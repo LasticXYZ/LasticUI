@@ -10,3 +10,6 @@ coverage
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+
+# remove later on
+static_frontend
