@@ -1,16 +1,13 @@
-import { AnalyticSection, PoolsSection, SearchSection } from '@/sections';
-import { GraphSection, MiniGraphSection, Subtitle } from '@/sections';
+import { AnalyticSection, CoreOwners, GraphSection, MiniGraphSection, Subtitle } from '@/sections';
 
 const Pools = () => {
     return (
       <>
+        <Subtitle subtitle="Primary Bulk coretime market" />
         <AnalyticSection />
         <GraphSection />
-        <Subtitle subtitle="Info" />
-        <AnalyticSection />
         <MiniGraphSection />
-        <PoolsSection />
-
+        <CoreOwners />
         <Subtitle subtitle="Transactions" />
       </>
     );
