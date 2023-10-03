@@ -74,6 +74,20 @@ module.exports = {
       'primary-6': '#0169DF',
       'primary-7': '#015FCB',
       'primary-8': '#0156B7',
+      /* pink color  */
+      'pink-1': '#FFF6F0',
+      'pink-2': '#FDDBC4',
+      'pink-3': '#FBB59F',
+      'pink-4': '#FF977F',
+      /* teal color  */
+      'teal-1': '#78FBE5',
+      'teal-2': '#76EDDD',
+      'teal-3': '#5FCEBA',
+      'teal-4': '#36767E',
+      /* yellow color */
+      'yellow-1': '#FFF6EE',
+      'yellow-2': '#FFE89F',
+      'yellow-3': '#FFD28A',
       /* other lastic colors */
       'lastic-red': '#E6B3CA',
       'lastic-lavender': '#AB9DCF',
