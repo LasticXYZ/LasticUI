@@ -8,9 +8,7 @@ const Footer = () => (
     <div className="mx-auto w-full max-w-screen-xl px-4 py-10 lg:py-20">
         <div className="md:flex md:justify-between">
           <div className="mb-6 md:mb-0">
-              <Link 
-                href="/" 
-                className="flex items-center">
+              <Link href="/" className="flex items-center" legacyBehavior>
                   <Image 
                     href="/assets/Images/Logos/lastic-logo.png" 
                     alt="lastic Logo"

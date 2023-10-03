@@ -15,11 +15,7 @@ const Navbar = ( {navigation} ) => (
                 <div className="flex mt-8 items-center justify-between">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
-                      <Link
-                        href="/"
-                        alt="lastic"
-                        className="font-bold"
-                      >
+                      <Link href="/" alt="lastic" className="font-bold" legacyBehavior>
                       <Image
                         src="/assets/Images/Logos/lastic-logo.png"
                         width={130}
@@ -43,7 +39,7 @@ const Navbar = ( {navigation} ) => (
                               'rounded-md px-4 py-2 text-l font-medium'
                             )}
                             aria-current={item.current ? 'page' : undefined}
-                          >
+                            legacyBehavior>
                             {item.name}
                           </Link>
                         ))}
@@ -80,7 +76,7 @@ const Navbar = ( {navigation} ) => (
                         'block rounded-md px-3 py-2 text-base font-medium'
                       )}
                       aria-current={item.current ? 'page' : undefined}
-                    >
+                      legacyBehavior>
                       {item.name}
                     </Link>
                   ))}
