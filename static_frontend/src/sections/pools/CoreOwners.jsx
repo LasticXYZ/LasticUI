@@ -9,28 +9,30 @@ import React, { useState } from 'react';
 
 const PoolsSection = () => {
   const TableHeader = [
-    { title: "# Collateral token / Quote Token" },
-    { title: "APR ?" },
-    { title: "Liquidity" },
-    { title: "lastic Burned" },
+    { title: "#" },
+    { title: "Para ID" },
+    { title: "Project Name" },
+    { title: "Owner" },
+    { title: "Cores Owned" },
+    { title: "% Owned" },
   ];
 
   const TableData = [
     {
       href: "/",
-      data: ["1 DAI / USDC", <TagComp className="mx-4 my-2" title="4.25%"/>, "1.18M USD", "1,273 lastic"],
+      data: ["1.", "200", "Asset Hub", "0x302...1231", <TagComp className="mx-4 my-2" title="2.12"/>, " 0.21%"],
     },
     {
       href: "/",
-      data: ["1 DAI / USDC", <TagComp className="mx-4 my-2" title="4.25%"/>, "1.18M USD", "1,273 lastic"],
+      data: ["1.", "200", "Asset Hub", "0x302...1231", <TagComp className="mx-4 my-2" title="2.12"/>, " 0.21%"],
     },
     {
       href: "/",
-      data: ["1 DAI / USDC", <TagComp className="mx-4 my-2" title="4.25%"/>, "1.18M USD", "1,273 lastic"],
+      data: ["1.", "200", "Asset Hub", "0x302...1231", <TagComp className="mx-4 my-2" title="2.12"/>, " 0.21%"],
     },
     {
       href: "/",
-      data: ["1 DAI / USDC", <TagComp className="mx-4 my-2" title="4.25%"/>, "1.18M USD", "1,273 lastic"],
+      data: ["1.", "200", "Asset Hub", "0x302...1231", <TagComp className="mx-4 my-2" title="2.12"/>, " 0.21%"],
     }
   ]
 
@@ -43,7 +45,7 @@ const PoolsSection = () => {
       </h1>
     </div>
     <div>
-      <GeneralTable tableData={TableData} tableHeader={TableHeader} colClass="grid-cols-first-big" />
+      <GeneralTable tableData={TableData} tableHeader={TableHeader} colClass="grid-cols-6" />
     </div>
 
 </section>
