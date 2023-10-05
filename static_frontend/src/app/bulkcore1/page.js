@@ -1,3 +1,5 @@
+'use client';
+
 import { AnalyticSection, CoreOwners, GraphSection, MiniGraphSection, Subtitle } from '@/sections';
 
 const Pools = () => {

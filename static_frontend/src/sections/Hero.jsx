@@ -26,7 +26,6 @@ const Hero = () => {
           alt='hero'
           width={800}
           height={800}
-          objectFit="cover"
         />
       </div>
 

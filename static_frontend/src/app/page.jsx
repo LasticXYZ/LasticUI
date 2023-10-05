@@ -1,8 +1,9 @@
-import { FAQSection, Hero } from '../sections';
+'use client';
+
+import { FAQSection, Hero } from '@/sections';
 
 const Home = () => (
   <>
-
     <Hero />
     <FAQSection />
   </>
