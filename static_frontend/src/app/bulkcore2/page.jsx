@@ -1,21 +1,22 @@
 'use client';
 
 
-import { AnalyticSection, PoolsSection, SearchSection } from '@/sections';
-import { GraphSection, MiniGraphSection, Subtitle } from '@/sections';
+import SearchSection from './SearchSection';
+import SubTitle from './SubTitle';
+import AnalyticSection from './AnalyticSection';
+import SecondaryBulkGraphSection from './SecondaryBulkGraphSection';
+import MiniGraphSection from './MiniGraphSection';
+import CoreOwners from './CoreOwners';
 
 const Pools = () => {
     return (
       <>
-        <SearchSection />
-        <AnalyticSection />
-        <PoolsSection />
+        <SubTitle subtitle="Secondary Bulk coretime market" />
         <SearchSection showMiddleButton={false} />
-        <GraphSection />
-        <Subtitle subtitle="Info" />
         <AnalyticSection />
+        <SecondaryBulkGraphSection />
         <MiniGraphSection />
-        <Subtitle subtitle="Transactions" />
+        <CoreOwners />
       </>
     );
 };
