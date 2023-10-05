@@ -1,6 +1,5 @@
-'use client';
-
-import { FAQSection, Hero } from '@/sections';
+import Hero from "./Hero";
+import FAQSection from "./FAQSection";
 
 const Home = () => (
   <>

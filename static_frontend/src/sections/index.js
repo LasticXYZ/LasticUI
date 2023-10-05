@@ -1,5 +1,3 @@
-import Hero from './Hero';
-import FAQSection from './FAQSection';
 import CoreOwners from './pools/CoreOwners';
 import AnalyticSection from './pools/AnalyticSection';
 import SearchSection from './pools/SearchSection';
@@ -11,10 +9,8 @@ import TransactionsSection from './pools/TransactionsSection';
 export {
   AnalyticSection,
   GraphSection,
-  Hero,
   CoreOwners,
   SearchSection,
-  FAQSection,
   MiniGraphSection,
   Subtitle,
   TransactionsSection,

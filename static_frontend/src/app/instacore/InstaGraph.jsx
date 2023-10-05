@@ -1,3 +1,5 @@
+'use client';
+
 import InfoPlusAnalyticsCard from "@/components/card/InfoPlusAnalyticsCard"
 import MainBarGraph from "@/components/graph/MainBarGraph"
 
