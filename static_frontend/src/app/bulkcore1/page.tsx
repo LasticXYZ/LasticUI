@@ -1,6 +1,6 @@
 'use client';
 
-import SubTitle from './SubTitle';
+import SubTitle from '../samesections/SubTitle';
 import AnalyticSection from './AnalyticSection';
 import CoreOwners from './CoreOwners';
 import PrimaryBulkGraphSection from './PrimaryBulkGraphSection';

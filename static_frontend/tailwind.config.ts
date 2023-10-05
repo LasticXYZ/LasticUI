@@ -1,5 +1,6 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+import type { Config } from 'tailwindcss'
+
+const config: Config  = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx}",
     "./pages/**/*.{js,ts,jsx,tsx}",
@@ -22,6 +23,10 @@ module.exports = {
       gridTemplateColumns: {
         // Simple first column bigger, other same size smaller
         'first-big': '3fr repeat(3, minmax(0, 1fr))',
+      },
+      fontFamily: {
+        primary: 'var(--font-roboto)',
+        syncopate: 'var(--font-syncopate)',
       },
     },
     colors: {
@@ -47,15 +52,6 @@ module.exports = {
       'green-6': '#2DF0B6',
       'green-7': '#65D47C',
       'green-8': '#2A9340',
-      /* yellow */
-      'yellow-1': '#FFFAEB',
-      'yellow-2': '#FFF5D6',
-      'yellow-3': '#FFECAD',
-      'yellow-4': '#FFE285',
-      'yellow-5': '#FFD95C',
-      'yellow-6': '#FFD447',
-      'yellow-7': '#FFCF33',
-      'yellow-8': '#F6C361',
       /* red  */
       'red-1': '#FFEBEC',
       'red-2': '#FFD6DA',
@@ -131,11 +127,10 @@ module.exports = {
       'gray-22': '#1A1B23',
       'gray-23': '#121217',
       'gray-24': '#09090C',
-    },
-    fontFamily: {
-      'rubik': ['Rubik_Regular', 'Inter', 'sans-serif'],
-      'syncopate': ['Syncopate_Bold', 'monospace'],
-    },
+    }
   },
   plugins: [],
 }
+
+
+export default config

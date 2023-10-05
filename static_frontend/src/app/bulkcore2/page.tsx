@@ -2,7 +2,7 @@
 
 
 import SearchSection from './SearchSection';
-import SubTitle from './SubTitle';
+import SubTitle from '../samesections/SubTitle';
 import AnalyticSection from './AnalyticSection';
 import SecondaryBulkGraphSection from './SecondaryBulkGraphSection';
 import MiniGraphSection from './MiniGraphSection';
