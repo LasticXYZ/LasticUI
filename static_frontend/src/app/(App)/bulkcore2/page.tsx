@@ -1,6 +1,5 @@
 'use client';
 
-
 import SearchSection from './SearchSection';
 import SubTitle from '../samesections/SubTitle';
 import AnalyticSection from './AnalyticSection';

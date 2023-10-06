@@ -1,19 +1,26 @@
 'use client';
 
-import {useState, useRef} from "react";
+import React, { FC, useState, useRef, RefObject } from "react";
 import ArrowIcon from "../icon/ArrowIcon";
 
-const AccordionTile = ({ question, answer }) => {
+type AccordionProps = {
+    question: string;
+    answer: string;
+};
+
+const AccordionTile: FC<AccordionProps> = ({ question, answer }) => {
 
     const [isShowed, setIsShowed] = useState(false)
-    const [height, setHeight] = useState('0px')
+    const [height, setHeight] = useState('0')
 
-    const divHeight = useRef()
+    const divHeight: RefObject<HTMLDivElement> = useRef(null)
 
     const showAccordion = () => {
 
         setIsShowed((isShowed) => !isShowed);
-        setHeight(isShowed ? "0px" : `${divHeight.current.scrollHeight}px`)
+        if (divHeight.current) {
+            setHeight(isShowed ? "0px" : `${divHeight.current.scrollHeight}px`)
+        }
 
     }
 

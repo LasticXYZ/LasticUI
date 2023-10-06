@@ -8,7 +8,11 @@ const navigation_app = [
     { name: '2. Bulk-core', href: '/bulkcore2', current: false },
   ]
 
-export default function Layout({ children }) {
+export default function Layout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
     <Background>
       <Navbar navigation={navigation_app}/>

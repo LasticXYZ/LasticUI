@@ -1,6 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Roboto, Syncopate } from 'next/font/google'
+import { Roboto, Syncopate, Rubik } from 'next/font/google'
 import { Layout } from '@/components'
   
 const syncopate = Syncopate(
@@ -17,6 +17,13 @@ const roboto = Roboto(
   },
 )
 
+const rubik = Rubik(
+  { subsets: ['latin'],
+    weight: ['300', '400', '700'],
+    variable: '--font-rubik',
+  },
+)
+
 export const metadata: Metadata = {
   title: 'Lastic',
   description: 'Blockspace marketplace for Polkadot.',
@@ -29,7 +36,7 @@ export default function RootLayout({
   }) {
   return (
     <html lang="en">
-      <body className={`${roboto.variable} ${syncopate.variable}`}>
+      <body className={`${roboto.variable} ${syncopate.variable} ${rubik.variable}`}>
           <Layout>{children}</Layout>
       </body>
     </html>

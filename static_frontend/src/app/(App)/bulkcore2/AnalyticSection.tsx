@@ -1,6 +1,4 @@
-import PrimaryButton from '@/components/button/PrimaryButton';
 import AnalyticCard from '@/components/card/AnalyticCard';
-import MiningCard from '@/components/card/MiningCard';
 
 const analytics = [
     { title: '20.52 DOT', subtitle: 'Current Price' },
