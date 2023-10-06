@@ -1,7 +1,14 @@
 import { joinClassNames } from "@/utils/helperFunc";
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 
-function SwitchDisplays({ displayOptions, active, setActive, className="px-3 py-1" }) {
+type SwitchDisplaysProps = {
+    displayOptions: Array<{key: string, value: string}>;
+    active: string;
+    setActive: (key: string) => void;
+    className?: string;
+};
+
+const SwitchDisplays: FC<SwitchDisplaysProps> = ({ displayOptions, active, setActive, className="px-3 py-1" }) => {
     /*
     const [active, setActive] = useState(displayOptions[0].key);
 

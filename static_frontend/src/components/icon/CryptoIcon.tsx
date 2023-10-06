@@ -1,6 +1,6 @@
 import Image from "next/image";
 import PropTypes from "prop-types";
-import React, { useRef, useState} from "react";
+import React, { FC, useRef, useState} from "react";
 //import { UncontrolledTooltip = "reactstrap";
 //import cbethIcon from "/assets/Images/Icon/crypto/cbeth.svg";
 
@@ -17,7 +17,13 @@ const etherscanIcon = "/assets/Images/Icon/crypto/etherscan.svg";
 const debankIcon = "/assets/Images/Icon/crypto/debank.svg";
 const zapperIcon = "/assets/Images/Icon/crypto/zapper.svg";
 
-const CryptoIcon = ({ name, size, address, ...rest }) => {
+type CryptoIconProps = {
+  name: string;
+  size: number;
+  address: string;
+};
+
+const CryptoIcon: FC<CryptoIconProps> = ({ name, size, address, ...rest }) => {
   const btnRef = useRef(null);
   const [ready, setReady] = useState(false);
 
@@ -61,14 +67,5 @@ const CryptoIcon = ({ name, size, address, ...rest }) => {
     </>
   );
 }
-
-CryptoIcon.propTypes = {
-  name: PropTypes.string.isRequired,
-  size: PropTypes.string,
-};
-
-CryptoIcon.defaultProps = {
-  size: "1rem",
-};
 
 export default CryptoIcon;

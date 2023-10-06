@@ -1,7 +1,14 @@
 import Link from "next/link"
 import { joinClassNames } from "@/utils/helperFunc" // This is a custom function to join class names
+import { FC } from "react"
 
-const GeneralTable = ({ tableData, tableHeader, colClass="grid-cols-4" }) => {
+type GeneralTableProps = {
+    tableData: Array<{href: string, data: Array<string | JSX.Element>}>;
+    tableHeader: Array<{title: string}>;
+    colClass?: string;
+};
+
+const GeneralTable: FC<GeneralTableProps> = ({ tableData, tableHeader, colClass="grid-cols-4" }) => {
     return (
       <div className="flex flex-col">
         <div className="relative overflow-x-auto border rounded-xl border-gray-20 py-5 px-5">
@@ -18,11 +25,10 @@ const GeneralTable = ({ tableData, tableHeader, colClass="grid-cols-4" }) => {
                     key={index}
                     className="text-black cursor-pointer hover:text-gray-7"
                     href={item.href}
-                    alt="link"
                     legacyBehavior>
                       <div className={joinClassNames("grid gap-4 px-2 border-b border-gray-20", colClass)}>
-                      { item.data.map((item2) => (
-                        <div key={item2} className="flex justify-start items-center p-4">{item2}</div>
+                      { item.data.map((item2, innerIndex) => (
+                        <div key={innerIndex} className="flex justify-start items-center p-4">{item2}</div>
                       ))}
                       </div>
                   </Link>
