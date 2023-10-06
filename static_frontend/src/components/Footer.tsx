@@ -9,9 +9,8 @@ const Footer = () => (
           <div className="mb-6 md:mb-0">
               <Link href="/" className="flex items-center" legacyBehavior>
                   <Image 
-                    href="/assets/Images/Logos/lastic-logo.png" 
+                    src="/assets/Images/Logos/lastic-logo.png" 
                     alt="lastic Logo"
-                    src="/assets/Images/Logos/lastic-logo.png"
                     width={150}
                     height={50}
                    />
@@ -87,7 +86,7 @@ const Footer = () => (
       <div className="sm:flex sm:items-center sm:justify-between">
           <div>
             <span className="text-sm text-gray-13 sm:text-center ">
-              <Link href="/" alt="lastic" className="px-2 hover:underline">
+              <Link href="/" className="px-2 hover:underline">
               $lastic 
               </Link>
               |  © 2023 Lastic Corp. All rights reserved.

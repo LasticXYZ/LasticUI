@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-
 import { Bar } from 'react-chartjs-2';
 import { 
+    BarController,
+    BarElement,
     Chart as ChartJS,
     CategoryScale,
     LinearScale,
@@ -13,6 +14,8 @@ import {
  } from 'chart.js';
 
 ChartJS.register(
+    BarController,
+    BarElement,
     CategoryScale,
     LinearScale,
     PointElement,

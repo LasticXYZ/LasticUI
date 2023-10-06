@@ -1,4 +1,8 @@
-const Background = ({ children }) => {
+const Background = ({
+     children 
+    } : {
+        children: React.ReactNode
+    }) => {
     return (
     <div className="bg-white  overflow-hidden">
         <div className="absolute z-0 inset-10 top-0 h-[40rem] overflow-hidden">

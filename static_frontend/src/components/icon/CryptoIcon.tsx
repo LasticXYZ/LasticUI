@@ -17,6 +17,8 @@ const etherscanIcon = "/assets/Images/Icon/crypto/etherscan.svg";
 const debankIcon = "/assets/Images/Icon/crypto/debank.svg";
 const zapperIcon = "/assets/Images/Icon/crypto/zapper.svg";
 
+type CryptoName = "DAI" | "sDAI" | "COMP" | "ETH" | "LINK" | "UNI" | "USDC" | "WBTC" | "WETH" | "wstETH" | "cbETH" | "etherscan" | "debank" | "zapper";
+
 type CryptoIconProps = {
   name: string;
   size: number;
@@ -33,8 +35,7 @@ const CryptoIcon: FC<CryptoIconProps> = ({ name, size, address, ...rest }) => {
     }
   }, [btnRef]);
 
-
-  const mapping = {
+  const mapping: Record<CryptoName, string> = {
     DAI: daiIcon,
     sDAI: daiIcon,
     COMP: compIcon,
@@ -50,7 +51,7 @@ const CryptoIcon: FC<CryptoIconProps> = ({ name, size, address, ...rest }) => {
     debank: debankIcon,
     zapper: zapperIcon,
   };
-  const Icon = mapping[name];
+  const Icon: string = mapping[name as CryptoName];
   if (!Icon) {
     return name;
   }

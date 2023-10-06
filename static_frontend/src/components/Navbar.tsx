@@ -6,8 +6,13 @@ import Link from 'next/link'
 import Image from 'next/image'
 import DropDownButton from './button/DropDownButton'
 import { joinClassNames } from '@/utils/helperFunc' // This is a custom function to join class names
+import { FC } from 'react'
 
-const Navbar = ( {navigation} ) => (
+type NavbarProps = {
+  navigation: Array<{name: string, href: string, current: boolean}>;
+};
+
+const Navbar: FC<NavbarProps> = ( {navigation} ) => (
   <>
       <div className="min-h-full mt-10">
         <Disclosure as="nav" className="">
@@ -17,7 +22,11 @@ const Navbar = ( {navigation} ) => (
                 <div className="flex mt-8 items-center justify-between">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
-                      <Link href="/" alt="lastic" className="font-bold" legacyBehavior>
+                      <Link
+                        href="/"
+                        className="font-bold"
+                        legacyBehavior
+                      >
                       <Image
                         src="/assets/Images/Logos/lastic-logo.png"
                         width={130}

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 
-import Chart from 'chart.js/auto';
 import { Bar } from 'react-chartjs-2';
 import { 
+    BarController,
+    BarElement,
     Chart as ChartJS,
     CategoryScale,
     LinearScale,
@@ -12,9 +13,10 @@ import {
     Legend,
     Filler,
  } from 'chart.js';
-import SwitchDisplays from '../switch/DisplaySwitch';
 
 ChartJS.register(
+    BarController,
+    BarElement,
     CategoryScale,
     LinearScale,
     PointElement,
@@ -47,23 +49,23 @@ const MiniBarGraph = () => {
     };
 
     const options = {
-        elements: {
-            bar: {
-                barPercentage: 0.5,
-                categoryPercentage: 1,
-            },
-        },
         scales: {
-            xAxis: { display: false /* this is redundent */ },
-            yAxis: { display: false /* this is redundent */ },  
+            x: {
+                display: false,
+                barPercentage: 0.5,
+                categoryPercentage: 1
+            },
+            y: {
+                display: false
+            }
         },
-      plugins: {
-        legend: {
-            display: false
-        },
-
-      },
+        plugins: {
+            legend: {
+                display: false
+            }
+        }
     };
+    
 
     return (
         <>
