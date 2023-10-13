@@ -28,48 +28,46 @@ const Hero = () => {
           height={800}
         />
       </div>
-
-      
     </div>
-              <div className='flex items-center justify-center md:justify-start max-w-[400px] px-4 py-8 mx-auto'>
-              <Link
-                href='https://github.com/LasticXYZ/Lastic'
-                target='_blank'
-                rel='noreferrer'
-                legacyBehavior>
-                <div className='rounded-full shadow-lg bg-[#5FCEBA] shadow-gray-900 p-6 cursor-pointer hover:scale-110 ease-in duration-300 mr-4'>
-                  <FaGithub />
-                </div>
-              </Link>
-              <Link
-                href='https://twitter.com/lastic_xyz'
-                target='_blank'
-                rel='noreferrer'
-                legacyBehavior>
-                <div className='rounded-full shadow-lg bg-[#FF977F] shadow-gray-900 p-6 cursor-pointer hover:scale-105 ease-in duration-300 mr-4'>
-                  <FaTwitter />
-                </div>
-              </Link>
-              <Link
-                href='https://medium.com/lastic-marketplace'
-                target='_blank'
-                rel='noreferrer'
-                legacyBehavior>
-                <div className='rounded-full shadow-lg bg-[#FFD28A] shadow-gray-900 p-6 cursor-pointer hover:scale-110 ease-in duration-300 mr-4'>
-                  <FaMedium />
-                </div>
-              </Link>
-              <Link
-                href='https://t.me/+khw2i6GGYFw3NDNi'
-                target='_blank'
-                rel='noreferrer'
-                legacyBehavior>
-                <div className='rounded-full shadow-lg bg-[#76EDDD] shadow-gray-900 p-6 cursor-pointer hover:scale-110 ease-in duration-300'>
-                  <FaTelegram />
-                </div>
-              </Link>
-            </div>
-        </div>
+      <div className='flex items-center justify-center md:justify-start max-w-[400px] px-4 py-8 mx-auto'>
+        <Link
+          href='https://github.com/LasticXYZ/Lastic'
+          target='_blank'
+          rel='noreferrer'
+          legacyBehavior>
+          <div className='rounded-full shadow-lg bg-[#5FCEBA] shadow-gray-900 p-6 cursor-pointer hover:scale-110 ease-in duration-300 mr-4'>
+            <FaGithub />
+          </div>
+        </Link>
+        <Link
+          href='https://twitter.com/lastic_xyz'
+          target='_blank'
+          rel='noreferrer'
+          legacyBehavior>
+          <div className='rounded-full shadow-lg bg-[#FF977F] shadow-gray-900 p-6 cursor-pointer hover:scale-105 ease-in duration-300 mr-4'>
+            <FaTwitter />
+          </div>
+        </Link>
+        <Link
+          href='https://medium.com/lastic-marketplace'
+          target='_blank'
+          rel='noreferrer'
+          legacyBehavior>
+          <div className='rounded-full shadow-lg bg-[#FFD28A] shadow-gray-900 p-6 cursor-pointer hover:scale-110 ease-in duration-300 mr-4'>
+            <FaMedium />
+          </div>
+        </Link>
+        <Link
+          href='https://t.me/+khw2i6GGYFw3NDNi'
+          target='_blank'
+          rel='noreferrer'
+          legacyBehavior>
+          <div className='rounded-full shadow-lg bg-[#76EDDD] shadow-gray-900 p-6 cursor-pointer hover:scale-110 ease-in duration-300'>
+            <FaTelegram />
+          </div>
+        </Link>
+      </div>
+  </div>
   );
 };
 

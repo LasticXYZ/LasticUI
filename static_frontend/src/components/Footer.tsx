@@ -20,7 +20,7 @@ const Footer = () => (
           <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-4">
             <div>
               <h2 className="mb-6 text-sm font-semibold font-syncopate text-lastic-lavender uppercase ">HOME</h2>
-              <ul className="text-rubik  font-medium">
+              <ul className="text-montserrat  font-medium">
                   <li className="mb-4">
                       <a href="https://replace.com/" className="hover:underline">Pools</a>
                   </li>
@@ -37,7 +37,7 @@ const Footer = () => (
             </div>
             <div>
                 <h2 className="mb-6 text-sm font-semibold font-syncopate text-lastic-lavender uppercase ">ABOUT</h2>
-                <ul className="text-rubik font-medium">
+                <ul className="text-montserrat font-medium">
                     <li className="mb-4">
                         <a href="https://replace.com/" className="hover:underline">lastic</a>
                     </li>
@@ -54,7 +54,7 @@ const Footer = () => (
             </div>
             <div>
                 <h2 className="mb-6 text-sm font-semibold font-syncopate text-lastic-lavender uppercase ">RESOURCES</h2>
-                <ul className="text-rubik  font-medium">
+                <ul className="text-montserrat  font-medium">
                     <li className="mb-4">
                         <a href="https://replace.com/" className="hover:underline ">Newsletter</a>
                     </li>
@@ -68,8 +68,8 @@ const Footer = () => (
             </div>
             <div>
                 <h2 className="mb-6 text-sm font-semibold font-syncopate text-lastic-lavender uppercase ">CONTACT</h2>
-                <ul className="text-rubik  font-medium">
-                    <li className=" text-rubik mb-4">
+                <ul className="text-montserrat  font-medium">
+                    <li className=" text-montserrat mb-4">
                         <a href="#" className="hover:underline">Contact</a>
                     </li>
                     <li className="mb-4">
