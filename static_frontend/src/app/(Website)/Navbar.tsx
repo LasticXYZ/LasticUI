@@ -4,7 +4,7 @@ import { Disclosure } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import Image from 'next/image'
-import DropDownButton from './button/DropDownButton'
+import PrimaryButton from '@/components/button/PrimaryButton'
 import { joinClassNames } from '@/utils/helperFunc' // This is a custom function to join class names
 import { FC } from 'react'
 
@@ -14,12 +14,12 @@ type NavbarProps = {
 
 const Navbar: FC<NavbarProps> = ( {navigation} ) => (
   <>
-      <div className="min-h-full mt-10">
+      <div className="min-h-full">
         <Disclosure as="nav" className="">
           {({ open }) => (
             <>
               <div className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8">
-                <div className="flex mt-8 items-center justify-between">
+                <div className="flex mt-5 items-center justify-between">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
                       <Link
@@ -59,7 +59,7 @@ const Navbar: FC<NavbarProps> = ( {navigation} ) => (
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-4 flex items-center md:ml-6">
-                      <DropDownButton />
+                      <PrimaryButton title="Launch" location='/instacore'/>
                     </div>
                   </div>
                   <div className="-mr-2 flex md:hidden">
@@ -95,7 +95,7 @@ const Navbar: FC<NavbarProps> = ( {navigation} ) => (
               </Disclosure.Panel>
 
               <div className="flex justify-end space-y-1 px-2 md:hidden">
-                <DropDownButton />
+                <PrimaryButton title='Launch' location='/instacore' />
               </div>
 
             </>

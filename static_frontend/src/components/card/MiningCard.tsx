@@ -1,4 +1,4 @@
-import PrimaryButton from "../button/PrimaryButton";
+import PrimaryButton from "../button/SecondaryButton";
 import CryptoIcon from "../icon/CryptoIcon";
 import TagComp from "../tags/TagComp";
 

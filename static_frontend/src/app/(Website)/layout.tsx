@@ -1,8 +1,15 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Roboto, Syncopate, Rubik } from 'next/font/google'
-import { Layout } from '@/components'
-  
+import { Syncopate, Montserrat } from 'next/font/google'
+import Navbar from './Navbar'
+import Footer from './Footer'
+import Background from './Background'
+
+const navigation_app = [
+    { name: 'Docs', href: '/docs', current: false },
+    { name: 'FAQ', href: '/faq', current: false },
+  ]
+
 const syncopate = Syncopate(
   { subsets: ['latin'],
     weight: ['400', '700'],
@@ -10,17 +17,10 @@ const syncopate = Syncopate(
   },
 )
 
-const roboto = Roboto(
+const montserrat = Montserrat(
   { subsets: ['latin'],
     weight: ['300', '400', '700'],
-    variable: '--font-roboto',
-  },
-)
-
-const rubik = Rubik(
-  { subsets: ['latin'],
-    weight: ['300', '400', '700'],
-    variable: '--font-rubik',
+    variable: '--font-montserrat',
   },
 )
 
@@ -36,8 +36,14 @@ export default function RootLayout({
   }) {
   return (
     <html lang="en">
-      <body className={`${roboto.variable} ${syncopate.variable} ${rubik.variable}`}>
-          <Layout>{children}</Layout>
+      <body className={`${syncopate.variable} ${montserrat.variable}`}>
+        <Background>
+          <Navbar navigation={navigation_app}/>
+          <div className="py-5">
+            <main>{children}</main>
+          </div>
+          <Footer />
+        </Background>
       </body>
     </html>
   )

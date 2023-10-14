@@ -25,7 +25,7 @@ const config: Config  = {
         'first-big': '3fr repeat(3, minmax(0, 1fr))',
       },
       fontFamily: {
-        primary: 'var(--font-roboto)',
+        primary: 'var(--font-montserrat)',
         syncopate: 'var(--font-syncopate)',
       },
     },
@@ -73,7 +73,7 @@ const config: Config  = {
       /* pink color  */
       'pink-1': '#FFF6F0',
       'pink-2': '#FDDBC4',
-      'pink-3': '#FBB59F',
+      'pink-3': '#FAB4AD',
       'pink-4': '#FA857A',
       'pink-5': '#FF6F62',
       /* teal color  */
@@ -99,9 +99,9 @@ const config: Config  = {
       'lastic-green': '#2A9340',
       'lastic-teal': '#37FCFB',
       'lastic-aqua': '#8AC7DB',
-      'lastic-spectrum-from': '#8AFAB6',   
-      'lastic-spectrum-via': '#642DD2',   
-      'lastic-spectrum-to': '#F8D19D',   
+      'lastic-spectrum-from': '#FDDBC4',   
+      'lastic-spectrum-via': '#FF977F',   
+      'lastic-spectrum-to': '#FDDBC4',   
       /* gray */
       'gray-1': '#F3F4F6',
       'gray-2': '#E8E8ED',

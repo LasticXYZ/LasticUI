@@ -1,8 +1,21 @@
+"use client";
+
 import './globals.css'
-import type { Metadata } from 'next'
-import { Roboto, Syncopate, Rubik } from 'next/font/google'
-import { Layout } from '@/components'
-  
+//import type { Metadata } from 'next'
+import { Syncopate, Montserrat } from 'next/font/google'
+import Navbar from './Navbar'
+import Background from './Background'
+import { env } from '@/config/environment'
+import { getDeployments } from '@/deployments/deployments'
+import { UseInkathonProvider } from '@scio-labs/use-inkathon'
+
+const navigation_app = [
+    { name: 'Insta-core', href: '/instacore', current: false },
+    { name: '1. Bulk-core', href: '/bulkcore1', current: false },
+    { name: '2. Bulk-core', href: '/bulkcore2', current: false },
+  ]
+
+
 const syncopate = Syncopate(
   { subsets: ['latin'],
     weight: ['400', '700'],
@@ -10,24 +23,17 @@ const syncopate = Syncopate(
   },
 )
 
-const roboto = Roboto(
+const montserrat = Montserrat(
   { subsets: ['latin'],
     weight: ['300', '400', '700'],
-    variable: '--font-roboto',
+    variable: '--font-montserrat',
   },
 )
 
-const rubik = Rubik(
-  { subsets: ['latin'],
-    weight: ['300', '400', '700'],
-    variable: '--font-rubik',
-  },
-)
-
-export const metadata: Metadata = {
-  title: 'Lastic',
-  description: 'Blockspace marketplace for Polkadot.',
-}
+// export const metadata: Metadata = {
+//   title: 'Lastic',
+//   description: 'Blockspace marketplace for Polkadot.',
+// }
 
 export default function RootLayout({
     children,
@@ -36,8 +42,19 @@ export default function RootLayout({
   }) {
   return (
     <html lang="en">
-      <body className={`${roboto.variable} ${syncopate.variable} ${rubik.variable}`}>
-          <Layout>{children}</Layout>
+      <body className={`${syncopate.variable} ${montserrat.variable}`}>
+        <Background>
+          <UseInkathonProvider
+              appName="ink!athon" // TODO
+              connectOnInit={true}
+              defaultChain={env.defaultChain}
+          >
+            <Navbar navigation={navigation_app}/>
+            <div className="py-10">
+              <main>{children}</main>
+            </div>
+          </UseInkathonProvider>
+        </Background>
       </body>
     </html>
   )
