@@ -1,8 +1,8 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Syncopate, Montserrat } from 'next/font/google'
-import Navbar from '@/components/Navbar'
-import Background from '@/components/Background'
+import Navbar from './Navbar'
+import Background from './Background'
 
 const navigation_app = [
     { name: 'Insta-core', href: '/instacore', current: false },

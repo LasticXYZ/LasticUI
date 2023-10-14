@@ -39,7 +39,7 @@ export default function RootLayout({
       <body className={`${syncopate.variable} ${montserrat.variable}`}>
         <Background>
           <Navbar navigation={navigation_app}/>
-          <div className="py-10">
+          <div className="py-5">
             <main>{children}</main>
           </div>
           <Footer />
