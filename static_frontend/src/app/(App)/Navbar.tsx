@@ -7,6 +7,7 @@ import Image from 'next/image'
 import PrimaryButton from '@/components/button/SecondaryButton'
 import { joinClassNames } from '@/utils/helperFunc' // This is a custom function to join class names
 import { FC } from 'react'
+import ConnectButton from '@/components/web3/ConnectButton'
 
 type NavbarProps = {
   navigation: Array<{name: string, href: string, current: boolean}>;
@@ -95,7 +96,7 @@ const Navbar: FC<NavbarProps> = ( {navigation} ) => (
               </Disclosure.Panel>
 
               <div className="flex justify-end space-y-1 px-2 md:hidden">
-                <PrimaryButton />
+                <ConnectButton />
               </div>
 
             </>

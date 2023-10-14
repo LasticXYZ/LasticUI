@@ -15,14 +15,53 @@ const Hero = () => {
             the world&apos;s first  
             <span className='leading-relaxed px-3 text-transparent  bg-clip-text bg-gradient-to-r from-lastic-spectrum-from via-lastic-spectrum-via to-lastic-spectrum-to'>blockspace</span> marketplace.
           </h2>
-          <p className='py-4 md:px-0 text-gray-8 text-lg mx-auto'>
+          <p className='py-4 md:px-0 text-montserrat max-w-xs text-gray-8 text-lg'>
           Do anything you want with your blockspace
           </p>
-          <div className=' pt-20'>
-            <PrimaryButton title='Launch' location='/instacore'/>
-            <SecondaryButton title='See Whitepaper' location='/instacore'/>
+          <div className='pt-10'>
+              <PrimaryButton title='Launch' location='/instacore'/>
+
+              <SecondaryButton title='See Whitepaper' location='/instacore'/>
           </div>
         </div>
+        <div className='flex items-center justify-start pt-10'>
+        <Link
+          href='https://github.com/LasticXYZ/Lastic'
+          target='_blank'
+          rel='noreferrer'
+          legacyBehavior>
+          <div className='rounded-full border border-gray-9 shadow-gray-900 p-4 cursor-pointer hover:scale-110 ease-in duration-300 mr-4'>
+            <FaGithub />
+          </div>
+        </Link>
+        <Link
+          href='https://twitter.com/lastic_xyz'
+          target='_blank'
+          rel='noreferrer'
+          legacyBehavior>
+          <div className='rounded-full border border-gray-9 shadow-gray-900 p-4 cursor-pointer hover:scale-110 ease-in duration-300 mr-4'>
+            <FaTwitter />
+          </div>
+        </Link>
+        <Link
+          href='https://medium.com/lastic-marketplace'
+          target='_blank'
+          rel='noreferrer'
+          legacyBehavior>
+          <div className='rounded-full border border-gray-9 shadow-gray-900 p-4 cursor-pointer hover:scale-110 ease-in duration-300 mr-4'>
+            <FaMedium />
+          </div>
+        </Link>
+        <Link
+          href='https://t.me/+khw2i6GGYFw3NDNi'
+          target='_blank'
+          rel='noreferrer'
+          legacyBehavior>
+          <div className='rounded-full border border-gray-9 shadow-gray-900 p-4 cursor-pointer hover:scale-110 ease-in duration-300 mr-4'>
+            <FaTelegram />
+          </div>
+        </Link>
+      </div>
       </div>
 
       <div className="w-full md:w-1/2 relative z-10">
@@ -35,44 +74,7 @@ const Hero = () => {
         />
       </div>
     </div>
-      <div className='flex items-center justify-center md:justify-start max-w-[400px] px-4 py-8 mx-auto'>
-        <Link
-          href='https://github.com/LasticXYZ/Lastic'
-          target='_blank'
-          rel='noreferrer'
-          legacyBehavior>
-          <div className='rounded-full shadow-lg border border-gray-9 shadow-gray-900 p-4 cursor-pointer hover:scale-110 ease-in duration-300 mr-4'>
-            <FaGithub />
-          </div>
-        </Link>
-        <Link
-          href='https://twitter.com/lastic_xyz'
-          target='_blank'
-          rel='noreferrer'
-          legacyBehavior>
-          <div className='rounded-full shadow-lg border border-gray-9 shadow-gray-900 p-4 cursor-pointer hover:scale-110 ease-in duration-300 mr-4'>
-            <FaTwitter />
-          </div>
-        </Link>
-        <Link
-          href='https://medium.com/lastic-marketplace'
-          target='_blank'
-          rel='noreferrer'
-          legacyBehavior>
-          <div className='rounded-full shadow-lg border border-gray-9 shadow-gray-900 p-4 cursor-pointer hover:scale-110 ease-in duration-300 mr-4'>
-            <FaMedium />
-          </div>
-        </Link>
-        <Link
-          href='https://t.me/+khw2i6GGYFw3NDNi'
-          target='_blank'
-          rel='noreferrer'
-          legacyBehavior>
-          <div className='rounded-full shadow-lg border border-gray-9 shadow-gray-900 p-4 cursor-pointer hover:scale-110 ease-in duration-300 mr-4'>
-            <FaTelegram />
-          </div>
-        </Link>
-      </div>
+
   </div>
   );
 };
