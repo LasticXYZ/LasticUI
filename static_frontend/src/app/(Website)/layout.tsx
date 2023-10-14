@@ -1,8 +1,17 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Montserrat, Syncopate } from 'next/font/google'
-import { Layout } from '@/components'
-  
+import { Syncopate, Montserrat } from 'next/font/google'
+import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
+import Background from '@/components/Background'
+
+const navigation_app = [
+    { name: 'Insta-core', href: '/instacore', current: false },
+    { name: '1. Bulk-core', href: '/bulkcore1', current: false },
+    { name: '2. Bulk-core', href: '/bulkcore2', current: false },
+  ]
+
+
 const syncopate = Syncopate(
   { subsets: ['latin'],
     weight: ['400', '700'],
@@ -29,8 +38,14 @@ export default function RootLayout({
   }) {
   return (
     <html lang="en">
-      <body className={`${montserrat.variable} ${syncopate.variable}`}>
-          <Layout>{children}</Layout>
+      <body className={`${syncopate.variable} ${montserrat.variable}`}>
+        <Background>
+          <Navbar navigation={navigation_app}/>
+          <div className="py-10">
+            <main>{children}</main>
+          </div>
+          <Footer />
+        </Background>
       </body>
     </html>
   )
