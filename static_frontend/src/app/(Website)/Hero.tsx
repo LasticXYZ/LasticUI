@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import React from 'react';
 import { FaGithub, FaTelegram, FaTwitter, FaMedium } from 'react-icons/fa';
-import PrimaryButton from '@/components/button/PrimaryButton';
+import PrimaryButton from '@/components/button/SecondaryButton';
 
 const Hero = () => {
   return (

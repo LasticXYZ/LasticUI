@@ -1,4 +1,4 @@
-import PrimaryButton from '@/components/button/PrimaryButton';
+import PrimaryButton from '@/components/button/SecondaryButton';
 import MiningCard from '@/components/card/MiningCard';
 import TableCardViewIcon from '@/components/icon/TableCardViewIcon';
 import GeneralTable from '@/components/table/GeneralTable';

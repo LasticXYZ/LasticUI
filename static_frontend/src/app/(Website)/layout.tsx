@@ -1,16 +1,14 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Syncopate, Montserrat } from 'next/font/google'
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
-import Background from '@/components/Background'
+import Navbar from './Navbar'
+import Footer from './Footer'
+import Background from './Background'
 
 const navigation_app = [
-    { name: 'Insta-core', href: '/instacore', current: false },
-    { name: '1. Bulk-core', href: '/bulkcore1', current: false },
-    { name: '2. Bulk-core', href: '/bulkcore2', current: false },
+    { name: 'Docs', href: '/docs', current: false },
+    { name: 'FAQ', href: '/faq', current: false },
   ]
-
 
 const syncopate = Syncopate(
   { subsets: ['latin'],
