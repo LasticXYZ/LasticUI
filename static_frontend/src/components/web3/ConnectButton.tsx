@@ -54,11 +54,10 @@ return (
     // Connect Button + Modal
     <div className="relative">
       <button
-        className="flex items-center justify-between rounded-lg bg-gray-200 dark:bg-gray-800 px-6 py-3 font-bold text-black dark:text-white transition duration-300 hover:bg-gray-300"
+        className=" font-syncopate font-black rounded-2xl hover:bg-pink-3 border border-gray-8 text-xs inline-flex items-center justify-center px-12 py-3 mr-3 text-center text-black hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
         onClick={() => setOpenConnect(!openConnect)}
       >
         <span>Connect Wallet</span>
-        <FiChevronDown size={22} />
       </button>
 
       <WalletModal isOpen={openConnect} onClose={() => setOpenConnect(false)}>
@@ -107,12 +106,13 @@ return (
       <div className="flex items-center space-x-4">
         {/* Account Name, Address, and AZNS-Domain (if assigned) */}
         <button
-          className="flex flex-col items-start rounded-xl p-4 bg-white dark:bg-gray-900 shadow hover:bg-gray-100"
+            className=" font-syncopate font-black rounded-2xl hover:bg-pink-3 border border-gray-8 text-xs inline-flex items-center justify-center px-12 py-3 mr-3 text-center text-black hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
+
           onClick={() => setOpenChooseAccount(true)} 
           >
-          <div className="space-y-1">
+          <div className="space-y-0">
             <AccountName account={activeAccount} />
-            <p className="text-xs opacity-75">
+            <p className="text-xs font-mono font-thin opafcity-75">
               {truncateHash(encodeAddress(activeAccount.address, activeChain?.ss58Prefix || 42), 8)}
             </p>
           </div>
@@ -136,7 +136,7 @@ return (
                     setActiveAccount?.(acc);
                   }
                 }}
-                className={`p-2 flex justify-between items-center cursor-pointer ${acc.address === activeAccount.address ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-100"}`}
+                className={`p-3 flex justify-between items-center cursor-pointer ${acc.address === activeAccount.address ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-100"}`}
                 >
                 <div>
                   <AccountName account={acc} />
