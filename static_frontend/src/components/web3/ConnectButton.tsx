@@ -102,15 +102,15 @@ return (
   )}
   {!!activeAccount && (
     // Account Menu & Disconnect Button
-    <div className="p-4 space-y-4">
+    <div className="">
       <div className="flex items-center space-x-4">
         {/* Account Name, Address, and AZNS-Domain (if assigned) */}
         <button
-            className=" font-syncopate font-black rounded-2xl hover:bg-pink-3 border border-gray-8 text-xs inline-flex items-center justify-center px-12 py-3 mr-3 text-center text-black hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
+            className=" font-syncopate font-black rounded-2xl hover:bg-pink-3 border border-gray-8 text-xs inline-flex items-center justify-center px-7 py-2 mr-3 text-center text-black hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
 
           onClick={() => setOpenChooseAccount(true)} 
           >
-          <div className="space-y-0">
+          <div className=" px-12">
             <AccountName account={activeAccount} />
             <p className="text-xs font-mono font-thin opafcity-75">
               {truncateHash(encodeAddress(activeAccount.address, activeChain?.ss58Prefix || 42), 8)}
