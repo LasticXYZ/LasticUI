@@ -61,7 +61,7 @@ return (
       </button>
 
       <WalletModal isOpen={openConnect} onClose={() => setOpenConnect(false)}>
-        <ul className="rounded-lg border border-gray-200 bg-white dark:bg-gray-700 divide-y divide-gray-200">
+        <ul className="rounded-lg border border-gray-9 bg-white dark:bg-gray-14 divide-y divide-gray-2">
           {/* Installed Wallets */}
           {!isSSR &&
             !activeAccount &&
@@ -75,7 +75,7 @@ return (
                     connect?.(undefined, w);
                     setChosenWallet(w);
                   }}
-                  className="p-3 cursor-pointer hover:bg-gray-100 transition duration-300"
+                  className="p-3 cursor-pointer hover:bg-gray-1 transition duration-300"
                 >
                   {w.name}
                 </li>
@@ -106,7 +106,7 @@ return (
       <div className="flex items-center space-x-4">
         {/* Account Name, Address, and AZNS-Domain (if assigned) */}
         <button
-            className=" font-syncopate font-black rounded-2xl hover:bg-pink-3 border border-gray-8 text-xs inline-flex items-center justify-center px-7 py-2 mr-3 text-center text-black hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
+            className=" font-syncopate font-black rounded-2xl hover:bg-pink-3 border border-gray-9 text-xs inline-flex items-center justify-center px-7 py-2 mr-3 text-center text-black focus:ring-4"
 
           onClick={() => setOpenChooseAccount(true)} 
           >
@@ -136,7 +136,7 @@ return (
                     setActiveAccount?.(acc);
                   }
                 }}
-                className={`p-3 flex justify-between items-center cursor-pointer ${acc.address === activeAccount.address ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-100"}`}
+                className={`p-3 flex justify-between items-center cursor-pointer ${acc.address === activeAccount.address ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-2"}`}
                 >
                 <div>
                   <AccountName account={acc} />
@@ -147,7 +147,7 @@ return (
             )
           })}
 
-            <div className="flex flex-col space-y-2 py-2 border-t-2 border-gray-200 bg-white dark:bg-gray-700">
+            <div className="flex flex-col space-y-2 py-2 border-t-2 border-gray-3 bg-white dark:bg-gray-19">
             {/* Supported Chains */}
             {supportedChains.map((chain) => (
               <div
@@ -158,7 +158,7 @@ return (
                     toast.success(`Switched to ${chain.name}`);
                   }
                 }}
-                className={`p-2 flex justify-between items-center cursor-pointer ${chain.network === activeChain?.network ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-100"}`}
+                className={`p-2 flex justify-between items-center cursor-pointer ${chain.network === activeChain?.network ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-1"}`}
               >
                 <p>{chain.name}</p>
                 {chain.network === activeChain?.network && <AiOutlineCheckCircle size={16} className="text-green-500" />}
@@ -168,13 +168,13 @@ return (
           
             {/* Account Balance */}
             {balanceFormatted !== undefined && (
-              <div className="rounded-2x px-4 py-2 font-bold text-gray-700 hover:bg-gray-200">
+              <div className="rounded-2x px-4 py-2 font-bold text-gray-19 hover:bg-gray-9">
                 {balanceFormatted}
               </div>
             )}
-            <div className="p-2 flex justify-between items-center cursor-pointer hover:bg-red-100" onClick={() => disconnect?.()}>
-              <span className="text-red-500">Disconnect</span>
-              <AiOutlineDisconnect size={18} className="text-red-500" />
+            <div className="p-2 flex justify-between items-center cursor-pointer hover:bg-red-1" onClick={() => disconnect?.()}>
+              <span className="text-red-5">Disconnect</span>
+              <AiOutlineDisconnect size={18} className="text-red-5" />
             </div>
 
           </>
