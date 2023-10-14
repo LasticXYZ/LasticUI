@@ -1,5 +1,5 @@
 import { WalletModal } from '@/components/modal/WalletModal'
-import { env } from '@config/environment'
+import { env } from '@/config/environment'
 import { encodeAddress } from '@polkadot/util-crypto'
 import {
   SubstrateChain,

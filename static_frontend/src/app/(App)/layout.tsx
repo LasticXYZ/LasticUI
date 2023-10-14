@@ -1,8 +1,13 @@
+"use client";
+
 import './globals.css'
-import type { Metadata } from 'next'
+//import type { Metadata } from 'next'
 import { Syncopate, Montserrat } from 'next/font/google'
 import Navbar from './Navbar'
 import Background from './Background'
+import { env } from '@/config/environment'
+import { getDeployments } from '@/deployments/deployments'
+import { UseInkathonProvider } from '@scio-labs/use-inkathon'
 
 const navigation_app = [
     { name: 'Insta-core', href: '/instacore', current: false },
@@ -25,10 +30,10 @@ const montserrat = Montserrat(
   },
 )
 
-export const metadata: Metadata = {
-  title: 'Lastic',
-  description: 'Blockspace marketplace for Polkadot.',
-}
+// export const metadata: Metadata = {
+//   title: 'Lastic',
+//   description: 'Blockspace marketplace for Polkadot.',
+// }
 
 export default function RootLayout({
     children,
@@ -39,10 +44,16 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${syncopate.variable} ${montserrat.variable}`}>
         <Background>
-          <Navbar navigation={navigation_app}/>
-          <div className="py-10">
-            <main>{children}</main>
-          </div>
+          <UseInkathonProvider
+              appName="ink!athon" // TODO
+              connectOnInit={true}
+              defaultChain={env.defaultChain}
+          >
+            <Navbar navigation={navigation_app}/>
+            <div className="py-10">
+              <main>{children}</main>
+            </div>
+          </UseInkathonProvider>
         </Background>
       </body>
     </html>

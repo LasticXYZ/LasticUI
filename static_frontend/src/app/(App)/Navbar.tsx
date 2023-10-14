@@ -7,7 +7,7 @@ import Image from 'next/image'
 import PrimaryButton from '@/components/button/SecondaryButton'
 import { joinClassNames } from '@/utils/helperFunc' // This is a custom function to join class names
 import { FC } from 'react'
-import ConnectButton from '@/components/web3/ConnectButton'
+import { ConnectButton } from '@/components/web3/ConnectButton'
 
 type NavbarProps = {
   navigation: Array<{name: string, href: string, current: boolean}>;
@@ -60,7 +60,7 @@ const Navbar: FC<NavbarProps> = ( {navigation} ) => (
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-4 flex items-center md:ml-6">
-                      <PrimaryButton />
+                      <ConnectButton />
                     </div>
                   </div>
                   <div className="-mr-2 flex md:hidden">
