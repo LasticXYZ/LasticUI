@@ -11,15 +11,17 @@ const Hero = () => {
     <div className=' w-full md:justify-start m-auto relative flex flex-col md:flex-row items-center justify-center'>
       <div className='max-w-[500px] w-full px-20 text-center md:text-left md:px-0 py-20 h-full mx-auto p-2 relative z-10'>
         <div>
-          <h2 className='py-4 text-gray-17  text-4xl font-syncopate font-bold md:px-0'>
-            the world&apos;s first 
-            <div className='text-lastic-spectrum-via'>blockspace</div> marketplace.
+          <h2 className=' pt-20 py-4 text-gray-17  text-4xl font-syncopate font-bold md:px-0'>
+            the world&apos;s first  
+            <span className='leading-relaxed px-3 text-transparent  bg-clip-text bg-gradient-to-r from-lastic-spectrum-from via-lastic-spectrum-via to-lastic-spectrum-to'>blockspace</span> marketplace.
           </h2>
-          <h4 className='py-4 md:px-0 text-teal-1 text-2xl md:text-2xl mx-auto'>
+          <p className='py-4 md:px-0 text-gray-8 text-lg mx-auto'>
           Do anything you want with your blockspace
-          </h4>
-          <PrimaryButton title='Launch' location='/instacore'/>
-          <SecondaryButton title='See Whitepaper' location='/instacore'/>
+          </p>
+          <div className=' pt-20'>
+            <PrimaryButton title='Launch' location='/instacore'/>
+            <SecondaryButton title='See Whitepaper' location='/instacore'/>
+          </div>
         </div>
       </div>
 

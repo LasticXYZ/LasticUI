@@ -73,7 +73,7 @@ const config: Config  = {
       /* pink color  */
       'pink-1': '#FFF6F0',
       'pink-2': '#FDDBC4',
-      'pink-3': '#FBB59F',
+      'pink-3': '#FAB4AD',
       'pink-4': '#FA857A',
       'pink-5': '#FF6F62',
       /* teal color  */
@@ -99,7 +99,7 @@ const config: Config  = {
       'lastic-green': '#2A9340',
       'lastic-teal': '#37FCFB',
       'lastic-aqua': '#8AC7DB',
-      'lastic-spectrum-from': '#FA857A',   
+      'lastic-spectrum-from': '#FDDBC4',   
       'lastic-spectrum-via': '#FF977F',   
       'lastic-spectrum-to': '#FDDBC4',   
       /* gray */
