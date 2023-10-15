@@ -1,24 +1,36 @@
 const Background = ({
-     children 
-    } : {
-        children: React.ReactNode
-    }) => {
-    return (
-    <div className="bg-white  overflow-hidden">
-        <div className="absolute z-0 inset-10 top-0 h-[40rem] overflow-hidden">
-            <div className=" h-full w-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-6 to-white rounded-full transform -translate-y-1/2">
-            </div>
-        </div>
-        <div className="absolute z-0 inset-x-0 top-0 h-[40rem] overflow-hidden">
-            <div className=" h-full w-full bg-white opacity-90 transform ">
-            </div>
-        </div>
+    children 
+   } : {
+       children: React.ReactNode
+   }) => {
+   return (
+   <div className="bg-[#F9f9fc] overflow-hidden min-h-screen">
+       {/* Radial Gradient Background */}
+       <div className="fixed z-0 inset-0 h-screen w-full overflow-hidden">
 
-        <div className="relative z-10">
-            { children }
+            {/* Ellipse4 */}
+            <div className="absolute top-[-36px] left-[-9.35px] w-[513.08px] h-[513.08px] bg-[#00E3BA] opacity-80 rounded-full"></div>
+
+            {/* Ellipse3 */}
+            <div className="absolute top-[259.38px] left-[-273px] w-[513.08px] h-[513.08px] bg-[#37FCFB] opacity-50 rounded-full"></div>
+
+            {/* Ellipse2 */}
+            <div className="absolute top-[148.88px] left-[909.61px] w-[612.64px] h-[612.64px] bg-[#CB2600] opacity-90 rounded-full"></div>
+
+            {/* Ellipse1 */}
+            <div className="absolute top-[-36px] left-[292.59px] w-[971.46px] h-[485.73px] bg-[#37FCFB] opacity-70 rounded-full"></div>
+
         </div>
-    </div>
-    )
+       
+       {/* Gray Background */}
+       <div className="fixed z-0 inset-0 h-screen w-full bg-[#F3F3F3] bg-opacity-80 backdrop-blur-3xl"></div>
+
+       {/* Content */}
+       <div className="relative z-10 min-h-screen">
+           { children }
+       </div>
+   </div>
+   )
 }
 
 export default Background;

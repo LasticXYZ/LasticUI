@@ -13,30 +13,30 @@ const CoreUtilisation: React.FC<CoreUtilisationProps> = () => {
             <div className="mb-4 p-10">
                 <h1 className="text-xl font-syncopate font-bold">core utilization</h1>
             </div>
-            <div className="bg-white grid grid-cols-4 font-montserrat p-6 w-full">
-            <div className="grid grid-cols-1 gap-4 mb-4">
-                <select className="border-b border-gray-9 p-2">
+            <div className="grid grid-cols-4 font-montserrat p-6 w-full">
+            <div className="col-span-1 grid grid-cols-1 gap-4 mb-4">
+            <select className="border-b bg-transparent border-gray-9 p-2">
                 <option>Core Type</option>
                 </select>
-                <select className="border-b border-gray-9 p-2">
+                <select className="border-b bg-transparent border-gray-9 p-2">
                 <option>Project Name</option>
                 </select>
-                <select className="border-b border-gray-9 p-2">
+                <select className="border-b bg-transparent border-gray-9 p-2">
                 <option>Para ID</option>
                 </select>
-                <select className="border-b border-gray-9 p-2">
+                <select className="border-b bg-transparent border-gray-9 p-2">
                 <option>Nb. of Cores Owned</option>
                 </select>
-                <select className="border-b border-gray-9 p-2">
+                <select className="border-b bg-transparent border-gray-9 p-2">
                 <option>% Owned</option>
                 </select>
-                <select className="border-b border-gray-9 p-2">
+                <select className="border-b bg-transparent border-gray-9 p-2">
                 <option>Period Until Renewal</option>
                 </select>
-                <select className="border-b border-gray-9 p-2">
+                <select className="border-b bg-transparent border-gray-9 p-2">
                 <option>Monthly price per Core</option>
                 </select>
-                <select className="border-b border-gray-9 p-2">
+                <select className="border-b bg-transparent border-gray-9 p-2">
                 <option>Volume and Price</option>
                 </select>
             </div>

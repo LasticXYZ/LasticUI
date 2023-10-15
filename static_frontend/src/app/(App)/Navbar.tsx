@@ -15,7 +15,7 @@ type NavbarProps = {
 
 const Navbar: FC<NavbarProps> = ( {navigation} ) => (
   <>
-      <div className="min-h-full border-b border-gray-9">
+      <div className="min-h-full border-b bg-[#F6FDFF] bg-opacity-40 border-gray-4">
         <Disclosure as="nav" className="">
           {({ open }) => (
             <>

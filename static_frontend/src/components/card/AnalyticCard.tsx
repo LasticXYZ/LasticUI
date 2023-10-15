@@ -11,7 +11,14 @@ const getColorForChange = (change: number | string) => {
     if (typeof change === 'number') {
         return change > 0 ? 'text-green-7' : 'text-red-6';
     }
-    return 'text-black';
+    return 'text-gray-15';
+};
+
+const getArrowForChange = (change: number | string) => {
+    if (typeof change === 'number') {
+        return change > 0 ? '↑' : '↓';
+    }
+    return ''; // Return an empty string if it's not a number
 };
 
 const AnalyticCard: FC<AnalyticCardProps> = ({ title, subtitle, change="No info" }) => (
@@ -19,7 +26,9 @@ const AnalyticCard: FC<AnalyticCardProps> = ({ title, subtitle, change="No info"
         <div className="px-8 py-5 flex flex-col items-start justify-center">
             <dt className="text-gray-15 text-sm mb-2"> { subtitle }</dt>
             <dd className="text-black font-bold text-3xl mb-1">{ title }</dd>
-            <span className={`${getColorForChange(change)} text-md`}>{ change }</span>
+            <span className={`${getColorForChange(change)} text-md`}>
+                {getArrowForChange(change)} { change }
+            </span>
         </div>
     </Border>
 )
