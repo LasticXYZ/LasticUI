@@ -42,7 +42,7 @@ const MiniBarGraph = () => {
                 borderRadius: 2,
                 borderColor: "#fff",
                 fill: false,
-                backgroundColor: "deposit" === curentlyDisplayed ? "#81c7db" : "#fff",
+                backgroundColor: "deposit" === curentlyDisplayed ? "#76EDDD" : "#fff",
                 data: [ 40, 68, 8, 74, 56, 60, 7, 6, 60, 87, 60, 87, 56, 60, 87, 60, 87, 56, 60, 87, ],
             },
         ],

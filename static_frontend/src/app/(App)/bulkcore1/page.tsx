@@ -2,18 +2,15 @@
 
 import SubTitle from '../samesections/SubTitle';
 import AnalyticSection from './AnalyticSection';
-import CoreOwners from './CoreOwners';
-import PrimaryBulkGraphSection from './PrimaryBulkGraphSection';
-import MiniGraphSection from './MiniGraphSection';
+import TimeSection from './TimeSection';
 import CoreUtilisation from './CoreUtilisation';
 
 const Pools = () => {
     return (
       <>
         <SubTitle subtitle="Primary Bulk coretime market" />
+        <TimeSection />
         <AnalyticSection />
-        <PrimaryBulkGraphSection />
-        <MiniGraphSection />
         <CoreUtilisation /> 
       </>
     );

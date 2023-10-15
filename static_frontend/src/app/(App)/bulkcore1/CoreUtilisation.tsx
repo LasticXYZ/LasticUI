@@ -8,7 +8,7 @@ type CoreUtilisationProps = {};
 
 const CoreUtilisation: React.FC<CoreUtilisationProps> = () => {
   return (
-    <section className="mx-auto max-w-9xl px-4 mt-5 sm:px-6 lg:px-8">
+    <section className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8">
         <Border>
             <div className="mb-4 p-10">
                 <h1 className="text-xl font-syncopate font-bold">core utilization</h1>
@@ -41,7 +41,7 @@ const CoreUtilisation: React.FC<CoreUtilisationProps> = () => {
                 </select>
             </div>
             <div className=" col-span-3 p-4">
-            <MiniBarGraph />
+                <MiniBarGraph />
             </div>
             </div>
             <CoreOwners />
