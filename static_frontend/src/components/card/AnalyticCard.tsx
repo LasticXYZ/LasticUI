@@ -22,8 +22,8 @@ const getArrowForChange = (change: number | string) => {
 };
 
 const AnalyticCard: FC<AnalyticCardProps> = ({ title, subtitle, change="No info" }) => (
-    <Border>
-        <div className="px-8 py-5 flex flex-col items-start justify-center">
+    <Border className='w-full flex-grow flex flex-col '>
+        <div className="px-8 py-16 flex flex-col flex-grow items-start justify-center">
             <dt className="text-gray-15 text-sm mb-2"> { subtitle }</dt>
             <dd className="text-black font-bold text-3xl mb-1">{ title }</dd>
             <span className={`${getColorForChange(change)} text-md`}>
