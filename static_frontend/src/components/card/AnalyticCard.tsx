@@ -5,6 +5,7 @@ type AnalyticCardProps = {
     title: string;
     subtitle: string;
     change: number | string;
+    className?: string;
 }
 
 const getColorForChange = (change: number | string) => {
@@ -21,9 +22,9 @@ const getArrowForChange = (change: number | string) => {
     return ''; // Return an empty string if it's not a number
 };
 
-const AnalyticCard: FC<AnalyticCardProps> = ({ title, subtitle, change="No info" }) => (
+const AnalyticCard: FC<AnalyticCardProps> = ({ title, subtitle, change="No info", className='py-16' }) => (
     <Border className='w-full flex-grow flex flex-col '>
-        <div className="px-8 py-16 flex flex-col flex-grow items-start justify-center">
+        <div className={`${className} px-8 flex flex-col flex-grow items-start justify-center`}>
             <dt className="text-gray-15 text-sm mb-2"> { subtitle }</dt>
             <dd className="text-black font-bold text-3xl mb-1">{ title }</dd>
             <span className={`${getColorForChange(change)} text-md`}>
