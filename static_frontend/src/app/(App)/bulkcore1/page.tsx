@@ -5,6 +5,7 @@ import AnalyticSection from './AnalyticSection';
 import CoreOwners from './CoreOwners';
 import PrimaryBulkGraphSection from './PrimaryBulkGraphSection';
 import MiniGraphSection from './MiniGraphSection';
+import CoreUtilisation from './CoreUtilisation';
 
 const Pools = () => {
     return (
@@ -13,7 +14,7 @@ const Pools = () => {
         <AnalyticSection />
         <PrimaryBulkGraphSection />
         <MiniGraphSection />
-        <CoreOwners />
+        <CoreUtilisation /> 
       </>
     );
 };
