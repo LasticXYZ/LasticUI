@@ -72,7 +72,7 @@ const MainBarGraph = () => {
 
     return (
         <>
-        <div className="flex flex-col justify-between bg-white border border-gray-7 shadow p-6 rounded-xl">
+        <div className="flex flex-col justify-between p-6">
             <div className="flex justify-between py-2 px-3">
                 <h5 className="text-black text-xl font-syncopate px-3 font-light">Insta coretime Price over time</h5>
                 {/* <SwitchDisplays displayOptions={displayOptions} active={curentlyDisplayed} setActive={setCurrentDisplay} /> */}

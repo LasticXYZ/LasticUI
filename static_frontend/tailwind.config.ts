@@ -25,7 +25,7 @@ const config: Config  = {
         'first-big': '3fr repeat(3, minmax(0, 1fr))',
       },
       fontFamily: {
-        primary: 'var(--font-montserrat)',
+        montserrat: 'var(--font-montserrat)',
         syncopate: 'var(--font-syncopate)',
       },
     },
