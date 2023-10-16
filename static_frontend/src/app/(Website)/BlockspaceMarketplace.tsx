@@ -2,7 +2,7 @@ import React from 'react';
 
 const BlockspaceMarketplace = () => {
     return (
-        <div className="bg-pink-1">
+        <div className="bg-pink-1 border bg-opacity-70 border-gray-9">
         <section className="mx-auto max-w-9xl py-28 px-4 sm:px-6 lg:px-8">
             <h2 className="font-syncopate text-center font-bold pt-14 px-5 text-2xl md:text-1xl xl:text-2xl">
             A Blockspace Marketplace?
