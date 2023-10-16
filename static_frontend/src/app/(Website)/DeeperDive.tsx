@@ -2,9 +2,9 @@ import React from 'react';
 
 const DeeperDive: React.FC = () => {
     return (
-        <div className="flex flex-col items-center space-y-8 bg-white p-12">
-            <h2 className="text-4xl font-bold">deeper DIVE</h2>
-            <h3 className="text-2xl">Flexible Payment Options</h3>
+        <div className="flex flex-col items-center bg-white p-12">
+            <h1 className="text-3xl font-syncopate font-bold text-center mb-4">Deeper dive</h1>
+            <h2 className="text-xl font-syncopate text-center mb-10">Flexible Payment Options </h2>
             <img src="/your-image-path.jpg" alt="Deeper Dive Image" className="rounded-lg shadow-md max-w-lg" />
             <div className="text-center space-y-4">
                 <h4 className="text-lg font-bold">Innovation at the Heart of Blockspace Transactions</h4>

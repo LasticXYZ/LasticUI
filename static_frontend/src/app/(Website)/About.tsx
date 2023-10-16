@@ -1,12 +1,11 @@
 "use client"; 
 
-import React, { useRef, useEffect, useState } from 'react';
 import AboutCard from '@/components/card/AboutCard';
 
-const Background: React.FC<{ height: number }> = ({ height }) => {
+const Background: React.FC = () => {
     return (
-      <div style={{ height: `${height}px` }} className=" w-full bg-gray-300 ">
-        <div className=" w-full h-full bg-[#FAF7F8]">
+      <div className='h-full'>
+        <div className=" w-full bg-[#FAF7F8]">
           <div className=" py-20 w-full h-[332px] left-[281px] top-[542px] bg-[#FA857A] blur-[350px]"></div>
         </div>
       </div>
@@ -14,15 +13,6 @@ const Background: React.FC<{ height: number }> = ({ height }) => {
 }
     
 export default function About() {
-    const contentRef = useRef(null);
-    const [contentHeight, setContentHeight] = useState(0);
-  
-    useEffect(() => {
-      if (contentRef.current) {
-        setContentHeight(contentRef?.current?.getBoundingClientRect().height);
-      }
-    }, [contentRef]);
-
   const features = [
     {
       title: "MARKET-BASED SCALING",
@@ -58,14 +48,14 @@ export default function About() {
 
   return (
     <div className="overflow-hidden border border-gray-9">
-        <div className='absolute z-20  w-full h-full overflow-hidden'>
-         <Background height={contentHeight} />
+        <div className='absolute z-5  w-full h-screen overflow-hidden'>
+         <Background />
         </div>
 
         <div className='relative z-50'>
             <div className="mx-auto max-w-9xl py-28 px-4 sm:px-6 lg:px-8">
-                <h1 className="text-3xl font-syncopate font-bold text-center mb-4">ABOUT</h1>
-                <h2 className="text-xl font-syncopate text-center mb-10">KEY FEATURES THAT SET US APART</h2>
+                <h1 className="text-3xl font-syncopate font-bold text-center mb-4">About</h1>
+                <h2 className="text-xl font-syncopate text-center mb-10">Key features that set us apart </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-5 gap-6">
                     {features.map((feature, index) => (
                     <AboutCard 

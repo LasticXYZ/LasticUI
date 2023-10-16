@@ -3,7 +3,6 @@ import BlockspaceMarketplace from "./BlockspaceMarketplace";
 import HowItWorks from "./HowItWorks";
 import About from "./About";
 import DeeperDive from "./DeeperDive";
-import ArticleSection from "./ArticleSection";
 
 const Home = () => (
   <>
@@ -12,7 +11,6 @@ const Home = () => (
     <HowItWorks />
     <About />
     <DeeperDive />
-    <ArticleSection />
   </>
 );
 

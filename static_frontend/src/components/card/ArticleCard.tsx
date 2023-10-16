@@ -1,21 +1,35 @@
 import React from 'react';
+import Border from '../border/Border';
 
 interface ArticleCardProps {
   imageUrl: string;
   title: string;
-  description: string;
+  pubDate: string;
+  link: string;
 }
 
-const ArticleCard: React.FC<ArticleCardProps> = ({ imageUrl, title, description }) => {
-  return (
-    <div className="p-4 max-w-sm mx-auto bg-white rounded-xl shadow-md flex items-center space-x-4">
-      <img className="h-32 w-32 rounded-lg" src={imageUrl} alt={title} />
-      <div>
-        <div className="text-xl font-medium text-black">{title}</div>
-        <p className="text-gray-500">{description}</p>
-      </div>
-    </div>
-  );
-}
+const ArticleCard: React.FC<ArticleCardProps> = ({ imageUrl, title, link, pubDate }) => {
+    return (
+        <Border>
+        <a href={link} className="block text-current no-underline">
+          <div className=''>
+            <img 
+              className="h-64 w-full object-cover rounded-t-lg" 
+              src={imageUrl} 
+              alt={title} 
+            />
+            <div className='p-5'>
+              <h4 className="font-semibold font-syncopate">{title}</h4>
+              <div className='w-10 h-1 my-3 rounded-full bg-pink-3'></div>
+              <p className="text-xs">{pubDate}</p>
+              <div className='py-5'>
+              </div>
+            </div>
+          </div>
+      </a>
+    </Border>
+    );
+  }
+  
 
 export default ArticleCard;
