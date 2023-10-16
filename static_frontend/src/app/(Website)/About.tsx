@@ -3,9 +3,9 @@ import AboutCard from '@/components/card/AboutCard';
 
 const Background: React.FC = () => {
     return (
-      <div className="absolute w-[1567px] h-[1002px] left-[-1px] top-[2674px] bg-gray-300 border border-black">
-        <div className="absolute w-[1567px] h-[1003.88px] left-[-1px] top-[-1.88px] bg-[#FAF7F8] border border-[#B4B4B4]">
-          <div className="absolute w-[1004px] h-[332px] left-[281px] top-[542px] bg-[#FA857A] blur-[350px]"></div>
+      <div className=" w-full h-[1002px] left-[-1px] top-[2674px] bg-gray-300 ">
+        <div className=" w-[1567px] h-[1003.88px] left-[-1px] top-[-1.88px] bg-[#FAF7F8]">
+          <div className=" w-[1004px] h-[332px] left-[281px] top-[542px] bg-[#FA857A] blur-[350px]"></div>
         </div>
       </div>
     );
@@ -46,20 +46,28 @@ export default function Home() {
   ]
 
   return (
-    <div className="relative p-10">
-      <h1 className="text-3xl font-syncopate font-bold text-center mb-4">ABOUT</h1>
-      <h2 className="text-xl font-syncopate text-center mb-10">KEY FEATURES THAT SET US APART</h2>
-      <div className="grid grid-cols-3 gap-6">
-        {features.map((feature, index) => (
-          <AboutCard 
-            key={index}
-            title={feature.title} 
-            description={feature.description} 
-            icon={feature.icon} 
-          />
-        ))}
-      </div>
-      <Background />
+    <div className="overflow-hidden">
+        <div className='absolute z-20  w-full h-full overflow-hidden'>
+            <Background />
+        </div>
+
+        <div className='relative z-50'>
+            <div className="mx-auto max-w-9xl py-28 px-4 sm:px-6 lg:px-8">
+                <h1 className="text-3xl font-syncopate font-bold text-center mb-4">ABOUT</h1>
+                <h2 className="text-xl font-syncopate text-center mb-10">KEY FEATURES THAT SET US APART</h2>
+                <div className="grid grid-cols-3 gap-6">
+                    {features.map((feature, index) => (
+                    <AboutCard 
+                        key={index}
+                        title={feature.title} 
+                        description={feature.description} 
+                        icon={feature.icon} 
+                    />
+                    ))}
+                </div>
+            </div>
+
+        </div>
     </div>
   )
 }
