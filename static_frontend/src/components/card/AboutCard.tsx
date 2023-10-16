@@ -1,4 +1,5 @@
 import React from 'react';
+import Border from '../border/Border';
 
 type FeatureCardProps = {
   title: string;
@@ -8,13 +9,17 @@ type FeatureCardProps = {
 
 const AboutCard: React.FC<FeatureCardProps> = ({ title, description, icon }) => {
   return (
-    <div className="bg-white p-6 rounded-md shadow-md flex flex-col items-center space-y-4">
-      <div className="text-red-500">
-        {icon}
-      </div>
-      <h3 className="font-semibold text-xl">{title}</h3>
-      <p className="text-center">{description}</p>
-    </div>
+    <Border>
+        <div className='p-5'>
+            <div className="text-red-500 px-1 py-5">
+            {icon}
+            </div>
+            <h4 className="font-semibold">{title}</h4>
+            <div className='w-10 h-1 my-3 rounded-full bg-pink-3'></div>
+            <p className="text-xs">{description}</p>
+            <div className='py-5'></div>
+        </div>
+    </Border>
   );
 }
 
