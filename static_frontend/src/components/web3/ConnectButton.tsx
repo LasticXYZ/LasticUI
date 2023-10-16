@@ -110,7 +110,7 @@ return (
 
           onClick={() => setOpenChooseAccount(true)} 
           >
-          <div className=" px-12">
+          <div className=" px-6">
             <AccountName account={activeAccount} />
             <p className="text-xs font-mono font-thin opafcity-75">
               {truncateHash(encodeAddress(activeAccount.address, activeChain?.ss58Prefix || 42), 8)}

@@ -16,7 +16,9 @@
     "@headlessui/react": "^1.7.13",
     "@heroicons/react": "^2.0.16",
     "@material-tailwind/react": "^1.4.2",
+    "axios": "^1.5.1",
     "chart.js": "^4.2.1",
+    "cheerio": "1.0.0-rc.12",
     "eslint": "8.36.0",
     "font-awesome": "^4.7.0",
     "framer-motion": "^10.9.2",
@@ -27,8 +29,6 @@
     "reactstrap": "^9.1.8"
   },
   "devDependencies": {
-    "@types/react": "18.2.25",
-    "autoprefixer": "^10.4.14",
     "@polkadot/api": "^10.9.1",
     "@polkadot/api-contract": "^10.9.1",
     "@polkadot/extension-dapp": "^0.46.5",
@@ -37,10 +37,12 @@
     "@polkadot/types": "^10.9.1",
     "@polkadot/util": "^12.5.1",
     "@polkadot/util-crypto": "^12.5.1",
-    "react-hot-toast": "^2.4.1",
     "@scio-labs/use-inkathon": "^0.0.8",
+    "@types/react": "18.2.25",
+    "autoprefixer": "^10.4.14",
     "eslint-config-next": "^13.5.4",
     "postcss": "^8.4.21",
+    "react-hot-toast": "^2.4.1",
     "tailwindcss": "^3.2.7"
   }
 }

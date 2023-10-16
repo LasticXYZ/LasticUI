@@ -6,8 +6,8 @@ const Background = ({
         children: React.ReactNode
     }) => {
     return (
-    <div className="bg-white  overflow-hidden">
-        <div className="absolute z-0 inset-0 top-0 overflow-hidden">
+    <div className="bg-white min-h-screen overflow-hidden">
+        <div className="fixed z-0 inset-0 h-screen w-full top-0 overflow-hidden">
             <Image 
                 src='/assets/Images/home-banner.png'
                 alt='hero'

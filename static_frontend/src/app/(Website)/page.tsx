@@ -1,10 +1,16 @@
 import Hero from "./Hero";
-import FAQSection from "./FAQSection";
+import BlockspaceMarketplace from "./BlockspaceMarketplace";
+import HowItWorks from "./HowItWorks";
+import About from "./About";
+import DeeperDive from "./DeeperDive";
 
 const Home = () => (
   <>
     <Hero />
-    <FAQSection />
+    <BlockspaceMarketplace />
+    <HowItWorks />
+    <About />
+    <DeeperDive />
   </>
 );
 

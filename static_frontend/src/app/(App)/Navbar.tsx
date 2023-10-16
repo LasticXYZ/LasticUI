@@ -15,7 +15,7 @@ type NavbarProps = {
 
 const Navbar: FC<NavbarProps> = ( {navigation} ) => (
   <>
-      <div className="min-h-full border-b border-gray-9">
+      <div className="min-h-full border-b bg-[#F6FDFF] bg-opacity-40 border-gray-4">
         <Disclosure as="nav" className="">
           {({ open }) => (
             <>
@@ -47,7 +47,7 @@ const Navbar: FC<NavbarProps> = ( {navigation} ) => (
                             className={joinClassNames(
                               item.current
                                 ? ' text-lastic-aqua'
-                                : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                : 'text-gray-3 hover:bg-gray-7 hover:text-white',
                               'rounded-md px-4 py-2 text-l font-medium'
                             )}
                             aria-current={item.current ? 'page' : undefined}

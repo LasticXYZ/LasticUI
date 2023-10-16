@@ -1,17 +1,37 @@
 import { FC } from 'react';
+import Border from '../border/Border';
 
-type AnalyticCard = {
+type AnalyticCardProps = {
     title: string;
     subtitle: string;
+    change: number | string;
+    className?: string;
 }
 
-const AnalyticCard: FC<AnalyticCard> = (
-    { title, subtitle }
-    ) => (
-    <div className="px-3 py-7 flex flex-col items-center justify-center bg-white border border-gray-6 rounded-3xl">
-        <dt className="mb-2 text-2xl font-bold">{ title }</dt>
-        <dd className="text-gray-20 font-light text-sm">{ subtitle }</dd>
-    </div>
+const getColorForChange = (change: number | string) => {
+    if (typeof change === 'number') {
+        return change > 0 ? 'text-green-7' : 'text-red-6';
+    }
+    return 'text-gray-15';
+};
+
+const getArrowForChange = (change: number | string) => {
+    if (typeof change === 'number') {
+        return change > 0 ? '↑' : '↓';
+    }
+    return ''; // Return an empty string if it's not a number
+};
+
+const AnalyticCard: FC<AnalyticCardProps> = ({ title, subtitle, change="No info", className='py-16' }) => (
+    <Border className='w-full flex-grow flex flex-col '>
+        <div className={`${className} px-8 flex flex-col flex-grow items-start justify-center`}>
+            <dt className="text-gray-15 text-sm mb-2"> { subtitle }</dt>
+            <dd className="text-black font-bold text-3xl mb-1">{ title }</dd>
+            <span className={`${getColorForChange(change)} text-md`}>
+                {getArrowForChange(change)} { change }
+            </span>
+        </div>
+    </Border>
 )
 
 export default AnalyticCard;

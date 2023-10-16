@@ -33,7 +33,7 @@ const FAQ = [
 
 const FAQSection = () => {
   return(
-    <div className="text-gray-20 bg-[#c2f0ea] py-20">
+    <div className="text-gray-20 h-screen py-20">
       <div className="mx-auto max-w-5xl">
         
           <h1 className='text-5xl text-center font-syncopate text-gray-20 font-semibold'>

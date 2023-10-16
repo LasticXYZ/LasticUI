@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 const Footer = () => (
 
-<footer className="bg-white text-black">
+<footer className=" text-black">
     <div className="mx-auto w-full max-w-screen-xl px-4 py-10 lg:py-20">
         <div className="md:flex md:justify-between">
           <div className="mb-6 md:mb-0">
