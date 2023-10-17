@@ -24,6 +24,7 @@ import Transfer from './Transfer'
 import Upgrade from './Upgrade'
 import GetConstants from './needed/GetConstants'
 import GetExtrinsics from './needed/GetExtrinsics'
+import QuerySaleInfo from './needed/QuerySaleInfo'
 
 function Main() {
   const { apiState, apiError, keyringState } = useSubstrateState()
@@ -88,6 +89,9 @@ function Main() {
           </Grid.Row>
           <Grid.Row>
             <GetExtrinsics />
+          </Grid.Row>
+          <Grid.Row>
+            <QuerySaleInfo />
           </Grid.Row>
           <Grid.Row>
             <TemplateModule />
