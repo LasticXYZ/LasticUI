@@ -25,7 +25,7 @@ The repository is organized into three primary directories:
 
 Click on the image below to access the full-sized flow chart:
 
-[Click to visit Flow Chart](https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FaFn15lyvti5hqLJBNUDZlU%2FLastic-Flow-Chart-%25231%3Ftype%3Dwhiteboard%26node-id%3D0%253A1%26t%3Dt31UcWVAme6gT0JH-1)
+[Click to visit Flow Chart](https://www.figma.com/file/aFn15lyvti5hqLJBNUDZlU/Lastic-Flow-Chart-%231?type=whiteboard&node-id=0%3A1&t=ZiWNv9gRsH68D5Km-1)
 
 ![FLOW CHART](https://github.com/LasticXYZ/LasticUI/assets/30662672/a08dd7b3-bc14-4d51-9689-75bac7895b26)
 ### Figma UI:
