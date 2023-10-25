@@ -31,6 +31,18 @@ You can also build the app in production mode,
 yarn build
 ```
 
+## Deliverables
+
+Flow chart:
+
+[![FLOW CHART](https://github.com/LasticXYZ/LasticUI/assets/30662672/a08dd7b3-bc14-4d51-9689-75bac7895b26)](https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FaFn15lyvti5hqLJBNUDZlU%2FLastic-Flow-Chart-%25231%3Ftype%3Dwhiteboard%26node-id%3D0%253A1%26t%3Dt31UcWVAme6gT0JH-1)
+
+Figma UI:
+_After Launching click Options > Fit Width_
+
+[![FIGMA UI](https://github.com/LasticXYZ/LasticUI/assets/30662672/442e1f73-8bd9-48a2-8139-1057ec2dddd1)](https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fproto%2FYzHexLzhb9Q4FPkM19cl1y%2FLastic%3Fpage-id%3D0%253A1%26type%3Ddesign%26node-id%3D203-897%26viewport%3D1012%252C165%252C0.06%26t%3DFBfVL9tIBH4OQJ1A-1%26scaling%3Dmin-zoom%26starting-point-node-id%3D203%253A897%26mode%3Ddesign)
+
+
 ---
 
 This project is built upon this template: `https://github.com/substrate-developer-hub/substrate-front-end-template.git`
