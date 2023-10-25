@@ -195,7 +195,6 @@ function Main(props) {
             onChange={onInterxTypeChange}
           />
         </Form.Group>
-        Broker pallet
         <Form.Field>
           <Dropdown
             placeholder="Pallets / RPC"
