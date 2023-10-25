@@ -31,7 +31,16 @@
     "gql-query-builder": "^3.8.0",
     "ofetch": "^1.3.3",
     "scule": "^1.0.0",
-    "ufo": "^1.3.0"
+    "ufo": "^1.3.0",
+    "@polkadot/api": "^10.6.1",
+    "@polkadot/extension-dapp": "^0.46.2",
+    "@polkadot/keyring": "^12.1.2",
+    "@polkadot/networks": "^12.1.2",
+    "@polkadot/types": "^10.6.1",
+    "@polkadot/ui-keyring": "^3.3.1",
+    "@polkadot/ui-settings": "^3.3.1",
+    "@polkadot/util": "^12.1.2",
+    "@polkadot/util-crypto": "^12.1.2"
   },
   "devDependencies": {
     "c8": "latest",
