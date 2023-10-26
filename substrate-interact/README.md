@@ -1,155 +1,77 @@
-# Lastic UI
-
-First spin up substrate, because broker pallet you have to make the substrate run this way:
-
-```sh
-git clone git@github.com:paritytech/polkadot-sdk.git
-cd substrate
-cargo run -p node-cli -r -- --dev
-```
-
-To run the frontend:
-```sh
-yarn install
-yarn start
-```
-
-Go to `http://localhost:8000/substrate-front-end-template`.
-
-
-### Usage
-
-You can start the template in development mode to connect to a locally running node
-
-```bash
-yarn start
-```
-
-You can also build the app in production mode,
-
-```bash
-yarn build
-```
-
-## Deliverables
-
-Flow chart:
-
-[![FLOW CHART](https://github.com/LasticXYZ/LasticUI/assets/30662672/a08dd7b3-bc14-4d51-9689-75bac7895b26)](https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FaFn15lyvti5hqLJBNUDZlU%2FLastic-Flow-Chart-%25231%3Ftype%3Dwhiteboard%26node-id%3D0%253A1%26t%3Dt31UcWVAme6gT0JH-1)
-
-Figma UI:
-_After Launching click Options > Fit Width_
-
-[![FIGMA UI](https://github.com/LasticXYZ/LasticUI/assets/30662672/442e1f73-8bd9-48a2-8139-1057ec2dddd1)](https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fproto%2FYzHexLzhb9Q4FPkM19cl1y%2FLastic%3Fpage-id%3D0%253A1%26type%3Ddesign%26node-id%3D203-897%26viewport%3D1012%252C165%252C0.06%26t%3DFBfVL9tIBH4OQJ1A-1%26scaling%3Dmin-zoom%26starting-point-node-id%3D203%253A897%26mode%3Ddesign)
-
+Here's an improved version of your `README.md`:
 
 ---
 
-This project is built upon this template: `https://github.com/substrate-developer-hub/substrate-front-end-template.git`
+# Lastic Substrate Interact
 
+Lastic Substrate Interact is a user interface designed to work with the Substrate framework. This directory will eventually be merged together with `../static_frontend`. This guide will help you set up and run the project.
 
-### Try the Hosted Version
+## Prerequisites
 
-Connecting to your local Substrate node (Chrome and Firefox only):
+Before you begin, ensure you have the Substrate node running. Follow the steps below to spin up a local Substrate node:
 
-https://substrate-developer-hub.github.io/substrate-front-end-template?rpc=ws://localhost:9944
+```sh
+# Clone the Polkadot SDK repository
+git clone git@github.com:paritytech/polkadot-sdk.git
 
-Connecting to Polkadot:
+# Navigate to the substrate directory
+cd substrate
 
-https://substrate-developer-hub.github.io/substrate-front-end-template?rpc=wss://rpc.polkadot.io
+# Run the node in development mode
+cargo run -p node-cli -r -- --dev
+```
 
+## Running the Frontend
+
+To set up and run the frontend, execute the following commands:
+
+```sh
+# Install the required dependencies
+yarn install
+
+# Start the frontend server
+yarn start
+```
+
+Once the server is running, you can access the frontend at:  
+[http://localhost:8000/substrate-front-end-template](http://localhost:8000/substrate-front-end-template)
+
+## Coretime Chain Setup
+
+1. Launch the Polkadot.js application.
+2. Navigate to **Development > Local node**.
+3. Go to **Developer > Extrinsics**.
+4. Decode and submit the following hex-encoded calls:
+
+   - Sudo configure: `0x1600460005000000140000001e000000640000000046c323013200002d31010a000000`
+   - Start sale: `0x16004604e80300000000000000000000000000001400`
+   - Purchase: `0x4605a0860100000000000000000000000000`
+
+## Template Reference
+
+This project is based on the following template:  
+[substrate-developer-hub/substrate-front-end-template](https://github.com/substrate-developer-hub/substrate-front-end-template.git)
 
 ## Configuration
 
-The template's configuration is stored in the `src/config` directory, with
-`common.json` being loaded first, then the environment-specific JSON file,
-and finally environment variables, with precedence.
+Configuration files for the template are located in the `src/config` directory. The configuration loading order is as follows:
 
-- `development.json` affects the development environment
-- `test.json` affects the test environment, triggered in `yarn test` command.
-- `production.json` affects the production environment, triggered with the `yarn build` command.
+1. `common.json`
+2. Environment-specific JSON file (e.g., `development.json`, `test.json`, `production.json`)
+3. Environment variables (with precedence)
 
-To deploy your own front-end to production, you need to configure:
+### Environment Configuration
 
-- `PROVIDER_SOCKET` in `src/config/production.json` pointing to your own
-  deployed node.
+- `development.json`: Affects the development environment.
+- `test.json`: Affects the test environment (used with `yarn test` command).
+- `production.json`: Affects the production environment (used with `yarn build` command).
 
-Some environment variables are read and integrated in the template `config` object,
-including:
+For deploying your frontend to production, ensure you set the `PROVIDER_SOCKET` in `src/config/production.json` to point to your deployed node.
 
-- `REACT_APP_PROVIDER_SOCKET` overriding `config[PROVIDER_SOCKET]`
+Some environment variables are integrated into the template's `config` object. For instance, `REACT_APP_PROVIDER_SOCKET` can override `config[PROVIDER_SOCKET]`.
 
-More on [React environment variables](https://create-react-app.dev/docs/adding-custom-environment-variables).
+For more details on React environment variables, refer to the [official documentation](https://create-react-app.dev/docs/adding-custom-environment-variables).
 
+---
 
-
-### How to Specify the WebSocket to Connect to
-
-There are two ways to specify the websocket to connect to:
-
-- With `PROVIDER_SOCKET` in `{common, development, production}.json`.
-- With `rpc=<ws or wss connection>` query parameter after the URL. This overrides the above setting.
-
-## Reusable Components
-
-### useSubstrate Custom Hook
-
-The custom hook `useSubstrate()` provides access to the Polkadot js API and thus the
-keyring and the blockchain itself. Specifically it exposes this API.
-
-```js
-{
-  setCurrentAccount: func(acct) {...}
-  state: {
-    socket,
-    keyring,
-    keyringState,
-    api,
-    apiState,
-    currentAccount
-  }
-}
-```
-
-- `socket` - The remote provider socket it is connecting to.
-- `keyring` - A keyring of accounts available to the user.
-- `keyringState` - One of `"READY"` or `"ERROR"` states. `keyring` is valid
-  only when `keyringState === "READY"`.
-- `api` - The remote api to the connected node.
-- `apiState` - One of `"CONNECTING"`, `"READY"`, or `"ERROR"` states. `api` is valid
-  only when `apiState === "READY"`.
-- `currentAccount` - The current selected account pair in the application context.
-- `setCurrentAccount` - Function to update the `currentAccount` value in the application context.
-
-If you are only interested in reading the `state`, there is a shorthand `useSubstrateState()` just to retrieve the state.
-
-### TxButton Component
-
-The [TxButton](./src/substrate-lib/components/TxButton.js) handles basic [query](https://polkadot.js.org/docs/api/start/api.query) and [transaction](https://polkadot.js.org/docs/api/start/api.tx) requests to the connected node.
-You can reuse this component for a wide variety of queries and transactions. See [src/Transfer.js](./src/Transfer.js) for a transaction example and [src/Balances.js](./src/Balances.js) for a query example.
-
-### Account Selector
-
-The [Account Selector](./src/AccountSelector.js) provides the user with a unified way to
-select their account from a keyring. If the Balances module is installed in the runtime,
-it also displays the user's token balance. It is included in the template already.
-
-## Miscellaneous
-
-- Polkadot-js API and related crypto libraries depend on [`BigInt`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt) that is only supported by modern browsers. To ensure that react-scripts properly transpile your webapp code, update the `package.json` file:
-
-  ```json
-  {
-    "browserslist": {
-      "production": [
-        ">0.2%",
-        "not ie <= 99",
-        "not android <= 4.4.4",
-        "not dead",
-        "not op_mini all"
-      ]
-    }
-  }
-  ```
-
-  Refer to [this doc page](https://github.com/vacp2p/docs.wakuconnect.dev/blob/develop/content/docs/guides/07_reactjs_relay.md).
+I've restructured the content for clarity, added some explanatory text, and formatted the document for better readability.
