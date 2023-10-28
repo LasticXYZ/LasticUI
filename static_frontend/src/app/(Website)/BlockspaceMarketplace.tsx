@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 
 const BlockspaceMarketplace = () => {
@@ -10,7 +11,13 @@ const BlockspaceMarketplace = () => {
 
             <div className="grid grid-cols-2 items-center justify-between p-8">
                 <div className="flex-2 pr-8">
-                    <img src="/assets/Images/bubble-gum.png" alt="Abstract Art" className="w-full" />
+                    <Image 
+                    src="/assets/Images/bubble-gum.png" 
+                    alt="Abstract Art" 
+                    className="w-full" 
+                    width={400}
+                    height={400}
+                    />
                 </div>
 
                 <div className="flex-3 pl-8">
