@@ -2,32 +2,28 @@ import AccordionTile from '@/components/accordion/AccordionTile';
 
 const FAQ = [
   {
-      question: "What is Lastic?",
-      answer: "Lastic is the world's first true blockspace marketplace. It revolutionizes the way blockspace can be exchanged with the flexibility required for applications across all web3 ecosystems. Using Polkadot’s coretime model as its foundation, it ensures applications can access the blockspace they need, and blockspace providers can tailor its packaging according to market demands."
+      question: "What is blockspace?",
+      answer: "Blockspace is the product of blockchains. It is the space available within a block in a blockchain where transactions and other data can be processed, verified, and stored. Each block in a blockchain has a maximum size or capacity, and the transactions that are to be included in the block must fit within this space. The transactions within a block must also meet the requirements of the format that the blockchain will allow. The concept of blockspace is crucial in understanding the value proposition of Coretime on Polkadot, as it forms the basis for how computational resources are allocated and priced within the network. Through the purchasing and trading of blockspace via Coretime, Polkadot aims to create a more dynamic and flexible system for developers and projects to access and utilize the network's resources."
   },
   {
-      question: "How does Lastic differ from current blockspace marketplaces?",
-      answer: "Current blockspace marketplaces often refer to tools that MEV actors use to reorder transactions within a block for specific virtual machines or state-transition-functions. Lastic, on the other hand, offers a marketplace where buyers can manipulate the blockspace they've purchased in any way they desire, such as reordering transactions, scaling up their processing, deploying smart contracts, and more."
+      question: "What is a blockspace marketplace?",
+      answer: "A Blockspace marketplace refers to a platform that facilitates the buying, selling, or allocation of blockchain execution and storage space, known as blockspace. There are two types of marketplaces that allow for purchasing of blockspace, namely primary and secondary marketplaces. In the case of Lastic, the primary marketplace is the purchasing of coretime provided by the network directly. Whereas, the secondary marketplace is where blockspace can be divided and re-sold to participants."
   },
   {
-      question: "What challenges does Lastic address?",
-      answer: "Lastic addresses challenges like the absence of a dedicated marketplace for buying and selling coretime in flexible chunks on Polkadot, the difficulty in obtaining cores on-demand, and the inability to sell excess blockspace, create partnerships, or acquire fine-grained coretime."
+      question: "What is Coretime on Polkadot?",
+      answer: "In the context of Polkadot and its Coretime feature, blockspace takes on a more specialized meaning. Coretime allows for the purchasing of blocks in a span of time, which essentially is the allocation of blockspace for validation and consensus processes on the Polkadot Relay Chain. When a user or project purchases Coretime, they are essentially buying the right to use a portion of the blockspace within a given block or series of blocks on the Polkadot blockchain. This is akin to reserving computational resources and space on the blockchain for a specified amount of time."
   },
   {
-      question: "What features does Lastic offer?",
-      answer: "Lastic provides features like market-based scaling, support for automated governance-controlled parameters, customizable coretime chunks, variable timeslices, and a wide range of payment options inspired by energy markets, including real-time spot market, day-ahead market, forward contracts, and capacity markets."
+      question: "What can the blockspace be used for?",
+      answer: "Blockspace on Polkadot serves as a crucial resource for executing and finalizing operations, such as transactions, within a block​. By providing expanded blockspace, Polkadot ensures an uninterrupted flow of bandwidth even during heavy congestion periods, which is pivotal for the network's cost-effectiveness. The blockspace ecosystem on Polkadot has evolved post the rollout of parachains, fostering a conducive environment for Web3 development with a spectrum of blockspace offerings that are secure, composable, flexible, efficient, and cost-effective. This ecosystem propels boundless innovation by ensuring interoperability among diverse blockchains, thereby offering economic scalability. Future upgrades of Polkadot will alter the way blockspace resources are allocated, removing the requirement of cores to be utilized only by parachains. Future implementations on the protocol roadmap include the ability for smart contracts, synchronous processes, and a vast range of computations to utilize the blockspace Polkadot provides and Lastic will help developers harness the power of flexible blockspace in this way."
   },
   {
-      question: "What architecture is Lastic planning to use?",
-      answer: "Lastic is considering three potential architectures: as a Parachain, as a smart contract on a Parachain similar to Uniswap, or as a smart contract on Coretime Chain. Each has its own tradeoffs. A user interface showcasing the current state of coretime is also deemed necessary."
+      question: "Who will be able to buy and sell blockspace on Lastic?",
+      answer: "Lastic is building a user-friendly interface that serves builders, tinkerers, and traders alike. With the help of the Polkadot community, we plan on making blockspace buying, selling and splitting as easy as trading tokens on a decentralized exchange."
   },
   {
-      question: "Will Lastic introduce its own token?",
+      question: "When will Lastic launch?",
       answer: "The Lastic team is currently exploring this option. However, irrespective of the decision, a fee-per-transaction revenue structure is anticipated."
-  },
-  {
-      question: "What is Lastic's future outlook?",
-      answer: "Lastic aims to be the leading blockspace marketplace across the entire web3 ecosystem, as Polkadot is strategically placed to validate a variety of VM and chain types including ZK Rollups, Optimistic Rollups, and more."
   }
 ]
 
