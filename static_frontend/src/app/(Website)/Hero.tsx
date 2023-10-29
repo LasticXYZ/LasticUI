@@ -31,7 +31,7 @@ const Hero = () => {
             target='_blank'
             rel='noreferrer'
             legacyBehavior>
-            <div className='rounded-full border border-gray-9 shadow-gray-900 p-4 cursor-pointer hover:scale-110 ease-in duration-300 mr-4'>
+            <div className='rounded-full border border-gray-9 shadow-gray-900 p-4 cursor-pointer hover:scale-110 ease-in duration-300'>
               <FaGithub />
             </div>
           </Link>
