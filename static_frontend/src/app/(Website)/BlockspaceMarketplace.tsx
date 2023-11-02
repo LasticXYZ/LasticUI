@@ -9,33 +9,33 @@ const BlockspaceMarketplace = () => {
             A Blockspace Marketplace?
             </h2>
 
-            <div className="grid grid-cols-2 items-center justify-between p-8">
+            <div className="grid grid-cols-2 items-center justify-between py-20 ">
                 <div className="flex-2 pr-8">
                     <Image 
-                    src="/assets/Images/bubble-gum.png" 
+                    src="/assets/Images/deeper_dive.png" 
                     alt="Abstract Art" 
-                    className="w-full" 
+                    className="w-full rounded-2xl boreder border-gray-9" 
                     width={400}
                     height={400}
                     />
                 </div>
 
-                <div className="flex-3 pl-8">
-                    <p className="my-4 text-bold text-gray-600">
+                <div className="flex-3 pl-16">
+                    <p className="my-4 font-bold text-gray-600">
                         Lastic is a user-friendly marketplace for buying and selling blockspace tailored to your needs, built on Polkadot Coretime.
                     </p>
 
                     <ul className='py-2 px-4'>
-                        <li className="mb-2">
-                        <strong className="font-semibold">1. Buy or Sell Blockspace:</strong> 
+                        <li className="mb-2 py-3">
+                        <strong className="font-semibold">1. Buy or Sell Blockspace: </strong> 
                             One place for your blockspace.
                         </li>
-                        <li className="mb-2">
+                        <li className="mb-2 py-3">
                             <strong className="font-semibold">2. Use your blockspace: </strong>
                             Connect your Polkadot parachain, Wasm smart contract, ZK Prover, or any other computation.
                         </li>
-                        <li className="mb-2">
-                            <strong className="font-semibold">3. Automation and renewals:</strong> 
+                        <li className="mb-2 py-3">
+                            <strong className="font-semibold">3. Automation and renewals: </strong> 
                             Allow parachains to automate their coretime allocation based on current market conditions.
                         </li>
                     </ul>
