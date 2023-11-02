@@ -6,6 +6,7 @@ import Footer from './Footer'
 import Background from './Background'
 
 const navigation_app = [
+    { name: 'Docs', href: 'https://docs.lastic.xyz/', current: false },
     { name: 'Articles', href: '/articles', current: false },
     { name: 'FAQ', href: '/faq', current: false },
   ]

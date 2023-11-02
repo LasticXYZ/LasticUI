@@ -21,22 +21,21 @@ const BlockspaceMarketplace = () => {
                 </div>
 
                 <div className="flex-3 pl-8">
-                    <p className="my-4 text-gray-600">
-                        At its core, Lastic provides a seamless marketplace for buying and
-                        selling coretime in flexible chunks tailored to your needs.
+                    <p className="my-4 text-bold text-gray-600">
+                        Lastic is a user-friendly marketplace for buying and selling blockspace tailored to your needs, built on Polkadot Coretime.
                     </p>
 
                     <ul className='py-2 px-4'>
                         <li className="mb-2">
-                        1. <strong className="font-semibold">Buy or Sell Your Coretime:</strong> 
-                            Transparent bidding and asking system for coretime trading.
+                        <strong className="font-semibold">1. Buy or Sell Blockspace:</strong> 
+                            One place for your blockspace.
                         </li>
                         <li className="mb-2">
-                            <strong className="font-semibold">2. Elastic Scaling for Parachains:</strong>
-                            Access multiple cores as per your requirement without explicit requests.
+                            <strong className="font-semibold">2. Use your blockspace: </strong>
+                            Connect your Polkadot parachain, Wasm smart contract, ZK Prover, or any other computation.
                         </li>
                         <li className="mb-2">
-                            <strong className="font-semibold">3. Automated Governance-Controlled Parameters:</strong> 
+                            <strong className="font-semibold">3. Automation and renewals:</strong> 
                             Allow parachains to automate their coretime allocation based on current market conditions.
                         </li>
                     </ul>

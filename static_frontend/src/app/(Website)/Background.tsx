@@ -11,7 +11,7 @@ const Background = ({
             <Image 
                 src='/assets/Images/home-banner.png'
                 alt='hero'
-                layout="fill"
+                fill
             />
         </div>
 
