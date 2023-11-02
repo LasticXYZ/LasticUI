@@ -25,7 +25,7 @@ const DeeperDive: React.FC = () => {
                     alt="Deeper Dive Image"
                     width={500}
                     height={500}
-                    className="rounded-lg shadow-md max-w-lg"
+                    className="rounded-2xl border border-gray-9"
                 />
                 
                 {/* Info */}
