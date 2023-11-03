@@ -47,7 +47,7 @@ export default function About() {
   ]
 
   return (
-    <div className="overflow-hidden border border-gray-9">
+    <div className="overflow-hidden border-y border-gray-9">
         <div className='absolute z-5  w-full h-screen overflow-hidden'>
          <Background />
         </div>

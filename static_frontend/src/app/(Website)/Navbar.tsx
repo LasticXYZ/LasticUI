@@ -18,7 +18,7 @@ const Navbar: FC<NavbarProps> = ( {navigation} ) => (
         <Disclosure as="nav" className="">
           {({ open }) => (
             <>
-              <div className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8">
+              <div className="mx-auto 2xl:px-40 px-4 sm:px-6 lg:px-8">
                 <div className="flex mt-5 items-center justify-between">
                   <div className="flex items-center">
                     <div className="flex-shrink-0 cursor-pointer">

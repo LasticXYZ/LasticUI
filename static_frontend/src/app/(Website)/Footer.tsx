@@ -5,7 +5,7 @@ import { FaMedium, FaTelegram } from 'react-icons/fa';
 const Footer = () => (
 
 <footer className=" text-black">
-    <div className="mx-auto w-full max-w-screen-xl px-4 py-10 lg:py-20">
+    <div className="mx-auto w-full px-5 md:px-20 xl:px-40 py-10 lg:py-20">
         <div className="md:flex md:justify-between">
           <div className="mb-6 md:mb-0">
               <Link href="/" className="flex items-center" legacyBehavior>

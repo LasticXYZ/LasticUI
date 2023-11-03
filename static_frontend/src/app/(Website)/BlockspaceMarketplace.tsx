@@ -5,7 +5,7 @@ const BlockspaceMarketplace = () => {
     return (
         <div className="bg-pink-1 pt-10 border-y bg-opacity-70 border-gray-9">
             <section className="mx-auto max-w-9xl py-12 px-4 sm:px-6 lg:px-8">
-                <h2 className="font-syncopate text-center font-bold pt-2 sm:pt-14 px-5 text-xl sm:text-xl md:text-2xl">
+                <h2 className="font-syncopate text-center font-bold pt-2 sm:pt-8 px-5 text-xl sm:text-xl md:text-2xl">
                     A Blockspace Marketplace?
                 </h2>
 

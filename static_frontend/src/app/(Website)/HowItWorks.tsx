@@ -8,7 +8,7 @@ const HowItWorks = () => {
                 <h2 className="text-lg md:text-3xl font-semibold mb-8 font-syncopate text-center">HOW DOES IT WORK?</h2>
                 
                 {/* Image for large screens */}
-                <div className="hidden lg:block">
+                <div className="hidden md:block">
                     <Image 
                         src="/assets/Images/how-it-works.png"
                         alt="How it works"
@@ -19,7 +19,7 @@ const HowItWorks = () => {
                 </div>
 
                 {/* Image for small screens */}
-                <div className="lg:hidden">
+                <div className="md:hidden">
                     <Image 
                         src="/assets/Images/how-it-works2.png"
                         alt="How it works"
