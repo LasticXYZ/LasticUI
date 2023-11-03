@@ -32,7 +32,7 @@ const DeeperDive: React.FC = () => {
                 <div className=' max-w-xl p-10'>
                     <div className="text-lg text-left space-y-4 py-5">
                     <p><span className="font-bold">Innovation at the Heart of Blockspace Transactions. </span>
-                    Blockspace is more than just storage; it's an essential resource. Other so-called blockspace marketplaces only allow for the re-ordering of transactions or speculation of staking yields. Lastic can do much, much, more.</p>
+                    Blockspace is more than just storage; it&apos;s an essential resource. Other so-called blockspace marketplaces only allow for the re-ordering of transactions or speculation of staking yields. Lastic can do much, much, more.</p>
                     </div>
 
                     {/* List */}

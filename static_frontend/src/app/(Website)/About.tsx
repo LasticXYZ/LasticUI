@@ -62,7 +62,6 @@ export default function About() {
                         key={index}
                         title={feature.title} 
                         description={feature.description} 
-                        icon={feature.icon} 
                     />
                     ))}
                 </div>
