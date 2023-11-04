@@ -18,21 +18,21 @@ const PoolsSection = () => {
   const TableData = [
     {
       href: "/",
-      data: ["1.", "200", "Asset Hub", "0x302...1231", <TagComp className="mx-4 my-2" title="2.12"/>, " 0.21%", "Instantanious",  "/"],
+      data: ["1.", "200", "Asset Hub", "0x302...1231", <TagComp key="tag-1" className="mx-4 my-2" title="2.12"/>, " 0.21%", "Instantanious", "/"],
     },
     {
       href: "/",
-      data: ["1.", "200", "Asset Hub", "0x302...1231", <TagComp className="mx-4 my-2" title="2.12"/>, " 0.21%", "Instantanious",  "/"],
+      data: ["2.", "201", "Asset Hub", "0x303...1232", <TagComp key="tag-2" className="mx-4 my-2" title="3.45"/>, " 0.33%", "Instantanious", "/"],
     },
     {
       href: "/",
-      data: ["1.", "200", "Asset Hub", "0x302...1231", <TagComp className="mx-4 my-2" title="2.12"/>, " 0.21%", "Instantanious",  "/"],
+      data: ["3.", "202", "Asset Hub", "0x304...1233", <TagComp key="tag-3" className="mx-4 my-2" title="5.67"/>, " 0.45%", "Instantanious", "/"],
     },
     {
       href: "/",
-      data: ["1.", "200", "Asset Hub", "0x302...1231", <TagComp className="mx-4 my-2" title="2.12"/>, " 0.21%", "Instantanious",  "/"],
+      data: ["4.", "203", "Asset Hub", "0x305...1234", <TagComp key="tag-4" className="mx-4 my-2" title="7.89"/>, " 0.78%", "Instantanious", "/"],
     }
-  ]
+  ]  
 
   return (
     <>

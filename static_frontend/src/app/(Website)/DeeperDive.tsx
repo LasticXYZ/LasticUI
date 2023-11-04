@@ -20,12 +20,12 @@ const DeeperDive: React.FC = () => {
                 <div className='grid grid-cols-1  md:grid-cols-2  gap-4  sm:flex-row w-full sm:items-center'>
 
                     {/* Image */}
-                    <div className="relative h-72 md:h-96 xl:h-[500px] w-full">
+                    <div className="relative h-72 md:h-96 xl:h-[600px] w-full">
                         <Image 
                             src="/assets/Images/coretime-vis.png"
                             alt="Deeper Dive Image"
                             className="rounded-2xl border border-gray-9 object-cover" 
-                            layout='fill'
+                            fill
                         />
                     </div>
 
@@ -45,7 +45,7 @@ const DeeperDive: React.FC = () => {
 
                         {/* Button */}
                         <div className='px-4 mx-auto sm:px-20 py-5'>
-                            <PrimaryButton title="View Docs" location="https://docs.lastic.xyz/" /> 
+                            <PrimaryButton title="Read the Docs" location="https://docs.lastic.xyz/" /> 
                         </div>
                     </div>
                 </div>

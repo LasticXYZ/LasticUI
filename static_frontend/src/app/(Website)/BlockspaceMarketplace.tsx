@@ -16,12 +16,12 @@ const BlockspaceMarketplace = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 items-center justify-between gap-4 py-12">
                     <div className="md:flex-1">
-                        <div className="relative h-72 md:h-96 xl:h-[500px] w-full">
+                        <div className="relative h-9 md:h-96 xl:h-[500px] w-full">
                             <Image 
                                 src="/assets/Images/deeper_dive.png" 
                                 alt="Abstract Art" 
                                 className="rounded-2xl border border-gray-9 object-cover" 
-                                layout="fill"
+                                fill
                             />
                         </div>
                     </div>

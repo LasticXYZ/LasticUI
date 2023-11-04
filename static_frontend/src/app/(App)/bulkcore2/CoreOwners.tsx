@@ -1,6 +1,3 @@
-import PrimaryButton from '@/components/button/SecondaryButton';
-import MiningCard from '@/components/card/MiningCard';
-import TableCardViewIcon from '@/components/icon/TableCardViewIcon';
 import GeneralTable from '@/components/table/GeneralTable';
 import TagComp from '@/components/tags/TagComp';
 import Link from 'next/link';
@@ -20,19 +17,19 @@ const PoolsSection = () => {
   const TableData = [
     {
       href: "/",
-      data: ["1.", "200", "Asset Hub", "0x302...1231", <TagComp className="mx-4 my-2" title="2.12"/>, " 0.21%"],
+      data: ["1.", "200", "Asset Hub", "0x302...1231", <TagComp key="prop1" className="mx-4 my-2" title="2.12"/>, " 0.21%"],
     },
     {
       href: "/",
-      data: ["1.", "200", "Asset Hub", "0x302...1231", <TagComp className="mx-4 my-2" title="2.12"/>, " 0.21%"],
+      data: ["1.", "200", "Asset Hub", "0x302...1231", <TagComp key="prop2" className="mx-4 my-2" title="2.12"/>, " 0.21%"],
     },
     {
       href: "/",
-      data: ["1.", "200", "Asset Hub", "0x302...1231", <TagComp className="mx-4 my-2" title="2.12"/>, " 0.21%"],
+      data: ["1.", "200", "Asset Hub", "0x302...1231", <TagComp key="prop3" className="mx-4 my-2" title="2.12"/>, " 0.21%"],
     },
     {
       href: "/",
-      data: ["1.", "200", "Asset Hub", "0x302...1231", <TagComp className="mx-4 my-2" title="2.12"/>, " 0.21%"],
+      data: ["1.", "200", "Asset Hub", "0x302...1231", <TagComp key="prop4" className="mx-4 my-2" title="2.12"/>, " 0.21%"],
     }
   ]
 

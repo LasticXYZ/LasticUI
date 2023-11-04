@@ -11,9 +11,9 @@ const Hero = () => {
       <div className='grid grid-cols-1 lg:grid-cols-2 xl:justify-between items-center w-full px-4 md:px-0'>
 
         {/* Text Section */}
-        <div className='2xl:pl-48 w-full md:max-w-2xl text-center lg:text-left md:px-5 lg:max-w-4xl pt-15 pb-4 md:py-20 mx-auto p-2 relative z-10'>
+        <div className='lg:pl-20 2xl:pl-48 w-full text-center lg:text-left md:px-5 max-w-4xl pt-15 pb-4 md:py-20 mx-auto p-2 relative z-10'>
           <div>
-            <h2 className='leading-normal lg:leading-snug pt-20 py-4 text-gray-17 text-2xl sm:text-4xl lg:text-5xl font-syncopate font-bold'>
+            <h2 className='leading-normal lg:leading-snug pt-20 py-4 text-gray-17 text-3xl md:text-4xl lg:text-5xl font-syncopate font-bold'>
               the world&apos;s first 
               <span className='text-transparent bg-clip-text bg-gradient-to-r from-lastic-spectrum-from via-lastic-spectrum-via to-lastic-spectrum-to'> blockspace </span>
               marketplace.
@@ -23,7 +23,7 @@ const Hero = () => {
             </p>
             <div className='pt-8 xl:pt-10 flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-2'>
                 <PrimaryButton title='Launch' location='/instacore'/>
-                <SecondaryButton title='See Whitepaper' location='/instacore'/>
+                <SecondaryButton title='Read the Docs' location='/instacore'/>
             </div>
           </div>
           {/* Social Icons */}
