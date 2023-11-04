@@ -11,7 +11,7 @@ const Hero = () => {
       <div className='grid grid-cols-1 lg:grid-cols-2 xl:justify-between items-center w-full px-4 md:px-0'>
 
         {/* Text Section */}
-        <div className='2xl:pl-48 w-full md:max-w-2xl text-center lg:text-left md:px-5 lg:max-w-2xl pt-15 pb-4 md:py-20 mx-auto p-2 relative z-10'>
+        <div className='2xl:pl-48 w-full md:max-w-2xl text-center lg:text-left md:px-5 lg:max-w-4xl pt-15 pb-4 md:py-20 mx-auto p-2 relative z-10'>
           <div>
             <h2 className='leading-normal lg:leading-snug pt-20 py-4 text-gray-17 text-2xl sm:text-4xl lg:text-5xl font-syncopate font-bold'>
               the world&apos;s first 
@@ -26,6 +26,7 @@ const Hero = () => {
                 <SecondaryButton title='See Whitepaper' location='/instacore'/>
             </div>
           </div>
+          {/* Social Icons */}
           <div className='flex items-center justify-center lg:justify-start pt-8 xl:pt-10 space-x-4'>
             <Link
               href='https://github.com/LasticXYZ/Lastic'

@@ -5,7 +5,7 @@ const HowItWorks = () => {
     return (
         <div className="bg-white">
             <section className="mx-auto max-w-9xl px-4 py-28 sm:px-6 lg:px-8">
-                <h2 className="text-lg md:text-3xl font-semibold mb-8 font-syncopate text-center">HOW DOES IT WORK?</h2>
+                <h2 className="text-2xl md:text-3xl font-semibold mb-8 font-syncopate text-center">HOW DOES IT WORK?</h2>
                 
                 {/* Image for large screens */}
                 <div className="hidden md:block">
