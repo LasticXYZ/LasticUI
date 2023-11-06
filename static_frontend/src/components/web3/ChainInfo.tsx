@@ -38,7 +38,7 @@ export const ChainInfo: FC = () => {
           Connecting to {activeChain?.name} ({activeChain?.rpcUrls?.[0]})
         </div>
       </div>
-    )
+    ) 
 
   return (
     <>
