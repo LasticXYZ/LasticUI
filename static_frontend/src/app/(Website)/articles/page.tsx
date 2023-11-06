@@ -7,6 +7,7 @@ interface Article {
     title: string;
     thumbnail: string;
     pubDate: string;
+    author: string;
     link: string;
   }
 
@@ -30,6 +31,7 @@ export default function Home() {
   }, []);
 
   return (
+    <div className='max-w-9xl mx-auto'>
     <div className="bg-pink-100 p-12 pt-32">
       <h2 className="text-4xl font-bold mb-8 font-syncopate text-center">ARTICLES</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -39,10 +41,12 @@ export default function Home() {
             imageUrl={article.thumbnail}  // Adjust these properties based on the structure of the RSS feed data
             title={article.title}
             pubDate={article.pubDate}
+            author={article.author}
             link={article.link}
           />
         ))}
       </div>
+    </div>
     </div>
   );
 }
