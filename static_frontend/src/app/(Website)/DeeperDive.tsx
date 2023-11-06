@@ -42,11 +42,6 @@ const DeeperDive: React.FC = () => {
                             <li className='py-3'><span className='font-bold'>Tradable blockspace: </span> With coretime on Polkadot, access to blockspace is represented as NFTs, making it easy to trade.</li>
                             <li className='py-3'><span className='font-bold'>No more auctions: </span> Coretime sales on Polkadot replace the costly and unpredictable slot auctions</li>
                         </ul>
-
-                        {/* Button */}
-                        <div className='px-4 mx-auto sm:px-20 py-5'>
-                            <SecondaryButton title="Read the Docs" location="https://docs.lastic.xyz/" /> 
-                        </div>
                     </div>
                 </div>
             </section>

@@ -56,7 +56,7 @@ const Navbar: FC<NavbarProps> = ( {navigation} ) => {
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-4 flex items-center md:ml-6">
-                      <PrimaryButton title="Launch" location='/'/>
+                      <PrimaryButton title="Coming Soon" location='/'/>
                     </div>
                   </div>
                   <div className="-mr-2 flex md:hidden">
@@ -86,7 +86,7 @@ const Navbar: FC<NavbarProps> = ( {navigation} ) => {
                   ))}
                 </div>
                 <div className="flex justify-center space-y-1 px-2 md:hidden">
-                  <PrimaryButton title='Launch' location='/' />
+                  <PrimaryButton title='Coming Soon' location='/' />
                 </div>
 
               </Disclosure.Panel>
