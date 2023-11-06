@@ -33,7 +33,7 @@ const montserrat = localFont({
 
 const navigation_app = [
     { name: 'Docs', href: 'https://docs.lastic.xyz/', current: false },
-    { name: 'Articles', href: '/articles', current: false },
+    { name: 'Articles', href: '/articles', current: true },
     { name: 'FAQ', href: '/faq', current: false },
   ]
 
@@ -43,13 +43,6 @@ const syncopate = Syncopate(
     variable: '--font-syncopate',
   },
 )
-
-// const montserrat = Montserrat(
-//   { subsets: ['latin'],
-//     weight: ['300', '400', '700'],
-//     variable: '--font-montserrat',
-//   },
-// )
 
 export const metadata: Metadata = {
   title: 'Lastic',

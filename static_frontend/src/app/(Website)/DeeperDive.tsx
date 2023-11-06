@@ -1,5 +1,5 @@
 // Dependencies
-import PrimaryButton from '@/components/button/PrimaryButton';
+import SecondaryButton from '@/components/button/SecondaryButton';
 import Image from 'next/image';
 import React from 'react';
 
@@ -45,7 +45,7 @@ const DeeperDive: React.FC = () => {
 
                         {/* Button */}
                         <div className='px-4 mx-auto sm:px-20 py-5'>
-                            <PrimaryButton title="Read the Docs" location="https://docs.lastic.xyz/" /> 
+                            <SecondaryButton title="Read the Docs" location="https://docs.lastic.xyz/" /> 
                         </div>
                     </div>
                 </div>

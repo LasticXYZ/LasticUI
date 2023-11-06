@@ -5,14 +5,17 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import Image from 'next/image'
 import PrimaryButton from '@/components/button/PrimaryButton'
-import { joinClassNames } from '@/utils/helperFunc' // This is a custom function to join class names
 import { FC } from 'react'
+import { usePathname } from 'next/navigation'
 
 type NavbarProps = {
   navigation: Array<{name: string, href: string, current: boolean}>;
 };
 
-const Navbar: FC<NavbarProps> = ( {navigation} ) => (
+const Navbar: FC<NavbarProps> = ( {navigation} ) => {
+  const pathname = usePathname()
+
+  return (
   <>
       <div className="w-full fixed z-50 bg-[#F6FDFF] pb-4 border-b border-gray-9 bg-opacity-70">
         <Disclosure as="nav" className="">
@@ -39,18 +42,12 @@ const Navbar: FC<NavbarProps> = ( {navigation} ) => (
                   <div className="flex items-center">
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4">
-                        {navigation.map((item) => (
+                        {navigation.map((item, idx) => (
                           <Link
-                            key={item.name}
+                            key={idx}
                             href={item.href}
-                            className={joinClassNames(
-                              item.current
-                                ? ' text-lastic-aqua'
-                                : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                              'rounded-md px-4 py-2 text-l font-medium'
-                            )}
-                            aria-current={item.current ? 'page' : undefined}
-                            legacyBehavior>
+                            className={`${pathname === item.href ? 'text-black' : 'text-gray-12 hover:text-gray-19'}`}
+                            >
                             {item.name}
                           </Link>
                         ))}
@@ -59,7 +56,7 @@ const Navbar: FC<NavbarProps> = ( {navigation} ) => (
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-4 flex items-center md:ml-6">
-                      <PrimaryButton title="Launch" location='/instacore'/>
+                      <PrimaryButton title="Launch" location='/'/>
                     </div>
                   </div>
                   <div className="-mr-2 flex md:hidden">
@@ -82,18 +79,14 @@ const Navbar: FC<NavbarProps> = ( {navigation} ) => (
                     <Link
                       key={item.name}
                       href={item.href}
-                      className={joinClassNames(
-                        item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                        'block rounded-md px-3 py-2 text-base font-medium'
-                      )}
-                      aria-current={item.current ? 'page' : undefined}
-                      legacyBehavior>
+                      className={`${pathname === item.href ? 'text-black' : 'text-gray-12 hover:text-gray-19'}`}
+                      >
                       {item.name}
                     </Link>
                   ))}
                 </div>
                 <div className="flex justify-center space-y-1 px-2 md:hidden">
-                  <PrimaryButton title='Launch' location='/instacore' />
+                  <PrimaryButton title='Launch' location='/' />
                 </div>
 
               </Disclosure.Panel>
@@ -106,6 +99,6 @@ const Navbar: FC<NavbarProps> = ( {navigation} ) => (
 
       </div>
   </>
-);
+)};
 
 export default Navbar;
