@@ -1,27 +1,17 @@
 "use client"; 
 
 import AboutCard from '@/components/card/AboutCard';
-
-const Background: React.FC = () => {
-    return (
-      <div className='h-full'>
-        <div className=" w-full bg-[#FAF7F8]">
-          <div className=" py-20 w-full h-[332px] left-[281px] top-[542px] bg-[#FA857A] blur-[350px]"></div>
-        </div>
-      </div>
-    );
-}
     
 export default function About() {
   const features = [
     {
       title: "MARKET-BASED SCALING",
-      description: "Enhance the scalability of your parachains with on-demand multiple cores.",
+      description: "Stop overpaying for infrastructure and security. Let the usage of your chain determine the amount of blockspace you get.",
       icon: <span className="text-3xl">📈</span>
     },
     {
       title: "FLEXIBLE PAYMENT OPTIONS",
-      description: "From subscriptions to freemium models, choose how you want to pay for your blockspace.",
+      description: "From subscriptions to automated payment models, choose how you want to pay for your blockspace.",
       icon: <span className="text-3xl">💰</span>
     },
     {
@@ -31,7 +21,7 @@ export default function About() {
     },
     {
       title: "COMMUNITY DRIVEN",
-      description: "Actively engaging with the Polkadot and wider blockchain community for feedback, insights, and collaboration to continuously enhance the platform.",
+      description: "We engage with the community for feedback, insights, and collaboration to continuously enhance the Lastic.",
       icon: <span className="text-3xl">🌍</span>
     },
     {
@@ -41,28 +31,24 @@ export default function About() {
     },
     {
       title: "FLEXIBILITY BEYOND POLKADOT",
-      description: "Purchase coretime in custom chunks and allocate variable time slices as per your workload.",
+      description: "Purchase Coretime in custom chunks and allocate variable timeslices in a needs-based fashion.",
       icon: <span className="text-3xl">🔗</span>
     }
   ]
 
   return (
-    <div className="overflow-hidden border border-gray-9">
-        <div className='absolute z-5  w-full h-screen overflow-hidden'>
-         <Background />
-        </div>
+    <div className="overflow-hidden border-y border-gray-9">
 
-        <div className='relative z-50'>
+        <div className=' bg-gradient-to-b from-[#ffc5c0] '>
             <div className="mx-auto max-w-9xl py-28 px-4 sm:px-6 lg:px-8">
-                <h1 className="text-3xl font-syncopate font-bold text-center mb-4">About</h1>
-                <h2 className="text-xl font-syncopate text-center mb-10">Key features that set us apart </h2>
+                <h1 className="text-2xl md:text-3xl font-syncopate font-bold text-center mb-4">Features</h1>
+                <h2 className="text-xl font-syncopate text-center mb-10">What sets Lastic apart </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-5 gap-6">
                     {features.map((feature, index) => (
                     <AboutCard 
                         key={index}
                         title={feature.title} 
                         description={feature.description} 
-                        icon={feature.icon} 
                     />
                     ))}
                 </div>

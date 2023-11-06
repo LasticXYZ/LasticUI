@@ -6,7 +6,6 @@ import { Syncopate, Montserrat } from 'next/font/google'
 import Navbar from './Navbar'
 import Background from './Background'
 import { env } from '@/config/environment'
-import { getDeployments } from '@/deployments/deployments'
 import { UseInkathonProvider } from '@scio-labs/use-inkathon'
 
 const navigation_app = [

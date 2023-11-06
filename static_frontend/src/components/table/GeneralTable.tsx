@@ -16,11 +16,12 @@ const GeneralTable: FC<GeneralTableProps> = ({ tableData, tableHeader, colClass=
             <div className="shadow overflow-hidden sm:rounded-lg">
               <div className={joinClassNames("grid gap-2 bg-[#AFE4DD] px-2 text-sm text-black rounded-full", colClass)}>
                 {tableHeader.map((item, index) => (
-                      <div key={index} className="bg-gray-100 flex justify-start items-center font-bold p-4">{item.title}</div>
+                    <div key={index} className="bg-gray-100 flex justify-start items-center font-bold p-4">{item.title}</div>
                 ))}
               </div>
 
               {tableData.map((item, index) => (
+                <div key={index} >
                   <Link
                     key={index}
                     className="text-black cursor-pointer hover:text-gray-7"
@@ -32,6 +33,7 @@ const GeneralTable: FC<GeneralTableProps> = ({ tableData, tableHeader, colClass=
                       ))}
                       </div>
                   </Link>
+                  </div>
               ))}
 
             </div>

@@ -14,11 +14,11 @@ type NavbarProps = {
 
 const Navbar: FC<NavbarProps> = ( {navigation} ) => (
   <>
-      <div className="min-h-full">
+      <div className="w-full fixed z-50 bg-[#F6FDFF] pb-4 border-b border-gray-9 bg-opacity-70">
         <Disclosure as="nav" className="">
           {({ open }) => (
             <>
-              <div className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8">
+              <div className="mx-auto 2xl:px-40 px-4 sm:px-6 lg:px-8">
                 <div className="flex mt-5 items-center justify-between">
                   <div className="flex items-center">
                     <div className="flex-shrink-0 cursor-pointer">
@@ -77,7 +77,7 @@ const Navbar: FC<NavbarProps> = ( {navigation} ) => (
               </div>
 
               <Disclosure.Panel className="md:hidden">
-                <div className="space-y-1 px-2 pt-2 pb-3 sm:px-3">
+                <div className="space-y-3 my-5 flex flex-col justify-center text-center px-2 pt-2 pb-3 sm:px-3">
                   {navigation.map((item) => (
                     <Link
                       key={item.name}
@@ -92,12 +92,13 @@ const Navbar: FC<NavbarProps> = ( {navigation} ) => (
                     </Link>
                   ))}
                 </div>
+                <div className="flex justify-center space-y-1 px-2 md:hidden">
+                  <PrimaryButton title='Launch' location='/instacore' />
+                </div>
+
               </Disclosure.Panel>
 
-              <div className="flex justify-end space-y-1 px-2 md:hidden">
-                <PrimaryButton title='Launch' location='/instacore' />
-              </div>
-
+              
             </>
           )}
         </Disclosure>

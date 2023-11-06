@@ -26,7 +26,7 @@ const AccordionTile: FC<AccordionProps> = ({ question, answer }) => {
 
         return (
             <div className="border-b">
-                <div className="flex items-center justify-between w-full py-5 font-medium text-left " onClick={() => showAccordion() }>
+                <div className="flex items-center justify-between w-full py-5 font-medium text-left cursor-pointer " onClick={() => showAccordion() }>
                     <p className={ "transition-all duration-100 ease-in " + ( isShowed ? "font-bold dark-blue ": "font-medium")}>
                         {question}
                     </p>
