@@ -30,7 +30,7 @@ const FAQ = [
 const FAQSection = () => {
   return(
     <div className="text-gray-20 min-h-screen py-20 pt-32">
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-5xl px-10">
         
           <h1 className='text-5xl text-center font-syncopate text-gray-20 font-semibold'>
             Q&A
