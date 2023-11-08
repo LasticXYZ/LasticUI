@@ -22,7 +22,8 @@ const Hero = () => {
             Do anything you want with your blockspace
             </p>
             <div className='pt-8 xl:pt-10 flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-2'>
-                <PrimaryButton title='Coming Soon' location='/'/>
+              <PrimaryButton title='Launch' location='/bulkcore1'/>
+              <SecondaryButton title='Check Docs' location='https://docs.lastic.xyz/'/>
             </div>
           </div>
           {/* Social Icons */}
