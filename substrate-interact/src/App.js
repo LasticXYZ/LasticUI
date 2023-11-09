@@ -30,7 +30,8 @@ import QueryLeases from './needed/QueryLeases'
 import QueryPalletVersion from './needed/QueryPalletVersion'
 import QueryReservations from './needed/QueryReservations'
 import QueryStatus from './needed/QueryStatus'
-
+import QueryAllowedRenewals from './needed/QueryAllowedRenewals'
+import QueryInstaPoolIo from './needed/QueryInstaPoolIo'
 
 function Main() {
   const { apiState, apiError, keyringState } = useSubstrateState()
@@ -115,6 +116,12 @@ function Main() {
           </Grid.Row>
           <Grid.Row>
             <QueryStatus /> 
+          </Grid.Row>
+          <Grid.Row>
+            <QueryAllowedRenewals /> 
+          </Grid.Row>
+          <Grid.Row>
+            <QueryInstaPoolIo /> 
           </Grid.Row>
           <Grid.Row>
             <TemplateModule />
