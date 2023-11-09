@@ -25,6 +25,7 @@ import TemplateModule from './TemplateModule'
 import GetConstants from './needed/GetConstants'
 import GetExtrinsics from './needed/GetExtrinsics'
 import { Query } from './needed/QueryTest'
+import QueryRegions from './needed/QueryRegion'
 
 function Main() {
   const { apiState, apiError, keyringState } = useSubstrateState()
@@ -83,6 +84,9 @@ function Main() {
           </Grid.Row>
           <Grid.Row>
             <Query />
+          </Grid.Row>
+          <Grid.Row>
+            <QueryRegions />
           </Grid.Row>
           <Grid.Row>
             <TemplateModule />

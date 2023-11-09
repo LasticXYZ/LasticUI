@@ -11,8 +11,17 @@ function useSubstrateQuery(queryKey, queryParams = []) {
 
     const fetchData = async () => {
       if (api?.query?.broker?.[queryKey]) {
-        const result = await api.query.broker[queryKey](...queryParams);
-        setData(result.toString());
+        try {
+          const result = await api.query.broker[queryKey](...queryParams);
+          // Check if the Option type is Some and unwrap the value
+          if (result.isSome) {
+            setData(result.unwrap().toString());
+          } else {
+            setData(null);
+          }
+        } catch (error) {
+          console.error(`Failed to fetch ${queryKey}:`, error);
+        }
       }
     };
 
@@ -36,7 +45,6 @@ function Query() {
   const allowedRenewals = useSubstrateQuery('allowedRenewals', ['']);
   const instaPoolContribution = useSubstrateQuery('instaPoolContribution', ['']);
   const instaPoolHistory = useSubstrateQuery('instaPoolHistory', ['']);
-  const regions = useSubstrateQuery('regions', ['']);
   const workload = useSubstrateQuery('workload', ['']);
 
 
@@ -63,8 +71,6 @@ function Query() {
         <div>{instaPoolContribution || "None"}</div>
         <h3>Insta Pool History</h3>
         <div>{instaPoolHistory || "None"}</div>
-        <h3>Regions</h3>
-        <div>{regions || "None"}</div>
         <h3>Workload</h3>
         <div>{workload || "None"}</div>
     </div>
