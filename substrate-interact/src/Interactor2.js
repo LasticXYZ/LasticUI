@@ -161,13 +161,6 @@ function Main(props) {
             checked={interxType === 'EXTRINSIC'}
             onChange={onInterxTypeChange}
           />
-          <Form.Radio
-            label="Query"
-            name="interxType"
-            value="QUERY"
-            checked={interxType === 'QUERY'}
-            onChange={onInterxTypeChange}
-          />
         </Form.Group>
         <Form.Field>
           <label>Pallet / RPC</label>
