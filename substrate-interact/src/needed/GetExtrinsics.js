@@ -13,7 +13,8 @@ function GetConstants() {
         'setLease',
         'startSales',
         'configure',
-        'reserve'
+        'reserve',
+        'requestCoreCount'
       ];
 
     const nonAdminPrivilegesExtrinsics = brokerExtrinsics.filter(extrinsic => !adminPrivilegesExtrinsics.includes(extrinsic));

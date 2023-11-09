@@ -12,19 +12,20 @@ import 'semantic-ui-css/semantic.min.css'
 import { SubstrateContextProvider, useSubstrateState } from './substrate-lib'
 import { DeveloperConsole } from './substrate-lib/components'
 
+//import Balances from './Balances'
+//import Transfer from './Transfer'
+//import Upgrade from './Upgrade'
 import AccountSelector from './AccountSelector'
-import Balances from './Balances'
 import BlockNumber from './BlockNumber'
 import Events from './Events'
-import Interactor from './Interactor'
+import Interactor2 from './Interactor2'
 import Metadata from './Metadata'
 import NodeInfo from './NodeInfo'
 import TemplateModule from './TemplateModule'
-import Transfer from './Transfer'
-import Upgrade from './Upgrade'
 import GetConstants from './needed/GetConstants'
 import GetExtrinsics from './needed/GetExtrinsics'
-import QuerySaleInfo from './needed/QuerySaleInfo'
+import { Query } from './needed/QueryTest'
+import QueryRegions from './needed/QueryRegion'
 
 function Main() {
   const { apiState, apiError, keyringState } = useSubstrateState()
@@ -73,25 +74,19 @@ function Main() {
             <BlockNumber />
             <BlockNumber finalized />
           </Grid.Row>
-          <Grid.Row stretched>
-            <Balances />
-          </Grid.Row>
           <Grid.Row>
-            <Transfer />
-            <Upgrade />
-          </Grid.Row>
-          <Grid.Row>
-            <Interactor />
+            <Interactor2 />
             <Events />
           </Grid.Row>
-          <Grid.Row>
+          <Grid.Row stretched>
             <GetConstants />
-          </Grid.Row>
-          <Grid.Row>
             <GetExtrinsics />
           </Grid.Row>
           <Grid.Row>
-            <QuerySaleInfo />
+            <Query />
+          </Grid.Row>
+          <Grid.Row>
+            <QueryRegions />
           </Grid.Row>
           <Grid.Row>
             <TemplateModule />
