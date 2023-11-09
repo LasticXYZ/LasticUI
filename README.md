@@ -15,9 +15,11 @@ The repository is organized into three primary directories:
    - Developed on top of the [`substrate-front-end-template`](https://github.com/substrate-developer-hub/substrate-front-end-template.git).
    - By following the guidelines in `./substrate_interact/README.md`, you can interact with the Coretime chain seamlessly.
 
-3. `./core_chain_sdk`: 
-   - Contains preliminary code destined for a separate repository.
-   - Currently, it houses boilerplate code essential for building an SDK to interact with the Coretime chain.
+### Moved to another repo
+ `./core_chain_sdk`: 
+   - The development of the core_chain_sdk has been moved to [github.com/LasticXYZ/lastic-sdk](https://github.com/LasticXYZ/lastic-sdk)
+   - Currently, it contains boilerplate code essential for building an SDK to interact with the Coretime chain.
+   - It is a fork of [scio-labs/use-inkathon](https://github.com/scio-labs/use-inkathon) boilerplate code
 
 ## Visual Resources
 
