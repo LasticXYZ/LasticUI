@@ -11,12 +11,12 @@ function Main(props) {
   const [status, setStatus] = useState(null)
 
   const [interxType, setInterxType] = useState('EXTRINSIC')
-  const [palletRPCs, setPalletRPCs] = useState([])
+  //const [palletRPCs, setPalletRPCs] = useState([])
   const [callables, setCallables] = useState([])
   const [paramFields, setParamFields] = useState([])
 
   const initFormState = {
-    palletRpc: '',
+    palletRpc: 'broker',
     callable: '',
     inputParams: [],
   }
@@ -34,18 +34,6 @@ function Main(props) {
     } else {
       return api.consts
     }
-  }
-
-  const updatePalletRPCs = () => {
-    if (!api) {
-      return
-    }
-    const apiType = getApiType(api, interxType)
-    const palletRPCs = Object.keys(apiType)
-      .sort()
-      .filter(pr => Object.keys(apiType[pr]).length > 0)
-      .map(pr => ({ key: pr, value: pr, text: pr }))
-    setPalletRPCs(palletRPCs)
   }
 
   const updateCallables = () => {
@@ -123,7 +111,7 @@ function Main(props) {
     setParamFields(paramFields)
   }
 
-  useEffect(updatePalletRPCs, [api, interxType])
+  //useEffect(updatePalletRPCs, [api, interxType])
   useEffect(updateCallables, [api, interxType, palletRpc])
   useEffect(updateParamFields, [api, interxType, palletRpc, callable, jsonrpc])
 
@@ -162,7 +150,7 @@ function Main(props) {
 
   return (
     <Grid.Column width={8}>
-      <h1>Pallet Interactor</h1>
+      <h1>Broker Pallet Interactor</h1>
       <Form>
         <Form.Group style={{ overflowX: 'auto' }} inline>
           <label>Interaction Type</label>
@@ -182,16 +170,11 @@ function Main(props) {
           />
         </Form.Group>
         <Form.Field>
-          <Dropdown
-            placeholder="Pallets / RPC"
+          <label>Pallet / RPC</label>
+          <Input
             fluid
-            label="Pallet / RPC"
-            onChange={onPalletCallableParamChange}
-            search
-            selection
-            state="palletRpc"
+            readOnly
             value={palletRpc}
-            options={palletRPCs}
           />
         </Form.Field>
         <Form.Field>
