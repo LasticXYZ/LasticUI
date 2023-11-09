@@ -13,15 +13,15 @@ import { SubstrateContextProvider, useSubstrateState } from './substrate-lib'
 import { DeveloperConsole } from './substrate-lib/components'
 
 import AccountSelector from './AccountSelector'
-import Balances from './Balances'
+//import Balances from './Balances'
 import BlockNumber from './BlockNumber'
 import Events from './Events'
 import Interactor from './Interactor'
 import Metadata from './Metadata'
 import NodeInfo from './NodeInfo'
 import TemplateModule from './TemplateModule'
-import Transfer from './Transfer'
-import Upgrade from './Upgrade'
+//import Transfer from './Transfer'
+//import Upgrade from './Upgrade'
 import GetConstants from './needed/GetConstants'
 import GetExtrinsics from './needed/GetExtrinsics'
 import QuerySaleInfo from './needed/QuerySaleInfo'
@@ -73,6 +73,7 @@ function Main() {
             <BlockNumber />
             <BlockNumber finalized />
           </Grid.Row>
+          {/*
           <Grid.Row stretched>
             <Balances />
           </Grid.Row>
@@ -80,6 +81,7 @@ function Main() {
             <Transfer />
             <Upgrade />
           </Grid.Row>
+          */}
           <Grid.Row>
             <Interactor />
             <Events />
