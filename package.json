@@ -2,8 +2,8 @@
     "name": "lastic-ui",
     "private": true,
     "workspaces": [
-      "substrate-interact",
-      "static-frontend"
+      "substrate_interact",
+      "static_frontend"
     ],
     "scripts": {
       "build": "pnpm -r --if-present build",
