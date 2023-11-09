@@ -3,14 +3,14 @@ import { useSubstrateState } from '../substrate-lib';
 
 function QueryPalletVersion() {
     const { api } = useSubstrateState();
-    const [palletVersion, setPalletVersion] = useState(null);
+    const [reservations, setReservations] = useState(null);
 
     // Hook to regularly fetch saleInfo data
     useEffect(() => {
       const fetch = async () => {
-        if (api && api.query && api.query.broker && api.query.broker.palletVersion) {
-          const result = await api.query.broker.palletVersion();
-          setPalletVersion(result.toString());
+        if (api && api.query && api.query.broker && api.query.broker.reservations) {
+          const result = await api.query.broker.reservations();
+          setReservations(result.toString());
         }
       };
       
@@ -23,8 +23,8 @@ function QueryPalletVersion() {
   
     return (
       <div>
-        <h3>Pallet Version :</h3>
-        <div>{palletVersion}</div>
+        <h3>Reservations :</h3>
+        <div>{reservations}</div>
       </div>
     );
 }

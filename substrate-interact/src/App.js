@@ -16,7 +16,7 @@ import AccountSelector from './AccountSelector'
 //import Balances from './Balances'
 import BlockNumber from './BlockNumber'
 import Events from './Events'
-import Interactor from './Interactor'
+import Interactor2 from './Interactor2'
 import Metadata from './Metadata'
 import NodeInfo from './NodeInfo'
 import TemplateModule from './TemplateModule'
@@ -28,6 +28,8 @@ import QuerySaleInfo from './needed/QuerySaleInfo'
 import QueryConfiguration from './needed/QueryConfiguration'
 import QueryLeases from './needed/QueryLeases'
 import QueryPalletVersion from './needed/QueryPalletVersion'
+import QueryReservations from './needed/QueryReservations'
+import QueryStatus from './needed/QueryStatus'
 
 
 function Main() {
@@ -87,7 +89,7 @@ function Main() {
           </Grid.Row>
           */}
           <Grid.Row>
-            <Interactor />
+            <Interactor2 />
             <Events />
           </Grid.Row>
           <Grid.Row>
@@ -107,6 +109,12 @@ function Main() {
           </Grid.Row>
           <Grid.Row>
             <QueryPalletVersion /> 
+          </Grid.Row>
+          <Grid.Row>
+            <QueryReservations /> 
+          </Grid.Row>
+          <Grid.Row>
+            <QueryStatus /> 
           </Grid.Row>
           <Grid.Row>
             <TemplateModule />
