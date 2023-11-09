@@ -25,6 +25,10 @@ import TemplateModule from './TemplateModule'
 import GetConstants from './needed/GetConstants'
 import GetExtrinsics from './needed/GetExtrinsics'
 import QuerySaleInfo from './needed/QuerySaleInfo'
+import QueryConfiguration from './needed/QueryConfiguration'
+import QueryLeases from './needed/QueryLeases'
+import QueryPalletVersion from './needed/QueryPalletVersion'
+
 
 function Main() {
   const { apiState, apiError, keyringState } = useSubstrateState()
@@ -94,6 +98,15 @@ function Main() {
           </Grid.Row>
           <Grid.Row>
             <QuerySaleInfo />
+          </Grid.Row>
+          <Grid.Row>
+            <QueryConfiguration />
+          </Grid.Row>
+          <Grid.Row>
+            <QueryLeases />
+          </Grid.Row>
+          <Grid.Row>
+            <QueryPalletVersion /> 
           </Grid.Row>
           <Grid.Row>
             <TemplateModule />
