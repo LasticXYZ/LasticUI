@@ -2,16 +2,60 @@
 
 Welcome to the **LasticUI** repository! This repository is dedicated to enabling seamless interaction with the Coretime Parachain.
 
+## Branch Structure
+There are 3 main branches that are relevant: 
+ - `development` - this branch contains most recent development
+ - `main` - this branch is features deployments that have yet to be tested and released to the public. The deployment of [main branch inside folder `./static-frontend`](https://github.com/LasticXYZ/LasticUI/tree/main/static_frontend) can be also accessed on [test.lastic.xyz](https://test.lastic.xyz/)
+
+## Get started
+You can run the repositories inside differnt folders either inidividually (by following instruction in the individual README.md folders) or by running the command
+
+For installing dependencies on both repositories:
+```sh
+pnpm i
+```
+
+And then run:
+```sh
+pnpm run dev
+```
+
+Now to open up `lastic-frontend` navigate to
+```
+http://localhost:3000
+```
+
+and to open the `substrate-interact` navigate to
+```
+http://localhost:8000/substrate-front-end-template
+```
+
+To make the substrate-interact fully work you will also need to have the Substrate node running. Follow the steps below to spin up a local Substrate node:
+
+```sh
+# Clone the Polkadot SDK repository
+git clone git@github.com:paritytech/polkadot-sdk.git
+
+# Navigate to the substrate directory
+cd substrate
+
+# Run the node in development mode
+cargo run -p node-cli -r -- --dev
+```
+
+For additional instructions on how to interact with the substrate node navigate to `./substrate-interact/README.md`.
+
+
 ## Directory Structure
 
 The repository is organized into three primary directories:
 
-1. `./static_frontend`: 
+1. `./static-frontend`: 
    - Contains the static frontend integrated with wallet connection functionality.
    - Serves as the boilerplate code that will evolve into the official Lastic website.
    - Design mirrors what's showcased in the `Figma UI`. As of now, the graphs are populated with mockup data.
 
-2. `./substrate_interact`: 
+2. `./substrate-interact`: 
    - Developed on top of the [`substrate-front-end-template`](https://github.com/substrate-developer-hub/substrate-front-end-template.git).
    - By following the guidelines in `./substrate_interact/README.md`, you can interact with the Coretime chain seamlessly.
 
@@ -20,6 +64,10 @@ The repository is organized into three primary directories:
    - The development of the core_chain_sdk has been moved to [github.com/LasticXYZ/lastic-sdk](https://github.com/LasticXYZ/lastic-sdk)
    - Currently, it contains boilerplate code essential for building an SDK to interact with the Coretime chain.
    - It is a fork of [scio-labs/use-inkathon](https://github.com/scio-labs/use-inkathon) boilerplate code
+
+
+Note that to make the repository 
+
 
 ## Visual Resources
 

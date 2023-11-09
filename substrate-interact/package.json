@@ -14,7 +14,7 @@
     "polkadot-js"
   ],
   "scripts": {
-    "start": "react-app-rewired start",
+    "dev": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "CI=true react-app-rewired test",
     "eject": "react-scripts eject",
