@@ -2,10 +2,27 @@
 
 Welcome to the **LasticUI** repository! This repository is dedicated to enabling seamless interaction with the Coretime Parachain.
 
-## Branch Structure
+## 🌿 Branch Structure
 There are 3 main branches that are relevant: 
  - `development` - this branch contains most recent development
  - `main` - this branch is features deployments that have yet to be tested and released to the public. The deployment of [main branch inside folder `./static-frontend`](https://github.com/LasticXYZ/LasticUI/tree/main/static_frontend) can be also accessed on [test.lastic.xyz](https://test.lastic.xyz/)
+ - `stable` - features the stable branch that is tested, this is the branch that is deployed on [lastic.xyz](https://lastic.xyz/)
+
+## 📁 Directory Overview
+
+The repository is organized into two primary directories:
+
+1. `./static-frontend`: 
+   - Contains the static frontend integrated with wallet connection functionality.
+   - Serves as the boilerplate code that will evolve into the official Lastic website.
+   - Design mirrors what's showcased in the `Figma UI`. As of now, the graphs are populated with mockup data.
+
+2. `./substrate-interact`: 
+   - Developed on top of the [`substrate-front-end-template`](https://github.com/substrate-developer-hub/substrate-front-end-template.git).
+   - By following the guidelines in `./substrate_interact/README.md`, you can interact with the Coretime chain seamlessly.
+
+### 🚚 Repository Migration
+ - `./core_chain_sdk` has moved! Check out [LasticSDK](https://github.com/LasticXYZ/lastic-sdk) for the SDK development tailored for Coretime chain interactions.
 
 ## Get started
 You can run the repositories inside differnt folders either inidividually (by following instruction in the individual README.md folders) or by running the command
@@ -44,29 +61,6 @@ cargo run -p node-cli -r -- --dev
 ```
 
 For additional instructions on how to interact with the substrate node navigate to `./substrate-interact/README.md`.
-
-
-## Directory Structure
-
-The repository is organized into three primary directories:
-
-1. `./static-frontend`: 
-   - Contains the static frontend integrated with wallet connection functionality.
-   - Serves as the boilerplate code that will evolve into the official Lastic website.
-   - Design mirrors what's showcased in the `Figma UI`. As of now, the graphs are populated with mockup data.
-
-2. `./substrate-interact`: 
-   - Developed on top of the [`substrate-front-end-template`](https://github.com/substrate-developer-hub/substrate-front-end-template.git).
-   - By following the guidelines in `./substrate_interact/README.md`, you can interact with the Coretime chain seamlessly.
-
-### Moved to another repo
- `./core_chain_sdk`: 
-   - The development of the core_chain_sdk has been moved to [github.com/LasticXYZ/lastic-sdk](https://github.com/LasticXYZ/lastic-sdk)
-   - Currently, it contains boilerplate code essential for building an SDK to interact with the Coretime chain.
-   - It is a fork of [scio-labs/use-inkathon](https://github.com/scio-labs/use-inkathon) boilerplate code
-
-
-Note that to make the repository 
 
 
 ## Visual Resources
