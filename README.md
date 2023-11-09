@@ -24,7 +24,7 @@ The repository is organized into two primary directories:
 ### 🚚 Repository Migration
  - `./core_chain_sdk` has moved! Check out [LasticSDK](https://github.com/LasticXYZ/lastic-sdk) for the SDK development tailored for Coretime chain interactions.
 
-## Get started
+## 🚀 Quick Start
 You can run the repositories inside differnt folders either inidividually (by following instruction in the individual README.md folders) or by running the command
 
 For installing dependencies on both repositories:
@@ -37,12 +37,12 @@ And then run:
 pnpm run dev
 ```
 
-Now to open up `lastic-frontend` navigate to
+Now to open up `lastic_frontend` navigate to
 ```
 http://localhost:3000
 ```
 
-and to open the `substrate-interact` navigate to
+and to open the `substrate_interact` navigate to
 ```
 http://localhost:8000/substrate-front-end-template
 ```
