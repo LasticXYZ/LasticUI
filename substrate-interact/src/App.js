@@ -12,26 +12,19 @@ import 'semantic-ui-css/semantic.min.css'
 import { SubstrateContextProvider, useSubstrateState } from './substrate-lib'
 import { DeveloperConsole } from './substrate-lib/components'
 
-import AccountSelector from './AccountSelector'
 //import Balances from './Balances'
+//import Transfer from './Transfer'
+//import Upgrade from './Upgrade'
+import AccountSelector from './AccountSelector'
 import BlockNumber from './BlockNumber'
 import Events from './Events'
 import Interactor2 from './Interactor2'
 import Metadata from './Metadata'
 import NodeInfo from './NodeInfo'
 import TemplateModule from './TemplateModule'
-//import Transfer from './Transfer'
-//import Upgrade from './Upgrade'
 import GetConstants from './needed/GetConstants'
 import GetExtrinsics from './needed/GetExtrinsics'
-import QuerySaleInfo from './needed/QuerySaleInfo'
-import QueryConfiguration from './needed/QueryConfiguration'
-import QueryLeases from './needed/QueryLeases'
-import QueryPalletVersion from './needed/QueryPalletVersion'
-import QueryReservations from './needed/QueryReservations'
-import QueryStatus from './needed/QueryStatus'
-import QueryAllowedRenewals from './needed/QueryAllowedRenewals'
-import QueryInstaPoolIo from './needed/QueryInstaPoolIo'
+import { Query } from './needed/QueryTest'
 
 function Main() {
   const { apiState, apiError, keyringState } = useSubstrateState()
@@ -80,48 +73,16 @@ function Main() {
             <BlockNumber />
             <BlockNumber finalized />
           </Grid.Row>
-          {/*
-          <Grid.Row stretched>
-            <Balances />
-          </Grid.Row>
-          <Grid.Row>
-            <Transfer />
-            <Upgrade />
-          </Grid.Row>
-          */}
           <Grid.Row>
             <Interactor2 />
             <Events />
           </Grid.Row>
-          <Grid.Row>
+          <Grid.Row stretched>
             <GetConstants />
-          </Grid.Row>
-          <Grid.Row>
             <GetExtrinsics />
           </Grid.Row>
           <Grid.Row>
-            <QuerySaleInfo />
-          </Grid.Row>
-          <Grid.Row>
-            <QueryConfiguration />
-          </Grid.Row>
-          <Grid.Row>
-            <QueryLeases />
-          </Grid.Row>
-          <Grid.Row>
-            <QueryPalletVersion /> 
-          </Grid.Row>
-          <Grid.Row>
-            <QueryReservations /> 
-          </Grid.Row>
-          <Grid.Row>
-            <QueryStatus /> 
-          </Grid.Row>
-          <Grid.Row>
-            <QueryAllowedRenewals /> 
-          </Grid.Row>
-          <Grid.Row>
-            <QueryInstaPoolIo /> 
+            <Query />
           </Grid.Row>
           <Grid.Row>
             <TemplateModule />
