@@ -27,10 +27,10 @@ To set up and run the frontend, execute the following commands:
 
 ```sh
 # Install the required dependencies
-yarn install
+pnpm i
 
 # Start the frontend server
-yarn start
+pnpm run dev
 ```
 
 Once the server is running, you can access the frontend at:  
