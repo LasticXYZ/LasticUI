@@ -52,17 +52,17 @@ function Query() {
     <div>
         <h1>Query Items</h1>
         <h3>Sale Info:</h3>
-        <div>{saleInfo}</div>
+        <div>{saleInfo || "None"}</div>
         <h3>Configuration:</h3>
-        <div>{configuration}</div>
+        <div>{configuration || "None"}</div>
         <h3>Status:</h3>
-        <div>{status}</div>
+        <div>{status || "None"}</div>
         <h3>Leases:</h3>
-        <div>{leases}</div>
+        <div>{leases || "None"}</div>
         <h3>Reservations:</h3>
-        <div>{reservations}</div>
+        <div>{reservations || "None"}</div>
         <h3>Pallet Version:</h3>
-        <div>{palletVersion}</div>
+        <div>{palletVersion || "None"}</div>
         <h3>Insta Pool Io</h3>
         <div>{instaPoolIo || "None"}</div>
         <h3>Allowed Renewals</h3>
