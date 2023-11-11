@@ -28,6 +28,7 @@ import { Query } from './needed/QueryTest'
 import QueryRegions from './needed/QueryRegion'
 import PurchaseInteractor from './needed/PurchaseInteract'
 import TransferInteractor from './needed/TransferInteract'
+import ConfigureInteractor from './needed/SudoConfigure'
 
 function Main() {
   const { apiState, apiError, keyringState } = useSubstrateState()
@@ -75,6 +76,9 @@ function Main() {
             <Metadata />
             <BlockNumber />
             <BlockNumber finalized />
+          </Grid.Row>
+          <Grid.Row>
+            <ConfigureInteractor />
           </Grid.Row>
           <Grid.Row>
             <Interactor2 />
