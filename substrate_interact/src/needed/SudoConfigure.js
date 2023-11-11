@@ -25,7 +25,7 @@ function Configure(props) {
 
   return (
     <Grid.Column width={8}>
-      <h3>Broker Pallet - Interactions</h3>
+      <h3>Broker Pallet - Set up sudo Interactions </h3>
       <Form>
         <Form.Field style={{ textAlign: 'center' }}>
           <TxButton
