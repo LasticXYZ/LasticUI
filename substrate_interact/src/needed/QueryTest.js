@@ -46,6 +46,8 @@ function Query() {
   const instaPoolContribution = useSubstrateQuery('instaPoolContribution', ['']);
   const instaPoolHistory = useSubstrateQuery('instaPoolHistory', ['']);
   const workload = useSubstrateQuery('workload', ['']);
+  let regionId = {begin: '214', 'core': '0', 'mask': '0xffffffffffffffffffff'};
+  const regionData = useSubstrateQuery('regions', [regionId]);
 
 
   return (
@@ -73,6 +75,8 @@ function Query() {
         <div>{instaPoolHistory || "None"}</div>
         <h3>Workload</h3>
         <div>{workload || "None"}</div>
+        <h3>Region Data:</h3>
+        <div>{regionData || "No data for this region"}</div>
     </div>
   );
 }
