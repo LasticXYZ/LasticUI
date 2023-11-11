@@ -1,24 +1,12 @@
-Here's an improved version of your `README.md`:
-
----
-
 # Lastic Substrate Interact
-
 Lastic Substrate Interact is a user interface designed to work with the Substrate framework. This directory will eventually be merged together with `../static_frontend`. This guide will help you set up and run the project.
 
 ## Prerequisites
 
-Before you begin, ensure you have the Substrate node running. Follow the steps below to spin up a local Substrate node:
+Before you begin, ensure you have the Substrate node running. To spin up a local Substrate node run the following command:
 
 ```sh
-# Clone the Polkadot SDK repository
-git clone git@github.com:paritytech/polkadot-sdk.git
-
-# Navigate to the substrate directory
-cd substrate
-
-# Run the node in development mode
-cargo run -p node-cli -r -- --dev
+../start.sh
 ```
 
 ## Running the Frontend
@@ -27,10 +15,10 @@ To set up and run the frontend, execute the following commands:
 
 ```sh
 # Install the required dependencies
-yarn install
+pnpm i
 
 # Start the frontend server
-yarn start
+pnpm run dev
 ```
 
 Once the server is running, you can access the frontend at:  

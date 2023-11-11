@@ -26,6 +26,9 @@ import GetConstants from './needed/GetConstants'
 import GetExtrinsics from './needed/GetExtrinsics'
 import { Query } from './needed/QueryTest'
 import QueryRegions from './needed/QueryRegion'
+import PurchaseInteractor from './needed/PurchaseInteract'
+import TransferInteractor from './needed/TransferInteract'
+import ConfigureInteractor from './needed/SudoConfigure'
 
 function Main() {
   const { apiState, apiError, keyringState } = useSubstrateState()
@@ -75,8 +78,15 @@ function Main() {
             <BlockNumber finalized />
           </Grid.Row>
           <Grid.Row>
+            <ConfigureInteractor />
+          </Grid.Row>
+          <Grid.Row>
             <Interactor2 />
             <Events />
+          </Grid.Row>
+          <Grid.Row>
+            <PurchaseInteractor />
+            <TransferInteractor />
           </Grid.Row>
           <Grid.Row stretched>
             <GetConstants />
