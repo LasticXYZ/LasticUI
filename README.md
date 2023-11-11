@@ -25,6 +25,17 @@ The repository is organized into two primary directories:
  - `./core_chain_sdk` has moved! Check out [LasticSDK](https://github.com/LasticXYZ/lastic-sdk) for the SDK development tailored for Coretime chain interactions.
 
 ## 🚀 Quick Start
+
+### Prerequisites
+Before you begin, ensure you have the Substrate node running. To spin up a local Substrate node run the following command:
+
+```sh
+./start.sh
+```
+
+For additional instructions on how to interact with the substrate node navigate to `./substrate-interact/README.md`.
+
+### Run
 You can run the repositories inside differnt folders either inidividually (by following instruction in the individual README.md folders) or by running the command
 
 For installing dependencies on both repositories:
@@ -47,20 +58,6 @@ and to open the `substrate_interact` navigate to
 http://localhost:8000/substrate-front-end-template
 ```
 
-To make the substrate-interact fully work you will also need to have the Substrate node running. Follow the steps below to spin up a local Substrate node:
-
-```sh
-# Clone the Polkadot SDK repository
-git clone git@github.com:paritytech/polkadot-sdk.git
-
-# Navigate to the substrate directory
-cd substrate
-
-# Run the node in development mode
-cargo run -p node-cli -r -- --dev
-```
-
-For additional instructions on how to interact with the substrate node navigate to `./substrate-interact/README.md`.
 
 
 ## Visual Resources
