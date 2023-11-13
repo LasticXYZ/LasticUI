@@ -33,6 +33,11 @@ Before you begin, ensure you have the Substrate node running. To spin up a local
 ./start.sh
 ```
 
+If that doesn't work try command:
+```sh
+./start2.sh
+```
+
 For additional instructions on how to interact with the substrate node navigate to `./substrate-interact/README.md`.
 
 ### Run
