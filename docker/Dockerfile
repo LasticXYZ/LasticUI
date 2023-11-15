@@ -24,11 +24,6 @@ RUN git clone https://github.com/paritytech/polkadot-sdk.git
 # Set the working directory to the cloned repository
 WORKDIR /polkadot-sdk
 
-# Checkout a specific release
-RUN git config --global user.email "you@example.com"
-RUN git config --global user.name "Your Name"
-RUN git checkout release-polkadot-v1.3.0
-
 # Install Rust toolchain and configure it
 RUN rustup update && \
     rustup default stable && \
@@ -43,10 +38,10 @@ RUN cargo build --release
 FROM debian:bookworm-slim as runtime
 
 # Copy the built binary from the builder stage
-COPY --from=builder /polkadot-sdk/target/release/substrate-node /usr/local/bin
+COPY --from=builder /polkadot-sdk/target/release /usr/local/bin
 
 # Expose necessary ports
 EXPOSE 30333 9933 9944 9615
 
 # Command to run the binary
-CMD ["/usr/local/bin/substrate-node", "--dev", "--unsafe-rpc-external", "--rpc-cors", "all"]
+CMD ["/usr/local/bin/polkadot", "--dev", "--unsafe-rpc-external", "--rpc-cors", "all"]
