@@ -34,9 +34,9 @@ const CoreOwners: React.FC = () => {
   ];
 
   const network_list = [
-    { name: 'Polkadot', currency: 'DOT'},
-    { name: 'Kusama', currency: 'KSM' },
-    { name: 'Rococo', currency: 'ROC' },
+    { name: 'Polkadot', currency: 'DOT', apiUrl: 'https://polkadot.api.subscan.io/api/scan/parachain/auctions'},
+    { name: 'Kusama', currency: 'KSM', apiUrl: 'https://kusama.api.subscan.io/api/scan/parachain/auctions' },
+    { name: 'Rococo', currency: 'ROC', apiUrl: 'https://rococo.api.subscan.io/api/scan/parachain/auctions' },
   ]
 
   const network_currency = network_list[0].currency;
