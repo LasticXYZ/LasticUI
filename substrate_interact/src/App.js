@@ -29,6 +29,9 @@ import QueryRegions from './needed/QueryRegion'
 import PurchaseInteractor from './needed/PurchaseInteract'
 import TransferInteractor from './needed/TransferInteract'
 import ConfigureInteractor from './needed/SudoConfigure'
+import Interactor from './Interactor'
+import RenewInteractor from './needed/RenewInteract'
+import AssignInteractor from './needed/AssignInteract'
 
 function Main() {
   const { apiState, apiError, keyringState } = useSubstrateState()
@@ -88,6 +91,10 @@ function Main() {
             <PurchaseInteractor />
             <TransferInteractor />
           </Grid.Row>
+          <Grid.Row>
+            <RenewInteractor />
+            <AssignInteractor />
+          </Grid.Row>
           <Grid.Row stretched>
             <GetConstants />
             <GetExtrinsics />
@@ -100,6 +107,9 @@ function Main() {
           </Grid.Row>
           <Grid.Row>
             <TemplateModule />
+          </Grid.Row>
+          <Grid.Row>
+            <Interactor />
           </Grid.Row>
         </Grid>
       </Container>

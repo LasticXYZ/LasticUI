@@ -40,6 +40,8 @@ Check the guide in the docs.lastic to help you interact with the Coretime chain
    - Start sale: `0x16004604e80300000000000000000000000000001400`
    - Purchase: `0x4605a0860100000000000000000000000000`
 
+ - Reserve: `0x1600460005000000140000001e000000640000000046c323013200002d31010a000000`
+
 ## Template Reference
 
 This project is based on the following template:  
