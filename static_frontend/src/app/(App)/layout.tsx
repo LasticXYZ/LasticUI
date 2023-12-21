@@ -48,10 +48,12 @@ export default function RootLayout({
               connectOnInit={true}
               defaultChain={env.defaultChain}
           >
-            <Navbar navigation={navigation_app}/>
-            <div className="py-10">
-              <main>{children}</main>
-            </div>
+            <Navbar navigation={navigation_app}>
+              <div className="py-10">
+                <main>{children}</main>
+              </div>
+
+            </Navbar>
           </UseInkathonProvider>
         </Background>
       </body>

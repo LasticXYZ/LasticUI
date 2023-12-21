@@ -4,107 +4,65 @@ import { Disclosure } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import Image from 'next/image'
-import PrimaryButton from '@/components/button/SecondaryButton'
+import SecondaryButton from '@/components/button/SecondaryButton'
 import { joinClassNames } from '@/utils/helperFunc' // This is a custom function to join class names
 import { FC } from 'react'
 import { ConnectButton } from '@/components/web3/ConnectButton'
 
 type NavbarProps = {
   navigation: Array<{name: string, href: string, current: boolean}>;
+  children?: React.ReactNode;
 };
 
-const Navbar: FC<NavbarProps> = ( {navigation} ) => (
+const Navbar: FC<NavbarProps> = ( {navigation, children} ) => (
   <>
-      <div className="min-h-full border-b bg-[#F6FDFF] bg-opacity-40 border-gray-4">
-        <Disclosure as="nav" className="">
-          {({ open }) => (
-            <>
-              <div className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8">
-                <div className="flex py-3 items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <Link
-                        href="/"
-                        className="font-bold"
-                        legacyBehavior
-                      >
-                      <Image
-                        src="/assets/Images/Logos/lastic-logo.png"
-                        width={130}
-                        height={50}
-                        alt="lastic Logo"
-                      />
-                      </Link>
-                    </div>
-                  </div>
-                  <div className="flex items-center">
-                    <div className="hidden md:block">
-                      <div className="ml-10 flex items-baseline space-x-4">
-                        {navigation.map((item) => (
-                          <Link
-                            key={item.name}
-                            href={item.href}
-                            className={joinClassNames(
-                              item.current
-                                ? ' text-lastic-aqua'
-                                : 'text-gray-3 hover:bg-gray-7 hover:text-white',
-                              'rounded-md px-4 py-2 text-l font-medium'
-                            )}
-                            aria-current={item.current ? 'page' : undefined}
-                            legacyBehavior>
-                            {item.name}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="hidden md:block">
-                    <div className="ml-4 flex items-center md:ml-6">
-                      <ConnectButton />
-                    </div>
-                  </div>
-                  <div className="-mr-2 flex md:hidden">
-                    {/* Mobile menu button */}
-                    <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring- focus:ring-offset-2 focus:ring-offset-gray-800">
-                      <span className="sr-only">Open main menu</span>
-                      {open ? (
-                        <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
-                      ) : (
-                        <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
-                      )}
-                    </Disclosure.Button>
-                  </div>
-                </div>
+      <div className="min-h-full ">
+      <Disclosure as="nav" className="">
+      {({ open }) => (
+        <>
+          <div className="flex">
+            {/* Sidebar Section */}
+            <div className="w-64 h-screen border-r bg-[#F6FDFF] bg-opacity-40 border-gray-4 shadow-lg">
+              <div className="flex-shrink-0 flex items-center justify-center p-4 border-b">
+                <Link href="/" className="font-bold" legacyBehavior>
+                  <Image
+                    src="/assets/Images/Logos/lastic-logo.png"
+                    width={130}
+                    height={50}
+                    alt="lastic Logo"
+                  />
+                </Link>
               </div>
-
-              <Disclosure.Panel className="md:hidden">
-                <div className="space-y-1 px-2 pt-2 pb-3 sm:px-3">
-                  {navigation.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className={joinClassNames(
-                        item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                        'block rounded-md px-3 py-2 text-base font-medium'
-                      )}
-                      aria-current={item.current ? 'page' : undefined}
-                      legacyBehavior>
-                      {item.name}
-                    </Link>
-                  ))}
-                </div>
-              </Disclosure.Panel>
-
-              <div className="flex justify-end space-y-1 px-2 md:hidden">
-                <ConnectButton />
+              <div className="mt-5 space-y-1">
+                {navigation.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={`block px-4 py-2 text-l font-medium transition duration-150 ease-in-out ${
+                      item.current ? 'text-lastic-aqua bg-gray-200' : 'text-gray-600 hover:bg-gray-100'
+                    }`}
+                    aria-current={item.current ? 'page' : undefined}
+                    legacyBehavior>
+                    {item.name}
+                  </Link>
+                ))}
               </div>
+            </div>
 
-            </>
-          )}
-        </Disclosure>
+            {/* Main Content Section */}
+            <div className="flex-1">
+              <ConnectButton />
 
-
+              {children}
+            </div>
+          </div>
+        </>
+      )}
+    </Disclosure>
       </div>
+
+      
+
   </>
 );
 
