@@ -27,7 +27,6 @@ export const useSubScanCall = <T,>({ apiUrl, requestData }: SubScanCallProps) =>
     axios(axiosConfig)
       .then((response: AxiosResponse<T>) => {
         setData(response.data);
-        console.log(JSON.stringify(response.data));
         setLoading(false);
       })
       .catch((error) => {
