@@ -7,11 +7,13 @@ import Navbar from './Navbar'
 import Background from './Background'
 import { env } from '@/config/environment'
 import { UseInkathonProvider } from '@scio-labs/use-inkathon'
+import { HomeIcon, UserGroupIcon, CogIcon } from '@heroicons/react/24/outline';
 
 const navigation_app = [
-    { name: 'Insta-core', href: '/instacore', current: false },
-    { name: '1. Bulk-core', href: '/bulkcore1', current: false },
-    { name: '2. Bulk-core', href: '/bulkcore2', current: false },
+    { name: 'Insta-core', icon: <HomeIcon  className="h-5 w-5" aria-hidden="true" />, href: '/instacore', current: false },
+    { name: '1. Bulk-core', icon: <UserGroupIcon className="h-5 w-5" aria-hidden="true" />, href: '/bulkcore1', current: false },
+    { name: '2. Bulk-core', icon: <CogIcon className="h-5 w-5" aria-hidden="true" />, href: '/bulkcore2', current: false },
+    { name: 'test', icon: <CogIcon className="h-5 w-5" aria-hidden="true" />, href: '/test', current: false },
   ]
 
 
@@ -44,14 +46,16 @@ export default function RootLayout({
       <body className={`${syncopate.variable} ${montserrat.variable}`}>
         <Background>
           <UseInkathonProvider
-              appName="ink!athon" // TODO
+              appName="lastic" // TODO
               connectOnInit={true}
               defaultChain={env.defaultChain}
           >
-            <Navbar navigation={navigation_app}/>
-            <div className="py-10">
-              <main>{children}</main>
-            </div>
+            <Navbar navigation={navigation_app}>
+              <div className="py-10">
+                <main>{children}</main>
+              </div>
+
+            </Navbar>
           </UseInkathonProvider>
         </Background>
       </body>
