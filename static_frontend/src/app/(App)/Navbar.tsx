@@ -98,7 +98,7 @@ const Navbar: FC<NavbarProps> = ( {navigation, children} ) => {
             </div>
 
             {/* Main Content Section */}
-            <div className="flex-1 ml-56">
+            <div className={`flex-1 ${isCollapsed ? 'ml-16' : 'ml-56'}`}>
               <div className="flex items-center justify-end px-4 py-4">
                 <div className="px-7">
                   Network: polkadot 
