@@ -7,11 +7,13 @@ import Navbar from './Navbar'
 import Background from './Background'
 import { env } from '@/config/environment'
 import { UseInkathonProvider } from '@scio-labs/use-inkathon'
+import { HomeIcon, UserGroupIcon, CogIcon } from '@heroicons/react/24/outline';
 
 const navigation_app = [
-    { name: 'Insta-core', href: '/instacore', current: false },
-    { name: '1. Bulk-core', href: '/bulkcore1', current: false },
-    { name: '2. Bulk-core', href: '/bulkcore2', current: false },
+    { name: 'Insta-core', icon: HomeIcon, href: '/instacore', current: false },
+    { name: '1. Bulk-core', icon: UserGroupIcon, href: '/bulkcore1', current: false },
+    { name: '2. Bulk-core', icon: CogIcon, href: '/bulkcore2', current: false },
+    { name: 'test', icon: CogIcon, href: '/test', current: false },
   ]
 
 
@@ -44,7 +46,7 @@ export default function RootLayout({
       <body className={`${syncopate.variable} ${montserrat.variable}`}>
         <Background>
           <UseInkathonProvider
-              appName="ink!athon" // TODO
+              appName="lastic" // TODO
               connectOnInit={true}
               defaultChain={env.defaultChain}
           >
