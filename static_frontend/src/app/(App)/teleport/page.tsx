@@ -37,7 +37,6 @@ const Teleport = () => {
   // JSX layout
   return (
     <section className="mx-auto max-w-9xl py-7 px-4 sm:px-6 lg:px-8">
-
     <Border >
     <div className="container mx-auto p-6">
       <h1 className="text-2xl font-bold mb-4 font-syncopate">Teleport</h1>
@@ -64,7 +63,7 @@ const Teleport = () => {
             placeholder="0"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            className="flex-1 p-2 bg-gray-800"
+            className="flex-1 p-2 bg-transparent border border-gray-9 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-7 focus:border-transparent"
           />
           <span className="ml-2">DOT</span>
         </div>
@@ -74,7 +73,7 @@ const Teleport = () => {
         </div>
       </div>
 
-      <button className="w-full py-2 bg-gray-800 hover:bg-gray-700">
+      <button className="w-full py-2 border border-gray-9 rounded-lg hover:bg-gray-1">
         Proceed To Confirmation
       </button>
 
