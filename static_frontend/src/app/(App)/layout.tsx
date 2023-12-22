@@ -14,6 +14,7 @@ const navigation_app = [
     { name: '1. Bulk-core', icon: <UserGroupIcon className="h-5 w-5" aria-hidden="true" />, href: '/bulkcore1', current: false },
     { name: '2. Bulk-core', icon: <CogIcon className="h-5 w-5" aria-hidden="true" />, href: '/bulkcore2', current: false },
     { name: 'test', icon: <CogIcon className="h-5 w-5" aria-hidden="true" />, href: '/test', current: false },
+    { name: 'Teleport assets', icon: <CogIcon className="h-5 w-5" aria-hidden="true" />, href: '/teleport', current: false },
   ]
 
 

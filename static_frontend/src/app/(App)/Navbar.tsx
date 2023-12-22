@@ -29,7 +29,7 @@ const Navbar: FC<NavbarProps> = ( {navigation, children} ) => {
               <div className="flex-shrink-0 flex items-center justify-between space-x-5 border-b border-gray-9  pl-6 pr-2 py-6 mt-2">
                 {!isCollapsed && (
                   <>
-                <Link href="/" className="font-bold" legacyBehavior>
+                <Link href="/" className="font-bold">
                   <Image
                     src="/assets/Images/Logos/lastic-logo.png"
                     width={130}
