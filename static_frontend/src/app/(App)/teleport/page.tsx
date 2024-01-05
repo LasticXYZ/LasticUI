@@ -5,6 +5,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { web3Enable } from '@polkadot/extension-dapp';
+import { Chain } from '@/utils/teleport';
+import {
+    useInkathon,
+    useBalance,
+  } from '@scio-labs/use-inkathon'
 import * as paraspell from '@paraspell/sdk';
 import Border from '@/components/border/Border';
 import ChainDropdown from '@/components/dropdown/ChainDropDown';
@@ -14,6 +19,15 @@ const Teleport = () => {
   const [toChain, setToChain] = useState('Basilisk');
   const [amount, setAmount] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const {
+    activeAccount,
+  } = useInkathon()
+
+  const { balanceFormatted } = useBalance(activeAccount?.address, true, {
+    forceUnit: false,
+    fixedDecimals: 2,
+    removeTrailingZeros: true,
+  })
 
   // Implement other state variables and logic here
 
@@ -34,6 +48,33 @@ const Teleport = () => {
     { name: 'Polkadot AssetHub', icon: '/assets/Images/NetworkIcons/assethub.svg' },
   ];
 
+  const getKusamaApi = async () =>
+  await ApiPromise.create({
+    provider: new WsProvider('KSM'),
+  })
+
+
+  const functionSendXCM = async ( amount: number ) => {
+    const apiKusama = await getKusamaApi()
+    const amountVal: number = amount * 1000000000
+
+    const promise = paraspell.xcmPallet.transferRelayToPara(
+        apiKusama,
+        Chain.BASILISK,  // Destination Parachain
+        amountVal,
+        toAddress.value            // AccountId32 or AccountKey20 address
+        )
+
+    promise
+    .signAndSend(
+      fromAddress.value,
+      { signer: injector.signer },
+      transactionHandler
+    )
+    .catch(errorHandler)
+
+  }
+
   // JSX layout
   return (
     <section className="mx-auto max-w-9xl py-7 px-4 sm:px-6 lg:px-8">
@@ -41,7 +82,7 @@ const Teleport = () => {
     <div className="container mx-auto p-6">
       <h1 className="text-2xl font-bold mb-4 font-syncopate">Teleport</h1>
       <p className="mb-6">Teleport assets between networks in the Polkadot and Kusama Ecosystem.</p>
-      <p className="mb-2 font-semibold">Click here to learn how it works</p>
+      <Link href="/" className="mb-2 font-semibold">Click here to learn how it works</Link>
       <hr className="my-4 border-gray-9" />
 
       <div className="grid grid-cols-2 gap-6 mb-6">
@@ -68,7 +109,7 @@ const Teleport = () => {
           <span className="ml-2">DOT</span>
         </div>
         <div className="flex justify-between items-center mt-2">
-          <span>Balance: 0.0000DOT</span>
+          <span>Balance: {balanceFormatted}</span>
           <button className="text-blue-500">Max</button>
         </div>
       </div>
