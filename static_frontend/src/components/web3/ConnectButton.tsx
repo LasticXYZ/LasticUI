@@ -55,14 +55,14 @@ return (
     // Connect Button + Modal
     <div className="relative">
       <button
-        className=" font-syncopate font-black rounded-2xl hover:bg-pink-3 border border-gray-8 text-xs inline-flex items-center justify-center px-12 py-3 mr-3 text-center text-black hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
+        className=" font-syncopate font-black rounded-2xl hover:bg-pink-3 border border-gray-8 text-xs inline-flex items-center justify-center px-12 py-3 mr-3 text-center text-black hover:bg-primary-800 focus:ring-4 focus:ring-primary-300"
         onClick={() => setOpenConnect(!openConnect)}
       >
         <span>Connect Wallet</span>
       </button>
 
       <WalletModal isOpen={openConnect} onClose={() => setOpenConnect(false)}>
-        <ul className="rounded-lg border border-gray-9 bg-white dark:bg-gray-14 divide-y divide-gray-2">
+        <ul className="rounded-lg border border-gray-9 bg-white divide-y divide-gray-2">
           {/* Installed Wallets */}
           {!isSSR &&
             !activeAccount &&
@@ -147,8 +147,6 @@ return (
               </div>
             )
           })}
-
-            <SupportedChains />
           
             {/* Account Balance */}
             {balanceFormatted !== undefined && (

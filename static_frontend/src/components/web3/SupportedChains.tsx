@@ -34,12 +34,12 @@ const SupportedChains: FC = () => {
   };
 
   return (
-    <div className="relative bg-white dark:bg-gray-19">
+    <div className="relative flex flex-row">
       <div
-        className="flex justify-between items-center p-2 cursor-pointer"
+        className="flex flex-row justify-between space-x-3 items-center p-2 cursor-pointer"
         onClick={() => setIsDropdownOpen((prev) => !prev)}
       >
-        <p>{activeChain?.name}</p>
+        <p>Network: {activeChain?.name}</p>
         <FiChevronDown size={16} className={`${isDropdownOpen ? 'transform rotate-180' : ''}`} />
       </div>
 
@@ -59,11 +59,6 @@ const SupportedChains: FC = () => {
           ))}
         </div>
       )}
-
-      {/* Current Chain Indicator */}
-      <div className="flex justify-end p-2">
-        {activeChain && <AiOutlineCheckCircle size={16} className="text-green-500" />}
-      </div>
     </div>
   );
 };

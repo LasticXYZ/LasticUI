@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import React, { FC, useState } from 'react'
 import { ConnectButton } from '@/components/web3/ConnectButton'
+import SupportedChains from '@/components/web3/SupportedChains'
 
 type NavbarProps = {
   navigation: Array<{name: string, href: string, icon: React.ReactElement, current: boolean}>;
@@ -101,7 +102,7 @@ const Navbar: FC<NavbarProps> = ( {navigation, children} ) => {
             <div className={`flex-1 ${isCollapsed ? 'ml-16' : 'ml-56'}`}>
               <div className="flex items-center justify-end px-4 py-4">
                 <div className="px-7">
-                  Network: polkadot 
+                  <SupportedChains />
                 </div>
                 <ConnectButton />
               </div>
