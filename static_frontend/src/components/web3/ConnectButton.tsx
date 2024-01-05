@@ -19,6 +19,7 @@ import { toast } from 'react-hot-toast'
 import { AiOutlineCheckCircle, AiOutlineDisconnect } from 'react-icons/ai'
 import { FiChevronDown, FiExternalLink } from 'react-icons/fi'
 import { AccountName } from './AccountName'  // Assuming AccountName is in the same directory
+import SupportedChains from './SupportedChains'
 
 export interface ConnectButtonProps {}
 export const ConnectButton: FC<ConnectButtonProps> = () => {
@@ -147,24 +148,7 @@ return (
             )
           })}
 
-            <div className="flex flex-col space-y-2 py-2 border-t-2 border-gray-3 bg-white dark:bg-gray-19">
-            {/* Supported Chains */}
-            {supportedChains.map((chain) => (
-              <div
-                key={chain.network}
-                onClick={async () => {
-                  if (chain.network !== activeChain?.network) {
-                    await switchActiveChain?.(chain);
-                    toast.success(`Switched to ${chain.name}`);
-                  }
-                }}
-                className={`p-2 flex justify-between items-center cursor-pointer ${chain.network === activeChain?.network ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-1"}`}
-              >
-                <p>{chain.name}</p>
-                {chain.network === activeChain?.network && <AiOutlineCheckCircle size={16} className="text-green-500" />}
-              </div>
-            ))}
-            </div>
+            <SupportedChains />
           
             {/* Account Balance */}
             {balanceFormatted !== undefined && (
