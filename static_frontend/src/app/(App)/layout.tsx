@@ -6,7 +6,7 @@ import { Syncopate, Montserrat } from 'next/font/google'
 import Navbar from './Navbar'
 import Background from './Background'
 import { env } from '@/config/environment'
-import { UseInkathonProvider } from '@scio-labs/use-inkathon'
+import { UseInkathonProvider } from '@poppyseed/lastic-sdk'
 import { HomeIcon, UserGroupIcon, CogIcon } from '@heroicons/react/24/outline';
 
 const navigation_app = [

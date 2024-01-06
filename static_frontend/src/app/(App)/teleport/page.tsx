@@ -9,10 +9,13 @@ import { Chain } from '@/utils/teleport';
 import {
     useInkathon,
     useBalance,
-  } from '@scio-labs/use-inkathon'
+    SubstrateChain,
+    allSubstrateChains,
+  } from '@poppyseed/lastic-sdk'
 import * as paraspell from '@paraspell/sdk';
 import Border from '@/components/border/Border';
 import ChainDropdown from '@/components/dropdown/ChainDropDown';
+import SupportedChains from '@/components/web3/SupportedChains';
 
 const Teleport = () => {
   const [fromChain, setFromChain] = useState('Kusama');
@@ -58,20 +61,20 @@ const Teleport = () => {
     const apiKusama = await getKusamaApi()
     const amountVal: number = amount * 1000000000
 
-    const promise = paraspell.xcmPallet.transferRelayToPara(
-        apiKusama,
-        Chain.BASILISK,  // Destination Parachain
-        amountVal,
-        toAddress.value            // AccountId32 or AccountKey20 address
-        )
+    // const promise = paraspell.xcmPallet.transferRelayToPara(
+    //     apiKusama,
+    //     Chain.BASILISK,  // Destination Parachain
+    //     amountVal,
+    //     toAddress.value            // AccountId32 or AccountKey20 address
+    //     )
 
-    promise
-    .signAndSend(
-      fromAddress.value,
-      { signer: injector.signer },
-      transactionHandler
-    )
-    .catch(errorHandler)
+    // promise
+    // .signAndSend(
+    //   fromAddress.value,
+    //   { signer: injector.signer },
+    //   transactionHandler
+    // )
+    // .catch(errorHandler)
 
   }
 
@@ -89,6 +92,7 @@ const Teleport = () => {
         <div>
           <p className="mb-2">Source chain</p>
           <ChainDropdown chainOptions={chainOptions} />
+          <SupportedChains />
         </div>
         <div>
           <p className="mb-2">Destination</p>
@@ -117,6 +121,15 @@ const Teleport = () => {
       <button className="w-full py-2 border border-gray-9 rounded-lg hover:bg-gray-1">
         Proceed To Confirmation
       </button>
+
+    <div>
+    {allSubstrateChains.map((chain) => (
+            <option key={chain.network} value={chain.network}>
+            {chain.name}
+            </option>
+        ))}
+
+    </div>
 
       <p className="mt-6">
         You will receive {amount || 0} DOT on Polkadot to 1ct4C4...GgnR5r (You Are Owner)

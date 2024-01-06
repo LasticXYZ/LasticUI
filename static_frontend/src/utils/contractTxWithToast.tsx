@@ -3,7 +3,7 @@ import {
   SubstrateExplorer,
   contractTx,
   useInkathon,
-} from '@scio-labs/use-inkathon'
+} from '@poppyseed/lastic-sdk'
 import Link from 'next/link'
 import { FC } from 'react'
 import { toast } from 'react-hot-toast'

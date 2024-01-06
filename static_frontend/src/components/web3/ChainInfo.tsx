@@ -1,4 +1,4 @@
-import { useInkathon } from '@scio-labs/use-inkathon'
+import { useInkathon } from '@poppyseed/lastic-sdk'
 import Link from 'next/link'
 import { FC, useEffect, useState } from 'react'
 import { HiOutlineExternalLink } from 'react-icons/hi'

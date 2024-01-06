@@ -10,7 +10,7 @@ import {
   useBalance,
   useInkathon,
   SubstrateWallet
-} from '@scio-labs/use-inkathon'
+} from '@poppyseed/lastic-sdk'
 import { truncateHash } from '@/utils/truncateHash'
 import { useIsSSR } from '@/utils/useIsSSR'
 import Link from 'next/link'
@@ -19,7 +19,6 @@ import { toast } from 'react-hot-toast'
 import { AiOutlineCheckCircle, AiOutlineDisconnect } from 'react-icons/ai'
 import { FiChevronDown, FiExternalLink } from 'react-icons/fi'
 import { AccountName } from './AccountName'  // Assuming AccountName is in the same directory
-import SupportedChains from './SupportedChains'
 
 export interface ConnectButtonProps {}
 export const ConnectButton: FC<ConnectButtonProps> = () => {
@@ -38,9 +37,6 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
     fixedDecimals: 2,
     removeTrailingZeros: true,
   })
-  const [supportedChains] = useState(
-    env.supportedChains.map((networkId) => getSubstrateChain(networkId) as SubstrateChain),
-  )
   const [browserWallets] = useState(
     allSubstrateWallets.filter((w) => w.platforms.includes(SubstrateWalletPlatform.Browser)),
   )

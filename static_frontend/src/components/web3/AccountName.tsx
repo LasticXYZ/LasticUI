@@ -3,7 +3,7 @@ import { useResolveAddressToDomain } from '@azns/resolver-react'
 import { InjectedAccount } from '@polkadot/extension-inject/types'
 import {
   useInkathon,
-} from '@scio-labs/use-inkathon'
+} from '@poppyseed/lastic-sdk'
 import { FC, useMemo } from 'react'
 
 export interface AccountNameProps {

@@ -8,7 +8,7 @@ import {
   useBalance,
   useInkathon,
   SubstrateWallet
-} from '@scio-labs/use-inkathon'
+} from '@poppyseed/lastic-sdk'
 import { FC, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { AiOutlineCheckCircle, AiOutlineDisconnect } from 'react-icons/ai'
