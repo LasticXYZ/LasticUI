@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3005",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -19,7 +19,7 @@
     "@paraspell/sdk": "^3.0.11",
     "@polkadot/api-base": "^10.11.2",
     "@polkadot/apps-config": "^0.133.1",
-    "@poppyseed/lastic-sdk": "^0.0.2",
+    "@poppyseed/lastic-sdk": "^0.0.3",
     "axios": "^1.6.5",
     "chart.js": "^4.4.1",
     "cheerio": "1.0.0-rc.12",
@@ -43,7 +43,6 @@
     "@polkadot/types": "^10.11.2",
     "@polkadot/util": "^12.6.2",
     "@polkadot/util-crypto": "^12.6.2",
-    "@scio-labs/use-inkathon": "^0.0.8",
     "@types/react": "18.2.25",
     "autoprefixer": "^10.4.16",
     "eslint-config-next": "^13.5.6",

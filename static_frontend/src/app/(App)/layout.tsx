@@ -6,7 +6,7 @@ import { Syncopate, Montserrat } from 'next/font/google'
 import Navbar from './Navbar'
 import Background from './Background'
 import { env } from '@/config/environment'
-import { UseInkathonProvider } from '@poppyseed/lastic-sdk'
+import { UseInkathonProvider, rococo, rococoCoretime } from '@poppyseed/lastic-sdk'
 import { HomeIcon, UserGroupIcon, CogIcon } from '@heroicons/react/24/outline';
 
 const navigation_app = [
@@ -49,7 +49,8 @@ export default function RootLayout({
           <UseInkathonProvider
               appName="lastic" // TODO
               connectOnInit={true}
-              defaultChain={env.defaultChain}
+              defaultChain={rococoCoretime}
+              relayChain={rococo}
           >
             <Navbar navigation={navigation_app}>
               <div className="py-10">

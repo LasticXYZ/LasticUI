@@ -2,11 +2,14 @@
 
 import Border from '@/components/border/Border';
 import React from 'react';
+import BrokerSaleInfo from '@/components/brokerSale/brokerSaleInfo';
+
 
 const TimeSection: React.FC = () => {
   return (
     <section className="mx-auto max-w-9xl px-4 mt-5 sm:px-6 lg:px-8">
     <Border>
+      <BrokerSaleInfo />
         <div className="mb-4 p-10">
             <button className='font-bold'><span className="text-pink-4">◀</span> previous coretime sale</button>
             <div className="flex justify-between rounded-full mx-10 bg-pink-4 px-16 py-10 bg-opacity-30 items-center my-6">
@@ -26,6 +29,7 @@ const TimeSection: React.FC = () => {
                 <span className="text-red-500">● Utilization period - 28 days</span>
             </div>
       </div>
+
     </Border>
     </section>
   );

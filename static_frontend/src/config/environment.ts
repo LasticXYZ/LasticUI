@@ -10,5 +10,6 @@ export const env = {
   isProduction: process.env.NEXT_PUBLIC_PRODUCTION_MODE === 'true',
 
   defaultChain: process.env.NEXT_PUBLIC_DEFAULT_CHAIN!,
+  relayChain: process.env.NEXT_PUBLIC_RELAY_CHAIN!,
   supportedChains: getSupportedChains(),
 }
