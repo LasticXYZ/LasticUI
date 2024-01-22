@@ -69,7 +69,7 @@ return (
                   onClick={() => {
                     // If the wallet has only one account, connect directly.
                     console.log("w:", w);
-                    connect?.(undefined, w);
+                    connect?.(undefined, undefined, w);
                     setChosenWallet(w);
                   }}
                   className="p-3 cursor-pointer hover:bg-gray-1 transition duration-300"
@@ -128,7 +128,7 @@ return (
                 // When an account is clicked, set it as active and then connect to the chosen wallet.
                 onClick={() => {
                   setActiveAccount?.(acc);
-                  connect?.(undefined, chosenWallet);
+                  connect?.(undefined, undefined, chosenWallet);
                   if (acc.address !== activeAccount.address) {
                     setActiveAccount?.(acc);
                   }
