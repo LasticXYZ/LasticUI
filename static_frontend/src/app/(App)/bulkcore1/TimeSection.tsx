@@ -2,7 +2,7 @@
 
 import Border from '@/components/border/Border';
 import React from 'react';
-import BrokerSaleInfo from '@/components/brokerSale/brokerSaleInfo';
+import BrokerSaleInfo from '@/components/broker/brokerSaleInfo';
 
 
 const TimeSection: React.FC = () => {

@@ -1,5 +1,3 @@
-import BrokerSaleInfo from "@/components/brokerSale/brokerSaleInfo";
-import PrimaryButton from "@/components/button/SecondaryButton";
 import SearchInput from "@/components/SearchInput/SearchInput";
 import SwitchDisplays from "@/components/switch/DisplaySwitch";
 import { useState } from "react";

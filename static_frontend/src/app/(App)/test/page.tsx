@@ -7,8 +7,7 @@ import CoreUtilisation from './CoreUtilisation';
 const BulkCore = () => {
     return (
       <>
-        <SubTitle subtitle="Primary Bulk coretime market" />
-        <TimeSection />
+        <SubTitle subtitle="Works with KSM and DOT" />
         <CoreUtilisation /> 
       </>
     );

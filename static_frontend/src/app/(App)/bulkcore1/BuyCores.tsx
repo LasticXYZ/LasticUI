@@ -1,17 +1,11 @@
 import Border from '@/components/border/Border';
-import CuteInfo from '@/components/info/CuteInfo';
-import { ConnectButton } from '@/components/web3/ConnectButton';
+import WalletStatus from '@/components/walletStatus/WalletStatus';
 import React from 'react';
 
 const BuyCores: React.FC = () => {
     return (
         <Border className="h-full flex justify-center items-center">
-            <div className="flex justify-center items-center p-20">
-                <div className="flex flex-col items-center justify-center p-8 ">
-                    <CuteInfo emoji="👀" message="Connect wallet in order to be able to renew." color="bg-teal-4"/>
-                    <ConnectButton />
-                </div>
-            </div>
+            <WalletStatus />
         </Border>
     );
 }
