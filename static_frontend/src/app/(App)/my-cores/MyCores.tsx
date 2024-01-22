@@ -4,7 +4,7 @@ import React from 'react';
 
 const MyCores: React.FC = () => {
     return (
-        <Border className="h-full flex flex-row justify-center items-center">
+        <Border className="h-full flex flex-row justify-right items-center">
             <BrokerRegionData />
         </Border>
     );
