@@ -10,6 +10,7 @@ import { UseInkathonProvider, rococo, rococoCoretime } from '@poppyseed/lastic-s
 import { HomeIcon, UserGroupIcon, CogIcon } from '@heroicons/react/24/outline';
 
 const navigation_app = [
+    { name: 'My cores', icon: <HomeIcon  className="h-5 w-5" aria-hidden="true" />, href: '/my-cores', current: false },
     { name: 'Insta-core', icon: <HomeIcon  className="h-5 w-5" aria-hidden="true" />, href: '/instacore', current: false },
     { name: '1. Bulk-core', icon: <UserGroupIcon className="h-5 w-5" aria-hidden="true" />, href: '/bulkcore1', current: false },
     { name: '2. Bulk-core', icon: <CogIcon className="h-5 w-5" aria-hidden="true" />, href: '/bulkcore2', current: false },

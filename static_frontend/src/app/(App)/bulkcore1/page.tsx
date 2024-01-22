@@ -27,4 +27,4 @@ const BulkCore = () => {
     );
 };
 
-export default BulkCore;
+export default BulkCore;  
