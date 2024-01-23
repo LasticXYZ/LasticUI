@@ -1,4 +1,4 @@
-import { useInkathon } from '@poppyseed/lastic-sdk';
+import { useBalance, useInkathon } from '@poppyseed/lastic-sdk';
 import { useEffect, useState } from 'react';
 import WalletStatus from '@/components/walletStatus/WalletStatus';
 import CoreItem from '../cores/CoreItem';
@@ -67,6 +67,7 @@ function useRegionQuery() {
     }
   
     const regionData = useRegionQuery();
+    let { tokenSymbol } = useBalance(activeAccount.address, true)
   
     // Filter regions where activeAccount's address matches the region owner's address
     const filteredRegionData = regionData?.filter(
@@ -76,30 +77,26 @@ function useRegionQuery() {
     return (
     filteredRegionData && filteredRegionData.length > 0 ? (
 
-      <div>
-            <div className="pt-10 pl-10">
-                <h1 className="text-xl font-syncopate font-bold">cores owned</h1>
-            </div>
+    <div className='h-full w-full flex flex-col justify-left items-left'>
+        <div className="pt-10 pl-10">
+            <h1 className="text-xl font-syncopate font-bold">cores owned</h1>
+        </div>
         <div>
             {filteredRegionData.map((region, index) => (
 
-              <div key={index}>
-                <h3>Core Nb {region.detail[0].core}</h3>
-                <p>Begin: {region.detail[0].begin}</p>
-                <p>Core: {region.detail[0].core}</p>
-                <p>Mask: {region.detail[0].mask}</p>
-                <p>End: {region.owner.end}</p>
-                <p>Owner: {region.owner.owner}</p>
-                <p>Paid: {region.owner.paid}</p>
+              <div key={index} className='p-6'>
                 <CoreItem
-                    timeBought="20 Dec 2023"
-                    coreNumber={2123}
-                    size={1}
-                    phase="Renewal Period"
-                    cost={2000}
-                    reward={200}
-                    currencyCost="DOT"
+                    timeBought="Jan 2024"
+                    coreNumber={region.detail[0].core}
+                    size='1'
+                    phase="- Period"
+                    cost={region.owner.paid}
+                    reward="0"
+                    currencyCost={tokenSymbol}
                     currencyReward="LASTIC"
+                    mask={region.detail[0].mask}
+                    begin={region.detail[0].begin}
+                    end={region.owner.end}
                 />
               </div>
             ))}

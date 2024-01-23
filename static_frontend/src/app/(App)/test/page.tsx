@@ -2,7 +2,7 @@
 
 import SubTitle from '../samesections/SubTitle';
 import TimeSection from './TimeSection';
-import CoreUtilisation from './CoreUtilisation';
+import CoreUtilisation from './CoreUtilisationKSMDOT';
 
 const BulkCore = () => {
     return (

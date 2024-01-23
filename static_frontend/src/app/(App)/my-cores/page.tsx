@@ -36,7 +36,7 @@ const InstaCore = () => {
             <PastTransactions />
         </section>
       </>
-    );
+    );     
 };
 
 export default InstaCore;
