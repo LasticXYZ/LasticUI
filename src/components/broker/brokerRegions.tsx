@@ -66,14 +66,13 @@ function useRegionQuery() {
 
   export default function BrokerRegionData() {
     const { activeAccount, activeChain } = useInkathon();
-  
+    let { tokenSymbol } = useBalance(activeAccount?.address, true)
+    const regionData = useRegionQuery();
+
     if (!activeAccount || !activeChain) {
       return <WalletStatus />;
     }
-  
-    const regionData = useRegionQuery();
-    let { tokenSymbol } = useBalance(activeAccount.address, true)
-  
+
     // Filter regions where activeAccount's address matches the region owner's address
     const filteredRegionData = regionData?.filter(
       region => region.owner.owner === activeAccount.address

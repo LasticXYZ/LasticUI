@@ -16,7 +16,7 @@ The repository is organized into two primary directories:
    - Contains the static frontend integrated with wallet connection functionality.
    - Serves as the boilerplate code that will evolve into the official Lastic website.
    - Design mirrors what's showcased in the `Figma UI`. As of now, the graphs are populated with mockup data.
-   
+
 ### 🚚 Repository Migration
  - `./core_chain_sdk` has moved! Check out [LasticSDK](https://github.com/LasticXYZ/lastic-sdk) for the SDK development tailored for Coretime chain interactions.
 
@@ -33,32 +33,6 @@ If that doesn't work try command:
 ```sh
 ./start2.sh
 ```
-
-For additional instructions on how to interact with the substrate node navigate to `./substrate-interact/README.md`.
-
-### Run
-You can run the repositories inside differnt folders either inidividually (by following instruction in the individual README.md folders) or by running the command
-
-For installing dependencies on both repositories:
-```sh
-pnpm i
-```
-
-And then run:
-```sh
-pnpm run dev
-```
-
-Now to open up `lastic_frontend` navigate to
-```
-http://localhost:3000
-```
-
-and to open the `substrate_interact` navigate to
-```
-http://localhost:8000/substrate-front-end-template
-```
-
 
 
 ## Visual Resources

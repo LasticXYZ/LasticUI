@@ -1,7 +1,6 @@
 'use client';
 
 import SubTitle from '../samesections/SubTitle';
-import TimeSection from './TimeSection';
 import CoreUtilisation from './CoreUtilisationKSMDOT';
 
 const BulkCore = () => {

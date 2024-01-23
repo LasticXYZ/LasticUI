@@ -10,6 +10,9 @@ const AnalyticSection = () => {
     activeChain
 } = useInkathon();
 
+const { tokenSymbol, balanceFormatted: initialBalanceFormatted } = useBalance(activeAccount?.address, true);
+
+
   if (!activeAccount || !activeChain) {
     return (
       <section className="mx-auto max-w-9xl py-7 px-4 sm:px-6 lg:px-8">
@@ -22,16 +25,13 @@ const AnalyticSection = () => {
     )
   }
 
-  let { tokenSymbol, balanceFormatted } = useBalance(activeAccount.address, true)
+  const balanceFormatted = initialBalanceFormatted ?? `- ${tokenSymbol}`;
 
-  if (!balanceFormatted) {
-    balanceFormatted = `- ${tokenSymbol}`
-  }
 
   let analytics = [
     { title: '0 LST', subtitle: 'Lastic Tokens', change: '' },
     { title: balanceFormatted, subtitle: `${tokenSymbol} on coretime chain`, change: '' },
-    { title: balanceFormatted, subtitle: `${tokenSymbol} on relay chain`, change: ''},
+    { title: '-', subtitle: `${tokenSymbol} on relay chain`, change: ''},
   ]
 
 
