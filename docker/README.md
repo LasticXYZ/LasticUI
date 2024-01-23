@@ -1,4 +1,3 @@
-
 ```
 docker build -t substrate-node .
 ```

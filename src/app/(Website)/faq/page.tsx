@@ -1,11 +1,11 @@
-import FAQSection from "@/app/(Website)/faq/FAQSection";
+import FAQSection from '@/app/(Website)/faq/FAQSection'
 
 const FAQ = () => {
-    return (
-      <>
-        <FAQSection />
-      </>
-    );
-};
+  return (
+    <>
+      <FAQSection />
+    </>
+  )
+}
 
-export default FAQ;
+export default FAQ

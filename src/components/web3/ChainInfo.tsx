@@ -38,15 +38,14 @@ export const ChainInfo: FC = () => {
           Connecting to {activeChain?.name} ({activeChain?.rpcUrls?.[0]})
         </div>
       </div>
-    ) 
+    )
 
   return (
     <>
       <div className="flex grow flex-col space-y-4 max-w-[20rem]">
         <h2 className="text-center font-mono text-gray-400">Chain Info</h2>
 
-        <div 
-        className='p-4 bg-white'>
+        <div className="p-4 bg-white">
           {/* Metadata */}
           {Object.entries(chainInfo || {}).map(([key, value]) => (
             <div key={key} className="text-sm leading-7">
@@ -96,7 +95,7 @@ export const ChainInfo: FC = () => {
           <>
             <h2 className="text-center font-mono text-red-400">Security Disclaimer</h2>
 
-            <div className='bg-red-500 bg-red-300 text-sm'>
+            <div className="bg-red-500 bg-red-300 text-sm">
               You are interacting with un-audited mainnet contracts and risk all your funds. Never
               transfer tokens to this contract.
             </div>

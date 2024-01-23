@@ -1,11 +1,10 @@
-import axios from 'axios';
-import React, { useEffect } from 'react';
+import axios from 'axios'
+import React, { useEffect } from 'react'
 
-const token = process.env.NEXT_PUBLIC_SUBSCAN_TOKEN;
+const token = process.env.NEXT_PUBLIC_SUBSCAN_TOKEN
 
 export const CallTest: React.FC = () => {
   useEffect(() => {
-
     const fetchData = async () => {
       try {
         const requestData = {
@@ -13,7 +12,7 @@ export const CallTest: React.FC = () => {
           page: 0,
           row: 10,
           status: 0,
-        };
+        }
 
         const config = {
           method: 'post',
@@ -24,22 +23,22 @@ export const CallTest: React.FC = () => {
             'X-API-Key': token,
           },
           data: JSON.stringify(requestData),
-        };
+        }
 
-        const response = await axios.request(config);
-        console.log(JSON.stringify(response.data));
+        const response = await axios.request(config)
+        console.log(JSON.stringify(response.data))
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
-    };
+    }
 
-    fetchData();
-  }, []); // Empty dependency array ensures the effect runs once after component mount
+    fetchData()
+  }, []) // Empty dependency array ensures the effect runs once after component mount
 
   // Return null or JSX here
   return (
     <div>
       <h1>CallTest</h1>
     </div>
-  );
-};
+  )
+}

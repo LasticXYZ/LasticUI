@@ -9,14 +9,14 @@ import { FC } from 'react'
 import { usePathname } from 'next/navigation'
 
 type NavbarProps = {
-  navigation: Array<{name: string, href: string, current: boolean}>;
-};
+  navigation: Array<{ name: string; href: string; current: boolean }>
+}
 
-const Navbar: FC<NavbarProps> = ( {navigation} ) => {
+const Navbar: FC<NavbarProps> = ({ navigation }) => {
   const pathname = usePathname()
 
   return (
-  <>
+    <>
       <div className="w-full fixed z-50 bg-[#F6FDFF] pb-4 border-b border-gray-9 bg-opacity-70">
         <Disclosure as="nav" className="">
           {({ open }) => (
@@ -25,17 +25,13 @@ const Navbar: FC<NavbarProps> = ( {navigation} ) => {
                 <div className="flex mt-5 items-center justify-between">
                   <div className="flex items-center">
                     <div className="flex-shrink-0 cursor-pointer">
-                      <Link
-                        href="/"
-                        className="font-bold"
-                        legacyBehavior
-                      >
-                      <Image
-                        src="/assets/Images/Logos/lastic-logo.png"
-                        width={130}
-                        height={50}
-                        alt="lastic Logo"
-                      />
+                      <Link href="/" className="font-bold" legacyBehavior>
+                        <Image
+                          src="/assets/Images/Logos/lastic-logo.png"
+                          width={130}
+                          height={50}
+                          alt="lastic Logo"
+                        />
                       </Link>
                     </div>
                   </div>
@@ -47,7 +43,7 @@ const Navbar: FC<NavbarProps> = ( {navigation} ) => {
                             key={idx}
                             href={item.href}
                             className={`${pathname === item.href ? 'text-black' : 'text-gray-12 hover:text-gray-19'}`}
-                            >
+                          >
                             {item.name}
                           </Link>
                         ))}
@@ -56,7 +52,7 @@ const Navbar: FC<NavbarProps> = ( {navigation} ) => {
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-4 flex items-center md:ml-6">
-                      <PrimaryButton title="Launch" location='/bulkcore1'/>
+                      <PrimaryButton title="Launch" location="/bulkcore1" />
                     </div>
                   </div>
                   <div className="-mr-2 flex md:hidden">
@@ -80,25 +76,21 @@ const Navbar: FC<NavbarProps> = ( {navigation} ) => {
                       key={item.name}
                       href={item.href}
                       className={`${pathname === item.href ? 'text-black' : 'text-gray-12 hover:text-gray-19'}`}
-                      >
+                    >
                       {item.name}
                     </Link>
                   ))}
                 </div>
                 <div className="flex justify-center space-y-1 px-2 md:hidden">
-                  <PrimaryButton title='Launch' location='/bulkcore1' />
+                  <PrimaryButton title="Launch" location="/bulkcore1" />
                 </div>
-
               </Disclosure.Panel>
-
-              
             </>
           )}
         </Disclosure>
-
-
       </div>
-  </>
-)};
+    </>
+  )
+}
 
-export default Navbar;
+export default Navbar

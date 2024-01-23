@@ -1,17 +1,17 @@
-import { useState, useEffect } from 'react';
-import axios, { AxiosResponse } from 'axios';
+import { useState, useEffect } from 'react'
+import axios, { AxiosResponse } from 'axios'
 
-const token = process.env.NEXT_PUBLIC_SUBSCAN_TOKEN;
+const token = process.env.NEXT_PUBLIC_SUBSCAN_TOKEN
 
 interface SubScanCallProps {
-  apiUrl: string;
-  requestData: Record<string, any>;
+  apiUrl: string
+  requestData: Record<string, any>
 }
 
 export const useSubScanCall = <T,>({ apiUrl, requestData }: SubScanCallProps) => {
-  const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [data, setData] = useState<T | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     const axiosConfig = {
@@ -22,19 +22,19 @@ export const useSubScanCall = <T,>({ apiUrl, requestData }: SubScanCallProps) =>
         'X-API-Key': token,
       },
       data: JSON.stringify(requestData),
-    };
+    }
 
     axios(axiosConfig)
       .then((response: AxiosResponse<T>) => {
-        setData(response.data);
-        setLoading(false);
+        setData(response.data)
+        setLoading(false)
       })
       .catch((error) => {
-        console.error('Error fetching data:', error);
-        setError('Failed to fetch data');
-        setLoading(false);
-      });
-  }, [apiUrl, requestData]);
+        console.error('Error fetching data:', error)
+        setError('Failed to fetch data')
+        setLoading(false)
+      })
+  }, [apiUrl, requestData])
 
-  return { data, loading, error };
-};
+  return { data, loading, error }
+}

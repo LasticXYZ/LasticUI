@@ -1,14 +1,14 @@
-import React, { useState, FC } from 'react';
-import { Listbox } from '@headlessui/react';
-import { ChevronDownIcon } from '@heroicons/react/24/outline';
-import Image from 'next/image';
+import React, { useState, FC } from 'react'
+import { Listbox } from '@headlessui/react'
+import { ChevronDownIcon } from '@heroicons/react/24/outline'
+import Image from 'next/image'
 
 interface ChainDropdownProps {
-    chainOptions: Array<{name: string, icon: string}>;
+  chainOptions: Array<{ name: string; icon: string }>
 }
 
-const ChainDropdown: FC<ChainDropdownProps> = ({chainOptions}) => {
-  const [selectedChain, setSelectedChain] = useState(chainOptions[0]);
+const ChainDropdown: FC<ChainDropdownProps> = ({ chainOptions }) => {
+  const [selectedChain, setSelectedChain] = useState(chainOptions[0])
 
   return (
     <Listbox value={selectedChain} onChange={setSelectedChain}>
@@ -40,13 +40,13 @@ const ChainDropdown: FC<ChainDropdownProps> = ({chainOptions}) => {
                       {chain.name}
                     </span>
                     <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-indigo-600">
-                        <Image 
-                          src={chain.icon} 
-                          alt="" 
-                          width={24}
-                          height={24}
-                          className="flex-shrink-0 h-6 w-6 rounded-full"
-                        />
+                      <Image
+                        src={chain.icon}
+                        alt=""
+                        width={24}
+                        height={24}
+                        className="flex-shrink-0 h-6 w-6 rounded-full"
+                      />
                     </span>
                   </>
                 )}
@@ -56,7 +56,7 @@ const ChainDropdown: FC<ChainDropdownProps> = ({chainOptions}) => {
         </div>
       )}
     </Listbox>
-  );
-};
+  )
+}
 
-export default ChainDropdown;
+export default ChainDropdown

@@ -32,33 +32,28 @@ const montserrat = localFont({
 })
 
 const navigation_app = [
-    { name: 'Docs', href: 'https://docs.lastic.xyz/', current: false },
-    { name: 'Articles', href: '/articles', current: true },
-    { name: 'FAQ', href: '/faq', current: false },
-  ]
+  { name: 'Docs', href: 'https://docs.lastic.xyz/', current: false },
+  { name: 'Articles', href: '/articles', current: true },
+  { name: 'FAQ', href: '/faq', current: false },
+]
 
-const syncopate = Syncopate(
-  { subsets: ['latin'],
-    weight: ['400', '700'],
-    variable: '--font-syncopate',
-  },
-)
+const syncopate = Syncopate({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-syncopate',
+})
 
 export const metadata: Metadata = {
   title: 'Lastic',
   description: 'Blockspace marketplace for Polkadot.',
 }
 
-export default function RootLayout({
-    children,
-  } : {
-    children: React.ReactNode
-  }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className={`${syncopate.variable} ${montserrat.className}`}>
         <Background>
-          <Navbar navigation={navigation_app}/>
+          <Navbar navigation={navigation_app} />
           <div className="py-5">
             <main>{children}</main>
           </div>
@@ -68,4 +63,3 @@ export default function RootLayout({
     </html>
   )
 }
-

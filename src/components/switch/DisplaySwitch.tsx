@@ -1,15 +1,20 @@
-import { joinClassNames } from "@/utils/helperFunc";
-import React, { FC, useState } from "react";
+import { joinClassNames } from '@/utils/helperFunc'
+import React, { FC, useState } from 'react'
 
 type SwitchDisplaysProps = {
-    displayOptions: Array<{key: string, value: string}>;
-    active: string;
-    setActive: (key: string) => void;
-    className?: string;
-};
+  displayOptions: Array<{ key: string; value: string }>
+  active: string
+  setActive: (key: string) => void
+  className?: string
+}
 
-const SwitchDisplays: FC<SwitchDisplaysProps> = ({ displayOptions, active, setActive, className="px-3 py-1" }) => {
-    /*
+const SwitchDisplays: FC<SwitchDisplaysProps> = ({
+  displayOptions,
+  active,
+  setActive,
+  className = 'px-3 py-1',
+}) => {
+  /*
     const [active, setActive] = useState(displayOptions[0].key);
 
     const onOptionClick = (option) => {
@@ -18,17 +23,21 @@ const SwitchDisplays: FC<SwitchDisplaysProps> = ({ displayOptions, active, setAc
         onChange(option);
         }
     };
-    */  
+    */
 
   return (
     <div className="flex items-center">
-      <ul className="flex bg-gray-23 rounded-xl" >
+      <ul className="flex bg-gray-23 rounded-xl">
         {displayOptions.map((option) => (
           <li
             key={option.key}
-            className= {joinClassNames(option.key === active ? 
-                "cursor-pointer bg-primary-8 rounded-xl text-center" : 
-                "cursor-pointer mr-2 text-center", "cursor-pointer", className)}
+            className={joinClassNames(
+              option.key === active
+                ? 'cursor-pointer bg-primary-8 rounded-xl text-center'
+                : 'cursor-pointer mr-2 text-center',
+              'cursor-pointer',
+              className,
+            )}
             onClick={() => setActive(option.key)}
           >
             {option.value}
@@ -36,7 +45,7 @@ const SwitchDisplays: FC<SwitchDisplaysProps> = ({ displayOptions, active, setAc
         ))}
       </ul>
     </div>
-  );
+  )
 }
 
-export default SwitchDisplays;
+export default SwitchDisplays

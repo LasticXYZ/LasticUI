@@ -1,18 +1,17 @@
-import InfoPlusAnalyticsCard from "@/components/card/InfoPlusAnalyticsCard"
-import MainBarGraph from "@/components/graph/MainBarGraph"
+import InfoPlusAnalyticsCard from '@/components/card/InfoPlusAnalyticsCard'
+import MainBarGraph from '@/components/graph/MainBarGraph'
 
 const GraphSection = () => (
-    <section className="mx-auto max-w-9xl p-10">
+  <section className="mx-auto max-w-9xl p-10">
     <div className="grid grid-cols-3 gap-4 ">
-        <div className="col-span-2">
-            <MainBarGraph />
-        </div>
-        <div className=" flex items-stretch">
-            <InfoPlusAnalyticsCard />
-        </div>
+      <div className="col-span-2">
+        <MainBarGraph />
+      </div>
+      <div className=" flex items-stretch">
+        <InfoPlusAnalyticsCard />
+      </div>
     </div>
-    </section>
+  </section>
 )
-
 
 export default GraphSection

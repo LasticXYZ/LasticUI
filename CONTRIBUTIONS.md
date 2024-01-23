@@ -3,6 +3,7 @@
 Welcome to the Lastic project! We're excited that you're interested in contributing. Before you get started, please take a moment to read the following guidelines to ensure a smooth and collaborative experience.
 
 ## Table of Contents
+
 - [Code of Conduct](#code-of-conduct)
 - [How Can I Contribute?](#how-can-i-contribute)
 - [Getting Started](#getting-started)

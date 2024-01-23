@@ -1,9 +1,4 @@
-import {
-  ContractTxResult,
-  SubstrateExplorer,
-  contractTx,
-  useInkathon,
-} from '@poppyseed/lastic-sdk'
+import { ContractTxResult, SubstrateExplorer, contractTx, useInkathon } from '@poppyseed/lastic-sdk'
 import Link from 'next/link'
 import { FC } from 'react'
 import { toast } from 'react-hot-toast'

@@ -1,13 +1,13 @@
 import type { Config } from 'tailwindcss'
 
-const config: Config  = {
+const config: Config = {
   content: [
-    "./app/**/*.{js,ts,jsx,tsx}",
-    "./pages/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
- 
+    './app/**/*.{js,ts,jsx,tsx}',
+    './pages/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,jsx,tsx}',
+
     // Or if using `src` directory:
-    "./src/**/*.{js,ts,jsx,tsx}",
+    './src/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {
@@ -31,9 +31,9 @@ const config: Config  = {
     },
     colors: {
       /* basic colors */
-      'white': '#FFFFFF',
-      'black': '#000000',
-      'transparent': 'transparent',
+      white: '#FFFFFF',
+      black: '#000000',
+      transparent: 'transparent',
       /* purple */
       'purple-1': '#F7EFFB',
       'purple-2': '#D2C8EF',
@@ -99,9 +99,9 @@ const config: Config  = {
       'lastic-green': '#2A9340',
       'lastic-teal': '#37FCFB',
       'lastic-aqua': '#8AC7DB',
-      'lastic-spectrum-from': '#FDDBC4',   
-      'lastic-spectrum-via': '#FF977F',   
-      'lastic-spectrum-to': '#FDDBC4',   
+      'lastic-spectrum-from': '#FDDBC4',
+      'lastic-spectrum-via': '#FF977F',
+      'lastic-spectrum-to': '#FDDBC4',
       /* gray */
       'gray-1': '#F3F4F6',
       'gray-2': '#E8E8ED',
@@ -127,10 +127,9 @@ const config: Config  = {
       'gray-22': '#1A1B23',
       'gray-23': '#121217',
       'gray-24': '#09090C',
-    }
+    },
   },
   plugins: [],
 }
-
 
 export default config
