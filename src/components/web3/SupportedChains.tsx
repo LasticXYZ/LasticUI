@@ -1,30 +1,33 @@
 import { env } from '@/config/environment'
 import {
   SubstrateChain,
-  SubstrateWalletPlatform,
-  allSubstrateWallets,
   getSubstrateChain,
-  isWalletInstalled,
-  useBalance,
-  useInkathon,
-  SubstrateWallet,
+  useInkathon
 } from '@poppyseed/lastic-sdk'
 import { FC, useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { AiOutlineCheckCircle, AiOutlineDisconnect } from 'react-icons/ai'
-import { FiChevronDown, FiExternalLink } from 'react-icons/fi'
+import { FiChevronDown } from 'react-icons/fi'
+
+type ChainConfig = {
+  coretime: string;
+  relay: string;
+}
 
 const SupportedChains: FC = () => {
   const { activeChain, switchActiveChain } = useInkathon()
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+
   const [supportedChains] = useState(
-    env.supportedChains.map((networkId) => getSubstrateChain(networkId) as SubstrateChain),
+    env.supportedChains.map((chainMap) => ({
+        coretime: getSubstrateChain(chainMap.coretime) as SubstrateChain,
+        relay: getSubstrateChain(chainMap.relay) as SubstrateChain,
+      })),
   )
 
-  const handleChainSwitch = async (chain: SubstrateChain) => {
+  const handleChainSwitch = async (chain: SubstrateChain, relayChain: SubstrateChain) => {
     if (chain.network !== activeChain?.network) {
-      await switchActiveChain?.(chain)
+      await switchActiveChain?.(chain, relayChain)
       toast.success(`Switched to ${chain.name}`)
       setIsDropdownOpen(false) // Close dropdown after switching
     }
@@ -43,18 +46,20 @@ const SupportedChains: FC = () => {
       {/* Dropdown List */}
       {isDropdownOpen && (
         <div className="absolute top-full left-0 w-full border-t-2 border-gray-3">
-          {supportedChains.map(
-            (chain) =>
-              chain.network !== activeChain?.network && (
+          {supportedChains.map((chainPair, index) => {
+            const { coretime, relay } = chainPair;
+            return (
+              coretime.network !== activeChain?.network && (
                 <div
-                  key={chain.network}
-                  onClick={() => handleChainSwitch(chain)}
-                  className="p-2 flex justify-between items-center hover:bg-gray-1 cursor-pointer"
+                  key={index}
+                  onClick={() => handleChainSwitch(coretime, relay)}
+                  className="p-2 flex justify-between items-center hover:bg-gray-100 cursor-pointer"
                 >
-                  <p>{chain.name}</p>
+                  <p>{coretime.name}</p>
                 </div>
-              ),
-          )}
+              )
+            )
+          })}
         </div>
       )}
     </div>

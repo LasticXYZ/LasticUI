@@ -204,8 +204,8 @@ export default function BrokerSaleInfo() {
     }
   }, [currentBlockNumber, saleInfo, configuration, brokerConstants])
 
-  const [regionBeginTimestamp, setRegionBeginTimestamp] = useState<string>('')
-  const [regionEndTimestamp, setRegionEndTimestamp] = useState<string>('')
+  const [regionBeginTimestamp, setRegionBeginTimestamp] = useState<string | null>(null)
+  const [regionEndTimestamp, setRegionEndTimestamp] = useState<string | null>(null)
   const [currentRelayBlock, setCurrentRelayBlock] = useState<number | null>(null)
 
   useEffect(() => {
@@ -214,10 +214,10 @@ export default function BrokerSaleInfo() {
         if (saleInfo && brokerConstants) {
           const beginTimestamp = relayApi
             ? await blockTimeToUTC(relayApi, saleInfo.regionBegin * brokerConstants.timeslicePeriod)
-            : ''
+            : null
           const endTimestamp = relayApi
             ? await blockTimeToUTC(relayApi, saleInfo.regionEnd * brokerConstants.timeslicePeriod)
-            : ''
+            : null
           const getCurrentRelayBlock = relayApi ? await getCurrentBlockNumber(relayApi) : null
 
           setRegionBeginTimestamp(beginTimestamp)

@@ -1,23 +1,24 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import { ApiPromise, WsProvider } from '@polkadot/api'
-import { web3Enable } from '@polkadot/extension-dapp'
-import { Chain } from '@/utils/teleport'
-import { useInkathon, useBalance, SubstrateChain, allSubstrateChains } from '@poppyseed/lastic-sdk'
-import * as paraspell from '@paraspell/sdk'
 import Border from '@/components/border/Border'
 import ChainDropdown from '@/components/dropdown/ChainDropDown'
 import SupportedChains from '@/components/web3/SupportedChains'
+import * as paraspell from '@paraspell/sdk'
+import { ApiPromise, WsProvider } from '@polkadot/api'
+import { allSubstrateChains, useBalance, useInkathon } from '@poppyseed/lastic-sdk'
+import Link from 'next/link'
+import { useState } from 'react'
 
 const Teleport = () => {
   const [fromChain, setFromChain] = useState('Kusama')
   const [toChain, setToChain] = useState('Basilisk')
   const [amount, setAmount] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const { activeAccount } = useInkathon()
+  const {
+    api,
+    relayApi,
+    activeAccount
+  } = useInkathon()
 
   const { balanceFormatted } = useBalance(activeAccount?.address, true, {
     forceUnit: false,
@@ -52,21 +53,22 @@ const Teleport = () => {
   const functionSendXCM = async (amount: number) => {
     const apiKusama = await getKusamaApi()
     const amountVal: number = amount * 1000000000
+    if (!activeAccount || !relayApi || !api) return
 
-    // const promise = paraspell.xcmPallet.transferRelayToPara(
-    //     apiKusama,
-    //     Chain.BASILISK,  // Destination Parachain
-    //     amountVal,
-    //     toAddress.value            // AccountId32 or AccountKey20 address
-    //     )
+    const promise = paraspell.xcmPallet.transferRelayToPara(
+        relayApi,
+        'AssetHubKusama',  // Destination Parachain
+        amountVal,
+        activeAccount.address
+        )
 
-    // promise
-    // .signAndSend(
-    //   fromAddress.value,
-    //   { signer: injector.signer },
-    //   transactionHandler
-    // )
-    // .catch(errorHandler)
+    promise
+    .signAndSend(
+      activeAccount.address
+    )
+    .catch((err) => {
+      console.error(err)
+    })
   }
 
   // JSX layout
