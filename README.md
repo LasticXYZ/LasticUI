@@ -89,3 +89,34 @@ Articles to check out:
  - [Simplifying RFC-1: Understanding Agile Coretime for the Polkadot Network](https://medium.com/lastic-marketplace/the-genesis-of-lastic-a-coretime-marketplace-for-polkadot-75130e40306c)
  - [Polkadot 2.0: A New Era of Decentralization](https://medium.com/lastic-marketplace/polkadot-2-0-a-new-era-of-decentralization-d5626a6e63e5)
  - [Unraveling Agile Coretime: Polkadot’s Innovative Resource Allocation](https://medium.com/lastic-marketplace/unraveling-agile-coretime-polkadots-innovative-resource-allocation-2c025d0daa59)
+
+
+
+# Lastic Static Frontend
+
+This repository contains the boilerplate code for the Lastic website. The frontend is designed to integrate with wallet connection functionality and is based on the designs showcased in the `Figma UI`.
+
+Functionality:
+  - Houses the static frontend with wallet connection features.
+  - Will be further developed into the official Lastic website.
+  - The design closely follows the `Figma UI`. Currently, the graphs use mockup data for demonstration.
+
+## Getting Started
+
+To set up and run the project, follow the steps below:
+
+```bash
+# Install the required dependencies
+pnpm install
+```
+
+Set up the environmental variables, copy and rename `.env.local.example`.
+
+```
+# Start the development server
+pnpm run dev
+```
+
+## Project Framework
+
+This project is built using [Next.js](https://nextjs.org/), uses pnpm and Tailwind css.
