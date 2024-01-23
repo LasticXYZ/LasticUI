@@ -3,21 +3,19 @@
 import Border from '@/components/border/Border'
 import ChainDropdown from '@/components/dropdown/ChainDropDown'
 import SupportedChains from '@/components/web3/SupportedChains'
-import * as paraspell from '@paraspell/sdk'
-import { ApiPromise, WsProvider } from '@polkadot/api'
+import { Builder } from '@paraspell/sdk'
 import { allSubstrateChains, useBalance, useInkathon } from '@poppyseed/lastic-sdk'
 import Link from 'next/link'
 import { useState } from 'react'
 
 const Teleport = () => {
-  const [fromChain, setFromChain] = useState('Kusama')
-  const [toChain, setToChain] = useState('Basilisk')
   const [amount, setAmount] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const {
     api,
     relayApi,
-    activeAccount
+    activeAccount,
+    activeSigner,
   } = useInkathon()
 
   const { balanceFormatted } = useBalance(activeAccount?.address, true, {
@@ -45,30 +43,32 @@ const Teleport = () => {
     { name: 'Polkadot AssetHub', icon: '/assets/Images/NetworkIcons/assethub.svg' },
   ]
 
-  const getKusamaApi = async () =>
-    await ApiPromise.create({
-      provider: new WsProvider('KSM'),
-    })
+  const transactionHandler = {
+    onBroadcast: (hash: string) => {
+      console.log(`Transaction broadcasted with hash ${hash}`)
+    },
+    onFinalized: (hash: string) => {
+      console.log(`Transaction finalized with hash ${hash}`)
+    },
+    onReady: (hash: string) => {
+      console.log(`Transaction ready with hash ${hash}`)
+    },
+    onInBlock: (hash: string) => {
+      console.log(`Transaction in block with hash ${hash}`)
+    },
+  }
 
   const functionSendXCM = async (amount: number) => {
-    const apiKusama = await getKusamaApi()
-    const amountVal: number = amount * 1000000000
+    const amountVal: number = amount * 10 ** 5
     if (!activeAccount || !relayApi || !api) return
 
-    const promise = paraspell.xcmPallet.transferRelayToPara(
-        relayApi,
-        'AssetHubKusama',  // Destination Parachain
-        amountVal,
-        activeAccount.address
-        )
+    let test = await Builder(api)            //Api parameter is optional
+      .to('AssetHubKusama')       // Destination Parachain //You can now add custom ParachainID eg. .to('Basilisk', 2024)
+      .amount(amountVal)           // Token amount
+      .address(activeAccount.address)         // AccountId32 or AccountKey20 address
+      .build()                  // Function called to build call
 
-    promise
-    .signAndSend(
-      activeAccount.address
-    )
-    .catch((err) => {
-      console.error(err)
-    })
+    console.log(test)
   }
 
   // JSX layout
@@ -115,7 +115,9 @@ const Teleport = () => {
             </div>
           </div>
 
-          <button className="w-full py-2 border border-gray-9 rounded-lg hover:bg-gray-1">
+          <button 
+            onClick={() => functionSendXCM(1)}
+          className="w-full py-2 border border-gray-9 rounded-lg hover:bg-gray-1">
             Proceed To Confirmation
           </button>
 
