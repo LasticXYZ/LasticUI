@@ -8,7 +8,7 @@ interface CardProps {
   coreNumber: string;
   size: string;
   phase: string;
-  cost: string;
+  cost: number;
   reward: string;
   currencyCost: string;
   currencyReward: string;

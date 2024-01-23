@@ -58,6 +58,11 @@ function useRegionQuery() {
     return data;
   }
   
+  function parseAndDividePaid(paid: string): number {
+    const numberWithoutCommas = paid.replace(/,/g, '');
+    const number = parseInt(numberWithoutCommas, 10);
+    return number / 10 ** 12;
+  }
 
   export default function BrokerRegionData() {
     const { activeAccount, activeChain } = useInkathon();
@@ -90,7 +95,7 @@ function useRegionQuery() {
                     coreNumber={region.detail[0].core}
                     size='1'
                     phase="- Period"
-                    cost={region.owner.paid}
+                    cost={parseAndDividePaid(region.owner.paid)}
                     reward="0"
                     currencyCost={tokenSymbol}
                     currencyReward="LASTIC"
