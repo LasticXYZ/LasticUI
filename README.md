@@ -16,11 +16,7 @@ The repository is organized into two primary directories:
    - Contains the static frontend integrated with wallet connection functionality.
    - Serves as the boilerplate code that will evolve into the official Lastic website.
    - Design mirrors what's showcased in the `Figma UI`. As of now, the graphs are populated with mockup data.
-
-2. `./substrate-interact`: 
-   - Developed on top of the [`substrate-front-end-template`](https://github.com/substrate-developer-hub/substrate-front-end-template.git).
-   - By following the guidelines in `./substrate_interact/README.md`, you can interact with the Coretime chain seamlessly.
-
+   
 ### 🚚 Repository Migration
  - `./core_chain_sdk` has moved! Check out [LasticSDK](https://github.com/LasticXYZ/lastic-sdk) for the SDK development tailored for Coretime chain interactions.
 
