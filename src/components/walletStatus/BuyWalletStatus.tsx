@@ -1,8 +1,12 @@
+import PurchaseInteractor from '@/components/broker/PurchaseInteractor'
 import SecondaryButton from '@/components/button/SecondaryButton'
 import CuteInfo from '@/components/info/CuteInfo'
 import { ConnectButton } from '@/components/web3/ConnectButton'
+import { truncateHash } from '@/utils/truncateHash'
+import { encodeAddress } from '@polkadot/util-crypto'
 import {
     SaleInfoType,
+    useBalance,
     useInkathon
 } from '@poppyseed/lastic-sdk'
 import Image from 'next/image'
@@ -10,11 +14,14 @@ import React from 'react'
 
 type BuyWalletStatusType = {
     saleInfo: SaleInfoType,
-    currentPrice: string
+    formatPrice: string
+    currentPrice: number,
 }
 
-const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({saleInfo, currentPrice}) => {
-  const { activeAccount } = useInkathon()
+const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({saleInfo, formatPrice, currentPrice, }) => {
+  const { activeAccount, activeChain } = useInkathon()
+  const { balanceFormatted, balance} = useBalance(activeAccount?.address, true);
+
 
   if (!activeAccount) {
     return (
@@ -51,8 +58,8 @@ const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({saleInfo, currentPrice}
         <h2 className="text-2xl font-syncopate font-semibold mt-4 mb-4">
             Sale Info
         </h2>
-        <div className='flex flex-row mt-10'>
-            <div className='pr-10'>
+        <div className='flex flex-row mt-5'>
+            <div className='pr-10 mt-5'>
                 <Image 
                     src="/assets/Images/core1.png"
                     width={200}
@@ -73,10 +80,16 @@ const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({saleInfo, currentPrice}
                 Cores that need to be sold so that the price starts rising: <span className="font-semibold">{saleInfo.idealCoresSold} / {saleInfo.coresOffered} </span>
                 </div>
                 <div className="text-gray-600 mb-4">
-                Buy core for: <span className="text-green-500 font-semibold">{currentPrice}</span>
+                Buy core for: <span className="text-green-500 font-semibold">{formatPrice}</span>
                 </div>
-                <div className="flex flex-col px-10 mt-10 items-center">
-                    <SecondaryButton title="Buy Core" location="/instacore" />
+                <div>
+                    Using account: {truncateHash(encodeAddress(activeAccount.address, activeChain?.ss58Prefix || 42), 8)}
+                </div>
+                <div>
+                    { balance ? (balance.toNumber() > 0 ? `Balance: ${balanceFormatted}` : 'You have 0 balance on this account') : 'Loading Balance' }
+                </div>
+                <div className="flex flex-col px-10 mt-10 items-center ">
+                    <PurchaseInteractor param={Math.floor(currentPrice * 1.02).toString()} />
                 </div>
             </div>
 

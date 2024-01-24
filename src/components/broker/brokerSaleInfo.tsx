@@ -285,7 +285,7 @@ export default function BrokerSaleInfo() {
       </div>
       <div className="col-span-3 py-4">
         <Border className="h-full flex justify-center items-center">
-          <BuyWalletStatus saleInfo={saleInfo} currentPrice={`${(currentPrice / 10 ** 12).toFixed(8)} ${tokenSymbol}`} />
+          <BuyWalletStatus saleInfo={saleInfo} formatPrice={`${(currentPrice / 10 ** 12).toFixed(8)} ${tokenSymbol}`} currentPrice={currentPrice}/>
         </Border>
       </div>
     </div>
