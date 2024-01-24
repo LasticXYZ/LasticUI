@@ -258,8 +258,8 @@ export default function BrokerSaleInfo() {
     <>
    <section className="mx-auto max-w-9xl px-4 mt-5 sm:px-6 lg:px-8">
     <Border>
-    <div>
-      <div className="mb-4 p-10">
+    <div className=" p-10">
+      <div >
         <button className="font-bold">
           <span className="text-pink-4">◀</span> previous coretime sale
         </button>
@@ -268,14 +268,13 @@ export default function BrokerSaleInfo() {
           <div className="text-2xl font-bold font-syncopate text-gray-18">{timeRemaining}</div>
         </div>
       </div>
-
-      <h2>
-        <b>Sale Info: {saleStage}</b>
-      </h2>
-      </div>
       <TimelineComponent currentBlockNumber={currentBlockNumber} saleInfo={saleInfo} config={configuration} constants={brokerConstants} />
-      <TimelineUtilize currentBlockNumber={currentBlockNumber} saleInfo={saleInfo} config={configuration} constants={brokerConstants} />
+      <TimelineUtilize currentRelayBlock={currentRelayBlock} saleInfo={saleInfo} config={configuration} constants={brokerConstants} />
+      <div className='flex justify-center'>
+        <b className='pr-2'>Sale Info:</b> {saleStage}
+      </div>
 
+    </div>
     </Border>
   </section>
 
@@ -286,7 +285,7 @@ export default function BrokerSaleInfo() {
       </div>
       <div className="col-span-3 py-4">
         <Border className="h-full flex justify-center items-center">
-          <BuyWalletStatus saleInfo={saleInfo} configuration={configuration} brokerConstants={brokerConstants} />
+          <BuyWalletStatus saleInfo={saleInfo} currentPrice={`${(currentPrice / 10 ** 12).toFixed(8)} ${tokenSymbol}`} />
         </Border>
       </div>
     </div>

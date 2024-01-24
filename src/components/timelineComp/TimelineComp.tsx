@@ -23,7 +23,7 @@ const Slider: FC<SliderPropeTypes> = ({ currentBlockNumber, saleInfo, config, co
     const safePurchasePercentage = Math.max(0, Math.min(100, purchasePercentage));
   
     return (
-      <div className='mx-20 my-16 relative'>
+      <div className='mx-10 my-16 relative'>
         <div className="w-full bg-pink-4 bg-opacity-20 h-3 rounded-full overflow-hidden">
           <div className="bg-pink-4 bg-opacity-50 h-full" style={{ width: `${safePurchasePercentage}%` }}></div>
         </div>
@@ -41,7 +41,7 @@ const Slider: FC<SliderPropeTypes> = ({ currentBlockNumber, saleInfo, config, co
           <p className="text-sm text-left -mt-12 -ml-5">Sale Start</p>
         </div>
         <div className="absolute top-0 -mt-1" style={{ left: `${(safeStartSalePercentage + safeLeadinPercentage) / 2}%` }}>
-            <p className="text-sm text-left mt-5 -ml-10">Linear decreasing Period</p>
+            <p className="text-sm text-left mt-5 -ml-10">Linearly decreasing price</p>
         </div>
         {/* Marker for Lead-in Period */}
         <div className="absolute top-0 -mt-1" style={{ left: `${safeLeadinPercentage}%` }}>

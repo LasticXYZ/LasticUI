@@ -2,20 +2,18 @@ import SecondaryButton from '@/components/button/SecondaryButton'
 import CuteInfo from '@/components/info/CuteInfo'
 import { ConnectButton } from '@/components/web3/ConnectButton'
 import {
-    BrokerConstantsType,
-    ConfigurationType,
     SaleInfoType,
     useInkathon
 } from '@poppyseed/lastic-sdk'
+import Image from 'next/image'
 import React from 'react'
 
 type BuyWalletStatusType = {
     saleInfo: SaleInfoType,
-    configuration: ConfigurationType,
-    brokerConstants: BrokerConstantsType
+    currentPrice: string
 }
 
-const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({saleInfo, configuration}) => {
+const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({saleInfo, currentPrice}) => {
   const { activeAccount } = useInkathon()
 
   if (!activeAccount) {
@@ -33,31 +31,57 @@ const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({saleInfo, configuration
     )
   }
 
+  if (saleInfo.coresSold >= saleInfo.coresOffered) {
+    return (
+      <div className="flex justify-center items-center py-20 px-4">
+        <div className="flex flex-col items-center justify-center px-2 py-8 ">
+          <CuteInfo
+            emoji="😔"
+            message="All cores are sold out."
+            color="bg-lastic-spectrum-via"
+          />
+          <SecondaryButton title="Purchase Instantianous Coretime" location="/instacore" />
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="flex justify-center items-center py-20 px-4">
-      <div className="flex flex-col items-center justify-center px-2 py-8 ">
-        <h2>
-            <b>Sale Info:</b>
+    <div className="flex flex-col items-left h-full w-full p-10">
+        <h2 className="text-2xl font-syncopate font-semibold mt-4 mb-4">
+            Sale Info
         </h2>
-        <div>availableCores: {saleInfo.coresOffered - saleInfo.coresSold}</div>
-        <div>How many cores are set to renew by default?</div>
-        <div>
-            idealCoresSold: {saleInfo.idealCoresSold}
-            firstCore: {saleInfo.firstCore}
-            selloutPrice: {saleInfo.selloutPrice}
-            renewalBump: {configuration.renewalBump}
+        <div className='flex flex-row mt-10'>
+            <div className='pr-10'>
+                <Image 
+                    src="/assets/Images/core1.png"
+                    width={200}
+                    height={200}
+                    alt="instacore"
+                    className="mb-4"
+                />
+
+            </div>
+            <div>
+                <div className="text-gray-18 text-xl font-syncopate mb-5">
+                Core Nb: <span className="font-semibold">{saleInfo.firstCore + saleInfo.coresSold}</span>
+                </div>
+                <div className="text-gray-600 mb-2">
+                Available Cores: <span className="font-semibold">{saleInfo.coresOffered - saleInfo.coresSold} / {saleInfo.coresOffered} </span> 
+                </div>
+                <div className="text-gray-600 mb-2">
+                Cores that need to be sold so that the price starts rising: <span className="font-semibold">{saleInfo.idealCoresSold} / {saleInfo.coresOffered} </span>
+                </div>
+                <div className="text-gray-600 mb-4">
+                Buy core for: <span className="text-green-500 font-semibold">{currentPrice}</span>
+                </div>
+                <div className="flex flex-col px-10 mt-10 items-center">
+                    <SecondaryButton title="Buy Core" location="/instacore" />
+                </div>
+            </div>
+
         </div>
 
-        <div>
-        <b>Configuration:</b>
-      </div>
-      <div>
-        idealBulkProportion: {configuration.idealBulkProportion}
-        limitCoresOffered: {configuration.limitCoresOffered}
-        contributionTimeout: {configuration.contributionTimeout}
-      </div>
-        <SecondaryButton title="Buy core" />
-      </div>
     </div>
   )
 }

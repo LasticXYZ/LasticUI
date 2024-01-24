@@ -4,8 +4,6 @@ import { FC } from "react";
 // Additional interfaces, which should be defined according to your data structure
 type SliderPropeTypes = {
     currentRelayBlock: number;
-    regionBeginTimestamp: string ;
-    regionEndTimestamp: string;
     saleInfo: SaleInfoType;
     config: ConfigurationType;
     constants: BrokerConstantsType;
@@ -36,14 +34,14 @@ const Slider: FC<SliderPropeTypes> = ({ currentRelayBlock, saleInfo, config, con
     const safeutilizationPercentage = Math.max(0, Math.min(100, utilizationPercentage));
   
     return (
-      <div className='mx-20 my-16 relative'>
-        <div>
+      <div className='mx-10 mt-16 mb-10 relative'>
+        <div>{/*
             Amount of utilization:{' '}
             {currentRelayBlockUtilization(currentRelayBlock, saleInfo, constants)} % current relay
             block: {currentRelayBlock}
             start region block: {saleInfo.regionBegin * constants.timeslicePeriod}
             end region block: {saleInfo.regionEnd * constants.timeslicePeriod}
-            {/* Region Begin Timestamp:{' '}
+             Region Begin Timestamp:{' '}
             {regionBeginTimestamp !== null ? regionBeginTimestamp : 'Loading...'}
             Region End Timestamp: {regionEndTimestamp !== null ? regionEndTimestamp : 'Loading...'} */}
         </div>
@@ -53,12 +51,12 @@ const Slider: FC<SliderPropeTypes> = ({ currentRelayBlock, saleInfo, config, con
         {/* Marker for Interlude Period */}
         <div className="absolute top-0 -mt-1" style={{ left: `${0}%` }}>
           <div className="w-5 h-5 bg-red-4 rounded-full"></div>
-          <p className="text-sm text-left -mt-12 -ml-8">Core Start</p>
+          <p className="text-sm text-left -mt-12 -ml-8">Start Utilization</p>
         </div>
         {/* Marker for Purchase Period */}
         <div className="absolute top-0 -mt-1" style={{ left: '100%' }}>
             <div className="w-5 h-5 bg-red-4 rounded-full"></div>
-            <p className="text-sm text-left -mt-12 -ml-10">Sale End</p>
+            <p className="text-sm text-left -mt-12 -ml-20">End Utilization</p>
         </div>
       </div>
     );
