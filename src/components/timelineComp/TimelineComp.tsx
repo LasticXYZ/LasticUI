@@ -27,19 +27,29 @@ const Slider: FC<SliderPropeTypes> = ({ currentBlockNumber, saleInfo, config, co
         <div className="w-full bg-pink-4 bg-opacity-20 h-3 rounded-full overflow-hidden">
           <div className="bg-pink-4 bg-opacity-50 h-full" style={{ width: `${safePurchasePercentage}%` }}></div>
         </div>
+        {/* Marker for Interlude Period */}
         <div className="absolute top-0 -mt-1" style={{ left: `${0}%` }}>
           <div className="w-5 h-5 bg-red-4 rounded-full"></div>
-          <p className="text-sm text-left -mt-12 -ml-8">Interlude Period</p>
+          <p className="text-sm text-left -mt-12 -ml-8">Core Start</p>
         </div>
-        {/* Marker for Interlude Period */}
+        <div className="absolute top-0 -mt-1" style={{ left: `${(safeStartSalePercentage) / 2}%` }}>
+            <p className="text-sm text-left mt-5 -ml-10">Renew Period</p>
+        </div>
+        {/* Marker for LeadIn Period */}
         <div className="absolute top-0 -mt-1" style={{ left: `${safeStartSalePercentage}%` }}>
           <div className="w-5 h-5 bg-red-4 rounded-full"></div>
           <p className="text-sm text-left -mt-12 -ml-5">Sale Start</p>
         </div>
+        <div className="absolute top-0 -mt-1" style={{ left: `${(safeStartSalePercentage + safeLeadinPercentage) / 2}%` }}>
+            <p className="text-sm text-left mt-5 -ml-10">Linear decreasing Period</p>
+        </div>
         {/* Marker for Lead-in Period */}
         <div className="absolute top-0 -mt-1" style={{ left: `${safeLeadinPercentage}%` }}>
             <div className="w-5 h-5 bg-red-4 rounded-full"></div>
-            <p className="text-sm text-left -mt-12 -ml-8">Lead-in Period</p>
+            <p className="text-sm text-left -mt-12 -ml-10">Prices Stabilize</p>
+        </div>
+        <div className="absolute top-0 -mt-1" style={{ left: `${(safeLeadinPercentage + 100) / 2}%` }}>
+            <p className="text-sm text-left mt-5 -ml-10">Stable price = {saleInfo.price / 10 ** 12}</p>
         </div>
         {/* Marker for Purchase Period */}
         <div className="absolute top-0 -mt-1" style={{ left: '100%' }}>

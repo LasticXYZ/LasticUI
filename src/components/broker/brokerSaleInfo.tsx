@@ -1,6 +1,7 @@
 import AnalyticSection from '@/app/(App)/bulkcore1/AnalyticSection'
 import Border from '@/components/border/Border'
 import TimelineComponent from '@/components/timelineComp/TimelineComp'
+import TimelineUtilize from '@/components/timelineComp/TimelineUtilize'
 import BuyWalletStatus from '@/components/walletStatus/BuyWalletStatus'
 import { ApiPromise } from '@polkadot/api'
 import {
@@ -160,21 +161,6 @@ function calculateCurrentPrice(
   }
 }
 
-function currentRelayBlockUtilization(
-  currentRelayBlock: number,
-  saleInfo: SaleInfoType,
-  constant: BrokerConstantsType,
-) {
-  const startBlock = saleInfo.regionBegin * constant.timeslicePeriod
-  const endBlock = saleInfo.regionEnd * constant.timeslicePeriod
-  const percent = (currentRelayBlock - startBlock) / (endBlock - startBlock)
-  if (percent < 0) {
-    return 0
-  } else {
-    return percent
-  }
-}
-
 export default function BrokerSaleInfo() {
   const { api, relayApi, activeAccount } = useInkathon()
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
@@ -284,21 +270,11 @@ export default function BrokerSaleInfo() {
       </div>
 
       <h2>
-        <b>Sale Info:</b>
+        <b>Sale Info: {saleStage}</b>
       </h2>
-      <div>{saleStage}</div>
-      <div>
-        Amount of utilization:{' '}
-        {currentRelayBlockUtilization(currentRelayBlock, saleInfo, brokerConstants)} % current relay
-        block: {currentRelayBlock}
-        start region block: {saleInfo.regionBegin * brokerConstants.timeslicePeriod}
-        end region block: {saleInfo.regionEnd * brokerConstants.timeslicePeriod}
-        Region Begin Timestamp:{' '}
-        {regionBeginTimestamp !== null ? regionBeginTimestamp : 'Loading...'}
-        Region End Timestamp: {regionEndTimestamp !== null ? regionEndTimestamp : 'Loading...'}
-      </div>
       </div>
       <TimelineComponent currentBlockNumber={currentBlockNumber} saleInfo={saleInfo} config={configuration} constants={brokerConstants} />
+      <TimelineUtilize currentBlockNumber={currentBlockNumber} saleInfo={saleInfo} config={configuration} constants={brokerConstants} />
 
     </Border>
   </section>
