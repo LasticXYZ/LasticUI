@@ -1,16 +1,16 @@
-import AnalyticCard from '@/components/card/AnalyticCard';
-import React from 'react';
+import AnalyticCard from '@/components/card/AnalyticCard'
+import React from 'react'
 
 type AnalyticItem = {
-  title: string;
-  subtitle: string;
-  change: number | string;
-};
+  title: string
+  subtitle: string
+  change: number | string
+}
 
 // Define props for AnalyticSection
 export type AnalyticSectionProps = {
-  analytics: AnalyticItem[];
-};
+  analytics: AnalyticItem[]
+}
 
 const AnalyticSection: React.FC<AnalyticSectionProps> = ({ analytics }) => (
   <div className="grid grid-cols-1 items-stretch content-between justify-between w-full flex-grow">

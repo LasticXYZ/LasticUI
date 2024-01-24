@@ -1,4 +1,4 @@
 export type ChainConfig = {
-    coretime: string;
-    relay: string;
-  }
+  coretime: string
+  relay: string
+}

@@ -4,9 +4,7 @@ import BrokerSaleInfo from '@/components/broker/brokerSaleInfo'
 import React from 'react'
 
 const TimeSection: React.FC = () => {
-  return (
-        <BrokerSaleInfo />
-  )
+  return <BrokerSaleInfo />
 }
 
 export default TimeSection

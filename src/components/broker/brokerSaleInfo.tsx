@@ -131,7 +131,8 @@ function saleStatus(
       saleInfo.saleStart + config.leadinLength - currentBlockNumber,
       typeOfChain,
     )
-    statusMessage = 'Sales have started we are now in the lead-in period. The price is linearly decreasing with each block.'
+    statusMessage =
+      'Sales have started we are now in the lead-in period. The price is linearly decreasing with each block.'
     statusTitle = 'Lead-in Period'
   } else if (currentBlockNumber <= saleEnds) {
     timeRemaining = blocksToTimeFormat(saleEnds - currentBlockNumber, typeOfChain)
@@ -232,8 +233,6 @@ export default function BrokerSaleInfo() {
     fetchRegionTimestamps()
   }, [relayApi, saleInfo, brokerConstants])
 
-
-
   if (!api || !relayApi) return <div>API not available</div>
 
   if (
@@ -250,46 +249,69 @@ export default function BrokerSaleInfo() {
   let currentPrice = calculateCurrentPrice(currentBlockNumber, saleInfo, configuration)
 
   let analyticsData = [
-    { title: `${(currentPrice / 10 ** 12).toFixed(4)} ${tokenSymbol}`, subtitle: 'Current Price', change: `${(currentPrice / 10 ** 12).toFixed(9)} ${tokenSymbol} to be exact` },
-    { title: `${saleInfo?.coresSold} / ${saleInfo?.coresOffered}`, subtitle: `Core sold out of ${saleInfo?.coresOffered} available`, change: '' },
+    {
+      title: `${(currentPrice / 10 ** 12).toFixed(4)} ${tokenSymbol}`,
+      subtitle: 'Current Price',
+      change: `${(currentPrice / 10 ** 12).toFixed(9)} ${tokenSymbol} to be exact`,
+    },
+    {
+      title: `${saleInfo?.coresSold} / ${saleInfo?.coresOffered}`,
+      subtitle: `Core sold out of ${saleInfo?.coresOffered} available`,
+      change: '',
+    },
   ]
 
   return (
     <>
-   <section className="mx-auto max-w-9xl px-4 mt-5 sm:px-6 lg:px-8">
-    <Border>
-    <div className=" p-10">
-      <div >
-        <button className="font-bold">
-          <span className="text-pink-4">◀</span> previous coretime sale
-        </button>
-        <div className="flex justify-between rounded-full mx-10 bg-pink-4 px-16 py-10 bg-opacity-30 items-center my-6">
-          <div className="text-xl font-bold font-syncopate text-gray-21">{saleTitle}</div>
-          <div className="text-2xl font-bold font-syncopate text-gray-18">{timeRemaining}</div>
-        </div>
-      </div>
-      <TimelineComponent currentBlockNumber={currentBlockNumber} saleInfo={saleInfo} config={configuration} constants={brokerConstants} />
-      <TimelineUtilize currentRelayBlock={currentRelayBlock} saleInfo={saleInfo} config={configuration} constants={brokerConstants} />
-      <div className='flex justify-center'>
-        <b className='pr-2'>Sale Info:</b> {saleStage}
-      </div>
-
-    </div>
-    </Border>
-  </section>
-
-  <section className="mx-auto max-w-9xl py-4 px-4 sm:px-6 lg:px-8 flex flex-col items-stretch">
-    <div className="grid grid-cols-4 gap-8 flex-grow">
-      <div className="col-span-1 flex flex-col items-stretch w-full">
-        <AnalyticSection analytics={analyticsData} />
-      </div>
-      <div className="col-span-3 py-4">
-        <Border className="h-full flex justify-center items-center">
-          <BuyWalletStatus saleInfo={saleInfo} formatPrice={`${(currentPrice / 10 ** 12).toFixed(8)} ${tokenSymbol}`} currentPrice={currentPrice}/>
+      <section className="mx-auto max-w-9xl px-4 mt-5 sm:px-6 lg:px-8">
+        <Border>
+          <div className=" p-10">
+            <div>
+              <button className="font-bold">
+                <span className="text-pink-4">◀</span> previous coretime sale
+              </button>
+              <div className="flex justify-between rounded-full mx-10 bg-pink-4 px-16 py-10 bg-opacity-30 items-center my-6">
+                <div className="text-xl font-bold font-syncopate text-gray-21">{saleTitle}</div>
+                <div className="text-2xl font-bold font-syncopate text-gray-18">
+                  {timeRemaining}
+                </div>
+              </div>
+            </div>
+            <TimelineComponent
+              currentBlockNumber={currentBlockNumber}
+              saleInfo={saleInfo}
+              config={configuration}
+              constants={brokerConstants}
+            />
+            <TimelineUtilize
+              currentRelayBlock={currentRelayBlock}
+              saleInfo={saleInfo}
+              config={configuration}
+              constants={brokerConstants}
+            />
+            <div className="flex justify-center">
+              <b className="pr-2">Sale Info:</b> {saleStage}
+            </div>
+          </div>
         </Border>
-      </div>
-    </div>
-  </section>
+      </section>
+
+      <section className="mx-auto max-w-9xl py-4 px-4 sm:px-6 lg:px-8 flex flex-col items-stretch">
+        <div className="grid grid-cols-4 gap-8 flex-grow">
+          <div className="col-span-1 flex flex-col items-stretch w-full">
+            <AnalyticSection analytics={analyticsData} />
+          </div>
+          <div className="col-span-3 py-4">
+            <Border className="h-full flex justify-center items-center">
+              <BuyWalletStatus
+                saleInfo={saleInfo}
+                formatPrice={`${(currentPrice / 10 ** 12).toFixed(8)} ${tokenSymbol}`}
+                currentPrice={currentPrice}
+              />
+            </Border>
+          </div>
+        </div>
+      </section>
     </>
   )
 }
