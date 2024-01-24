@@ -1,3 +1,8 @@
+import AnalyticSection from '@/app/(App)/bulkcore1/AnalyticSection'
+import Border from '@/components/border/Border'
+import TimelineComponent from '@/components/timelineComp/TimelineComp'
+import TimelineUtilize from '@/components/timelineComp/TimelineUtilize'
+import BuyWalletStatus from '@/components/walletStatus/BuyWalletStatus'
 import { ApiPromise } from '@polkadot/api'
 import {
   BrokerConstantsType,
@@ -8,6 +13,7 @@ import {
   blocksToTimeFormat,
   getConstants,
   getCurrentBlockNumber,
+  useBalance,
   useInkathon,
 } from '@poppyseed/lastic-sdk'
 import { useEffect, useMemo, useState } from 'react'
@@ -114,10 +120,12 @@ function saleStatus(
 
   let statusMessage = ''
   let timeRemaining = ''
+  let statusTitle = ''
 
   if (currentBlockNumber < saleInfo.saleStart) {
     timeRemaining = blocksToTimeFormat(saleInfo.saleStart - currentBlockNumber, typeOfChain)
-    statusMessage = 'Interlude Period - time to renew your core!'
+    statusMessage = 'Time to renew your core!'
+    statusTitle = 'Interlude Period'
   } else if (currentBlockNumber < saleInfo.saleStart + config.leadinLength) {
     timeRemaining = blocksToTimeFormat(
       saleInfo.saleStart + config.leadinLength - currentBlockNumber,
@@ -125,14 +133,18 @@ function saleStatus(
     )
     statusMessage =
       'Sales have started we are now in the lead-in period. The price is linearly decreasing with each block.'
+    statusTitle = 'Lead-in Period'
   } else if (currentBlockNumber <= saleEnds) {
     timeRemaining = blocksToTimeFormat(saleEnds - currentBlockNumber, typeOfChain)
     statusMessage = 'Sale is in the purchase period.'
+    statusTitle = 'Purchase Period'
   } else {
+    timeRemaining = '-'
     statusMessage = 'The sale has ended.'
+    statusTitle = 'Sale Ended'
   }
 
-  return { statusMessage, timeRemaining }
+  return { statusTitle, statusMessage, timeRemaining }
 }
 
 function calculateCurrentPrice(
@@ -150,23 +162,10 @@ function calculateCurrentPrice(
   }
 }
 
-function currentRelayBlockUtilization(
-  currentRelayBlock: number,
-  saleInfo: SaleInfoType,
-  constant: BrokerConstantsType,
-) {
-  const startBlock = saleInfo.regionBegin * constant.timeslicePeriod
-  const endBlock = saleInfo.regionEnd * constant.timeslicePeriod
-  const percent = (currentRelayBlock - startBlock) / (endBlock - startBlock)
-  if (percent < 0) {
-    return 0
-  } else {
-    return percent
-  }
-}
-
 export default function BrokerSaleInfo() {
-  const { api, relayApi } = useInkathon()
+  const { api, relayApi, activeAccount } = useInkathon()
+  let { tokenSymbol } = useBalance(activeAccount?.address, true)
+
   const currentBlockNumber = useCurrentBlockNumber(api)
 
   const saleInfoString = useSubstrateQuery(api, 'saleInfo')
@@ -190,16 +189,18 @@ export default function BrokerSaleInfo() {
 
   // Update saleStage every second based on the currentBlockNumber
   const [saleStage, setSaleStage] = useState('')
+  const [saleTitle, setSaleTitle] = useState('')
   const [timeRemaining, setTimeRemaining] = useState('')
   useEffect(() => {
     if (saleInfo && configuration && brokerConstants) {
-      const { statusMessage, timeRemaining } = saleStatus(
+      const { statusMessage, timeRemaining, statusTitle } = saleStatus(
         currentBlockNumber,
         saleInfo,
         configuration,
         brokerConstants,
       )
       setTimeRemaining(timeRemaining)
+      setSaleTitle(statusTitle)
       setSaleStage(statusMessage)
     }
   }, [currentBlockNumber, saleInfo, configuration, brokerConstants])
@@ -245,52 +246,72 @@ export default function BrokerSaleInfo() {
     return <div>Loading...</div>
   }
 
-  return (
-    <div>
-      <div className="mb-4 p-10">
-        <button className="font-bold">
-          <span className="text-pink-4">◀</span> previous coretime sale
-        </button>
-        <div className="flex justify-between rounded-full mx-10 bg-pink-4 px-16 py-10 bg-opacity-30 items-center my-6">
-          <div className="text-xl font-bold font-syncopate text-gray-21">Renewal period</div>
-          <div className="text-2xl font-bold font-syncopate text-gray-18">{timeRemaining}</div>
-        </div>
-      </div>
+  let currentPrice = calculateCurrentPrice(currentBlockNumber, saleInfo, configuration)
 
-      <h2>
-        <b>Sale Info:</b>
-      </h2>
-      <div>availableCores: {saleInfo.coresOffered - saleInfo.coresSold}</div>
-      <div>
-        coresSold: {saleInfo.coresSold} / {saleInfo.coresOffered}
-      </div>
-      <div>currentPrice: {calculateCurrentPrice(currentBlockNumber, saleInfo, configuration)}</div>
-      <div>{saleStage}</div>
-      <div>
-        Amount of utilization:{' '}
-        {currentRelayBlockUtilization(currentRelayBlock, saleInfo, brokerConstants)} % current relay
-        block: {currentRelayBlock}
-        start region block: {saleInfo.regionBegin * brokerConstants.timeslicePeriod}
-        end region block: {saleInfo.regionEnd * brokerConstants.timeslicePeriod}
-        Region Begin Timestamp:{' '}
-        {regionBeginTimestamp !== null ? regionBeginTimestamp : 'Loading...'}
-        Region End Timestamp: {regionEndTimestamp !== null ? regionEndTimestamp : 'Loading...'}
-      </div>
-      <div>How many cores are set to renew by default?</div>
-      <div>
-        idealCoresSold: {saleInfo.idealCoresSold}
-        firstCore: {saleInfo.firstCore}
-        selloutPrice: {saleInfo.selloutPrice}
-        renewalBump: {configuration.renewalBump}
-      </div>
-      <div>
-        <b>Configuration:</b>
-      </div>
-      <div>
-        idealBulkProportion: {configuration.idealBulkProportion}
-        limitCoresOffered: {configuration.limitCoresOffered}
-        contributionTimeout: {configuration.contributionTimeout}
-      </div>
-    </div>
+  let analyticsData = [
+    {
+      title: `${(currentPrice / 10 ** 12).toFixed(4)} ${tokenSymbol}`,
+      subtitle: 'Current Price',
+      change: `${(currentPrice / 10 ** 12).toFixed(9)} ${tokenSymbol} to be exact`,
+    },
+    {
+      title: `${saleInfo?.coresSold} / ${saleInfo?.coresOffered}`,
+      subtitle: `Core sold out of ${saleInfo?.coresOffered} available`,
+      change: '',
+    },
+  ]
+
+  return (
+    <>
+      <section className="mx-auto max-w-9xl px-4 mt-5 sm:px-6 lg:px-8">
+        <Border>
+          <div className=" p-10">
+            <div>
+              <button className="font-bold">
+                <span className="text-pink-4">◀</span> previous coretime sale
+              </button>
+              <div className="flex justify-between rounded-full mx-10 bg-pink-4 px-16 py-10 bg-opacity-30 items-center my-6">
+                <div className="text-xl font-bold font-syncopate text-gray-21">{saleTitle}</div>
+                <div className="text-2xl font-bold font-syncopate text-gray-18">
+                  {timeRemaining}
+                </div>
+              </div>
+            </div>
+            <TimelineComponent
+              currentBlockNumber={currentBlockNumber}
+              saleInfo={saleInfo}
+              config={configuration}
+              constants={brokerConstants}
+            />
+            <TimelineUtilize
+              currentRelayBlock={currentRelayBlock}
+              saleInfo={saleInfo}
+              config={configuration}
+              constants={brokerConstants}
+            />
+            <div className="flex justify-center">
+              <b className="pr-2">Sale Info:</b> {saleStage}
+            </div>
+          </div>
+        </Border>
+      </section>
+
+      <section className="mx-auto max-w-9xl py-4 px-4 sm:px-6 lg:px-8 flex flex-col items-stretch">
+        <div className="grid grid-cols-4 gap-8 flex-grow">
+          <div className="col-span-1 flex flex-col items-stretch w-full">
+            <AnalyticSection analytics={analyticsData} />
+          </div>
+          <div className="col-span-3 py-4">
+            <Border className="h-full flex justify-center items-center">
+              <BuyWalletStatus
+                saleInfo={saleInfo}
+                formatPrice={`${(currentPrice / 10 ** 12).toFixed(8)} ${tokenSymbol}`}
+                currentPrice={currentPrice}
+              />
+            </Border>
+          </div>
+        </div>
+      </section>
+    </>
   )
 }

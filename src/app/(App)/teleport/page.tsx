@@ -11,12 +11,7 @@ import { useState } from 'react'
 const Teleport = () => {
   const [amount, setAmount] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const {
-    api,
-    relayApi,
-    activeAccount,
-    activeSigner,
-  } = useInkathon()
+  const { api, relayApi, activeAccount, activeSigner } = useInkathon()
 
   const { balanceFormatted } = useBalance(activeAccount?.address, true, {
     forceUnit: false,
@@ -62,11 +57,11 @@ const Teleport = () => {
     const amountVal: number = amount * 10 ** 5
     if (!activeAccount || !relayApi || !api) return
 
-    let test = await Builder(api)            //Api parameter is optional
-      .to('AssetHubKusama')       // Destination Parachain //You can now add custom ParachainID eg. .to('Basilisk', 2024)
-      .amount(amountVal)           // Token amount
-      .address(activeAccount.address)         // AccountId32 or AccountKey20 address
-      .build()                  // Function called to build call
+    let test = await Builder(api) //Api parameter is optional
+      .to('AssetHubKusama') // Destination Parachain //You can now add custom ParachainID eg. .to('Basilisk', 2024)
+      .amount(amountVal) // Token amount
+      .address(activeAccount.address) // AccountId32 or AccountKey20 address
+      .build() // Function called to build call
 
     console.log(test)
   }
@@ -115,9 +110,10 @@ const Teleport = () => {
             </div>
           </div>
 
-          <button 
+          <button
             onClick={() => functionSendXCM(1)}
-          className="w-full py-2 border border-gray-9 rounded-lg hover:bg-gray-1">
+            className="w-full py-2 border border-gray-9 rounded-lg hover:bg-gray-1"
+          >
             Proceed To Confirmation
           </button>
 

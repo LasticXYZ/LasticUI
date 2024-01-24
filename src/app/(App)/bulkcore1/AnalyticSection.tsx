@@ -1,11 +1,18 @@
 import AnalyticCard from '@/components/card/AnalyticCard'
+import React from 'react'
 
-const analytics = [
-  { title: '20.52 DOT', subtitle: 'Current Price', change: 5 },
-  { title: '20 / 50', subtitle: 'Core sold out of 50 available', change: -5 },
-]
+type AnalyticItem = {
+  title: string
+  subtitle: string
+  change: number | string
+}
 
-const AnalyticSection = () => (
+// Define props for AnalyticSection
+export type AnalyticSectionProps = {
+  analytics: AnalyticItem[]
+}
+
+const AnalyticSection: React.FC<AnalyticSectionProps> = ({ analytics }) => (
   <div className="grid grid-cols-1 items-stretch content-between justify-between w-full flex-grow">
     {analytics.map((item, key) => (
       <div key={key} className="py-4 flex-grow w-full">
