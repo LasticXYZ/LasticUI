@@ -1,8 +1,6 @@
-import AnalyticSection from '@/app/(App)/bulkcore1/AnalyticSection'
 import Border from '@/components/border/Border'
 import TimelineComponent from '@/components/timelineComp/TimelineComp'
 import TimelineUtilize from '@/components/timelineComp/TimelineUtilize'
-import BuyWalletStatus from '@/components/walletStatus/BuyWalletStatus'
 import { ApiPromise } from '@polkadot/api'
 import {
   BrokerConstantsType,
@@ -248,28 +246,12 @@ export default function BrokerSaleInfo() {
 
   let currentPrice = calculateCurrentPrice(currentBlockNumber, saleInfo, configuration)
 
-  let analyticsData = [
-    {
-      title: `${(currentPrice / 10 ** 12).toFixed(4)} ${tokenSymbol}`,
-      subtitle: 'Current Price',
-      change: `${(currentPrice / 10 ** 12).toFixed(9)} ${tokenSymbol} to be exact`,
-    },
-    {
-      title: `${saleInfo?.coresSold} / ${saleInfo?.coresOffered}`,
-      subtitle: `Core sold out of ${saleInfo?.coresOffered} available`,
-      change: '',
-    },
-  ]
-
   return (
     <>
-      <section className="mx-auto max-w-9xl px-4 mt-5 sm:px-6 lg:px-8">
+      <section className="mt-8">
         <Border>
           <div className=" p-10">
             <div>
-              <button className="font-bold">
-                <span className="text-pink-4">◀</span> previous coretime sale
-              </button>
               <div className="flex justify-between rounded-full mx-10 bg-pink-4 px-16 py-10 bg-opacity-30 items-center my-6">
                 <div className="text-xl font-bold font-syncopate text-gray-21">{saleTitle}</div>
                 <div className="text-2xl font-bold font-syncopate text-gray-18">
@@ -277,41 +259,51 @@ export default function BrokerSaleInfo() {
                 </div>
               </div>
             </div>
+            <div className="flex justify-center">
+              <b className="pr-2">Sale Info:</b> {saleStage}
+            </div>
             <TimelineComponent
               currentBlockNumber={currentBlockNumber}
               saleInfo={saleInfo}
               config={configuration}
               constants={brokerConstants}
             />
+            <div className="pt-5 pl-10">
+              <h3 className="text-xl font-syncopate font-bold">Utilization</h3>
+            </div>
             <TimelineUtilize
               currentRelayBlock={currentRelayBlock}
               saleInfo={saleInfo}
               config={configuration}
               constants={brokerConstants}
             />
-            <div className="flex justify-center">
-              <b className="pr-2">Sale Info:</b> {saleStage}
+            <div className="pt-5 pl-10">
+              <h3 className="text-xl font-syncopate font-bold">Utilization</h3>
             </div>
+            <div className="flex flex-row justify-between">
+              <div className="flex flex-col items-center justify-center px-2 py-8">
+                <div className="text-2xl font-bold font-syncopate text-gray-21">
+                  {23 / 10 ** 12} FOT
+                </div>
+                <div className="text-xl font-bold font-syncopate text-gray-18">
+                  Current Price per Core
+                </div>
+              </div>
+              <div className="flex flex-col items-center justify-center px-2 py-8">
+                <div className="text-2xl font-bold font-syncopate text-gray-21">
+                  {saleInfo.price / 10 ** 12} FOT
+                </div>
+                <div className="text-xl font-bold font-syncopate text-gray-18">
+                  Original Price per Core
+                </div>
+                </div>
+
+            </div>
+
           </div>
         </Border>
       </section>
 
-      <section className="mx-auto max-w-9xl py-4 px-4 sm:px-6 lg:px-8 flex flex-col items-stretch">
-        <div className="grid grid-cols-4 gap-8 flex-grow">
-          <div className="col-span-1 flex flex-col items-stretch w-full">
-            <AnalyticSection analytics={analyticsData} />
-          </div>
-          <div className="col-span-3 py-4">
-            <Border className="h-full flex justify-center items-center">
-              <BuyWalletStatus
-                saleInfo={saleInfo}
-                formatPrice={`${(currentPrice / 10 ** 12).toFixed(8)} ${tokenSymbol}`}
-                currentPrice={currentPrice}
-              />
-            </Border>
-          </div>
-        </div>
-      </section>
     </>
   )
 }
