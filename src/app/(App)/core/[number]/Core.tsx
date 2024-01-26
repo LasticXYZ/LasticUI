@@ -1,82 +1,16 @@
 import Border from '@/components/border/Border';
 import CoreItemExtensive from '@/components/cores/CoreItemExtensive';
 import WalletStatus from '@/components/walletStatus/WalletStatus';
+import { parseNativeTokenToHuman } from '@/utils/account/token';
+import { querySpecificRegion } from '@/utils/broker';
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk';
-import { useEffect, useState } from 'react';
-
-// Define a type for the queryParams
-type QueryParams = (string | number | Record<string, unknown>)[]
-
-type RegionDetailItem = {
-  begin: string
-  core: string
-  mask: string
-}
-
-type RegionDetail = RegionDetailItem[]
-
-type RegionOwner = {
-  end: string
-  owner: string
-  paid: string
-}
-
-type Region = {
-  detail: RegionDetail
-  owner: RegionOwner
-}
-
-type RegionsType = Region[]
-
-// Custom hook for querying substrate state
-function querySpecificRegion({ coreNb }: { coreNb: number}) {
-
-  const { api } = useInkathon()
-  const [data, setData] = useState<Region | null>(null)
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (api?.query?.broker?.regions) {
-        try {
-          const entries = await api.query.broker.regions.entries()
-          const regions: RegionsType = entries.map(([key, value]) => {
-            const detail = key.toHuman() as RegionDetail
-            const owner = value.toHuman() as RegionOwner
-            return { detail, owner }
-          })
-
-          const filteredRegion = regions.find(region =>
-            region.detail.some(detailItem => parseInt(detailItem.core) === coreNb)
-          );
-
-          setData(filteredRegion || null);
-        } catch (error) {
-          console.error('Failed to fetch regions:', error)
-        }
-      }
-    }
-
-    fetchData()
-    const intervalId = setInterval(fetchData, 5000)
-
-    return () => clearInterval(intervalId)
-  }, [api, data])
-
-  return data
-}
-
-function parseAndDividePaid(paid: string): number {
-  const numberWithoutCommas = paid.replace(/,/g, '')
-  const number = parseInt(numberWithoutCommas, 10)
-  return number / 10 ** 12
-}
 
 export default function BrokerRegionData({ coreNb }: { coreNb: number }) {
-  const { activeAccount, activeChain } = useInkathon()
+  const { activeAccount, activeChain, api } = useInkathon()
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
-  const region = querySpecificRegion({ coreNb })
+  const region = querySpecificRegion({ api, coreNb })
 
-  if (!activeChain) {
+  if (!activeChain || !activeAccount || !api) {
     return (
       <Border className='mt-5'>
         <WalletStatus 
@@ -109,7 +43,7 @@ export default function BrokerRegionData({ coreNb }: { coreNb: number }) {
               coreNumber={region.detail[0].core}
               size="1"
               phase="- Period"
-              cost={parseAndDividePaid(region.owner.paid)}
+              cost={parseNativeTokenToHuman({paid: region.owner.paid, decimals: 12})}
               reward="0"
               currencyCost={tokenSymbol}
               currencyReward="LASTIC"
