@@ -1,4 +1,5 @@
 import Border from '@/components/border/Border'
+import SecondaryButton from '@/components/button/SecondaryButton'
 import TimelineComponent from '@/components/timelineComp/TimelineComp'
 import TimelineUtilize from '@/components/timelineComp/TimelineUtilize'
 import { ApiPromise } from '@polkadot/api'
@@ -278,25 +279,33 @@ export default function BrokerSaleInfo() {
               constants={brokerConstants}
             />
             <div className="pt-5 pl-10">
-              <h3 className="text-xl font-syncopate font-bold">Utilization</h3>
+              <h3 className="text-xl font-syncopate font-bold">Note</h3>
             </div>
             <div className="flex flex-row justify-between">
-              <div className="flex flex-col items-center justify-center px-2 py-8">
+              <div className="flex flex-col italic max-w-md text-gray-12 items-center justify-center px-2 py-8">
+                Note: Since this core is split up you are not eligible for renewal. You are however able to:
+                <ul className='px-4 py-2'>
+                  <li> * Sell your Bulk Coretime - list it first on Bulk Coretime market</li>
+                  <li> * Utilize it - Make sure to have your Parachain ready in order to test it out.</li>
+                  <li> * Split it up</li>
+                  <li> * Recombine it</li>
+                  <li> * Assign it to a task</li>
+                </ul>
+              </div>
+              <div className='grid grid-cols-2 gap-4 py-10'>
                 <div className="text-2xl font-bold font-syncopate text-gray-21">
-                  {23 / 10 ** 12} FOT
+                  <SecondaryButton title="List this core" location="/instacore" />
                 </div>
-                <div className="text-xl font-bold font-syncopate text-gray-18">
-                  Current Price per Core
+                <div className="text-2xl font-bold font-syncopate text-gray-21">
+                  <SecondaryButton title="renew Core" location="/instacore" disabled={false} />
+                </div>
+                <div className="text-2xl font-bold font-syncopate text-gray-21">
+                  <SecondaryButton title="Combine core" location="/instacore" />
+                </div>
+                <div className="text-2xl font-bold font-syncopate text-gray-21">
+                  <SecondaryButton title="Split up core" location="/instacore" />
                 </div>
               </div>
-              <div className="flex flex-col items-center justify-center px-2 py-8">
-                <div className="text-2xl font-bold font-syncopate text-gray-21">
-                  {saleInfo.price / 10 ** 12} FOT
-                </div>
-                <div className="text-xl font-bold font-syncopate text-gray-18">
-                  Original Price per Core
-                </div>
-                </div>
 
             </div>
 

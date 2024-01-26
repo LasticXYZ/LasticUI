@@ -31,16 +31,14 @@ const CoreItemExtensive: React.FC<CardProps> = ({
 }) => {
   return (
     <>
-      <div>
-        <div className="uppercase font-syncopate tracking-wide text-md text-indigo-500 font-semibold">
-          Core Nb. {coreNumber}
-        </div>
+      <div className="pt-10 pl-10">
+        <h1 className="text-xl font-syncopate font-bold">Core Nb. {coreNumber} </h1>
       </div>
-      <div className="mx-auto pt-4 flex flex-row items-center justify-between overflow-hidden">
+      <div className="mx-auto pt-4 flex flex-row items-cente p-10 justify-between overflow-hidden">
         <div>
-          <Image src="/assets/Images/core1.png" alt="Lastic Logo" width={130} height={50} />
+          <Image src="/assets/Images/core2.png" alt="Lastic Logo" width={400} height={400} />
         </div>
-        <div className="flex w-full flex-row px-5 items-center justify-between">
+        <div className="flex w-full flex-col px-5 items-start justify-between">
           <div>
             <div className="block mt-1 text-md leading-tight font-medium text-black">
               Time bought: {timeBought}
