@@ -1,8 +1,8 @@
-import Border from '@/components/border/Border'
-import CoreItemExtensive from '@/components/cores/CoreItemExtensive'
-import WalletStatus from '@/components/walletStatus/WalletStatus'
-import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
-import { useEffect, useState } from 'react'
+import Border from '@/components/border/Border';
+import CoreItemExtensive from '@/components/cores/CoreItemExtensive';
+import WalletStatus from '@/components/walletStatus/WalletStatus';
+import { useBalance, useInkathon } from '@poppyseed/lastic-sdk';
+import { useEffect, useState } from 'react';
 
 // Define a type for the queryParams
 type QueryParams = (string | number | Record<string, unknown>)[]
@@ -29,9 +29,10 @@ type Region = {
 type RegionsType = Region[]
 
 // Custom hook for querying substrate state
-function useRegionQuery() {
+function querySpecificRegion({ coreNb }: { coreNb: number}) {
+
   const { api } = useInkathon()
-  const [data, setData] = useState<RegionsType | null>(null)
+  const [data, setData] = useState<Region | null>(null)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,7 +44,12 @@ function useRegionQuery() {
             const owner = value.toHuman() as RegionOwner
             return { detail, owner }
           })
-          setData(regions)
+
+          const filteredRegion = regions.find(region =>
+            region.detail.some(detailItem => parseInt(detailItem.core) === coreNb)
+          );
+
+          setData(filteredRegion || null);
         } catch (error) {
           console.error('Failed to fetch regions:', error)
         }
@@ -54,7 +60,7 @@ function useRegionQuery() {
     const intervalId = setInterval(fetchData, 5000)
 
     return () => clearInterval(intervalId)
-  }, [api])
+  }, [api, data])
 
   return data
 }
@@ -65,26 +71,39 @@ function parseAndDividePaid(paid: string): number {
   return number / 10 ** 12
 }
 
-export default function BrokerRegionData() {
+export default function BrokerRegionData({ coreNb }: { coreNb: number }) {
   const { activeAccount, activeChain } = useInkathon()
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
-  const regionData = useRegionQuery()
+  const region = querySpecificRegion({ coreNb })
 
-  if (!activeAccount || !activeChain) {
-    return <WalletStatus />
+  if (!activeChain) {
+    return (
+      <Border className='mt-5'>
+        <WalletStatus 
+          inactiveWalletMessage='Connecting to chain...'
+        />
+      </Border>
+    )
   }
 
-  // Filter regions where activeAccount's address matches the region owner's address
-  const filteredRegionData = regionData?.filter(
-    (region) => region.owner.owner === activeAccount.address,
-  )
+  if (!region) {
+    return (
+      <Border className='mt-5'>
+        <WalletStatus
+          customEmoji='🤷‍♀️'
+          inactiveWalletMessage='Connecting to chain...'
+          customColor='bg-purple-2'
+          customMessage='No region for this core number found'
+        />
+      </Border>
+    )
+  }
 
-  return filteredRegionData && filteredRegionData.length > 0 ? (
-    <Border>
-    <div className="h-full w-full flex flex-col justify-left items-left">
-      <div>
-        {filteredRegionData.map((region, index) => (
-          <div key={index} className="">
+  return (
+    <Border className='mt-5'>
+      <div className="h-full w-full flex flex-col justify-left items-left">
+        <div>
+          <div className="">
             <CoreItemExtensive
               timeBought="Jan 2024"
               coreNumber={region.detail[0].core}
@@ -99,14 +118,8 @@ export default function BrokerRegionData() {
               end={region.owner.end}
             />
           </div>
-        ))}
+        </div>
       </div>
-    </div>
-    </Border>
-
-  ) : (
-    <Border>
-    <WalletStatus />
     </Border>
   )
 }

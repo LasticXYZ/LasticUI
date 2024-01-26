@@ -1,7 +1,8 @@
 // components/Card.tsx
-import React from 'react'
 import Border from '@/components/border/Border'
 import Image from 'next/image'
+import Link from 'next/link'
+import React from 'react'
 
 interface CardProps {
   timeBought: string
@@ -32,6 +33,9 @@ const Card: React.FC<CardProps> = ({
 }) => {
   return (
     <Border className="px-10 py-6 hover:bg-pink-1 hover:cursor-pointer">
+      <Link 
+        href={`/core/${coreNumber}`}
+      >
       <div>
         <div className="uppercase font-syncopate tracking-wide text-md text-indigo-500 font-semibold">
           Core Nb. {coreNumber}
@@ -68,6 +72,7 @@ const Card: React.FC<CardProps> = ({
           </div>
         </div>
       </div>
+      </Link>
     </Border>
   )
 }

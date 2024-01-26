@@ -5,17 +5,16 @@ import Core from './Core'
 import PastTransactions from './PastTransactions'
 import TimeSection from './TimeSection'
 
-const InstaCore = () => {
+export default function PageCore({ params }: { params: { number: string } }) {
+  const CoreNb = parseInt(params.number)
   return (
     <>
-      <SubTitle subtitle="A deeper look into the core"/>
+      <SubTitle subtitle={`A deeper look into the core Nb. ${params.number}`}/>
       <section className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8 flex flex-col items-stretch">
-        <Core />
+        <Core coreNb={CoreNb}/>
         <TimeSection />
         <PastTransactions />
       </section>
     </>
   )
 }
-
-export default InstaCore
