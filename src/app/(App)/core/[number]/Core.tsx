@@ -1,8 +1,9 @@
 import Border from '@/components/border/Border';
+import TransferModal from '@/components/broker/extrinsics/TransferModal';
 import SecondaryButton from '@/components/button/SecondaryButton';
 import CoreItemExtensive from '@/components/cores/CoreItemExtensive';
 import TimelineComponent from '@/components/timelineComp/TimelineComp';
-import TimelineUtilize from '@/components/timelineComp/TimelineUtilize';
+import TimelineUtilizeCore from '@/components/timelineComp/TimelineUtilizeCore';
 import WalletStatus from '@/components/walletStatus/WalletStatus';
 import { parseNativeTokenToHuman } from '@/utils/account/token';
 import { calculateCurrentPrice, querySpecificRegion, saleStatus, useBrokerConstants, useCurrentBlockNumber, useSubstrateQuery } from '@/utils/broker';
@@ -64,6 +65,11 @@ export default function BrokerRegionData({ coreNb }: { coreNb: number }) {
     const [regionBeginTimestamp, setRegionBeginTimestamp] = useState<string | null>(null)
     const [regionEndTimestamp, setRegionEndTimestamp] = useState<string | null>(null)
     const [currentRelayBlock, setCurrentRelayBlock] = useState<number | null>(null)
+
+    const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
+
+    const openTransferModal = () => setIsTransferModalOpen(true);
+    const closeTransferModal = () => setIsTransferModalOpen(false);
 
     useEffect(() => {
       const fetchRegionTimestamps = async () => {
@@ -159,9 +165,6 @@ export default function BrokerRegionData({ coreNb }: { coreNb: number }) {
                 </div>
               </div>
             </div>
-            <div className="flex justify-center">
-              <b className="pr-2">Sale Info:</b> {saleStage}
-            </div>
             <TimelineComponent
               currentBlockNumber={currentBlockNumber}
               saleInfo={saleInfo}
@@ -171,7 +174,7 @@ export default function BrokerRegionData({ coreNb }: { coreNb: number }) {
             <div className="pt-5 pl-10">
               <h3 className="text-xl font-syncopate font-bold">Utilization</h3>
             </div>
-            <TimelineUtilize
+            <TimelineUtilizeCore
               currentRelayBlock={currentRelayBlock}
               saleInfo={saleInfo}
               config={configuration}
@@ -182,9 +185,9 @@ export default function BrokerRegionData({ coreNb }: { coreNb: number }) {
             </div>
             <div className="flex flex-row justify-between">
               <div className="flex flex-col italic max-w-md text-gray-12 items-center justify-center px-2 py-8">
-                Note: Since this core is split up you are not eligible for renewal. You are however able to:
+                Note: This webiste is a work in progress. For now you are able to:
                 <ul className='px-4 py-2'>
-                  <li> * Sell your Bulk Coretime - list it first on Bulk Coretime market</li>
+                  <li> * Transfer your Core - transfer is to another account</li>
                   <li> * Utilize it - Make sure to have your Parachain ready in order to test it out.</li>
                   <li> * Split it up</li>
                   <li> * Recombine it</li>
@@ -193,8 +196,15 @@ export default function BrokerRegionData({ coreNb }: { coreNb: number }) {
               </div>
               <div className='grid grid-cols-2 gap-4 py-10'>
                 <div className="text-2xl font-bold font-syncopate text-gray-21">
-                  <SecondaryButton title="List this core" location="/instacore" />
+                  <SecondaryButton title="Transfer core" onClick={openTransferModal} />
                 </div>
+                <TransferModal 
+                  isOpen={isTransferModalOpen} 
+                  onClose={closeTransferModal}
+                  coreNb={region.detail[0].core}
+                  mask={region.detail[0].mask}
+                  begin={region.detail[0].begin}
+                />
                 <div className="text-2xl font-bold font-syncopate text-gray-21">
                   <SecondaryButton title="renew Core" location="/instacore" disabled={false} />
                 </div>

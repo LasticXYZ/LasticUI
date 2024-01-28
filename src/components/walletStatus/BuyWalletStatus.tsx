@@ -1,4 +1,4 @@
-import PurchaseInteractor from '@/components/broker/PurchaseInteractor'
+import PurchaseInteractor from '@/components/broker/extrinsics/PurchaseInteractor'
 import SecondaryButton from '@/components/button/SecondaryButton'
 import CuteInfo from '@/components/info/CuteInfo'
 import { ConnectButton } from '@/components/web3/ConnectButton'
@@ -21,6 +21,8 @@ const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({
 }) => {
   const { activeAccount, activeChain } = useInkathon()
   const { balanceFormatted, balance } = useBalance(activeAccount?.address, true)
+
+  let inputPurchasePrice = Math.floor(currentPrice * 1.02)
 
   if (!activeAccount) {
     return (
@@ -93,7 +95,7 @@ const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({
               : 'Loading Balance'}
           </div>
           <div className="flex flex-col px-10 mt-10 items-center ">
-            <PurchaseInteractor param={Math.floor(currentPrice * 1.02).toString()} />
+            <PurchaseInteractor param={inputPurchasePrice.toString()} />
           </div>
         </div>
       </div>
