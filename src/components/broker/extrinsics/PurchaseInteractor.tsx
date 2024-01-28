@@ -13,7 +13,7 @@ export default function PurchaseInteractor({ param }: { param: string }) {
       palletRpc: 'broker',
       callable: 'purchase',
       inputParams: [param],
-      paramFields: [{ name: 'param', type: 'TYPE', optional: false }],
+      paramFields: [{ name: 'param', type: 'String', optional: false }],
     },
     type: 'SIGNED-TX',
     activeAccount,
