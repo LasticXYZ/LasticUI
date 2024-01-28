@@ -17,7 +17,7 @@ const Modal: FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
         <button className="absolute top-3 right-3" onClick={onClose}>
           X
         </button>
-        <h2 className="text-2xl mb-4">{title}</h2>
+        <h2 className="text-xl mb-4 font-syncopate font-bold">{title}</h2>
         {children}
       </div>
     </div>
