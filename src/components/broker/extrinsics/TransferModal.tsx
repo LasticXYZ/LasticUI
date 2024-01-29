@@ -15,14 +15,14 @@ interface TransferModalProps {
 }
 
 interface RegionId {
-        begin: number,
-        core: number,
-        mask: Uint8Array,
+  begin: number
+  core: number
+  mask: Uint8Array
 }
 
 interface TransferCall {
-    regionId: RegionId;
-    newOwner: Uint8Array;
+  regionId: RegionId
+  newOwner: Uint8Array
 }
 
 const TransferModal: FC<TransferModalProps> = ({ isOpen, onClose, coreNb, begin, mask }) => {
@@ -43,9 +43,8 @@ const TransferModal: FC<TransferModalProps> = ({ isOpen, onClose, coreNb, begin,
   const regionIdTest = {
     begin: begin.replace(/,/g, ''),
     core: coreNb,
-    mask: "0xffffffffffffffffffff",
-   }
-
+    mask: '0xffffffffffffffffffff',
+  }
 
   const txButtonProps: TxButtonProps = {
     api, // api is guaranteed to be defined here

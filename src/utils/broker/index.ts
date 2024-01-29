@@ -5,8 +5,8 @@ import {
   RegionOwner,
   RegionsType,
   typeOfChain,
-} from '@/types/broker';
-import { ApiPromise } from '@polkadot/api';
+} from '@/types/broker'
+import { ApiPromise } from '@polkadot/api'
 import {
   BrokerConstantsType,
   ConfigurationType,
@@ -14,10 +14,18 @@ import {
   blocksToTimeFormat,
   getConstants,
   getCurrentBlockNumber,
-} from '@poppyseed/lastic-sdk';
-import { useEffect, useState } from 'react';
+} from '@poppyseed/lastic-sdk'
+import { useEffect, useState } from 'react'
 
-export function querySpecificRegion({ api, coreNb, regionId }: { api?: ApiPromise; coreNb: number, regionId: string }) {
+export function useQuerySpecificRegion({
+  api,
+  coreNb,
+  regionId,
+}: {
+  api?: ApiPromise
+  coreNb: number
+  regionId: string
+}) {
   const [data, setData] = useState<Region | null>(null)
 
   useEffect(() => {
@@ -32,7 +40,11 @@ export function querySpecificRegion({ api, coreNb, regionId }: { api?: ApiPromis
           })
 
           const filteredRegion = regions.find((region) =>
-            region.detail.some((detailItem) => (parseInt(detailItem.core) === coreNb && detailItem.begin.replace(/,/g, '') === regionId)),
+            region.detail.some(
+              (detailItem) =>
+                parseInt(detailItem.core) === coreNb &&
+                detailItem.begin.replace(/,/g, '') === regionId,
+            ),
           )
 
           setData(filteredRegion || null)
@@ -46,7 +58,7 @@ export function querySpecificRegion({ api, coreNb, regionId }: { api?: ApiPromis
     const intervalId = setInterval(fetchData, 5000)
 
     return () => clearInterval(intervalId)
-  }, [api, data])
+  }, [api, coreNb, regionId])
 
   return data
 }

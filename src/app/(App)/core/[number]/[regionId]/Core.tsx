@@ -8,10 +8,10 @@ import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { parseNativeTokenToHuman } from '@/utils/account/token'
 import {
   calculateCurrentPrice,
-  querySpecificRegion,
   saleStatus,
   useBrokerConstants,
   useCurrentBlockNumber,
+  useQuerySpecificRegion,
   useSubstrateQuery,
 } from '@/utils/broker'
 import {
@@ -25,10 +25,16 @@ import {
 } from '@poppyseed/lastic-sdk'
 import { useEffect, useMemo, useState } from 'react'
 
-export default function BrokerRegionData({ coreNb, regionId }: { coreNb: number, regionId: string}) {
+export default function BrokerRegionData({
+  coreNb,
+  regionId,
+}: {
+  coreNb: number
+  regionId: string
+}) {
   const { activeAccount, relayApi, activeChain, api } = useInkathon()
   let { tokenSymbol, tokenDecimals } = useBalance(activeAccount?.address, true)
-  const region = querySpecificRegion({ api, coreNb, regionId })
+  const region = useQuerySpecificRegion({ api, coreNb, regionId })
 
   const currentBlockNumber = useCurrentBlockNumber(api)
 

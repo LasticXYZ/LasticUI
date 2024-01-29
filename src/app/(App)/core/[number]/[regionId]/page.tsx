@@ -4,7 +4,7 @@ import SubTitle from '../../../samesections/SubTitle'
 import Core from './Core'
 import PastTransactions from './PastTransactions'
 
-export default function PageCore({ params }: { params: { number: string, regionId: string } }) {
+export default function PageCore({ params }: { params: { number: string; regionId: string } }) {
   const CoreNb = parseInt(params.number)
   return (
     <>
@@ -16,4 +16,3 @@ export default function PageCore({ params }: { params: { number: string, regionI
     </>
   )
 }
-  
