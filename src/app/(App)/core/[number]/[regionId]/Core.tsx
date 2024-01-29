@@ -1,4 +1,5 @@
 import Border from '@/components/border/Border'
+import AssignModal from '@/components/broker/extrinsics/AssignModal'
 import TransferModal from '@/components/broker/extrinsics/TransferModal'
 import SecondaryButton from '@/components/button/SecondaryButton'
 import CoreItemExtensive from '@/components/cores/CoreItemExtensive'
@@ -80,9 +81,12 @@ export default function BrokerRegionData({
   const [currentRelayBlock, setCurrentRelayBlock] = useState<number | null>(null)
 
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
+  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false)
 
   const openTransferModal = () => setIsTransferModalOpen(true)
   const closeTransferModal = () => setIsTransferModalOpen(false)
+  const openAssignModal = () => setIsAssignModalOpen(true)
+  const closeAssignModal = () => setIsAssignModalOpen(false)
 
   useEffect(() => {
     const fetchRegionTimestamps = async () => {
@@ -220,8 +224,15 @@ export default function BrokerRegionData({
                   begin={region.detail[0].begin}
                 />
                 <div className="text-2xl font-bold font-syncopate text-gray-21">
-                  <SecondaryButton title="renew Core" onClick = {() => console.log('renew')} disabled={true} />
+                  <SecondaryButton title="Assign Core" onClick = {openAssignModal} />
                 </div>
+                <AssignModal
+                  isOpen={isAssignModalOpen}
+                  onClose={closeAssignModal}
+                  coreNb={region.detail[0].core}
+                  mask={region.detail[0].mask}
+                  begin={region.detail[0].begin}
+                />
                 <div className="text-2xl font-bold font-syncopate text-gray-21">
                   <SecondaryButton title="Combine core" onClick = {() => console.log('Combine')} disabled={true} />
                 </div>
