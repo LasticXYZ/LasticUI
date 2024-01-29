@@ -1,21 +1,22 @@
-import { BrokerConstantsType, ConfigurationType, SaleInfoType } from '@poppyseed/lastic-sdk'
+import { BrokerConstantsType, ConfigurationType } from '@poppyseed/lastic-sdk'
 import { FC } from 'react'
 
 // Additional interfaces, which should be defined according to your data structure
 type SliderPropeTypes = {
   currentRelayBlock: number
-  saleInfo: SaleInfoType
+  beginRegion: number
   config: ConfigurationType
   constants: BrokerConstantsType
 }
 
 function currentRelayBlockUtilization(
   currentRelayBlock: number,
-  saleInfo: SaleInfoType,
+  beginRegion: number,
+  configuration: ConfigurationType,
   constant: BrokerConstantsType,
 ) {
-  const startBlock = saleInfo.regionBegin * constant.timeslicePeriod
-  const endBlock = saleInfo.regionEnd * constant.timeslicePeriod
+  const startBlock = beginRegion * constant.timeslicePeriod
+  const endBlock = (beginRegion + configuration.regionLength) * constant.timeslicePeriod
   const percent = (currentRelayBlock - startBlock) / (endBlock - startBlock)
   if (percent < 0) {
     return 0
@@ -24,12 +25,12 @@ function currentRelayBlockUtilization(
   }
 }
 
-const Slider: FC<SliderPropeTypes> = ({ currentRelayBlock, saleInfo, config, constants }) => {
+const Slider: FC<SliderPropeTypes> = ({ currentRelayBlock, beginRegion, config, constants }) => {
   const saleDurationOnRelay = config.regionLength * constants.timeslicePeriod
 
   // Calculate percentages for each period
   const utilizationPercentage =
-    ((currentRelayBlock - saleInfo.regionBegin * constants.timeslicePeriod) / saleDurationOnRelay) *
+    ((currentRelayBlock - beginRegion * constants.timeslicePeriod) / saleDurationOnRelay) *
     100
 
   // Ensure the percentages are not negative or exceed 100

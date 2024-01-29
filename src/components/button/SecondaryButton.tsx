@@ -14,13 +14,15 @@ const SecondaryButton: FC<SecondaryButtonProps> = ({
   onClick,
   disabled,
 }) => {
+  const buttonClasses = `font-syncopate font-black rounded-2xl border text-xs inline-flex items-center justify-center px-12 py-3 mr-3 text-center ${disabled ? 'bg-gray-1 border-gray-4 text-gray-6 cursor-not-allowed' : ' hover:bg-pink-3 border-gray-8 text-black focus:ring-4 focus:ring-primary-3'}`;
+
   // If an onClick prop is provided, return a button element. Otherwise, return a Link component.
   if (onClick) {
     return (
       <button
         onClick={onClick}
         disabled={disabled}
-        className="font-syncopate font-black rounded-2xl hover:bg-pink-3 border border-gray-8 text-xs inline-flex items-center justify-center px-12 py-3 mr-3 text-center text-black hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
+        className={buttonClasses}
       >
         {title}
       </button>
@@ -29,7 +31,7 @@ const SecondaryButton: FC<SecondaryButtonProps> = ({
     return (
       <Link
         href={location}
-        className="font-syncopate font-black rounded-2xl hover:bg-pink-3 border border-gray-8 text-xs inline-flex items-center justify-center px-12 py-3 mr-3 text-center text-black hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
+        className={buttonClasses}
       >
         {title}
       </Link>
