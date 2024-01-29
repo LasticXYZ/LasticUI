@@ -30,7 +30,7 @@ export default function BrokerRegionData({
   regionId,
 }: {
   coreNb: number
-  regionId: string
+  regionId: number
 }) {
   const { activeAccount, relayApi, activeChain, api } = useInkathon()
   let { tokenSymbol, tokenDecimals } = useBalance(activeAccount?.address, true)
@@ -188,7 +188,7 @@ export default function BrokerRegionData({
             </div>
             <TimelineUtilizeCore
               currentRelayBlock={currentRelayBlock}
-              saleInfo={saleInfo}
+              beginRegion={regionId}
               config={configuration}
               constants={brokerConstants}
             />
@@ -196,14 +196,13 @@ export default function BrokerRegionData({
               <h3 className="text-xl font-syncopate font-bold">Note</h3>
             </div>
             <div className="flex flex-row justify-between">
-              <div className="flex flex-col italic max-w-md text-gray-12 items-center justify-center px-2 py-8">
-                Note: This webiste is a work in progress. For now you are able to:
-                <ul className="px-4 py-2">
+            { (region.owner.owner === activeAccount.address) ? (
+              <>
+              <div className="flex flex-col italic max-w-md text-gray-12 items-start justify-center px-4 py-8">
+                Note: This core is yours. You are able to:
+                <ul className="px-2 py-2">
                   <li> * Transfer your Core - transfer is to another account</li>
-                  <li>
-                    {' '}
-                    * Utilize it - Make sure to have your Parachain ready in order to test it out.
-                  </li>
+                  <li> * Utilize it - Make sure to have your Parachain ready in order to test it out.</li>
                   <li> * Split it up</li>
                   <li> * Recombine it</li>
                   <li> * Assign it to a task</li>
@@ -221,15 +220,21 @@ export default function BrokerRegionData({
                   begin={region.detail[0].begin}
                 />
                 <div className="text-2xl font-bold font-syncopate text-gray-21">
-                  <SecondaryButton title="renew Core" location="/instacore" disabled={false} />
+                  <SecondaryButton title="renew Core" onClick = {() => console.log('renew')} disabled={true} />
                 </div>
                 <div className="text-2xl font-bold font-syncopate text-gray-21">
-                  <SecondaryButton title="Combine core" location="/instacore" />
+                  <SecondaryButton title="Combine core" onClick = {() => console.log('Combine')} disabled={true} />
                 </div>
                 <div className="text-2xl font-bold font-syncopate text-gray-21">
-                  <SecondaryButton title="Split up core" location="/instacore" />
+                  <SecondaryButton title="Split up core" onClick = {() => console.log('Split')} disabled={true} />
                 </div>
               </div>
+              </>
+            ) : (
+              <div className="flex flex-col italic max-w-3xl text-gray-12 items-center justify-center px-2 py-8">
+                Note: You do not own this core. After buying a core you will be able to: Transfer it, Utilize it, Split it up and Recombine it.
+              </div>
+            )}
             </div>
           </div>
         </Border>

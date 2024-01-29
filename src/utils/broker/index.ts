@@ -24,7 +24,7 @@ export function useQuerySpecificRegion({
 }: {
   api?: ApiPromise
   coreNb: number
-  regionId: string
+  regionId: number
 }) {
   const [data, setData] = useState<Region | null>(null)
 
@@ -43,7 +43,7 @@ export function useQuerySpecificRegion({
             region.detail.some(
               (detailItem) =>
                 parseInt(detailItem.core) === coreNb &&
-                detailItem.begin.replace(/,/g, '') === regionId,
+                detailItem.begin.replace(/,/g, '') === regionId.toString(),
             ),
           )
 
