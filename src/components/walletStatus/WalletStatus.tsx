@@ -1,22 +1,37 @@
-import Border from '@/components/border/Border'
 import SecondaryButton from '@/components/button/SecondaryButton'
 import CuteInfo from '@/components/info/CuteInfo'
 import { ConnectButton } from '@/components/web3/ConnectButton'
 import { useInkathon } from '@poppyseed/lastic-sdk'
 import React from 'react'
 
-const WalletStatus: React.FC = () => {
+interface WalletStatusProps {
+  checkForWallet?: boolean
+  inactiveWalletEmoji?: string
+  customEmoji?: string
+  inactiveWalletMessage?: string
+  customColor?: string
+  customMessage?: string
+  redirectLocationMessage?: string
+  redirectLocation?: string
+}
+
+const WalletStatus: React.FC<WalletStatusProps> = ({
+  checkForWallet = true,
+  inactiveWalletEmoji = '👀',
+  customEmoji = '😔',
+  inactiveWalletMessage = 'Connect wallet in order to buy instantaneous coretime.',
+  customColor = 'bg-lastic-spectrum-via',
+  customMessage = 'You currently have 0 active cores.',
+  redirectLocationMessage = 'Go to marketplace',
+  redirectLocation = '/bulkcore1',
+}) => {
   const { activeAccount } = useInkathon()
 
-  if (!activeAccount) {
+  if (!activeAccount && checkForWallet) {
     return (
       <div className="flex justify-center items-center py-20 px-4">
         <div className="flex flex-col items-center justify-center px-2 py-8">
-          <CuteInfo
-            emoji="👀"
-            message="Connect wallet in order to buy instantaneous coretime."
-            color="bg-teal-4"
-          />
+          <CuteInfo emoji={inactiveWalletEmoji} message={inactiveWalletMessage} color="bg-teal-4" />
           <ConnectButton />
         </div>
       </div>
@@ -26,12 +41,8 @@ const WalletStatus: React.FC = () => {
   return (
     <div className="flex justify-center items-center py-20 px-4">
       <div className="flex flex-col items-center justify-center px-2 py-8 ">
-        <CuteInfo
-          emoji="😔"
-          message="You currently have 0 active cores."
-          color="bg-lastic-spectrum-via"
-        />
-        <SecondaryButton title="Go to marketplace" location="/bulkcore1" />
+        <CuteInfo emoji={customEmoji} message={customMessage} color={customColor} />
+        <SecondaryButton title={redirectLocationMessage} location={redirectLocation} />
       </div>
     </div>
   )

@@ -4,7 +4,6 @@ import { TxButtonProps, useBalance, useInkathon, useTxButton } from '@poppyseed/
 export default function PurchaseInteractor({ param }: { param: string }) {
   const { api, activeSigner, activeAccount } = useInkathon()
   const { balanceFormatted, balance } = useBalance(activeAccount?.address, true)
-  param = '1000000000'
 
   // Now that we've handled the undefined case, we can confidently use api
   const txButtonProps: TxButtonProps = {
@@ -14,7 +13,7 @@ export default function PurchaseInteractor({ param }: { param: string }) {
       palletRpc: 'broker',
       callable: 'purchase',
       inputParams: [param],
-      paramFields: [{ name: 'param', type: 'TYPE', optional: false }],
+      paramFields: [{ name: 'param', type: 'String', optional: false }],
     },
     type: 'SIGNED-TX',
     activeAccount,
