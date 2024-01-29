@@ -28,7 +28,9 @@ const Slider: FC<SliderPropeTypes> = ({ currentRelayBlock, saleInfo, config, con
   const saleDurationOnRelay = config.regionLength * constants.timeslicePeriod
 
   // Calculate percentages for each period
-  const utilizationPercentage = ((currentRelayBlock - saleInfo.regionBegin * constants.timeslicePeriod) / saleDurationOnRelay) * 100
+  const utilizationPercentage =
+    ((currentRelayBlock - saleInfo.regionBegin * constants.timeslicePeriod) / saleDurationOnRelay) *
+    100
 
   // Ensure the percentages are not negative or exceed 100
   const safeutilizationPercentage = Math.max(0, Math.min(100, utilizationPercentage))

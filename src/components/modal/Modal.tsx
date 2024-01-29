@@ -1,14 +1,14 @@
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react'
 
 interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title: string; // Add title prop for custom modal titles
-  children?: ReactNode; // This line is already perfect for children content
+  isOpen: boolean
+  onClose: () => void
+  title: string // Add title prop for custom modal titles
+  children?: ReactNode // This line is already perfect for children content
 }
 
 const Modal: FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -21,7 +21,7 @@ const Modal: FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
         {children}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Modal;
+export default Modal

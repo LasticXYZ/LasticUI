@@ -65,8 +65,7 @@ const CoreItemExtensive: React.FC<CardProps> = ({
           </div>
         </div>
       </div>
-      </>
-
+    </>
   )
 }
 

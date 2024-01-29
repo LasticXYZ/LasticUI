@@ -31,47 +31,46 @@ const Card: React.FC<CardProps> = ({
   begin,
   end,
 }) => {
+  const beginInt = parseInt(begin.replace(/,/g, ''), 10)
   return (
     <Border className="px-10 py-6 hover:bg-pink-1 hover:cursor-pointer">
-      <Link 
-        href={`/core/${coreNumber}`}
-      >
-      <div>
-        <div className="uppercase font-syncopate tracking-wide text-md text-indigo-500 font-semibold">
-          Core Nb. {coreNumber}
-        </div>
-      </div>
-      <div className="mx-auto pt-4 flex flex-row items-center justify-between overflow-hidden">
+      <Link href={`/core/${coreNumber}/${beginInt}`}>
         <div>
-          <Image src="/assets/Images/core1.png" alt="Lastic Logo" width={130} height={50} />
-        </div>
-        <div className="flex w-full flex-row px-5 items-center justify-between">
-          <div>
-            <div className="block mt-1 text-md leading-tight font-medium text-black">
-              Time bought: {timeBought}
-            </div>
-          </div>
-          <div>
-            <p className="text-gray-12">Size: {size} cores</p>
-            <p className="text-gray-12">Phase: {phase}</p>
-          </div>
-          <div>
-            <p className="text-gray-12">
-              Cost: {cost} {currencyCost}
-            </p>
-            <p className="text-gray-12">
-              Reward: {reward} {currencyReward}
-            </p>
-          </div>
-          <div className="">
-            <div className="text-sm text-gray-10">
-              <p>Mask: {mask}</p>
-              <p>Begin: {begin}</p>
-              <p>End: {end}</p>
-            </div>
+          <div className="uppercase font-syncopate tracking-wide text-md text-indigo-500 font-semibold">
+            Core Nb. {coreNumber}
           </div>
         </div>
-      </div>
+        <div className="mx-auto pt-4 flex flex-row items-center justify-between overflow-hidden">
+          <div>
+            <Image src="/assets/Images/core1.png" alt="Lastic Logo" width={130} height={50} />
+          </div>
+          <div className="flex w-full flex-row px-5 items-center justify-between">
+            <div>
+              <div className="block mt-1 text-md leading-tight font-medium text-black">
+                Time bought: {timeBought}
+              </div>
+            </div>
+            <div>
+              <p className="text-gray-12">Size: {size} cores</p>
+              <p className="text-gray-12">Phase: {phase}</p>
+            </div>
+            <div>
+              <p className="text-gray-12">
+                Cost: {cost} {currencyCost}
+              </p>
+              <p className="text-gray-12">
+                Reward: {reward} {currencyReward}
+              </p>
+            </div>
+            <div className="">
+              <div className="text-sm text-gray-10">
+                <p>Mask: {mask}</p>
+                <p>Begin: {begin}</p>
+                <p>End: {end}</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </Link>
     </Border>
   )
