@@ -147,6 +147,9 @@ export default function BrokerRegionData({
             <div className="">
               <CoreItemExtensive
                 timeBought="Jan 2024"
+                owner={region.owner.owner}
+                amITheOwner={region.owner.owner === activeAccount.address}
+                paid={region.owner.paid}
                 coreNumber={region.detail[0].core}
                 size="1"
                 phase="- Period"
