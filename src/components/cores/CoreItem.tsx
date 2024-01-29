@@ -31,10 +31,10 @@ const Card: React.FC<CardProps> = ({
   begin,
   end,
 }) => {
-  const beginInt = parseInt(begin.replace(/,/g, ''), 10)
+  const beginStr = begin.replace(/,/g, '')
   return (
     <Border className="px-10 py-6 hover:bg-pink-1 hover:cursor-pointer">
-      <Link href={`/core/${coreNumber}/${beginInt}`}>
+      <Link href={`/core/${coreNumber}/${beginStr}`}>
         <div>
           <div className="uppercase font-syncopate tracking-wide text-md text-indigo-500 font-semibold">
             Core Nb. {coreNumber}

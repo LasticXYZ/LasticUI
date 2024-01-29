@@ -32,7 +32,7 @@ export function querySpecificRegion({ api, coreNb, regionId }: { api?: ApiPromis
           })
 
           const filteredRegion = regions.find((region) =>
-            region.detail.some((detailItem) => parseInt(detailItem.core) === coreNb),
+            region.detail.some((detailItem) => (parseInt(detailItem.core) === coreNb && detailItem.begin.replace(/,/g, '') === regionId)),
           )
 
           setData(filteredRegion || null)
