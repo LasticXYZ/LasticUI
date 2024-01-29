@@ -196,14 +196,13 @@ export default function BrokerRegionData({
               <h3 className="text-xl font-syncopate font-bold">Note</h3>
             </div>
             <div className="flex flex-row justify-between">
+            { (region.owner.owner === activeAccount.address) ? (
+              <>
               <div className="flex flex-col italic max-w-md text-gray-12 items-center justify-center px-2 py-8">
-                Note: This webiste is a work in progress. For now you are able to:
+                Note: This website is a work in progress. With this core you are able to:
                 <ul className="px-4 py-2">
                   <li> * Transfer your Core - transfer is to another account</li>
-                  <li>
-                    {' '}
-                    * Utilize it - Make sure to have your Parachain ready in order to test it out.
-                  </li>
+                  <li> * Utilize it - Make sure to have your Parachain ready in order to test it out.</li>
                   <li> * Split it up</li>
                   <li> * Recombine it</li>
                   <li> * Assign it to a task</li>
@@ -230,6 +229,12 @@ export default function BrokerRegionData({
                   <SecondaryButton title="Split up core" location="/instacore" />
                 </div>
               </div>
+              </>
+            ) : (
+              <div className="flex flex-col italic max-w-3xl text-gray-12 items-center justify-center px-2 py-8">
+                Note: You do not own this core. After buying a core you will be able to: Transfer it, Utilize it, Split it up and Recombine it.
+              </div>
+            )}
             </div>
           </div>
         </Border>
