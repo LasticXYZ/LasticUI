@@ -1,9 +1,28 @@
 import Border from '@/components/border/Border'
 import GeneralTable from '@/components/table/GeneralTable'
 import TagComp from '@/components/tags/TagComp'
-import React, { useState } from 'react'
+import { getClient, SaleInitializedEvent } from '@poppyseed/squid-sdk'
+import { useEffect, useState } from 'react'
+
+type GraphLike<T> = { data: { event?: T, call?: T} }
+
 
 const PastTransactions = () => {
+  const [result, setResult] = useState<GraphLike<SaleInitializedEvent> | null>(null);
+  const client = getClient()
+  const query = client.eventAllSaleInitialized()
+  
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      const fetchedResult: GraphLike<SaleInitializedEvent> = await client.fetch(query);
+      setResult(fetchedResult);
+    };
+
+    fetchData();
+  }, []);
+
+
   const TableHeader = [
     { title: '#' },
     { title: 'Para ID' },
@@ -76,6 +95,9 @@ const PastTransactions = () => {
         <div className="mx-auto max-w-9xl px-4 mt-5 sm:px-6 lg:px-8">
           <div className="pt-10 pl-10">
             <h1 className="text-xl font-syncopate font-bold">My past transactions</h1>
+          </div>
+          <div>
+          {result ? <p>{JSON.stringify(result)}</p> : <p>Loading transactions...</p>}
           </div>
           <div>
             <GeneralTable tableData={TableData} tableHeader={TableHeader} colClass="grid-cols-8" />
