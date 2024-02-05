@@ -56,7 +56,7 @@ const AssignModal: FC<AssignModalProps> = ({ isOpen, onClose, coreNb, begin, mas
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={`Assign Core Nb: ${coreNb} To Task`}
+      title={`Assign Core Nb: ${coreNb} To Para ID`}
     >
       <div className="flex flex-col p-4">
         <div className="flex flex-col mb-4">
@@ -68,7 +68,7 @@ const AssignModal: FC<AssignModalProps> = ({ isOpen, onClose, coreNb, begin, mas
               : 'error'}
           </p>
           <label htmlFor="task" className="text-lg font-semibold mb-2">
-            To task nb:
+            To para ID:
           </label>
           <input
             id="task"
