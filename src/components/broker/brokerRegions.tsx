@@ -1,6 +1,7 @@
+import WalletStatus from '@/components/walletStatus/WalletStatus'
+import { parseNativeTokenToHuman } from '@/utils/account/token'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
 import { useEffect, useState } from 'react'
-import WalletStatus from '@/components/walletStatus/WalletStatus'
 import CoreItem from '../cores/CoreItem'
 
 // Define a type for the queryParams
@@ -58,12 +59,6 @@ function useRegionQuery() {
   return data
 }
 
-function parseAndDividePaid(paid: string): number {
-  const numberWithoutCommas = paid.replace(/,/g, '')
-  const number = parseInt(numberWithoutCommas, 10)
-  return number / 10 ** 12
-}
-
 export default function BrokerRegionData() {
   const { activeAccount, activeChain } = useInkathon()
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
@@ -91,7 +86,7 @@ export default function BrokerRegionData() {
               coreNumber={region.detail[0].core}
               size="1"
               phase="- Period"
-              cost={parseAndDividePaid(region.owner.paid)}
+              cost={parseNativeTokenToHuman({paid: region.owner.paid, decimals: 12})}
               reward="0"
               currencyCost={tokenSymbol}
               currencyReward="LASTIC"

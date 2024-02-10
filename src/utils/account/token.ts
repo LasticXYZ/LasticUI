@@ -5,6 +5,6 @@ export function parseNativeTokenToHuman({ paid, decimals }: { paid: string; deci
 }
 
 
-export function toShortAddress(address: string) {
-  return `${address.slice(0, 6)}...${address.slice(-6)}`
+export function toShortAddress(address: string, howMany: number = 6) {
+  return `${address.slice(0, howMany)}...${address.slice(-howMany)}`
 }

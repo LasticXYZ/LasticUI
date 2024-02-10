@@ -1,18 +1,25 @@
 import Border from '@/components/border/Border';
 import GeneralTable from '@/components/table/GeneralTable';
+import { parseNativeTokenToHuman } from '@/utils/account/token';
 import { decodeAddress, encodeAddress } from '@polkadot/util-crypto';
-import { useInkathon } from '@poppyseed/lastic-sdk';
+import { useBalance, useInkathon } from '@poppyseed/lastic-sdk';
 import { PurchasedEvent, getClient } from '@poppyseed/squid-sdk';
-import { useEffect, useState } from 'react';
+import { format } from 'date-fns';
+import { useEffect, useMemo, useState } from 'react';
 
 type GraphLike<T> = { data: { event?: T[], call?: T } };
 
 const PastTransactions = () => {
   const { activeAccount } = useInkathon();
+
   const [result, setResult] = useState<GraphLike<PurchasedEvent[]> | null>(null);
   const client = getClient();
   const publicKeyBytes = decodeAddress(activeAccount?.address);
   const targetNetworkPrefix = 2; // For example, Kusama prefix
+
+  let { tokenSymbol } = useBalance(activeAccount?.address, true)
+  tokenSymbol = tokenSymbol || 'UNIT';
+
   const newAddress = encodeAddress(publicKeyBytes, targetNetworkPrefix);
   const query = client.eventWhoPurchased(newAddress);
 
@@ -27,10 +34,16 @@ const PastTransactions = () => {
     }
   }, [newAddress]);
 
+  const reversedData = useMemo(() => {
+    // Make a copy of the event array (if it exists) and reverse the copy
+    return [...(result?.data.event || [])].reverse();
+  }, [result]);
+
   // Define the table header
   const TableHeader = [
-    { title: '#' },
+    { title: 'Time' },
     { title: 'Block Number' },
+    { title: 'Transaction Type'},
     { title: 'Core' },
     { title: 'RegionID Begin' },
     { title: 'Mask' },
@@ -38,15 +51,15 @@ const PastTransactions = () => {
   ];
 
   // Transform result into table data
-  const TableData = result?.data.event?.map((event, index) => ({
-    href: '/', // Assuming you might have a detail page for each transaction
+  const TableData = reversedData.map((event, index) => ({
     data: [
-      event.timestamp.toString(),
+      format(new Date(event.timestamp), 'MMMM dd, yyyy HH:mm:ss OOOO'),
+      event.blockNumber.toString(),
+      'Purchase',
       event.regionId.core.toString(),
       event.regionId.begin.toString(),
       event.regionId.mask,
-      event.blockNumber.toString(),
-      `${event.price?.toString()} UNIT`, // Replace UNIT with actual currency unit if available
+      `${parseNativeTokenToHuman({paid: event.price.toString(), decimals: 12})} ${tokenSymbol}`,
     ],
   })) || [];
 

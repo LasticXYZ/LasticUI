@@ -12,7 +12,7 @@ export default function PageCore({ params }: { params: { number: string; regionI
       <SubTitle subtitle={`A deeper look into the core Nb. ${params.number}`} />
       <section className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8 flex flex-col items-stretch">
         <Core coreNb={CoreNb} regionId={RegionId} />
-        <PastTransactions />
+        <PastTransactions coreNb={CoreNb} />
       </section>
     </>
   )
