@@ -99,7 +99,6 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
                       </div>
                       <div className="mt-2 text-gray-18 flex flex-col px-2">
                         <div className='ml-3'>
-                          Using account: <span className="text-gray-600">0x1234...5678</span>
                           <SideBarAccountName />
                         </div>
                       </div>
