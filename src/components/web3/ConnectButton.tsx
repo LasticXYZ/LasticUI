@@ -1,33 +1,27 @@
 import { WalletModal } from '@/components/modal/WalletModal'
-import { env } from '@/config/environment'
-import { encodeAddress } from '@polkadot/util-crypto'
-import {
-  SubstrateChain,
-  SubstrateWalletPlatform,
-  allSubstrateWallets,
-  getSubstrateChain,
-  isWalletInstalled,
-  useBalance,
-  useInkathon,
-  SubstrateWallet,
-} from '@poppyseed/lastic-sdk'
 import { truncateHash } from '@/utils/truncateHash'
 import { useIsSSR } from '@/utils/useIsSSR'
+import { encodeAddress } from '@polkadot/util-crypto'
+import {
+  SubstrateWallet,
+  SubstrateWalletPlatform,
+  allSubstrateWallets,
+  isWalletInstalled,
+  useBalance,
+  useInkathon
+} from '@poppyseed/lastic-sdk'
 import Link from 'next/link'
 import { FC, useState } from 'react'
-import { toast } from 'react-hot-toast'
 import { AiOutlineCheckCircle, AiOutlineDisconnect } from 'react-icons/ai'
-import { FiChevronDown, FiExternalLink } from 'react-icons/fi'
-import { AccountName } from './AccountName' // Assuming AccountName is in the same directory
+import { FiExternalLink } from 'react-icons/fi'
+import { AccountName } from './AccountName'; // Assuming AccountName is in the same directory
 
 export interface ConnectButtonProps {}
 export const ConnectButton: FC<ConnectButtonProps> = () => {
   const {
     activeChain,
-    switchActiveChain,
     connect,
     disconnect,
-    isConnecting,
     activeAccount,
     accounts,
     setActiveAccount,

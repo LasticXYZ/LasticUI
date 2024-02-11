@@ -5,7 +5,7 @@ export function parseNativeTokenToHuman({ paid, decimals = 12 }: { paid?: string
 }
 
 
-export function toShortAddress(address: string | null, howMany: number = 6) {
+export function toShortAddress(address?: string | null, howMany: number = 6) {
   if (!address) {
     return ''
   }
