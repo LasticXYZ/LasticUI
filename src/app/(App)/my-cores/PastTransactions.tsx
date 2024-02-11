@@ -68,7 +68,7 @@ const PastTransactions = () => {
             <h1 className="text-xl font-syncopate font-bold">My past transactions</h1>
           </div>
           <div>
-            {(result && !TableData) ? (
+            {(result) ? (
               <GeneralTable tableData={TableData} tableHeader={TableHeader} colClass="grid-cols-7" />
             ) : (
               <p>Loading transactions...</p>
