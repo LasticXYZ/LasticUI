@@ -6,7 +6,7 @@ import { PurchasedEvent, getClient } from '@poppyseed/squid-sdk';
 import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 
-type GraphLike<T> = { data: { event?: T[], call?: T } };
+type GraphLike<T> = { data: { event?: T[], call?: T[] } };
 
 const PastTransactions = ({
   coreNb,
@@ -15,7 +15,7 @@ const PastTransactions = ({
 }) => {
   const { activeAccount } = useInkathon();
 
-  const [result, setResult] = useState<GraphLike<PurchasedEvent[]> | null>(null);
+  const [result, setResult] = useState<GraphLike<PurchasedEvent> | null>(null);
   const client = getClient();
   const query = client.eventCorePurchased(coreNb);
 
@@ -24,7 +24,7 @@ const PastTransactions = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      const fetchedResult = await client.fetch(query);
+      const fetchedResult: GraphLike<PurchasedEvent> = await client.fetch(query);
       setResult(fetchedResult);
     };
 
@@ -44,13 +44,13 @@ const PastTransactions = ({
   // Transform result into table data
   const TableData = result?.data.event?.map((event, index) => ({
     data: [
-      format(new Date(event.timestamp), 'MMMM dd, yyyy HH:mm:ss OOOO'),
-      event.blockNumber.toString(),
+      event.timestamp ? format(new Date(event.timestamp), 'MMMM dd, yyyy HH:mm:ss OOOO') : '',
+      event.blockNumber?.toString(),
       'Purchase',
       toShortAddress(event.who, 4),
-      event.regionId.begin.toString(),
+      event.regionId.begin?.toString(),
       event.regionId.mask,
-      `${parseNativeTokenToHuman({paid: event.price.toString(), decimals: 12})} ${tokenSymbol}`,
+      `${parseNativeTokenToHuman({paid: event.price?.toString(), decimals: 12})} ${tokenSymbol}`,
     ],
   })) || [];
 
@@ -64,7 +64,7 @@ const PastTransactions = ({
             </h1>
           </div>
           <div>
-            {result ? (
+            {(result && !TableData) ? (
               <GeneralTable tableData={TableData} tableHeader={TableHeader} colClass="grid-cols-7" />
             ) : (
               <p>Loading transactions...</p>
