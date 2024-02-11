@@ -3,7 +3,7 @@
 import './globals.css'
 //import type { Metadata } from 'next'
 import { env } from '@/config/environment'
-import { CogIcon, HomeIcon, UserGroupIcon } from '@heroicons/react/24/outline'
+import { ArrowPathIcon, BoltIcon, HomeIcon, ShoppingCartIcon } from '@heroicons/react/24/outline'
 import { UseInkathonProvider } from '@poppyseed/lastic-sdk'
 import { Montserrat, Syncopate } from 'next/font/google'
 import Background from './Background'
@@ -11,38 +11,26 @@ import Navbar from './Navbar'
 
 const navigation_app = [
   {
-    name: 'My cores',
+    name: 'My Cores',
     icon: <HomeIcon className="h-5 w-5" aria-hidden="true" />,
     href: '/my-cores',
     current: false,
   },
   {
-    name: 'Insta-core',
-    icon: <HomeIcon className="h-5 w-5" aria-hidden="true" />,
-    href: '/instacore',
-    current: false,
-  },
-  {
-    name: '1. Bulk-core',
-    icon: <UserGroupIcon className="h-5 w-5" aria-hidden="true" />,
+    name: 'Coretime Sales',
+    icon: <ShoppingCartIcon className="h-5 w-5" aria-hidden="true" />,
     href: '/bulkcore1',
     current: false,
   },
   {
-    name: '2. Bulk-core',
-    icon: <CogIcon className="h-5 w-5" aria-hidden="true" />,
-    href: '/bulkcore2',
+    name: 'On Demand Cores',
+    icon: <BoltIcon className="h-5 w-5" aria-hidden="true" />,
+    href: '/instacore',
     current: false,
   },
   {
-    name: 'test',
-    icon: <CogIcon className="h-5 w-5" aria-hidden="true" />,
-    href: '/test',
-    current: false,
-  },
-  {
-    name: 'Teleport assets',
-    icon: <CogIcon className="h-5 w-5" aria-hidden="true" />,
+    name: 'Teleport Assets',
+    icon: <ArrowPathIcon className="h-5 w-5" aria-hidden="true" />,
     href: '/teleport',
     current: false,
   },

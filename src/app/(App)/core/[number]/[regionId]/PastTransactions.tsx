@@ -2,11 +2,9 @@ import Border from '@/components/border/Border';
 import GeneralTable from '@/components/table/GeneralTable';
 import { parseNativeTokenToHuman, toShortAddress } from '@/utils/account/token';
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk';
-import { PurchasedEvent, getClient } from '@poppyseed/squid-sdk';
+import { GraphLike, PurchasedEvent, getClient } from '@poppyseed/squid-sdk';
 import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
-
-type GraphLike<T> = { data: { event?: T[], call?: T[] } };
 
 const PastTransactions = ({
   coreNb,
@@ -15,7 +13,7 @@ const PastTransactions = ({
 }) => {
   const { activeAccount } = useInkathon();
 
-  const [result, setResult] = useState<GraphLike<PurchasedEvent> | null>(null);
+  const [result, setResult] = useState<GraphLike<PurchasedEvent[]> | null>(null);
   const client = getClient();
   const query = client.eventCorePurchased(coreNb);
 
@@ -24,7 +22,7 @@ const PastTransactions = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      const fetchedResult: GraphLike<PurchasedEvent> = await client.fetch(query);
+      const fetchedResult: GraphLike<PurchasedEvent[]> = await client.fetch(query);
       setResult(fetchedResult);
     };
 
