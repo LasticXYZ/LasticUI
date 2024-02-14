@@ -37,20 +37,25 @@ const Card: React.FC<CardProps> = ({
           </div>
         </div>
         <div className="mx-auto pt-4 flex flex-row items-center justify-between overflow-hidden">
-          <div className='px-5'>
+          <div className="px-5">
             <Image src="/assets/Images/core1.png" alt="Lastic Logo" width={130} height={100} />
           </div>
           <div className="flex w-full text-lg flex-col px-5items-start justify-center">
-            <div className='flex flex-row p-1'>
+            <div className="flex flex-row p-1">
               <p className="text-gray-12 px-2">Size: {size} core</p>
             </div>
-            <div className='flex flex-row p-1'>
-              <p className="text-gray-12 px-2"> Cost: {cost} {currencyCost}</p>
-              <p className="text-gray-12 px-2">Reward: {reward} {currencyReward}</p>
+            <div className="flex flex-row p-1">
+              <p className="text-gray-12 px-2">
+                {' '}
+                Cost: {cost} {currencyCost}
+              </p>
+              <p className="text-gray-12 px-2">
+                Reward: {reward} {currencyReward}
+              </p>
             </div>
             <div className="flex flex-row text-gray-12 p-1 ">
-              <p className='px-2'>Begin: {begin}</p>
-              <p className='px-2'>End: {end}</p>
+              <p className="px-2">Begin: {begin}</p>
+              <p className="px-2">End: {end}</p>
             </div>
           </div>
         </div>

@@ -7,26 +7,27 @@ export const ChainInfo: FC = () => {
   const { api, activeChain } = useInkathon()
   const [chainInfo, setChainInfo] = useState<{ [_: string]: any }>()
 
-  // Fetch Chain Info
-  const fetchChainInfo = async () => {
-    if (!api) {
-      setChainInfo(undefined)
-      return
+  useEffect(() => {
+    // Fetch Chain Info
+    const fetchChainInfo = async () => {
+      if (!api) {
+        setChainInfo(undefined)
+        return
+      }
+
+      const chain = (await api.rpc.system.chain())?.toString() || ''
+      const version = (await api.rpc.system.version())?.toString() || ''
+      const properties = ((await api.rpc.system.properties())?.toHuman() as any) || {}
+      const tokenSymbol = properties?.tokenSymbol?.[0] || 'UNIT'
+      const tokenDecimals = properties?.tokenDecimals?.[0] || 12
+      const chainInfo = {
+        Chain: chain,
+        Version: version,
+        Token: `${tokenSymbol} (${tokenDecimals} Decimals)`,
+      }
+      setChainInfo(chainInfo)
     }
 
-    const chain = (await api.rpc.system.chain())?.toString() || ''
-    const version = (await api.rpc.system.version())?.toString() || ''
-    const properties = ((await api.rpc.system.properties())?.toHuman() as any) || {}
-    const tokenSymbol = properties?.tokenSymbol?.[0] || 'UNIT'
-    const tokenDecimals = properties?.tokenDecimals?.[0] || 12
-    const chainInfo = {
-      Chain: chain,
-      Version: version,
-      Token: `${tokenSymbol} (${tokenDecimals} Decimals)`,
-    }
-    setChainInfo(chainInfo)
-  }
-  useEffect(() => {
     fetchChainInfo()
   }, [api])
 

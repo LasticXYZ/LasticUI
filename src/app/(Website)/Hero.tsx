@@ -1,9 +1,8 @@
-import Link from 'next/link'
-import Image from 'next/image'
-import React from 'react'
-import { FaGithub, FaTelegram, FaTwitter, FaMedium } from 'react-icons/fa'
-import SecondaryButton from '@/components/button/SecondaryButton'
 import PrimaryButton from '@/components/button/PrimaryButton'
+import SecondaryButton from '@/components/button/SecondaryButton'
+import Image from 'next/image'
+import Link from 'next/link'
+import { FaGithub, FaMedium, FaTelegram, FaTwitter } from 'react-icons/fa'
 
 const Hero = () => {
   return (
@@ -74,16 +73,15 @@ const Hero = () => {
         </div>
 
         {/* Image Section */}
-        <div className="relative h-full w-full items-center py-10 justify-center mx-auto z-10">
+        <div className="relative h-full w-full flex items-center justify-center py-10 mx-auto z-10 xl:min-h-[60vh]">
           <Image
             src="/assets/Images/hero-page.png"
             alt="hero"
             width={602}
             height={692}
             quality={100}
-            layout="responsive"
-            className="justify-center mx-auto py-2 lg:py-20 2xl:pr-40"
-          />
+            className="object-center justify-center items-center mx-auto lg:py-20 xl:object-scale-down"
+            />
         </div>
       </div>
     </div>

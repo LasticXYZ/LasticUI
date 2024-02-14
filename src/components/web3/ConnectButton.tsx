@@ -8,24 +8,18 @@ import {
   allSubstrateWallets,
   isWalletInstalled,
   useBalance,
-  useInkathon
+  useInkathon,
 } from '@poppyseed/lastic-sdk'
 import Link from 'next/link'
 import { FC, useState } from 'react'
 import { AiOutlineCheckCircle, AiOutlineDisconnect } from 'react-icons/ai'
 import { FiExternalLink } from 'react-icons/fi'
-import { AccountName } from './AccountName'; // Assuming AccountName is in the same directory
+import { AccountName } from './AccountName' // Assuming AccountName is in the same directory
 
 export interface ConnectButtonProps {}
 export const ConnectButton: FC<ConnectButtonProps> = () => {
-  const {
-    activeChain,
-    connect,
-    disconnect,
-    activeAccount,
-    accounts,
-    setActiveAccount,
-  } = useInkathon()
+  const { activeChain, connect, disconnect, activeAccount, accounts, setActiveAccount } =
+    useInkathon()
   const { balanceFormatted } = useBalance(activeAccount?.address, true, {
     forceUnit: false,
     fixedDecimals: 2,

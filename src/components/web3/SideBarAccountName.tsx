@@ -22,15 +22,13 @@ export const SideBarAccountName = () => {
 
   return (
     <>
-        <div className="flex font-bold text-sm py-1">
-            Connected to: {activeChain?.name}
-        </div>
-        <div className="flex font-bold text-sm py-1">
-            Name: {primaryDomain || activeAccount?.name}
-        </div>
-        <div className="flex font-bold text-sm py-1">
-            Address: {toShortAddress(activeAccount?.address, 6)}
-        </div>
+      <div className="flex font-bold text-sm py-1">Connected to: {activeChain?.name}</div>
+      <div className="flex font-bold text-sm py-1">
+        Name: {primaryDomain || activeAccount?.name}
+      </div>
+      <div className="flex font-bold text-sm py-1">
+        Address: {toShortAddress(activeAccount?.address, 6)}
+      </div>
     </>
   )
 }

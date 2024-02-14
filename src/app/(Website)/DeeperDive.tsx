@@ -1,5 +1,4 @@
 // Dependencies
-import SecondaryButton from '@/components/button/SecondaryButton'
 import Image from 'next/image'
 import React from 'react'
 
@@ -21,12 +20,14 @@ const DeeperDive: React.FC = () => {
         <div className="grid grid-cols-1  md:grid-cols-2  gap-4  sm:flex-row w-full sm:items-center">
           {/* Image */}
           <div className="relative h-72 md:h-96 xl:h-[600px] w-full">
-            <Image
-              src="/assets/Images/coretime-vis.png"
-              alt="Deeper Dive Image"
-              className="rounded-2xl border border-gray-9 object-cover"
-              fill
-            />
+          <Image
+            src="/assets/Images/coretime-vis.png"
+            alt="Deeper Dive Image"
+            className="rounded-2xl border border-gray-9 object-cover"
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          />
+
           </div>
 
           {/* Info */}

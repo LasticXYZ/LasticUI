@@ -43,7 +43,6 @@ Set up the environmental variables, copy and rename `.env.local.example`.
 pnpm run dev
 ```
 
-
 ## Visual Resources
 
 ### Flow Chart:

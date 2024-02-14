@@ -90,7 +90,7 @@ export default function MyCores() {
               <CoreItem
                 coreNumber={region.detail[0].core}
                 size="1"
-                cost={parseNativeTokenToHuman({paid: region.owner.paid, decimals: 12})}
+                cost={parseNativeTokenToHuman({ paid: region.owner.paid, decimals: 12 })}
                 reward="0"
                 currencyCost={tokenSymbol}
                 currencyReward="LASTIC"
@@ -107,6 +107,5 @@ export default function MyCores() {
     <Border className="h-full flex flex-row justify-center items-center">
       <WalletStatus />
     </Border>
-
   )
 }

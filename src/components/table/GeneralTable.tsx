@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { FC } from 'react';
 
 type GeneralTableProps = {
-  tableData: Array<{ href?: string; data: Array<string | JSX.Element> }>
+  tableData: Array<{ href?: string; data: Array<string | JSX.Element | undefined | null> }>
   tableHeader: Array<{ title: string }>
   colClass?: string
 }
@@ -36,27 +36,25 @@ const GeneralTable: FC<GeneralTableProps> = ({
 
             {tableData.map((item, index) => (
               <div key={index}>
-                {item.href &&
-                <Link
-                  key={index}
-                  className="text-black cursor-pointer hover:text-gray-7"
-                  href={item.href}
-                >
-                  <div
-                    className={joinClassNames('grid gap-4 px-2 border-b border-gray-9', colClass)}
-                  >
-                    {item.data.map((item2, innerIndex) => (
-                      <div key={innerIndex} className="flex justify-start items-center p-4">
-                        {item2}
-                      </div>
-                    ))}
-                  </div>
-                </Link>
-                }
-                {!item.href &&
-                  <div
+                {item.href && (
+                  <Link
                     key={index}
+                    className="text-black cursor-pointer hover:text-gray-7"
+                    href={item.href}
                   >
+                    <div
+                      className={joinClassNames('grid gap-4 px-2 border-b border-gray-9', colClass)}
+                    >
+                      {item.data?.map((item2, innerIndex) => (
+                        <div key={innerIndex} className="flex justify-start items-center p-4">
+                          {item2}
+                        </div>
+                      ))}
+                    </div>
+                  </Link>
+                )}
+                {!item.href && (
+                  <div key={index}>
                     <div
                       className={joinClassNames('grid gap-4 px-2 border-b border-gray-9', colClass)}
                     >
@@ -67,7 +65,7 @@ const GeneralTable: FC<GeneralTableProps> = ({
                       ))}
                     </div>
                   </div>
-                }
+                )}
               </div>
             ))}
           </div>

@@ -27,7 +27,7 @@ interface TransferCall {
 const TransferModal: FC<TransferModalProps> = ({ isOpen, onClose, coreNb, begin, mask }) => {
   const { api, activeSigner, activeAccount, activeChain } = useInkathon()
   const [newOwner, setNewOwner] = useState('')
-  
+
   const regionId = {
     begin: begin.replace(/,/g, ''),
     core: coreNb,

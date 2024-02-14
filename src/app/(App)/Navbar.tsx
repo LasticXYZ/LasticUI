@@ -38,6 +38,7 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
                             src="/assets/Images/Logos/lastic-logo.png"
                             width={130}
                             height={50}
+                            quality={100}
                             alt="lastic Logo"
                           />
                         </Link>
@@ -98,7 +99,7 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
                         ACCOUNT
                       </div>
                       <div className="mt-2 text-gray-18 flex flex-col px-2">
-                        <div className='ml-3'>
+                        <div className="ml-3">
                           <SideBarAccountName />
                         </div>
                       </div>

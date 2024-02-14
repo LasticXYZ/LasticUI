@@ -13,6 +13,7 @@ const Footer = () => (
               alt="lastic Logo"
               width={150}
               height={50}
+              quality={100}
             />
           </Link>
           <p className="mt-2 text-sm text-gray-8">Lastic the First Blockspace Marketplace.</p>
