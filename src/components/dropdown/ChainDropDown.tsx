@@ -19,6 +19,9 @@ const ChainDropdown: FC<ChainDropdownProps> = ({ chainOptions }) => {
               <Image
                 src={selectedChain.icon}
                 alt=""
+                width='0'
+                height="0"
+                style={{ width: '2em', height: 'auto' }}
                 className="flex-shrink-0 h-6 w-6 rounded-full"
               />
               <span className="ml-3 block truncate">{selectedChain.name}</span>
