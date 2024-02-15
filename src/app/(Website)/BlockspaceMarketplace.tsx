@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import React from 'react'
 
 const BlockspaceMarketplace = () => {
   return (
@@ -15,9 +14,9 @@ const BlockspaceMarketplace = () => {
           <h2 className="text-lg sm:text-xl font-syncopate text-center mb-5">What you can do</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 items-center justify-between gap-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 items-center justify-between gap-4 md:py-12">
           <div className="md:flex-1">
-            <div className="relative h-9 md:h-96 xl:h-[500px] w-full">
+            <div className="relative h-[20vh] md:h-[40vh] xl:h-[500px] w-full">
               <Image
                 src="/assets/Images/deeper_dive.png"
                 alt="Abstract Art"

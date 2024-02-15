@@ -1,7 +1,7 @@
-import React, { useState, FC } from 'react'
 import { Listbox } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
+import { FC, useState } from 'react'
 
 interface ChainDropdownProps {
   chainOptions: Array<{ name: string; icon: string }>
@@ -16,7 +16,11 @@ const ChainDropdown: FC<ChainDropdownProps> = ({ chainOptions }) => {
         <div className="relative mt-1">
           <Listbox.Button className="relative w-full cursor-pointer rounded-lg bg-opacity-20 py-2 pl-3 pr-10 text-left border border-gray-9 focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
             <span className="flex items-center">
-              <img src={selectedChain.icon} alt="" className="flex-shrink-0 h-6 w-6 rounded-full" />
+              <Image
+                src={selectedChain.icon}
+                alt=""
+                className="flex-shrink-0 h-6 w-6 rounded-full"
+              />
               <span className="ml-3 block truncate">{selectedChain.name}</span>
             </span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">

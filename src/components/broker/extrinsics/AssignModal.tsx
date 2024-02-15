@@ -22,7 +22,7 @@ interface RegionId {
 const AssignModal: FC<AssignModalProps> = ({ isOpen, onClose, coreNb, begin, mask }) => {
   const { api, activeSigner, activeAccount, activeChain } = useInkathon()
   const [task, setTask] = useState(0)
-  const [finality, setFinality] = useState('Provisional');
+  const [finality, setFinality] = useState('Provisional')
 
   const regionId: RegionId = {
     begin: begin.replace(/,/g, ''),
@@ -40,7 +40,7 @@ const AssignModal: FC<AssignModalProps> = ({ isOpen, onClose, coreNb, begin, mas
       paramFields: [
         { name: 'regionId', type: 'Object', optional: false },
         { name: 'task', type: 'Number', optional: false },
-        { name: 'finality', type: 'String', optional: false}
+        { name: 'finality', type: 'String', optional: false },
       ],
     },
     type: 'SIGNED-TX',
@@ -53,16 +53,12 @@ const AssignModal: FC<AssignModalProps> = ({ isOpen, onClose, coreNb, begin, mas
   if (!isOpen) return null
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title={`Assign Core Nb: ${coreNb} To Para ID`}
-    >
+    <Modal isOpen={isOpen} onClose={onClose} title={`Assign Core Nb: ${coreNb} To Para ID`}>
       <div className="flex flex-col p-4">
         <div className="flex flex-col mb-4">
           <p className="text-lg font-semibold mb-2">Assing Core Nb: {coreNb}</p>
           <p className="text-lg mb-2">
-            Account: {' '}
+            Account:{' '}
             {activeAccount
               ? truncateHash(encodeAddress(activeAccount.address, activeChain?.ss58Prefix || 42), 8)
               : 'error'}
@@ -80,24 +76,20 @@ const AssignModal: FC<AssignModalProps> = ({ isOpen, onClose, coreNb, begin, mas
           <label htmlFor="finality" className="text-lg font-semibold mb-2">
             Finality:
           </label>
-            <select
-                id="finality"
-                className="text-lg border border-gray-300 rounded-md p-2 mb-4 focus:ring-blue-500 focus:border-blue-500"
-                value={finality}
-                onChange={(e) => setFinality(e.target.value)}
-            >
-                <option value="Provisional">Provisional</option>
-                <option value="Final">Final</option>
-            </select>
+          <select
+            id="finality"
+            className="text-lg border border-gray-300 rounded-md p-2 mb-4 focus:ring-blue-500 focus:border-blue-500"
+            value={finality}
+            onChange={(e) => setFinality(e.target.value)}
+          >
+            <option value="Provisional">Provisional</option>
+            <option value="Final">Final</option>
+          </select>
           <p className="text-lg mb-2">Region Begin: {begin}</p>
           <p className="text-md">Core Mask: {mask}</p>
         </div>
         <div className="flex justify-center pt-5">
-          <PrimaryButton
-            title="Assign Core"
-            onClick={transaction}
-            disabled={!allParamsFilled()}
-          />
+          <PrimaryButton title="Assign Core" onClick={transaction} disabled={!allParamsFilled()} />
           <div className="mt-5 text-sm text-gray-16 ">{status}</div>
         </div>
       </div>

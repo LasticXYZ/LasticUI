@@ -42,7 +42,7 @@ const CoreItemExtensive: React.FC<CardProps> = ({
         <h1 className="text-xl font-syncopate font-bold">Core Nb. {coreNumber} </h1>
       </div>
       <div className="mx-auto pt-4 flex flex-row items-start p-10 justify-between overflow-hidden">
-        <div className='px-10'>
+        <div className="px-10">
           <Image src="/assets/Images/core2.png" alt="Lastic Logo" width={400} height={400} />
         </div>
         <div className="flex w-full flex-col px-5 items-start justify-start space-y-3">
@@ -53,7 +53,7 @@ const CoreItemExtensive: React.FC<CardProps> = ({
           </div>
           <div>
             <div className="block mt-1 text-md leading-tight font-medium text-black">
-              Paid: {parseNativeTokenToHuman({paid: paid, decimals: 12})} {currencyCost}
+              Paid: {parseNativeTokenToHuman({ paid: paid, decimals: 12 })} {currencyCost}
             </div>
           </div>
           <div>

@@ -1,12 +1,13 @@
 'use client'
 
+import { ConnectButton } from '@/components/web3/ConnectButton'
+import { SideBarAccountName } from '@/components/web3/SideBarAccountName'
+import SupportedChains from '@/components/web3/SupportedChains'
 import { Disclosure } from '@headlessui/react'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
 import React, { FC, useState } from 'react'
-import { ConnectButton } from '@/components/web3/ConnectButton'
-import SupportedChains from '@/components/web3/SupportedChains'
 
 type NavbarProps = {
   navigation: Array<{ name: string; href: string; icon: React.ReactElement; current: boolean }>
@@ -37,6 +38,7 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
                             src="/assets/Images/Logos/lastic-logo.png"
                             width={130}
                             height={50}
+                            quality={100}
                             alt="lastic Logo"
                           />
                         </Link>
@@ -84,7 +86,6 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
                           }`}
                           aria-current={item.current ? 'page' : undefined}
                         >
-                          <ChevronRightIcon className="h-4 w-5" aria-hidden="true" />
                           <span className="px-2">{Icon}</span>
 
                           {!isCollapsed && <span>{item.name}</span>}
@@ -93,9 +94,16 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
                     })}
                   </div>
                   {!isCollapsed && (
-                    <div className="text-gray-8 border-t border-gray-9 mt-20 font-montserrat text-xs font-semibold px-4 pt-6">
-                      ACCOUNT
-                    </div>
+                    <>
+                      <div className="text-gray-8 border-t border-gray-9 mt-20 font-montserrat text-xs font-semibold px-4 pt-6">
+                        ACCOUNT
+                      </div>
+                      <div className="mt-2 text-gray-18 flex flex-col px-2">
+                        <div className="ml-3">
+                          <SideBarAccountName />
+                        </div>
+                      </div>
+                    </>
                   )}
                 </div>
 

@@ -267,12 +267,11 @@ export default function BrokerSaleInfo() {
         <Border>
           <div className=" p-10">
             <div>
-              <button className="font-bold">
-                <span className="text-pink-4">◀</span> previous coretime sale
-              </button>
               <div className="flex justify-between rounded-full mx-10 bg-pink-4 px-16 py-10 bg-opacity-30 items-center my-6">
-                <div className="text-xl font-bold font-syncopate text-gray-21">{saleTitle}</div>
-                <div className="text-2xl font-bold font-syncopate text-gray-18">
+                <div className="text-xl xl:text-2xl font-bold font-syncopate text-gray-21">
+                  {saleTitle}
+                </div>
+                <div className="text-xl xl:text-2xl font-bold font-syncopate text-gray-18">
                   {timeRemaining}
                 </div>
               </div>

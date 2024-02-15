@@ -1,83 +1,97 @@
 import GeneralTable from '@/components/table/GeneralTable'
-import TagComp from '@/components/tags/TagComp'
-import React, { useState } from 'react'
+import { parseNativeTokenToHuman, toShortAddress } from '@/utils/account/token'
+import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
+import { GraphLike, PurchasedEvent, getClient } from '@poppyseed/squid-sdk'
+import { format } from 'date-fns'
+import { useEffect, useState } from 'react'
 
-const PoolsSection = () => {
+const PastTransactions = () => {
+  const { activeAccount } = useInkathon()
+  const [result, setResult] = useState<GraphLike<PurchasedEvent[]> | null>(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [offset, setOffset] = useState(0)
+  const client = getClient()
+
+  let { tokenSymbol } = useBalance(activeAccount?.address, true)
+  tokenSymbol = tokenSymbol || 'UNIT'
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let query = client.eventAllPurchased(7, offset)
+      const fetchedResult: GraphLike<PurchasedEvent[]> = await client.fetch(query)
+      setResult(fetchedResult)
+    }
+
+    fetchData()
+  }, [client, offset]) // Add offset to the dependency array
+
   const TableHeader = [
-    { title: '#' },
-    { title: 'Para ID' },
-    { title: 'Project Name' },
-    { title: 'Owner' },
-    { title: 'Cores Owned' },
-    { title: '% Owned' },
-    { title: 'Core Type' },
-    { title: 'Period Until Renewal' },
+    { title: 'Time' },
+    { title: 'Block Number' },
+    { title: 'Purchased By' },
+    { title: 'Core Nb.' },
+    { title: 'RegionID Begin' },
+    { title: 'Price' },
   ]
 
-  const TableData = [
-    {
-      href: '/',
+  const TableData =
+    result?.data.event?.map((event, index) => ({
       data: [
-        '1.',
-        '200',
-        'Asset Hub',
-        '0x302...1231',
-        <TagComp key="tag-1" className="mx-4 my-2" title="2.12" />,
-        ' 0.21%',
-        'Instantanious',
-        '/',
+        event.timestamp ? format(new Date(event.timestamp), 'MMMM dd, yyyy HH:mm:ss OOOO') : '',
+        event.blockNumber?.toString(),
+        toShortAddress(event.who, 5),
+        event.regionId.core?.toString(),
+        event.regionId.begin?.toString(),
+        `${parseNativeTokenToHuman({ paid: event.price?.toString(), decimals: 12 })} ${tokenSymbol}`,
       ],
-    },
-    {
-      href: '/',
-      data: [
-        '2.',
-        '201',
-        'Asset Hub',
-        '0x303...1232',
-        <TagComp key="tag-2" className="mx-4 my-2" title="3.45" />,
-        ' 0.33%',
-        'Instantanious',
-        '/',
-      ],
-    },
-    {
-      href: '/',
-      data: [
-        '3.',
-        '202',
-        'Asset Hub',
-        '0x304...1233',
-        <TagComp key="tag-3" className="mx-4 my-2" title="5.67" />,
-        ' 0.45%',
-        'Instantanious',
-        '/',
-      ],
-    },
-    {
-      href: '/',
-      data: [
-        '4.',
-        '203',
-        'Asset Hub',
-        '0x305...1234',
-        <TagComp key="tag-4" className="mx-4 my-2" title="7.89" />,
-        ' 0.78%',
-        'Instantanious',
-        '/',
-      ],
-    },
-  ]
+    })) || []
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1)
+      setOffset(offset - 10)
+    }
+  }
+
+  const handleNextPage = () => {
+    setCurrentPage(currentPage + 1)
+    setOffset(offset + 10)
+  }
 
   return (
-    <>
-      <div className="mx-auto max-w-9xl px-4 mt-5 sm:px-6 lg:px-8">
+    <div>
+      <div className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8">
         <div>
-          <GeneralTable tableData={TableData} tableHeader={TableHeader} colClass="grid-cols-8" />
+          {result ? (
+            <>
+              <GeneralTable
+                tableData={TableData}
+                tableHeader={TableHeader}
+                colClass="grid-cols-6"
+              />
+              <div className="flex justify-between space-x-2 mt-4 p-5">
+                <button
+                  onClick={handlePreviousPage}
+                  disabled={currentPage === 1}
+                  className={`px-4 py-2 rounded-2xl text-black border border-gray-21 font-semibold ${currentPage === 1 ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : 'bg-blue-5 hover:bg-blue-6'}`}
+                >
+                  Previous
+                </button>
+                <button
+                  onClick={handleNextPage}
+                  className="px-4 py-2 bg-green-500 hover:bg-green-6 border border-gray-21 text-black font-semibold rounded-2xl"
+                >
+                  Next
+                </button>
+              </div>
+            </>
+          ) : (
+            <p>Loading transactions...</p>
+          )}
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
-export default PoolsSection
+export default PastTransactions

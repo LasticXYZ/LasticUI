@@ -25,18 +25,22 @@ The repository is organized into two primary directories:
 
 ## 🚀 Quick Start
 
-### Prerequisites
+## Getting Started
 
-Before you begin, ensure you have the Substrate node running. To spin up a local Substrate node run the following command:
+To set up and run the project, follow the steps below:
 
-```sh
-./start.sh
+```bash
+# Install the required dependencies
+pnpm install
 ```
 
-If that doesn't work try command:
+Copy the `.env.local.example` and rename it to `.env.local`. If you are using Subscan create a subscan public token and add it here: NEXT_PUBLIC_SUBSCAN_TOKEN='...'.
 
-```sh
-./start2.sh
+Set up the environmental variables, copy and rename `.env.local.example`.
+
+```
+# Start the development server
+pnpm run dev
 ```
 
 ## Visual Resources
@@ -75,22 +79,6 @@ Functionality:
 - Houses the static frontend with wallet connection features.
 - Will be further developed into the official Lastic website.
 - The design closely follows the `Figma UI`. Currently, the graphs use mockup data for demonstration.
-
-## Getting Started
-
-To set up and run the project, follow the steps below:
-
-```bash
-# Install the required dependencies
-pnpm install
-```
-
-Set up the environmental variables, copy and rename `.env.local.example`.
-
-```
-# Start the development server
-pnpm run dev
-```
 
 ## Project Framework
 

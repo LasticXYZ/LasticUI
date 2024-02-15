@@ -1,73 +1,53 @@
 import Border from '@/components/border/Border'
 import GeneralTable from '@/components/table/GeneralTable'
-import TagComp from '@/components/tags/TagComp'
+import { parseNativeTokenToHuman, toShortAddress } from '@/utils/account/token'
+import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
+import { GraphLike, PurchasedEvent, getClient } from '@poppyseed/squid-sdk'
+import { format } from 'date-fns'
+import { useEffect, useState } from 'react'
 
-const PastTransactions = () => {
+const PastTransactions = ({ coreNb }: { coreNb: number }) => {
+  const { activeAccount } = useInkathon()
+
+  const [result, setResult] = useState<GraphLike<PurchasedEvent[]> | null>(null)
+  const client = getClient()
+  const query = client.eventCorePurchased(coreNb)
+
+  let { tokenSymbol } = useBalance(activeAccount?.address, true)
+  tokenSymbol = tokenSymbol || 'UNIT'
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const fetchedResult: GraphLike<PurchasedEvent[]> = await client.fetch(query)
+      setResult(fetchedResult)
+    }
+
+    fetchData()
+  }, [client, query])
+
   const TableHeader = [
-    { title: '#' },
-    { title: 'Para ID' },
-    { title: 'Project Name' },
-    { title: 'Owner' },
-    { title: 'Cores Owned' },
-    { title: '% Owned' },
-    { title: 'Core Type' },
-    { title: 'Period Until Renewal' },
+    { title: 'Time' },
+    { title: 'Block Number' },
+    { title: 'Transaction Type' },
+    { title: 'Who' },
+    { title: 'RegionID Begin' },
+    { title: 'Mask' },
+    { title: 'Price' },
   ]
 
-  const TableData = [
-    {
-      href: '/',
+  // Transform result into table data
+  const TableData =
+    result?.data.event?.map((event, index) => ({
       data: [
-        '1.',
-        '200',
-        'Asset Hub',
-        '0x302...1231',
-        <TagComp key="tag-1" className="mx-4 my-2" title="2.12" />,
-        ' 0.21%',
-        'Instantanious',
-        '/',
+        event.timestamp ? format(new Date(event.timestamp), 'MMMM dd, yyyy HH:mm:ss OOOO') : '',
+        event.blockNumber?.toString(),
+        'Purchase',
+        toShortAddress(event.who, 4),
+        event.regionId.begin?.toString(),
+        event.regionId.mask,
+        `${parseNativeTokenToHuman({ paid: event.price?.toString(), decimals: 12 })} ${tokenSymbol}`,
       ],
-    },
-    {
-      href: '/',
-      data: [
-        '2.',
-        '201',
-        'Asset Hub',
-        '0x303...1232',
-        <TagComp key="tag-2" className="mx-4 my-2" title="3.45" />,
-        ' 0.33%',
-        'Instantanious',
-        '/',
-      ],
-    },
-    {
-      href: '/',
-      data: [
-        '3.',
-        '202',
-        'Asset Hub',
-        '0x304...1233',
-        <TagComp key="tag-3" className="mx-4 my-2" title="5.67" />,
-        ' 0.45%',
-        'Instantanious',
-        '/',
-      ],
-    },
-    {
-      href: '/',
-      data: [
-        '4.',
-        '203',
-        'Asset Hub',
-        '0x305...1234',
-        <TagComp key="tag-4" className="mx-4 my-2" title="7.89" />,
-        ' 0.78%',
-        'Instantanious',
-        '/',
-      ],
-    },
-  ]
+    })) || []
 
   return (
     <div className="mt-8">
@@ -75,11 +55,19 @@ const PastTransactions = () => {
         <div className="mx-auto max-w-9xl px-4 mt-5 sm:px-6 lg:px-8">
           <div className="pt-10 pl-10">
             <h1 className="text-xl font-syncopate font-bold">
-              Past transactions done with this core
+              Past transactions with core Nb. {coreNb}
             </h1>
           </div>
           <div>
-            <GeneralTable tableData={TableData} tableHeader={TableHeader} colClass="grid-cols-8" />
+            {result ? (
+              <GeneralTable
+                tableData={TableData}
+                tableHeader={TableHeader}
+                colClass="grid-cols-7"
+              />
+            ) : (
+              <p>Loading transactions...</p>
+            )}
           </div>
         </div>
       </Border>
