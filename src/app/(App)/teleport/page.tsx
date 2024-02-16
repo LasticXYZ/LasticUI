@@ -7,11 +7,35 @@ import { Builder } from '@paraspell/sdk'
 import { DispatchError, Hash } from '@polkadot/types/interfaces'
 import { ISubmittableResult } from '@polkadot/types/types'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 
 export type TxCbOnSuccessParams = { blockHash: Hash; txHash: Hash }
 
+
+const handleTransaction = ({
+  onSuccess,
+  onError,
+  onResult = console.log,
+}: {
+  onSuccess: (prams: TxCbOnSuccessParams) => void,
+  onError: (err: DispatchError) => void,
+  onResult?: (result: ISubmittableResult) => void
+}) => (result: ISubmittableResult): void => {
+  onResult(result);
+  if (result.dispatchError) {
+    console.warn('[EXEC] dispatchError', result);
+    onError(result.dispatchError);
+    return;
+  }
+
+  if (result.status.isFinalized) {
+    console.log('[EXEC] Finalized', result);
+    console.log(`[EXEC] blockHash ${result.status.asFinalized}`);
+    onSuccess({ blockHash: result.status.asFinalized, txHash: result.txHash });
+  }
+};
 
 const txCb =
 (
@@ -34,34 +58,29 @@ const txCb =
 }
 
 export const notificationTypes = {
-  success: {
-    variant: 'success',
-  },
-  info: {
-    variant: 'info',
-  },
-  danger: {
-    variant: 'danger',
-    duration: 15000,
-  },
-  warn: {
-    variant: 'warning',
-  },
-}
-
+  success: 'success',
+  info: 'info',
+  danger: 'danger',
+  warn: 'warning',
+};
 
 export const showNotification = (
-  message: string | null,
-  params: any = notificationTypes.info,
-  duration = 10000,
+  message: string,
+  type: keyof typeof notificationTypes = 'info',
 ): void => {
-  if (params === notificationTypes.danger) {
-    console.error('[Notification Error]', message)
-    return
-  }
+  const duration = type === 'danger' ? 15000 : 10000;
+  console.log(`[${type.toUpperCase()}] ${message}`, `Duration: ${duration}ms`);
+};
 
-  console.log(message)
+type ChainOptions = {
+  [key: string]: string; // Adding an index signature
+};
+
+const chainOptions: ChainOptions = {
+  'Rococo Relay Chain': '/assets/Images/NetworkIcons/rococo-img.svg',
+  'Rococo Coretime Testnet': '/assets/Images/NetworkIcons/assethub.svg',
 }
+
 
 const Teleport = () => {
   const [amount, setAmount] = useState(NaN)
@@ -74,72 +93,44 @@ const Teleport = () => {
     removeTrailingZeros: true,
   })
 
-  const chainOptions = [
-    { name: 'Rococo', icon: '/assets/Images/NetworkIcons/rococo-img.svg' },
-    { name: 'Rococo AssetHub', icon: '/assets/Images/NetworkIcons/assethub.svg' },
-  ]
-
-  // const transactionHandler = {
-  //   onBroadcast: (hash: string) => {
-  //     console.log(`Transaction broadcasted with hash ${hash}`)
-  //   },
-  //   onFinalized: (hash: string) => {
-  //     console.log(`Transaction finalized with hash ${hash}`)
-  //   },
-  //   onReady: (hash: string) => {
-  //     console.log(`Transaction ready with hash ${hash}`)
-  //   },
-  //   onInBlock: (hash: string) => {
-  //     console.log(`Transaction in block with hash ${hash}`)
-  //   },
-  // }
-
-  const transactionHandler = txCb(
-    ({ blockHash }) => {
-      showNotification(
-        `Transaction finalized at blockHash ${blockHash}`,
-        notificationTypes.success,
-      )
+  const transactionCallback = handleTransaction({
+    onSuccess: ({ blockHash }) => {
+      showNotification(`Transaction finalized at blockHash ${blockHash}`, 'success');
     },
-    (dispatchError) => {
-      showNotification(dispatchError.toString(), notificationTypes.warn)
+    onError: (error) => {
+      showNotification(error.toString(), 'danger');
     },
-  )
+  });
 
   const functionSendXCM = async (amountToSend: number) => {
     if (!activeAccount || !relayApi || !api) return
 
     setIsLoading(true)
-    let call;
 
     try {
-      call = await Builder(relayApi)
+      const call = await Builder(relayApi)
         .to('AssetHubKusama')
         .amount(amountToSend)
         .address(activeAccount.address)
-        .build()
+        .build();
 
-      console.log(call)
+      call.signAndSend(activeAccount.address, { signer: activeSigner }, transactionCallback);
     } catch (error) {
-      console.error('Error building XCM:', error)
-      return ;
-    } 
-
-    try {
-      call.signAndSend(
-        activeAccount.address,
-        { signer: activeSigner },
-        transactionHandler,
-      )
-    } catch (error) {
-      console.error('Error sending XCM:', error)
+      console.error('Error in XCM transaction:', error);
+      // Check if error is an instance of Error
+      if (error instanceof Error) {
+        showNotification('Error in XCM transaction: ' + error.message, 'danger');
+      } else {
+        // If it's not an Error instance, you might just log it as a string
+        showNotification('Error in XCM transaction: An unexpected error occurred.', 'danger');
+      }
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 
   const handleMaxClick = () => {
-    setAmount(Number(balance)/ 10**12) // Assuming 'balanceFormatted' is a string that can be directly used
+    setAmount(Number(balance)/ 10**tokenDecimals)
   }
 
   if (!activeAccount) {
@@ -168,11 +159,35 @@ const Teleport = () => {
           <div className="grid grid-cols-2 gap-6 mb-6">
             <div>
               <p className="mb-2">Source chain</p>
-              {activeRelayChain?.name}
+              <div className="relative w-full rounded-lg bg-opacity-20 py-2 pl-3 pr-10 text-left border border-gray-9 focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                <span className="flex items-center">
+                  <Image
+                    src={chainOptions[activeRelayChain?.name || 'Rococo Relay Chain']}
+                    alt=""
+                    width='0'
+                    height="0"
+                    style={{ width: '2em', height: 'auto' }}
+                    className="flex-shrink-0 h-6 w-6 rounded-full"
+                  />
+                  <span className="ml-3 block truncate">{activeRelayChain?.name}</span>
+                </span>
+              </div>
             </div>
             <div>
               <p className="mb-2">Destination</p>
-              {activeChain?.name}
+              <div className="relative w-full rounded-lg bg-opacity-20 py-2 pl-3 pr-10 text-left border border-gray-9 focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                <span className="flex items-center">
+                  <Image
+                    src={chainOptions[activeChain?.name || 'Rococo Relay Chain']}
+                    alt=""
+                    width='0'
+                    height="0"
+                    style={{ width: '2em', height: 'auto' }}
+                    className="flex-shrink-0 h-6 w-6 rounded-full"
+                  />
+                  <span className="ml-3 block truncate">{activeChain?.name}</span>
+                </span>
+              </div>
             </div>
           </div>
 
