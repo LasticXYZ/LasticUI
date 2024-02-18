@@ -116,7 +116,8 @@ const Teleport = () => {
           <p className="mb-6">
             Teleport assets between networks in the Polkadot and Kusama Ecosystem.
           </p>
-          <Link href="/" className="mb-2 font-semibold">
+          {/* Temporary link */}
+          <Link href="https://hello.kodadot.xyz/tutorial/teleport/teleport-bridge" className="mb-2 font-semibold">
             Click here to learn how it works
           </Link>
           <hr className="my-4 border-gray-9" />
@@ -178,7 +179,7 @@ const Teleport = () => {
               <span className="ml-2">{tokenSymbol}</span>
             </div>
             <div className="flex justify-between items-center mt-2">
-              <span>Balance: {balanceFormatted}</span>
+              <span>Balance on {activeChain?.name}: {balanceFormatted}</span>
               <button onClick={handleMaxClick} className="text-blue-500">Max</button>
             </div>
           </div>
@@ -190,7 +191,7 @@ const Teleport = () => {
             {isLoading ? 'Processing...' : 'Proceed To Confirmation'}
           </button>
           <p className="mt-6">
-            You will receive {amount || 0} {tokenSymbol} on {activeChain?.name} to {toShortAddress(activeAccount?.address, 4)}
+            You will receive {amount || 0} {tokenSymbol} on {isRelayToPara ? activeChain?.name : activeRelayChain?.name} to {toShortAddress(activeAccount?.address, 4)}
           </p>
         </div>
       </Border>
