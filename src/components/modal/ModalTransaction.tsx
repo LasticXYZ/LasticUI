@@ -7,7 +7,7 @@ const ModalTranasaction = (
   
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-        <div className="bg-white p-4 rounded-lg shadow-lg">
+        <div className="bg-white font-montserrat p-10 rounded-lg shadow-lg">
           <p>{message}</p>
         </div>
       </div>
