@@ -1,6 +1,8 @@
 'use client'
 
 import Border from '@/components/border/Border'
+import ModalSuccess from '@/components/modal/ModalSuccess'
+import ModalTranasaction from '@/components/modal/ModalTransaction'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { toShortAddress } from '@/utils/account/token'
 import { ArrowPathIcon } from '@heroicons/react/24/outline'
@@ -58,16 +60,23 @@ const Teleport = () => {
   const [amount, setAmount] = useState<number>(0)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRelayToPara, setIsRelayToPara] = useState<boolean>(true) // State to toggle direction
+  const [showTransactionPopup, setShowTransactionPopup] = useState(false);
+  const [showSuccessNotification, setShowSuccessNotification] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
   const { api, relayApi, activeAccount, activeChain, activeRelayChain, activeSigner } = useInkathon()
 
   const { balanceFormatted, balance, tokenSymbol, tokenDecimals } = useBalance(activeAccount?.address, true)
 
   const transactionCallback = handleTransaction({
     onSuccess: ({ blockHash }) => {
-      showNotification(`Transaction finalized at blockHash ${blockHash}`, 'success')
+      setShowTransactionPopup(false); // Hide transaction popup
+      setShowSuccessNotification(true); // Show success notification
+      setSuccessMessage(`Transaction finalized at blockHash ${blockHash}`); // Set success message
     },
     onError: (error) => {
-      showNotification(error instanceof Error ? error.message : String(error), 'danger')
+      setShowTransactionPopup(false); // Ensure to hide the popup in case of error too
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      showNotification(errorMessage, 'danger');
     },
   })
 
@@ -194,6 +203,8 @@ const Teleport = () => {
             You will receive {amount || 0} {tokenSymbol} on {isRelayToPara ? activeChain?.name : activeRelayChain?.name} to {toShortAddress(activeAccount?.address, 4)}
           </p>
         </div>
+        <ModalTranasaction isVisible={showTransactionPopup} message="Transaction is being processed. Please wait..." />
+        <ModalSuccess isVisible={showSuccessNotification} message={successMessage} onClose={() => setShowSuccessNotification(false)} />
       </Border>
     </section>
   )
