@@ -1,6 +1,7 @@
 'use client'
 
 import Border from '@/components/border/Border'
+import ModalError from '@/components/modal/ModalError'
 import ModalSuccess from '@/components/modal/ModalSuccess'
 import ModalTranasaction from '@/components/modal/ModalTransaction'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
@@ -39,18 +40,6 @@ const handleTransaction = ({
   }
 }
 
-export const notificationTypes = {
-  success: 'success',
-  info: 'info',
-  danger: 'danger',
-  warn: 'warning',
-}
-
-export const showNotification = (message: string, type: keyof typeof notificationTypes = 'info') => {
-  const duration = type === 'danger' ? 15000 : 10000
-  console.log(`[${type.toUpperCase()}] ${message}`, `Duration: ${duration}ms`)
-}
-
 const chainOptions: { [key: string]: string } = {
   'Rococo Relay Chain': '/assets/Images/NetworkIcons/rococo-img.svg',
   'Rococo Coretime Testnet': '/assets/Images/NetworkIcons/coretime-img.svg',
@@ -62,7 +51,9 @@ const Teleport = () => {
   const [isRelayToPara, setIsRelayToPara] = useState<boolean>(true) // State to toggle direction
   const [showTransactionPopup, setShowTransactionPopup] = useState(false);
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
+  const [showErrorNotification, setShowErrorNotification] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const { api, relayApi, activeAccount, activeChain, activeRelayChain, activeSigner } = useInkathon()
 
   const { balanceFormatted, balance, tokenSymbol, tokenDecimals } = useBalance(activeAccount?.address, true)
@@ -75,8 +66,9 @@ const Teleport = () => {
     },
     onError: (error) => {
       setShowTransactionPopup(false); // Ensure to hide the popup in case of error too
+      setShowErrorNotification(true); // Show error notification
       const errorMessage = error instanceof Error ? error.message : String(error);
-      showNotification(errorMessage, 'danger');
+      setErrorMessage(`Error in XCM transaction: ${errorMessage}`); // Set error message
     },
   })
 
@@ -84,16 +76,19 @@ const Teleport = () => {
     if (!activeAccount || !relayApi || !api) return
 
     setIsLoading(true)
+    setShowTransactionPopup(true)
 
     try {
       const call = isRelayToPara
         ? await Builder(relayApi).to('CoretimeKusama').amount(amountToSend).address(activeAccount.address).build()
         : await Builder(api).from('CoretimeKusama').amount(amountToSend).address(activeAccount.address).build()
-
+    
       call.signAndSend(activeAccount.address, { signer: activeSigner }, transactionCallback)
     } catch (error) {
       console.error('Error in XCM transaction:', error)
-      showNotification(error instanceof Error ? 'Error in XCM transaction: ' + error.message : 'Error in XCM transaction: An unexpected error occurred.', 'danger')
+      setErrorMessage(error instanceof Error ? `Error in XCM transaction: ${error.message}`: 'Error in XCM transaction: An unexpected error occurred.');
+      setIsLoading(false)
+      setShowTransactionPopup(false)
     } finally {
       setIsLoading(false)
     }
@@ -123,7 +118,7 @@ const Teleport = () => {
       <div className="container mx-auto p-6">
           <h1 className="text-2xl font-bold mb-4 font-syncopate">Teleport</h1>
           <p className="mb-6">
-            Teleport assets between networks in the Polkadot and Kusama Ecosystem.
+            Teleport assets between networks using the XCM protocol. XCM is a cross-chain messaging protocol that allows assets to be moved between different networks.
           </p>
           {/* Temporary link */}
           <Link href="https://hello.kodadot.xyz/tutorial/teleport/teleport-bridge" className="mb-2 font-semibold">
@@ -205,6 +200,7 @@ const Teleport = () => {
         </div>
         <ModalTranasaction isVisible={showTransactionPopup} message="Transaction is being processed. Please wait..." />
         <ModalSuccess isVisible={showSuccessNotification} message={successMessage} onClose={() => setShowSuccessNotification(false)} />
+        <ModalError isVisible={showErrorNotification} message={errorMessage} onClose={() => setShowErrorNotification(false)} />
       </Border>
     </section>
   )
