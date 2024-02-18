@@ -3,10 +3,10 @@
 import Border from '@/components/border/Border'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { toShortAddress } from '@/utils/account/token'
-import { Builder } from '@paraspell/sdk'
 import { DispatchError, Hash } from '@polkadot/types/interfaces'
 import { ISubmittableResult } from '@polkadot/types/types'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
+import { Builder } from '@poppyseed/xcm-sdk'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -36,26 +36,6 @@ const handleTransaction = ({
     onSuccess({ blockHash: result.status.asFinalized, txHash: result.txHash });
   }
 };
-
-const txCb =
-(
-  onSuccess: (prams: TxCbOnSuccessParams) => void,
-  onError: (err: DispatchError) => void,
-  onResult: (result: ISubmittableResult) => void = console.log,
-) =>
-(result: ISubmittableResult): void => {
-  onResult(result)
-  if (result.dispatchError) {
-    console.warn('[EXEC] dispatchError', result)
-    onError(result.dispatchError)
-  }
-
-  if (result.status.isFinalized) {
-    console.log('[EXEC] Finalized', result)
-    console.log(`[EXEC] blockHash ${result.status.asFinalized}`)
-    onSuccess({ blockHash: result.status.asFinalized, txHash: result.txHash })
-  }
-}
 
 export const notificationTypes = {
   success: 'success',
@@ -102,14 +82,41 @@ const Teleport = () => {
     },
   });
 
-  const functionSendXCM = async (amountToSend: number) => {
+  const functionSendXCMRelaytoPara = async (amountToSend: number) => {
     if (!activeAccount || !relayApi || !api) return
 
     setIsLoading(true)
 
     try {
       const call = await Builder(relayApi)
-        .to('AssetHubKusama')
+        .to('CoretimeKusama')
+        .amount(amountToSend)
+        .address(activeAccount.address)
+        .build();
+
+      call.signAndSend(activeAccount.address, { signer: activeSigner }, transactionCallback);
+    } catch (error) {
+      console.error('Error in XCM transaction:', error);
+      // Check if error is an instance of Error
+      if (error instanceof Error) {
+        showNotification('Error in XCM transaction: ' + error.message, 'danger');
+      } else {
+        // If it's not an Error instance, you might just log it as a string
+        showNotification('Error in XCM transaction: An unexpected error occurred.', 'danger');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const functionSendXCMParatoRelay = async (amountToSend: number) => {
+    if (!activeAccount || !relayApi || !api) return
+
+    setIsLoading(true)
+
+    try {
+      const call = await Builder(api)
+        .from('CoretimeKusama')
         .amount(amountToSend)
         .address(activeAccount.address)
         .build();
@@ -211,7 +218,7 @@ const Teleport = () => {
           </div>
 
           <button
-            onClick={() => functionSendXCM(amount * 10 ** tokenDecimals)}
+            onClick={() => functionSendXCMParatoRelay(amount * 10 ** tokenDecimals)}
             disabled={isLoading} // Disable button when operation is in progress
             className={`w-full py-2 border border-gray-9 rounded-lg hover:bg-gray-3 ${isLoading ? 'bg-gray-10' : ''}`}
           >
