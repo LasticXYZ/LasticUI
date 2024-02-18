@@ -29,7 +29,6 @@
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.1.1",
     "@material-tailwind/react": "^1.4.2",
-    "@paraspell/sdk": "^3.0.11",
     "@polkadot/api-base": "^10.11.2",
     "@poppyseed/lastic-sdk": "^0.1.0",
     "@poppyseed/squid-sdk": "^0.0.5",
