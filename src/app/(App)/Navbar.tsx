@@ -21,7 +21,7 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
 
   return (
     <>
-      <div className="min-h-full ">
+      <div className="min-h-full font-montserrat">
         <Disclosure as="nav" className="">
           {({ open }) => (
             <>

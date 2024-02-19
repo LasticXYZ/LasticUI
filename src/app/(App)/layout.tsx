@@ -65,7 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             relayChain={env.relayChain}
           >
             <Navbar navigation={navigation_app}>
-              <div className="py-10">
+              <div className="py-10 font-montserrat">
                 <main>{children}</main>
               </div>
             </Navbar>
