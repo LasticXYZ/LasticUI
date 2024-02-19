@@ -8,12 +8,12 @@ const DeeperDive: React.FC = () => {
       <section className="mx-auto max-w-9xl px-4 mt-5 sm:px-6 lg:px-8">
         <div className="py-5">
           {/* Title */}
-          <h1 className="text-2xl sm:text-3xl font-syncopate uppercase font-bold text-center mb-4">
+          <h1 className="text-2xl sm:text-3xl font-unbounded uppercase font-bold text-center mb-4">
             Why polkadot?
           </h1>
 
           {/* Subtitle */}
-          <h2 className="text-lg sm:text-xl font-syncopate uppercase text-center mb-2">A deeper dive</h2>
+          <h2 className="text-lg sm:text-xl font-unbounded uppercase text-center mb-2">A deeper dive</h2>
         </div>
 
         {/* Image and Info Container */}

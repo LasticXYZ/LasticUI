@@ -4,7 +4,7 @@ const HowItWorks = () => {
   return (
     <div className="bg-white">
       <section className="mx-auto max-w-9xl px-4 py-28 sm:px-6 lg:px-8">
-        <h2 className="text-2xl md:text-3xl font-semibold mb-8 font-syncopate uppercase text-center">
+        <h2 className="text-2xl md:text-3xl font-semibold mb-8 font-unbounded uppercase text-center">
           HOW DOES IT WORK?
         </h2>
 

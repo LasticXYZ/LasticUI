@@ -175,8 +175,8 @@ export default function BrokerRegionData({
           <div className=" p-10">
             <div>
               <div className="flex justify-between rounded-full mx-10 bg-pink-4 px-16 py-10 bg-opacity-30 items-center my-6">
-                <div className="text-xl font-bold font-syncopate uppercase text-gray-21">{saleTitle}</div>
-                <div className="text-2xl font-bold font-syncopate uppercase text-gray-18">
+                <div className="text-xl font-bold font-unbounded uppercase text-gray-21">{saleTitle}</div>
+                <div className="text-2xl font-bold font-unbounded uppercase text-gray-18">
                   {timeRemaining}
                 </div>
               </div>
@@ -188,7 +188,7 @@ export default function BrokerRegionData({
               constants={brokerConstants}
             />
             <div className="pt-5 pl-10">
-              <h3 className="text-xl font-syncopate uppercase font-bold">Utilization</h3>
+              <h3 className="text-xl font-unbounded uppercase font-bold">Utilization</h3>
             </div>
             <TimelineUtilizeCore
               currentRelayBlock={currentRelayBlock}
@@ -197,7 +197,7 @@ export default function BrokerRegionData({
               constants={brokerConstants}
             />
             <div className="pt-5 pl-10">
-              <h3 className="text-xl font-syncopate uppercase font-bold">Note</h3>
+              <h3 className="text-xl font-unbounded uppercase font-bold">Note</h3>
             </div>
             <div className="flex flex-row justify-between">
               {region.owner.owner === activeAccount.address ? (
@@ -217,7 +217,7 @@ export default function BrokerRegionData({
                     </ul>
                   </div>
                   <div className="grid grid-cols-2 gap-4 py-10">
-                    <div className="text-2xl font-bold font-syncopate uppercase text-gray-21">
+                    <div className="text-2xl font-bold font-unbounded uppercase text-gray-21">
                       <SecondaryButton title="Transfer core" onClick={openTransferModal} />
                     </div>
                     <TransferModal
@@ -227,7 +227,7 @@ export default function BrokerRegionData({
                       mask={region.detail[0].mask}
                       begin={region.detail[0].begin}
                     />
-                    <div className="text-2xl font-bold font-syncopate uppercase text-gray-21">
+                    <div className="text-2xl font-bold font-unbounded uppercase text-gray-21">
                       <SecondaryButton title="Assign Core" onClick={openAssignModal} />
                     </div>
                     <AssignModal
@@ -237,14 +237,14 @@ export default function BrokerRegionData({
                       mask={region.detail[0].mask}
                       begin={region.detail[0].begin}
                     />
-                    <div className="text-2xl font-bold font-syncopate uppercase text-gray-21">
+                    <div className="text-2xl font-bold font-unbounded uppercase text-gray-21">
                       <SecondaryButton
                         title="Combine core"
                         onClick={() => console.log('Combine')}
                         disabled={true}
                       />
                     </div>
-                    <div className="text-2xl font-bold font-syncopate uppercase text-gray-21">
+                    <div className="text-2xl font-bold font-unbounded uppercase text-gray-21">
                       <SecondaryButton
                         title="Split up core"
                         onClick={() => console.log('Split')}

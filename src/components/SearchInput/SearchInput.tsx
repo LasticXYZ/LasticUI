@@ -23,7 +23,7 @@ function SearchInput() {
         <input
           type="text"
           id="simple-search"
-          className="bg-white px-4 mx-4 font-syncopate uppercase rounded-full border border-gray-20 text-gray-3 text-l  focus:border-gray-15 block w-full pl-10 p-2.5 "
+          className="bg-white px-4 mx-4 font-unbounded uppercase rounded-full border border-gray-20 text-gray-3 text-l  focus:border-gray-15 block w-full pl-10 p-2.5 "
           placeholder="Search"
           required
         />

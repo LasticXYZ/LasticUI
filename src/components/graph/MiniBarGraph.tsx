@@ -90,7 +90,7 @@ const MiniBarGraph = () => {
     <>
       <div className="flex flex-col justify-betwee">
         <div className="flex justify-start  py-2 px-3">
-          <h5 className="text-black text-l font-syncopate uppercase px-3 font-light">
+          <h5 className="text-black text-l font-unbounded uppercase px-3 font-light">
             Monthly PRICE PER CORE
           </h5>
 

@@ -40,7 +40,7 @@ const navigation_app = [
 const syncopate = Syncopate({
   subsets: ['latin'],
   weight: ['400', '700'],
-  variable: '--font-syncopate',
+  variable: '--font-unbounded',
 })
 
 export const metadata: Metadata = {

@@ -5,7 +5,7 @@ import './globals.css'
 import { env } from '@/config/environment'
 import { ArrowPathIcon, BoltIcon, HomeIcon, ShoppingCartIcon } from '@heroicons/react/24/outline'
 import { UseInkathonProvider } from '@poppyseed/lastic-sdk'
-import { Montserrat, Syncopate } from 'next/font/google'
+import { Montserrat, Syncopate, Unbounded } from 'next/font/google'
 import Background from './Background'
 import Navbar from './Navbar'
 
@@ -39,7 +39,13 @@ const navigation_app = [
 const syncopate = Syncopate({
   subsets: ['latin'],
   weight: ['400', '700'],
-  variable: '--font-syncopate',
+  variable: '--font-unbounded',
+})
+
+const unbounded = Unbounded({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-unbounded',
 })
 
 const montserrat = Montserrat({
@@ -47,6 +53,8 @@ const montserrat = Montserrat({
   weight: ['300', '400', '700'],
   variable: '--font-montserrat',
 })
+
+
 
 // export const metadata: Metadata = {
 //   title: 'Lastic',
@@ -56,7 +64,7 @@ const montserrat = Montserrat({
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${syncopate.variable} ${montserrat.variable}`}>
+      <body className={`${syncopate.variable} ${montserrat.variable} ${unbounded.variable}`}>
         <Background>
           <UseInkathonProvider
             appName="lastic" // TODO

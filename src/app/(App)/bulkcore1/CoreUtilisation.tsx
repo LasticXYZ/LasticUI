@@ -11,7 +11,7 @@ const CoreUtilisation: React.FC<CoreUtilisationProps> = () => {
     <section className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8">
       <Border>
         <div className="pt-10 pl-10">
-          <h1 className="text-xl font-syncopate uppercase font-bold">core utilization</h1>
+          <h1 className="text-2xl font-unbounded uppercase font-bold">core utilization</h1>
         </div>
         <div className="grid grid-cols-4 font-montserrat p-6 w-full">
           <div className="col-span-1 grid grid-cols-1 gap-4 mb-4">

@@ -26,7 +26,8 @@ const config: Config = {
       },
       fontFamily: {
         montserrat: 'var(--font-montserrat)',
-        syncopate: 'var(--font-syncopate)',
+        syncopate: 'var(--font-unbounded)',
+        unbounded: 'var(--font-unbounded)',
       },
     },
     colors: {

@@ -82,7 +82,7 @@ export default function MyCores() {
     <Border className="h-full flex flex-row justify-center items-center">
       <div className="h-full w-full flex flex-col justify-left items-left">
         <div className="pt-10 pl-10">
-          <h1 className="text-xl font-syncopate uppercase font-bold">cores owned</h1>
+          <h1 className="text-xl font-unbounded uppercase font-bold">cores owned</h1>
         </div>
         <div>
           {filteredRegionData.map((region, index) => (

@@ -66,7 +66,7 @@ const PastTransactions = () => {
       <Border>
         <div className="mx-auto max-w-9xl px-4 mt-5 sm:px-6 lg:px-8">
           <div className="pt-10 pl-10">
-            <h1 className="text-xl font-syncopate uppercase font-bold">My transactions</h1>
+            <h1 className="text-xl font-unbounded uppercase font-bold">My transactions</h1>
           </div>
           <div>
             {result ? (
