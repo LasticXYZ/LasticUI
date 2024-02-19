@@ -46,10 +46,10 @@ export default function About() {
     <div className="overflow-hidden border-y border-gray-9">
       <div className=" bg-gradient-to-b from-[#ffc5c0] ">
         <div className="mx-auto max-w-9xl py-28 px-4 sm:px-6 lg:px-8">
-          <h1 className="text-2xl md:text-3xl font-syncopate font-bold text-center mb-4">
+          <h1 className="text-2xl md:text-3xl font-syncopate uppercase font-bold text-center mb-4">
             Features
           </h1>
-          <h2 className="text-xl font-syncopate text-center mb-10">What sets Lastic apart </h2>
+          <h2 className="text-xl font-syncopate uppercase text-center mb-10">What sets Lastic apart </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-5 gap-6">
             {features.map((feature, index) => (
               <AboutCard key={index} title={feature.title} description={feature.description} />

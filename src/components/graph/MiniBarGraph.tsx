@@ -1,18 +1,18 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
-import { Bar } from 'react-chartjs-2'
 import {
   BarController,
   BarElement,
-  Chart as ChartJS,
   CategoryScale,
+  Chart as ChartJS,
+  Filler,
+  Legend,
   LinearScale,
   PointElement,
   Title,
   Tooltip,
-  Legend,
-  Filler,
 } from 'chart.js'
+import { Bar } from 'react-chartjs-2'
 
 ChartJS.register(
   BarController,
@@ -90,7 +90,7 @@ const MiniBarGraph = () => {
     <>
       <div className="flex flex-col justify-betwee">
         <div className="flex justify-start  py-2 px-3">
-          <h5 className="text-black text-l font-syncopate px-3 font-light">
+          <h5 className="text-black text-l font-syncopate uppercase px-3 font-light">
             Monthly PRICE PER CORE
           </h5>
 

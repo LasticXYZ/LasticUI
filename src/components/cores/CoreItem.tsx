@@ -32,7 +32,7 @@ const Card: React.FC<CardProps> = ({
     <Border className="px-10 py-6 hover:bg-pink-1 hover:cursor-pointer">
       <Link href={`/core/${coreNumber}/${beginStr}`}>
         <div>
-          <div className="uppercase font-syncopate tracking-wide text-md text-indigo-500 font-semibold">
+          <div className="uppercase font-syncopate uppercase tracking-wide text-md text-indigo-500 font-semibold">
             Core Nb. {coreNumber}
           </div>
         </div>

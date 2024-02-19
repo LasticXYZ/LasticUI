@@ -1,10 +1,10 @@
-import './globals.css'
 import type { Metadata } from 'next'
-import { Syncopate, Montserrat } from 'next/font/google'
-import Navbar from './Navbar'
-import Footer from './Footer'
-import Background from './Background'
+import { Syncopate } from 'next/font/google'
 import localFont from 'next/font/local'
+import Background from './Background'
+import Footer from './Footer'
+import Navbar from './Navbar'
+import './globals.css'
 
 const montserrat = localFont({
   src: [
@@ -54,7 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${syncopate.variable} ${montserrat.className}`}>
         <Background>
           <Navbar navigation={navigation_app} />
-          <div className="py-5">
+          <div className="py-5 font-montserrat">
             <main>{children}</main>
           </div>
           <Footer />

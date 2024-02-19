@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import ArticleCard from '@/components/card/ArticleCard'
+import { useEffect, useState } from 'react'
 
 interface Article {
   title: string
@@ -35,7 +35,7 @@ export default function Home() {
   return (
     <div className="max-w-9xl mx-auto">
       <div className="bg-pink-100 p-12 pt-32">
-        <h2 className="text-4xl font-bold mb-8 font-syncopate text-center">ARTICLES</h2>
+        <h2 className="text-4xl font-bold mb-8 font-syncopate uppercase text-center">ARTICLES</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {articles.map((article, index) => (
             <ArticleCard

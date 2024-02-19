@@ -52,7 +52,7 @@ const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({
 
   return (
     <div className="flex flex-col items-left h-full w-full p-10">
-      <h2 className="text-2xl font-syncopate font-semibold mt-4 mb-4">Sale Info</h2>
+      <h2 className="text-2xl font-syncopate uppercase font-semibold mt-4 mb-4">Sale Info</h2>
       <div className="flex flex-row mt-5">
         <div className="pr-10 mt-5">
           <Image
@@ -64,7 +64,7 @@ const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({
           />
         </div>
         <div>
-          <div className="text-gray-18 text-xl font-syncopate mb-5">
+          <div className="text-gray-18 text-xl font-syncopate uppercase mb-5">
             Core Nb:{' '}
             <span className="font-semibold">{saleInfo.firstCore + saleInfo.coresSold}</span>
           </div>

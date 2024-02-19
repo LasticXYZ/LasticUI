@@ -1,12 +1,25 @@
 import { useEffect } from 'react';
 
-interface ModalErrorProps {
+interface ModalNotificationProps {
+  type: keyof typeof notificationTypes;
   isVisible: boolean;
   message: string;
   onClose: () => void;
 }
 
-const ModalError: React.FC<ModalErrorProps> = ({ isVisible, message, onClose }) => {
+export const notificationTypes = {
+  success: 'success',
+  info: 'info',
+  danger: 'danger',
+  warn: 'warning',
+}
+
+const ModalNotification: React.FC<ModalNotificationProps> = (
+  { 
+    isVisible, 
+    message, 
+    onClose 
+  }) => {
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (isVisible) {
@@ -27,4 +40,4 @@ const ModalError: React.FC<ModalErrorProps> = ({ isVisible, message, onClose }) 
   );
 };
 
-export default ModalError;
+export default ModalNotification;

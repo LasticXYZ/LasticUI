@@ -39,7 +39,7 @@ const CoreItemExtensive: React.FC<CardProps> = ({
   return (
     <>
       <div className="pt-10 pl-10">
-        <h1 className="text-xl font-syncopate font-bold">Core Nb. {coreNumber} </h1>
+        <h1 className="text-xl font-syncopate uppercase font-bold">Core Nb. {coreNumber} </h1>
       </div>
       <div className="mx-auto pt-4 flex flex-row items-start p-10 justify-between overflow-hidden">
         <div className="px-10">
