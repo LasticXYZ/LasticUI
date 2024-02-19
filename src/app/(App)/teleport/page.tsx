@@ -1,7 +1,7 @@
 'use client'
 
 import Border from '@/components/border/Border'
-import ModalError from '@/components/modal/ModalError'
+import ModalNotification from '@/components/modal/ModalError'
 import ModalSuccess from '@/components/modal/ModalSuccess'
 import ModalTranasaction from '@/components/modal/ModalTransaction'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
@@ -116,7 +116,7 @@ const Teleport = () => {
     <section className="mx-auto max-w-9xl py-7 px-4 sm:px-6 lg:px-8">
       <Border>
       <div className="container mx-auto p-6">
-          <h1 className="text-2xl font-bold mb-4 font-syncopate">Teleport</h1>
+          <h1 className="text-2xl font-bold mb-4 font-unbounded uppercase">Teleport</h1>
           <p className="mb-6">
             Teleport assets between networks using the XCM protocol. XCM is a cross-chain messaging protocol that allows assets to be moved between different networks.
           </p>
@@ -200,7 +200,7 @@ const Teleport = () => {
         </div>
         <ModalTranasaction isVisible={showTransactionPopup} message="Transaction is being processed. Please wait..." />
         <ModalSuccess isVisible={showSuccessNotification} message={successMessage} onClose={() => setShowSuccessNotification(false)} />
-        <ModalError isVisible={showErrorNotification} message={errorMessage} onClose={() => setShowErrorNotification(false)} />
+        <ModalNotification type='danger' isVisible={showErrorNotification} message={errorMessage} onClose={() => setShowErrorNotification(false)} />
       </Border>
     </section>
   )

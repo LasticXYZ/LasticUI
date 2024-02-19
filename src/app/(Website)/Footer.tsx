@@ -20,7 +20,7 @@ const Footer = () => (
         </div>
         <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-4">
           <div>
-            <h2 className="mb-6 text-sm font-semibold font-syncopate text-pink-4 uppercase ">
+            <h2 className="mb-6 text-sm font-semibold font-unbounded uppercase text-pink-4 uppercase ">
               HOME
             </h2>
             <ul className="text-montserrat  font-medium">
@@ -42,7 +42,7 @@ const Footer = () => (
             </ul>
           </div>
           <div>
-            <h2 className="mb-6 text-sm font-semibold font-syncopate text-pink-4 uppercase ">
+            <h2 className="mb-6 text-sm font-semibold font-unbounded uppercase text-pink-4 uppercase ">
               LEARN MORE
             </h2>
             <ul className="text-montserrat font-medium">
@@ -62,7 +62,7 @@ const Footer = () => (
             </ul>
           </div>
           <div>
-            <h2 className="mb-6 text-sm font-semibold font-syncopate text-pink-4 uppercase ">
+            <h2 className="mb-6 text-sm font-semibold font-unbounded uppercase text-pink-4 uppercase ">
               RESOURCES
             </h2>
             <ul className="text-montserrat  font-medium">
@@ -79,7 +79,7 @@ const Footer = () => (
             </ul>
           </div>
           <div>
-            <h2 className="mb-6 text-sm font-semibold font-syncopate text-pink-4 uppercase ">
+            <h2 className="mb-6 text-sm font-semibold font-unbounded uppercase text-pink-4 uppercase ">
               CONTACT
             </h2>
             <ul className="text-montserrat  font-medium">

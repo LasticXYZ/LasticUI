@@ -54,7 +54,7 @@ const PastTransactions = ({ coreNb }: { coreNb: number }) => {
       <Border>
         <div className="mx-auto max-w-9xl px-4 mt-5 sm:px-6 lg:px-8">
           <div className="pt-10 pl-10">
-            <h1 className="text-xl font-syncopate font-bold">
+            <h1 className="text-xl font-unbounded uppercase font-bold">
               Past transactions with core Nb. {coreNb}
             </h1>
           </div>

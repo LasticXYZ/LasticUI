@@ -37,7 +37,8 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
                           <Image
                             src="/assets/Images/Logos/lastic-logo.png"
                             width={130}
-                            height={50}
+                            height="0"
+                            style={{ width: '10em', height: 'auto' }}
                             quality={100}
                             alt="lastic Logo"
                           />

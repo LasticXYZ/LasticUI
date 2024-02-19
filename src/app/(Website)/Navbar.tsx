@@ -1,12 +1,12 @@
 'use client'
 
+import PrimaryButton from '@/components/button/PrimaryButton'
 import { Disclosure } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-import Link from 'next/link'
 import Image from 'next/image'
-import PrimaryButton from '@/components/button/PrimaryButton'
-import { FC } from 'react'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { FC } from 'react'
 
 type NavbarProps = {
   navigation: Array<{ name: string; href: string; current: boolean }>
@@ -17,7 +17,7 @@ const Navbar: FC<NavbarProps> = ({ navigation }) => {
 
   return (
     <>
-      <div className="w-full fixed z-50 bg-[#F6FDFF] pb-4 border-b border-gray-9 bg-opacity-70">
+      <div className="w-full fixed z-50 bg-[#F6FDFF] pb-4 border-b font-montserrat border-gray-9 bg-opacity-70">
         <Disclosure as="nav" className="">
           {({ open }) => (
             <>
@@ -30,6 +30,7 @@ const Navbar: FC<NavbarProps> = ({ navigation }) => {
                           src="/assets/Images/Logos/lastic-logo.png"
                           width={130}
                           height={50}
+                          quality={100}
                           alt="lastic Logo"
                         />
                       </Link>
@@ -42,7 +43,7 @@ const Navbar: FC<NavbarProps> = ({ navigation }) => {
                           <Link
                             key={idx}
                             href={item.href}
-                            className={`${pathname === item.href ? 'text-black' : 'text-gray-12 hover:text-gray-19'}`}
+                            className={`${pathname === item.href ? 'text-pink-4' : 'text-black hover:text-pink-4'}`}
                           >
                             {item.name}
                           </Link>
@@ -75,7 +76,7 @@ const Navbar: FC<NavbarProps> = ({ navigation }) => {
                     <Link
                       key={item.name}
                       href={item.href}
-                      className={`${pathname === item.href ? 'text-black' : 'text-gray-12 hover:text-gray-19'}`}
+                      className={`${pathname === item.href ? 'text-pink-4' : 'text-black hover:text-pink-4'}`}
                     >
                       {item.name}
                     </Link>

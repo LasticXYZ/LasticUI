@@ -1,10 +1,10 @@
-import React, { useMemo } from 'react'
-import { AuctionResponse, AuctionsRequest } from '@/components/callSubscan/types'
-import { useSubScanCall } from '@/components/callSubscan/callSubScan'
-import GeneralTable from '@/components/table/GeneralTable'
-import BarGraph from '@/components/graph/BarGraph'
-import Border from '@/components/border/Border'
 import AccordionTile from '@/components/accordion/AccordionTile'
+import Border from '@/components/border/Border'
+import { useSubScanCall } from '@/components/callSubscan/callSubScan'
+import { AuctionResponse, AuctionsRequest } from '@/components/callSubscan/types'
+import BarGraph from '@/components/graph/BarGraph'
+import GeneralTable from '@/components/table/GeneralTable'
+import React, { useMemo } from 'react'
 
 const CoreOwners: React.FC = () => {
   const requestData = useMemo<AuctionsRequest>(
@@ -97,7 +97,7 @@ const CoreOwners: React.FC = () => {
     <section className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8">
       <Border>
         <div className="pt-10 pl-10">
-          <h1 className="text-xl font-syncopate font-bold">core utilization</h1>
+          <h1 className="text-xl font-unbounded uppercase font-bold">core utilization</h1>
         </div>
         <div className="grid grid-cols-4 font-montserrat p-6 w-full">
           <div className="col-span-1 grid grid-cols-1 gap-4 mb-4">

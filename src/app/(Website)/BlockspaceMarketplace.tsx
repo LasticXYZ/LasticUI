@@ -6,12 +6,12 @@ const BlockspaceMarketplace = () => {
       <section className="mx-auto max-w-9xl py-12 px-4 sm:px-6 lg:px-8">
         <div className="py-5">
           {/* Title */}
-          <h1 className="text-2xl sm:text-3xl font-syncopate font-bold text-center mb-4">
+          <h1 className="text-2xl sm:text-3xl font-unbounded uppercase font-bold text-center mb-4">
             A Blockspace Marketplace?
           </h1>
 
           {/* Subtitle */}
-          <h2 className="text-lg sm:text-xl font-syncopate text-center mb-5">What you can do</h2>
+          <h2 className="text-lg sm:text-xl font-unbounded uppercase text-center mb-5">What you can do</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 items-center justify-between gap-4 md:py-12">
