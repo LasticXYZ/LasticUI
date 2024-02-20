@@ -26,6 +26,9 @@ dependencies:
   '@material-tailwind/react':
     specifier: ^1.4.2
     version: 1.4.2(react-dom@18.2.0)(react@18.2.0)
+  '@paraspell/sdk':
+    specifier: ^4.0.1
+    version: 4.0.1(@polkadot/api-base@10.11.2)(@polkadot/api@10.11.2)(@polkadot/apps-config@0.133.1)(@polkadot/types@10.11.2)(@polkadot/util@12.6.2)
   '@polkadot/api-base':
     specifier: ^10.11.2
     version: 10.11.2
@@ -2050,6 +2053,27 @@ packages:
     resolution: {integrity: sha512-PUivdP1bJlbY8BUWtO+LBGVCD5YJ4ljlQO1/8jrINy7iZE8S0XlxOb4aGMuynhmp5XKrFJotO+5vmZGxR4lYAQ==}
     dependencies:
       '@open-web3/orml-type-definitions': 2.0.1
+    dev: false
+
+  /@paraspell/sdk@4.0.1(@polkadot/api-base@10.11.2)(@polkadot/api@10.11.2)(@polkadot/apps-config@0.133.1)(@polkadot/types@10.11.2)(@polkadot/util@12.6.2):
+    resolution: {integrity: sha512-QtDaGL0+zFeP9tN/mzNr0xLKhLSy1AIf7biWlRkjMn5YQLBiRHkEUvwVOj7ZbVWKpkHxcsAz7jUbBxXhSz/PeQ==}
+    peerDependencies:
+      '@polkadot/api': ^10.6.1
+      '@polkadot/api-base': ^10.6.1
+      '@polkadot/apps-config': ^0.133.1
+      '@polkadot/types': ^10.6.1
+      '@polkadot/util': ^12.6.1
+    dependencies:
+      '@mangata-finance/type-definitions': 2.1.2(@polkadot/types@10.11.2)
+      '@polkadot/api': 10.11.2
+      '@polkadot/api-base': 10.11.2
+      '@polkadot/apps-config': 0.133.1(@polkadot/keyring@12.6.2)(@polkadot/util-crypto@12.6.2)(react-dom@18.2.0)(react-is@16.13.1)(react@18.2.0)
+      '@polkadot/types': 10.11.2
+      '@polkadot/util': 12.6.2
+      ethers: 5.7.2
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
     dev: false
 
   /@peaqnetwork/type-definitions@0.0.4:

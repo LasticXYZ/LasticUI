@@ -80,7 +80,7 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
                         <Link
                           key={item.name}
                           href={item.href}
-                          className={` py-3 px-2 text-l flex flex-row items-center font-semibold transition duration-150 ease-in-out hover:text-teal-5 hover:bg-teal-1 hover:bg-opacity-60 hover:rounded-xl ${
+                          className={` py-3 px-2 text-l flex flex-row items-center font-semibold transition duration-150 ease-in-out hover:text-teal-5 hover:bg-teal-1 hover:bg-opacity-60 hover:rounded-2xl ${
                             item.current
                               ? 'text-gray-600 bg-gray-200'
                               : 'text-gray-600 hover:bg-gray-100'

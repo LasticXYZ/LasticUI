@@ -17,7 +17,7 @@ const GeneralTable: FC<GeneralTableProps> = ({
     <div className="flex flex-col">
       <div className="relative overflow-x-auto py-5 px-5">
         <div className="relative overflow-x-auto">
-          <div className="shadow overflow-hidden sm:rounded-lg">
+          <div className="shadow overflow-hidden sm:rounded-2xl">
             <div
               className={joinClassNames(
                 'grid gap-2 bg-[#AFE4DD] px-2 text-sm text-black rounded-full',

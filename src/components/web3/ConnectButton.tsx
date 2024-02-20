@@ -46,7 +46,7 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
           </button>
 
           <WalletModal isOpen={openConnect} onClose={() => setOpenConnect(false)}>
-            <ul className="rounded-lg border border-gray-9 bg-white divide-y divide-gray-2">
+            <ul className="rounded-2xl border border-gray-9 bg-white divide-y divide-gray-2">
               {/* Installed Wallets */}
               {!isSSR &&
                 !activeAccount &&
