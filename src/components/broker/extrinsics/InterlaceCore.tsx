@@ -7,13 +7,14 @@ import { FC, useState } from 'react'
 
 /**
  * 
- * TODO. Still in progress!
+ * TODO. Still in progress! Just copied the SplitCoreModal and changed the title
  * 
  * 
  */
 
 
-interface SplitCoreModalProps {
+
+interface InterlaceCoreModalProps {
   isOpen: boolean
   onClose: () => void
   coreNb: string
@@ -27,7 +28,13 @@ interface RegionId {
   mask: string
 }
 
-const SplitCoreModal: FC<SplitCoreModalProps> = ({ isOpen, onClose, coreNb, begin, mask }) => {
+const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({
+  isOpen,
+  onClose,
+  coreNb,
+  begin,
+  mask,
+}) => {
   const { api, activeSigner, activeAccount, activeChain } = useInkathon()
   const [task, setTask] = useState(0)
   const [finality, setFinality] = useState('Provisional')
@@ -105,4 +112,4 @@ const SplitCoreModal: FC<SplitCoreModalProps> = ({ isOpen, onClose, coreNb, begi
   )
 }
 
-export default SplitCoreModal
+export default InterlaceCoreModal
