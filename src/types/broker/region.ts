@@ -18,3 +18,15 @@ export type Region = {
 }
 
 export type RegionsType = Region[]
+
+export interface RegionIdProps {
+  begin: string
+  core: string
+  mask: string
+}
+
+export interface RegionId {
+  begin: number
+  core: number
+  mask: Uint8Array
+}

@@ -217,14 +217,17 @@ export default function BrokerRegionData({
                     <li> * Assign it to a task</li>
                   </ul>
                 </div>
+
                 <div className="grid grid-cols-2 gap-4 py-10">
                   {/* Modals*/}
                   <TransferModal
                     isOpen={isTransferModalOpen}
                     onClose={() => setIsTransferModalOpen(false)}
-                    coreNb={region.detail[0].core}
-                    mask={region.detail[0].mask}
-                    begin={region.detail[0].begin}
+                    regionId={{
+                      begin: region.detail[0].begin.replace(/,/g, ''),
+                      core: region.detail[0].core,
+                      mask: region.detail[0].mask,
+                    }}
                   />
 
                   <AssignModal

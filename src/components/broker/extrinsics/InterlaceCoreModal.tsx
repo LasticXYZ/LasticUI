@@ -1,6 +1,7 @@
 'use client'
 import PrimaryButton from '@/components/button/PrimaryButton'
 import Modal from '@/components/modal/Modal'
+import { RegionIdProps } from '@/types/broker'
 import { truncateHash } from '@/utils/truncateHash'
 import { encodeAddress } from '@polkadot/util-crypto'
 import { TxButtonProps, useInkathon, useTxButton } from '@poppyseed/lastic-sdk'
@@ -13,16 +14,10 @@ import { FC, useState } from 'react'
  *
  */
 
-interface RegionId {
-  begin: string
-  core: string
-  mask: string
-}
-
 interface InterlaceCoreModalProps {
   isOpen: boolean
   onClose: () => void
-  regionId: RegionId
+  regionId: RegionIdProps
 }
 
 const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regionId }) => {
