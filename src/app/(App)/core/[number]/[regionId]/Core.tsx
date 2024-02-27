@@ -1,5 +1,7 @@
 import Border from '@/components/border/Border'
 import AssignModal from '@/components/broker/extrinsics/AssignModal'
+import InterlaceCoreModal from '@/components/broker/extrinsics/InterlaceCoreModal'
+import PartitionCoreModal from '@/components/broker/extrinsics/PartitionCoreModal'
 import TransferModal from '@/components/broker/extrinsics/TransferModal'
 import SecondaryButton from '@/components/button/SecondaryButton'
 import CoreItemExtensive from '@/components/cores/CoreItemExtensive'
@@ -84,11 +86,6 @@ export default function BrokerRegionData({
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false)
   const [isPartitionModalOpen, setIsPartitionModalOpen] = useState(false)
   const [isInterlaceModalOpen, setIsInterlaceModalOpen] = useState(false)
-
-  const openTransferModal = () => setIsTransferModalOpen(true)
-  const closeTransferModal = () => setIsTransferModalOpen(false)
-  const openAssignModal = () => setIsAssignModalOpen(true)
-  const closeAssignModal = () => setIsAssignModalOpen(false)
 
   useEffect(() => {
     const fetchRegionTimestamps = async () => {
@@ -221,24 +218,18 @@ export default function BrokerRegionData({
                   </ul>
                 </div>
                 <div className="grid grid-cols-2 gap-4 py-10">
-                  <div className="text-2xl font-bold font-unbounded uppercase text-gray-21">
-                    <SecondaryButton title="Transfer core" onClick={openTransferModal} />
-                  </div>
-
+                  {/* Modals*/}
                   <TransferModal
                     isOpen={isTransferModalOpen}
-                    onClose={closeTransferModal}
+                    onClose={() => setIsTransferModalOpen(false)}
                     coreNb={region.detail[0].core}
                     mask={region.detail[0].mask}
                     begin={region.detail[0].begin}
                   />
-                  <div className="text-2xl font-bold font-unbounded uppercase text-gray-21">
-                    <SecondaryButton title="Assign Core" onClick={openAssignModal} />
-                  </div>
 
                   <AssignModal
                     isOpen={isAssignModalOpen}
-                    onClose={closeAssignModal}
+                    onClose={() => setIsAssignModalOpen(false)}
                     regionId={{
                       begin: region.detail[0].begin.replace(/,/g, ''),
                       core: region.detail[0].core,
@@ -246,31 +237,64 @@ export default function BrokerRegionData({
                     }}
                   />
 
-                  {/* TODO: Add SplitCoreModal and InterlaceCoreModal here.*/}
+                  <PartitionCoreModal
+                    isOpen={isPartitionModalOpen}
+                    onClose={() => setIsPartitionModalOpen(false)}
+                    regionId={{
+                      begin: region.detail[0].begin.replace(/,/g, ''),
+                      core: region.detail[0].core,
+                      mask: region.detail[0].mask,
+                    }}
+                  />
+
+                  <InterlaceCoreModal
+                    isOpen={isInterlaceModalOpen}
+                    onClose={() => setIsInterlaceModalOpen(false)}
+                    regionId={{
+                      begin: region.detail[0].begin.replace(/,/g, ''),
+                      core: region.detail[0].core,
+                      mask: region.detail[0].mask,
+                    }}
+                  />
+
+                  {/* Buttons*/}
+                  <div className="text-2xl font-bold font-unbounded uppercase text-gray-21">
+                    <SecondaryButton
+                      title="Transfer Core"
+                      onClick={() => setIsTransferModalOpen(true)}
+                    />
+                  </div>
 
                   <div className="text-2xl font-bold font-unbounded uppercase text-gray-21">
                     <SecondaryButton
-                      title="Edit core mask"
-                      onClick={() => console.log('Interlace')}
+                      title="Assign Core"
+                      onClick={() => setIsAssignModalOpen(true)}
+                    />
+                  </div>
+
+                  <div className="text-2xl font-bold font-unbounded uppercase text-gray-21">
+                    <SecondaryButton
+                      title="Interlace Core"
+                      onClick={() => setIsInterlaceModalOpen(true)}
                       disabled={true}
                     />
                   </div>
 
                   <div className="text-2xl font-bold font-unbounded uppercase text-gray-21">
                     <SecondaryButton
-                      title="Split core"
-                      onClick={() => console.log('Partition')}
+                      title="Split Core"
+                      onClick={() => setIsPartitionModalOpen(true)}
                       disabled={true}
                     />
                   </div>
 
-                  {/* <div className="text-2xl font-bold font-unbounded uppercase text-gray-21">
-                      <SecondaryButton
-                        title="Combine core"
-                        onClick={() => console.log('Combine')}
-                        disabled={true}
-                      />
-                    </div> */}
+                  <div className="text-2xl font-bold font-unbounded uppercase text-gray-21">
+                    <SecondaryButton
+                      title="Combine core"
+                      onClick={() => console.log('Combine')}
+                      disabled={true}
+                    />
+                  </div>
                 </div>
               </>
               {/*  ) : (
