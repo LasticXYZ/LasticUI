@@ -239,9 +239,11 @@ export default function BrokerRegionData({
                   <AssignModal
                     isOpen={isAssignModalOpen}
                     onClose={closeAssignModal}
-                    coreNb={region.detail[0].core}
-                    mask={region.detail[0].mask}
-                    begin={region.detail[0].begin}
+                    regionId={{
+                      begin: region.detail[0].begin.replace(/,/g, ''),
+                      core: region.detail[0].core,
+                      mask: region.detail[0].mask,
+                    }}
                   />
 
                   {/* TODO: Add SplitCoreModal and InterlaceCoreModal here.*/}

@@ -5,30 +5,22 @@ import { encodeAddress } from '@polkadot/util-crypto'
 import { TxButtonProps, useInkathon, useTxButton } from '@poppyseed/lastic-sdk'
 import { FC, useState } from 'react'
 
-interface AssignModalProps {
-  isOpen: boolean
-  onClose: () => void
-  coreNb: string
-  mask: string
-  begin: string
-}
-
 interface RegionId {
   begin: string
   core: string
   mask: string
 }
 
-const AssignModal: FC<AssignModalProps> = ({ isOpen, onClose, coreNb, begin, mask }) => {
+interface AssignModalProps {
+  isOpen: boolean
+  onClose: () => void
+  regionId: RegionId
+}
+
+const AssignModal: FC<AssignModalProps> = ({ isOpen, onClose, regionId }) => {
   const { api, activeSigner, activeAccount, activeChain } = useInkathon()
   const [task, setTask] = useState(0)
   const [finality, setFinality] = useState('Provisional')
-
-  const regionId: RegionId = {
-    begin: begin.replace(/,/g, ''),
-    core: coreNb,
-    mask: mask,
-  }
 
   const txButtonProps: TxButtonProps = {
     api, // api is guaranteed to be defined here
@@ -53,10 +45,10 @@ const AssignModal: FC<AssignModalProps> = ({ isOpen, onClose, coreNb, begin, mas
   if (!isOpen) return null
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={`Assign Core Nb: ${coreNb} To Para ID`}>
+    <Modal isOpen={isOpen} onClose={onClose} title={`Assign Core Nb: ${regionId.core} To Para ID`}>
       <div className="flex flex-col p-4">
         <div className="flex flex-col mb-4">
-          <p className="text-lg font-semibold mb-2">Assing Core Nb: {coreNb}</p>
+          <p className="text-lg font-semibold mb-2">Assing Core Nb: {regionId.core}</p>
           <p className="text-lg mb-2">
             Account:{' '}
             {activeAccount
@@ -85,8 +77,8 @@ const AssignModal: FC<AssignModalProps> = ({ isOpen, onClose, coreNb, begin, mas
             <option value="Provisional">Provisional</option>
             <option value="Final">Final</option>
           </select>
-          <p className="text-lg mb-2">Region Begin: {begin}</p>
-          <p className="text-md">Core Mask: {mask}</p>
+          <p className="text-lg mb-2">Region Begin: {regionId.begin}</p>
+          <p className="text-md">Core Mask: {regionId.mask}</p>
         </div>
         <div className="flex justify-center pt-5">
           <PrimaryButton title="Assign Core" onClick={transaction} disabled={!allParamsFilled()} />

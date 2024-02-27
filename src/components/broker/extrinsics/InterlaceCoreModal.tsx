@@ -1,9 +1,10 @@
-import PrimaryButton from '@/components/button/PrimaryButton'
-import Modal from '@/components/modal/Modal'
-import { truncateHash } from '@/utils/truncateHash'
-import { encodeAddress } from '@polkadot/util-crypto'
-import { TxButtonProps, useInkathon, useTxButton } from '@poppyseed/lastic-sdk'
-import { FC, useState } from 'react'
+'use client';
+import PrimaryButton from '@/components/button/PrimaryButton';
+import Modal from '@/components/modal/Modal';
+import { truncateHash } from '@/utils/truncateHash';
+import { encodeAddress } from '@polkadot/util-crypto';
+import { TxButtonProps, useInkathon, useTxButton } from '@poppyseed/lastic-sdk';
+import { FC, useState } from 'react';
 
 /**
  * 
