@@ -1,13 +1,16 @@
 import AnalyticCard from '@/components/card/AnalyticCard'
-import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
+import { parseNativeTokenToHuman } from '@/utils/account/token'
+import { useBalance, useInkathon, useRelayBalance } from '@poppyseed/lastic-sdk'
 
 const AnalyticSection = () => {
   const { activeAccount, activeChain } = useInkathon()
 
-  const { tokenSymbol, balanceFormatted: initialBalanceFormatted } = useBalance(
-    activeAccount?.address,
-    true,
-  )
+  const {freeBalance, tokenSymbol, tokenDecimals} = useBalance(activeAccount?.address, true)
+  const {freeBalance: freeRelayBalance} = useRelayBalance(activeAccount?.address, true)
+
+  const coreBalance = parseNativeTokenToHuman({ paid: freeBalance?.toString(), decimals: tokenDecimals, reduceDecimals: 2 })
+  const relayBalance = parseNativeTokenToHuman({ paid: freeRelayBalance?.toString(), decimals: tokenDecimals, reduceDecimals: 2 })
+
 
   if (!activeAccount || !activeChain) {
     return (
@@ -21,12 +24,10 @@ const AnalyticSection = () => {
     )
   }
 
-  const balanceFormatted = initialBalanceFormatted ?? `- ${tokenSymbol}`
-
   let analytics = [
     { title: '0 LST', subtitle: 'Lastic Tokens', change: '' },
-    { title: balanceFormatted, subtitle: `${tokenSymbol} on coretime chain`, change: '' },
-    { title: '-', subtitle: `${tokenSymbol} on relay chain`, change: '' },
+    { title: coreBalance, subtitle: `${tokenSymbol} on coretime chain`, change: '' },
+    { title: relayBalance, subtitle: `${tokenSymbol} on relay chain`, change: '' },
   ]
 
   return (
