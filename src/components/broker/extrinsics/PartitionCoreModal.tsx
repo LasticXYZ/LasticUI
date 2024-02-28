@@ -1,8 +1,10 @@
 'use client'
-
 import PrimaryButton from '@/components/button/PrimaryButton'
 import Modal from '@/components/modal/Modal'
 import { RegionIdProps } from '@/types/broker'
+import { StaticDateTimePicker } from '@mui/x-date-pickers'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { TxButtonProps, useInkathon, useTxButton } from '@poppyseed/lastic-sdk'
 import { FC, useState } from 'react'
 
@@ -40,10 +42,17 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
   }
   const { transaction, status, allParamsFilled } = useTxButton(txButtonProps)
 
+  let timestep = 8
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={`Split Core Nb: ${regionId.core} `}>
+    <Modal isOpen={isOpen} onClose={onClose} title={`Split Core ${regionId.core} `}>
       <div className="flex flex-col p-4 ">
-        <div className="flex justify-center pt-5">
+        <p className="font-semibold mb-4">Where do you want to split?</p>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <StaticDateTimePicker orientation="landscape" disablePast />
+        </LocalizationProvider>
+
+        <div className="flex justify-center pt-10">
           <PrimaryButton title="Split Core" onClick={transaction} disabled={!allParamsFilled()} />
           <div className="mt-5 text-sm text-gray-16 ">{status}</div>
         </div>
