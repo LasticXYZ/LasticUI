@@ -1,11 +1,19 @@
 'use client'
 import PrimaryButton from '@/components/button/PrimaryButton'
 import Modal from '@/components/modal/Modal'
+import { useRegionQuery } from '@/hooks/useRegionQuery'
 import { RegionIdProps } from '@/types/broker'
-import { StaticDateTimePicker } from '@mui/x-date-pickers'
+import { useBrokerConstants } from '@/utils/broker'
+import { MobileDateTimePicker } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { TxButtonProps, useInkathon, useTxButton } from '@poppyseed/lastic-sdk'
+import {
+  CORETIME_CHAIN_BLOCK_TIME,
+  RELAY_CHAIN_BLOCK_TIME,
+  TxButtonProps,
+  useInkathon,
+  useTxButton,
+} from '@poppyseed/lastic-sdk'
 import { FC, useState } from 'react'
 
 /**
@@ -15,6 +23,27 @@ import { FC, useState } from 'react'
  *
  */
 
+type RegionDetailItem = {
+  begin: string
+  core: string
+  mask: string
+}
+
+type RegionDetail = RegionDetailItem[]
+
+type RegionOwner = {
+  end: string
+  owner: string
+  paid: string
+}
+
+type Region = {
+  detail: RegionDetail
+  owner: RegionOwner
+}
+
+type RegionsType = Region[]
+
 interface PartitionCoreModalProps {
   isOpen: boolean
   onClose: () => void
@@ -22,8 +51,8 @@ interface PartitionCoreModalProps {
 }
 
 const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regionId }) => {
-  const { api, activeSigner, activeAccount, activeChain } = useInkathon()
-  const [pivot, setPivot] = useState()
+  const { api, activeSigner, activeAccount, activeChain, relayApi } = useInkathon()
+  const [pivot, setPivot] = useState<Date | undefined>()
   const txButtonProps: TxButtonProps = {
     api, // api is guaranteed to be defined here
     setStatus: (status: string | null) => console.log('tx status:', status),
@@ -41,15 +70,33 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
     activeSigner,
   }
   const { transaction, status, allParamsFilled } = useTxButton(txButtonProps)
+  const { brokerConstants, isLoading: isConstantsLoading } = useBrokerConstants(api)
+  const regionData = useRegionQuery()
+  const filteredRegionDataByCoreNumber = regionData?.filter(
+    (region) =>
+      region.detail[0].core === regionId.core /* && region.detail[0].begin === regionId.begin */,
+  )
 
-  let timestep = 8
+  let blocktimeRelay = RELAY_CHAIN_BLOCK_TIME //ms
+  let blocktimeCoretime = CORETIME_CHAIN_BLOCK_TIME //ms
+  let timeslicePeriod = brokerConstants?.timeslicePeriod
+  let coreStartBlock = (regionId.begin as unknown as number) * timeslicePeriod!
+  console.log(filteredRegionDataByCoreNumber)
+  /* let endBlock = filteredRegionDataByCoreNumber![0].owner.end */
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={`Split Core ${regionId.core} `}>
       <div className="flex flex-col p-4 ">
         <p className="font-semibold mb-4">Where do you want to split?</p>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <StaticDateTimePicker orientation="landscape" disablePast />
+          <MobileDateTimePicker
+            disablePast
+            label={'test'}
+            orientation="landscape"
+            /* minutesStep={timestep} */
+            value={pivot}
+            onChange={(newValue) => setPivot(newValue || undefined)}
+          />
         </LocalizationProvider>
 
         <div className="flex justify-center pt-10">
