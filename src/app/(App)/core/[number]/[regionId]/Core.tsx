@@ -277,9 +277,9 @@ export default function BrokerRegionData({
                       />
                     </div>
 
-                    <div className="text-2xl font-bold font-unbounded uppercase text-gray-21">
+                    <div className="text-2xl font-bold font-unbounded uppercase text-gray-21 break-words">
                       <SecondaryButton
-                        title="Interlace Core"
+                        title="Change Frequency"
                         onClick={() => setIsInterlaceModalOpen(true)}
                       />
                     </div>
