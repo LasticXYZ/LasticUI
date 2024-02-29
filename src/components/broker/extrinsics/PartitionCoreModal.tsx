@@ -8,14 +8,7 @@ import { MobileDateTimePicker } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { ApiPromise } from '@polkadot/api'
-import {
-  CORETIME_CHAIN_BLOCK_TIME,
-  RELAY_CHAIN_BLOCK_TIME,
-  TxButtonProps,
-  blockTimeToUTC,
-  useInkathon,
-  useTxButton,
-} from '@poppyseed/lastic-sdk'
+import { TxButtonProps, blockTimeToUTC, useInkathon, useTxButton } from '@poppyseed/lastic-sdk'
 import { FC, useEffect, useState } from 'react'
 
 type regionTimeSpan = {
@@ -33,14 +26,17 @@ interface PartitionCoreModalProps {
 
 const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regionId }) => {
   const { api, activeSigner, activeAccount, activeChain, relayApi } = useInkathon()
-  const [pivot, setPivot] = useState<Date | undefined>()
+  const { brokerConstants, isLoading: isConstantsLoading } = useBrokerConstants(api)
+  const [selectedDateTime, setSelectedDateTime] = useState<Date | undefined>()
+  const [pivotOptions, setPivotOptions] = useState<timeslice[]>([])
+  const [selectedPivot, setSelectedPivot] = useState<timeslice | null>(null)
   const txButtonProps: TxButtonProps = {
     api,
     setStatus: (status: string | null) => console.log('tx status:', status),
     attrs: {
       palletRpc: 'broker',
       callable: 'partition',
-      inputParams: [regionId, pivot],
+      inputParams: [regionId, selectedDateTime],
       paramFields: [
         { name: 'regionId', type: 'Object', optional: false },
         { name: 'pivot', type: 'string', optional: false }, // unsure if string is correct
@@ -51,7 +47,7 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
     activeSigner,
   }
   const { transaction, status, allParamsFilled } = useTxButton(txButtonProps)
-  const { brokerConstants, isLoading: isConstantsLoading } = useBrokerConstants(api)
+
   const regionData = useRegionQuery()
   const [regionTimeSpan, setRegionTimeSpan] = useState<regionTimeSpan>({
     start: { region: 0, blocknumber: 0, utc: null },
@@ -96,8 +92,32 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
     fetchTimes()
   }, [regionData, relayApi])
 
-  let blocktimeRelay = RELAY_CHAIN_BLOCK_TIME //ms
-  let blocktimeCoretime = CORETIME_CHAIN_BLOCK_TIME //ms
+  const handleChange = async (newValue: Date | null) => {
+    setSelectedDateTime(newValue || undefined)
+
+    // Ensure newValue is not null, and all required data is available
+    if (
+      newValue &&
+      relayApi &&
+      regionTimeSpan.start.region &&
+      regionTimeSpan.end.region &&
+      brokerConstants?.timeslicePeriod
+    ) {
+      try {
+        console.log('Finding closest pivots for:', newValue)
+        const pivots = await getPivotsForDatetime(
+          regionTimeSpan.start.region,
+          regionTimeSpan.end.region,
+          brokerConstants.timeslicePeriod,
+          newValue,
+          relayApi,
+        )
+        setPivotOptions(pivots)
+      } catch (error) {
+        console.error('Error finding closest pivots:', error)
+      }
+    }
+  }
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={`Split Core ${regionId.core} `}>
@@ -117,16 +137,21 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <MobileDateTimePicker
             disablePast
-            minDateTime={regionTimeSpan.start.utc}
-            maxDateTime={regionTimeSpan.end.utc}
+            minDateTime={regionTimeSpan.start.utc || undefined}
+            maxDateTime={regionTimeSpan.end.utc || undefined}
             label={`Select a time in ${getTimezoneOffset()}`}
             orientation="landscape"
-            value={pivot}
-            onChange={(newValue) => {
-              setPivot(newValue || undefined)
-            }}
+            value={selectedDateTime}
+            onAccept={handleChange}
           />
         </LocalizationProvider>
+
+        <div className="flex flex-col mt-8">
+          <p className="font-semibold mb-4">Nearest pivots</p>
+          {pivotOptions.map((pivot, index) => {
+            return <li>{pivot}</li>
+          })}
+        </div>
 
         <div className="flex justify-center pt-10">
           <PrimaryButton title="Split Core" onClick={transaction} disabled={!allParamsFilled()} />
