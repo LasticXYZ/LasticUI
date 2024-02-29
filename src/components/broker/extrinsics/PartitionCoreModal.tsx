@@ -47,13 +47,15 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
     activeSigner,
   }
   const { transaction, status, allParamsFilled } = useTxButton(txButtonProps)
-
   const regionData = useRegionQuery()
   const [regionTimeSpan, setRegionTimeSpan] = useState<regionTimeSpan>({
     start: { region: 0, blocknumber: 0, utc: null },
     end: { region: 0, blocknumber: 0, utc: null },
   })
 
+  /**
+   * useEffect fetches the start and end times of the region and sets the regionTimeSpan state.
+   */
   useEffect(() => {
     const fetchTimes = async () => {
       if (regionData && relayApi) {
@@ -92,16 +94,20 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
     fetchTimes()
   }, [regionData, relayApi])
 
-  const handleChange = async (newValue: Date | null) => {
+  const handleAccept = async (newValue: Date | null) => {
+    console.log('Selected datetime:', newValue)
     setSelectedDateTime(newValue || undefined)
 
-    // Ensure newValue is not null, and all required data is available
+    // Ensure newValue is not null, all required data is available, and the selected datetime is within the region's timespan
     if (
       newValue &&
       relayApi &&
       regionTimeSpan.start.region &&
       regionTimeSpan.end.region &&
-      brokerConstants?.timeslicePeriod
+      brokerConstants?.timeslicePeriod &&
+      (regionTimeSpan.start.utc ?? Date.now()) < newValue &&
+      regionTimeSpan.end.utc &&
+      regionTimeSpan.end.utc > newValue
     ) {
       try {
         console.log('Finding closest pivots for:', newValue)
@@ -116,6 +122,8 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
       } catch (error) {
         console.error('Error finding closest pivots:', error)
       }
+    } else {
+      setPivotOptions([])
     }
   }
 
@@ -142,16 +150,18 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
             label={`Select a time in ${getTimezoneOffset()}`}
             orientation="landscape"
             value={selectedDateTime}
-            onAccept={handleChange}
+            onAccept={handleAccept}
           />
         </LocalizationProvider>
 
-        <div className="flex flex-col mt-8">
-          <p className="font-semibold mb-4">Nearest pivots</p>
-          {pivotOptions.map((pivot, index) => {
-            return <li>{pivot}</li>
-          })}
-        </div>
+        {pivotOptions.length > 0 && (
+          <div className="flex flex-col mt-8">
+            <p className="font-semibold mb-4">Nearest pivots</p>
+            {pivotOptions.map((pivot, index) => {
+              return <li>{pivot}</li>
+            })}
+          </div>
+        )}
 
         <div className="flex justify-center pt-10">
           <PrimaryButton title="Split Core" onClick={transaction} disabled={!allParamsFilled()} />
@@ -183,6 +193,7 @@ const getPivotsForDatetime = async (
   for (let timeslice = regionBegin; timeslice <= regionEnd; timeslice++) {
     const blockNumber = timeslice * timeslicePeriod
 
+    // TODO optimize runtime
     const timesliceDateString = await blockTimeToUTC(relayApi, blockNumber)
     if (!timesliceDateString) {
       continue
