@@ -12,7 +12,7 @@ import {
   RELAY_CHAIN_BLOCK_TIME,
   TxButtonProps,
   useInkathon,
-  useTxButton,
+  useTxButton
 } from '@poppyseed/lastic-sdk'
 import { FC, useState } from 'react'
 
@@ -72,22 +72,43 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
   const { transaction, status, allParamsFilled } = useTxButton(txButtonProps)
   const { brokerConstants, isLoading: isConstantsLoading } = useBrokerConstants(api)
   const regionData = useRegionQuery()
-  const filteredRegionDataByCoreNumber = regionData?.filter(
+  // const filteredRegionDataByCoreNumber = regionData?.filter(
+  //   (region) =>
+  //     region.detail[0].core === regionId.core /* && region.detail[0].begin === regionId.begin */,
+  // )
+  // const filteredRegionDataByOwner = regionData?.filter(
+  //   (region) =>
+  //     region.owner.owner === "5D82uFtNQss7A3Lkq9L9GbTXDPaxdkuqa87WSEgVB38EKLi8" // replace by wallet address
+  // )
+  // TODO error 
+  const filteredRegionData = regionData?.filter(
     (region) =>
-      region.detail[0].core === regionId.core /* && region.detail[0].begin === regionId.begin */,
+      region.detail[0].core === regionId.core &&
+      region.owner.owner === "5D82uFtNQss7A3Lkq9L9GbTXDPaxdkuqa87WSEgVB38EKLi8" // replace by wallet address
   )
 
+  console.log("filteredRegionData", filteredRegionData)
   let blocktimeRelay = RELAY_CHAIN_BLOCK_TIME //ms
   let blocktimeCoretime = CORETIME_CHAIN_BLOCK_TIME //ms
   let timeslicePeriod = brokerConstants?.timeslicePeriod
+  console.log("REGION ID BEGIN", regionId.begin)
   let coreStartBlock = (regionId.begin as unknown as number) * timeslicePeriod!
-  console.log(filteredRegionDataByCoreNumber)
-  /* let endBlock = filteredRegionDataByCoreNumber![0].owner.end */
+  let coreEndBlock = (filteredRegionData![0].owner.end.replace(/,/g, '') as unknown as number)  * timeslicePeriod!
+
+  // TODO add async await for blockTimeToUTC
+  // let coreStartUtc = relayApi 
+  //   ? blockTimeToUTC(relayApi, coreStartBlock)
+  //   : null
+
+    // console.log("coreStartUtc", coreStartUtc)
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={`Split Core ${regionId.core} `}>
       <div className="flex flex-col p-4 ">
-        <p className="font-semibold mb-4">Where do you want to split?</p>
+      <p className="font-semibold mb-4">Where do you want to split?</p>
+      <p >Core begins at {coreStartBlock}</p>
+      <p >Core ends at {coreEndBlock}</p>
+        
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <MobileDateTimePicker
             disablePast
