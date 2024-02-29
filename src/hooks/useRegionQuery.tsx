@@ -24,7 +24,7 @@ type Region = {
 
 type RegionsType = Region[]
 
-export const useRegionQuery = (): RegionsType | null => {
+export const useRegionQuery = (updateInterval?: number): RegionsType | null => {
   const { api } = useInkathon()
   const [data, setData] = useState<RegionsType | null>(null)
 
@@ -46,9 +46,10 @@ export const useRegionQuery = (): RegionsType | null => {
     }
 
     fetchData()
-    const intervalId = setInterval(fetchData, 5000)
-
-    return () => clearInterval(intervalId)
+    if (updateInterval) {
+      const intervalId = setInterval(fetchData, updateInterval)
+      return () => clearInterval(intervalId)
+    }
   }, [api])
 
   return data
