@@ -135,12 +135,11 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
 }
 
 /**
- *
- * @param regionBegin starting timeslice of the region
- * @param regionBegin used to check that boundaries are not crossed
- * @param timeslicePeriod the period of each timeslice in blocks
- * @param blocktime the blocktime of the chain in ms (usually 6000ms for relay)
- * @param target the target datetime to find the closest pivots for
+ * @param regionBegin starting timeslice of region.
+ * @param regionBegin ending timeslice of region. Used to check that boundaries are not crossed.
+ * @param timeslicePeriod the period of each timeslice in blocks.
+ * @param blocktime the blocktime of the chain in ms (usually 6000ms for relay).
+ * @param target the target datetime to find the closest pivots for.
  * @returns the closest 2 pivots for the given target. One above and one below.
  */
 const getPivotsForDatetime = (
@@ -153,6 +152,9 @@ const getPivotsForDatetime = (
   return [2, 2]
 }
 
+/**
+ * @returns a string representation of a date in the format of "MMM DD, YYYY, HH:MM:SS (GMT+X)"
+ */
 const getDateTimeString = (date: Date | null): string => {
   if (!date) {
     return 'N/A'
@@ -179,6 +181,9 @@ const getDateTimeString = (date: Date | null): string => {
   return `${dateString}, ${timeString} (${timeZoneString})`
 }
 
+/**
+ * @returns the timezone offset of the current user in the format of "GMT+X"
+ */
 const getTimezoneOffset = (): string => {
   const timezone = new Date()
     .toLocaleTimeString('en-US', {
