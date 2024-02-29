@@ -18,8 +18,8 @@ import {
 import { FC, useEffect, useState } from 'react'
 
 type regionTimeSpan = {
-  start: { blocknumber: number; utc: Date | null }
-  end: { blocknumber: number; utc: Date | null }
+  start: { region: number; blocknumber: number; utc: Date | null }
+  end: { region: number; blocknumber: number; utc: Date | null }
 }
 
 interface PartitionCoreModalProps {
@@ -51,8 +51,8 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
   const { brokerConstants, isLoading: isConstantsLoading } = useBrokerConstants(api)
   const regionData = useRegionQuery()
   const [regionTimeSpan, setRegionTimeSpan] = useState<regionTimeSpan>({
-    start: { blocknumber: 0, utc: null },
-    end: { blocknumber: 0, utc: null },
+    start: { region: 0, blocknumber: 0, utc: null },
+    end: { region: 0, blocknumber: 0, utc: null },
   })
 
   useEffect(() => {
@@ -79,8 +79,12 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
           let coreEndUtc = regionEndString ? new Date(regionEndString) : null
 
           setRegionTimeSpan({
-            start: { blocknumber: startBlock, utc: coreStartUtc },
-            end: { blocknumber: endBlock, utc: coreEndUtc },
+            start: { region: Number(regionId.begin), blocknumber: startBlock, utc: coreStartUtc },
+            end: {
+              region: Number(region.owner.end.replace(/,/g, '')),
+              blocknumber: endBlock,
+              utc: coreEndUtc,
+            },
           })
         }
       }
@@ -89,25 +93,8 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
     fetchTimes()
   }, [regionData, relayApi])
 
-  // filter by core id, owner and region begin!
-  const filteredRegionData = regionData
-    ? regionData.filter(
-        (region) =>
-          region.detail[0].core === regionId.core &&
-          region.owner.owner === activeAccount?.address &&
-          region.detail[0].begin.replace(/,/g, '') === regionId.begin,
-      )
-    : []
-
   let blocktimeRelay = RELAY_CHAIN_BLOCK_TIME //ms
   let blocktimeCoretime = CORETIME_CHAIN_BLOCK_TIME //ms
-  let timeslicePeriod = brokerConstants?.timeslicePeriod ?? 0
-
-  let coreStartBlock = Number(regionId.begin) * timeslicePeriod
-  let coreEndBlock =
-    filteredRegionData.length > 0
-      ? Number(filteredRegionData![0].owner.end.replace(/,/g, '')) * timeslicePeriod
-      : 0
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={`Split Core ${regionId.core} `}>
@@ -118,7 +105,8 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
             {getDateTimeString(regionTimeSpan.start.utc)} {' to '}
             {getDateTimeString(regionTimeSpan.end.utc)}
           </li>
-          <li>{`Block range: ${coreStartBlock} to ${coreEndBlock}`}</li>
+          <li>{`Region range: ${regionTimeSpan.start.region} to ${regionTimeSpan.end.region}`}</li>
+          <li>{`Block range: ${regionTimeSpan.start.blocknumber} to ${regionTimeSpan.end.blocknumber}`}</li>
         </div>
 
         <p className="font-semibold mb-4">Where do you want to split?</p>
@@ -144,6 +132,25 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
       </div>
     </Modal>
   )
+}
+
+/**
+ *
+ * @param regionBegin starting timeslice of the region
+ * @param regionBegin used to check that boundaries are not crossed
+ * @param timeslicePeriod the period of each timeslice in blocks
+ * @param blocktime the blocktime of the chain in ms (usually 6000ms for relay)
+ * @param target the target datetime to find the closest pivots for
+ * @returns the closest 2 pivots for the given target. One above and one below.
+ */
+const getPivotsForDatetime = (
+  regionBegin: number,
+  regionEnd: number,
+  timeslicePeriod: number,
+  blocktime: number,
+  target: Date,
+): number[] => {
+  return [2, 2]
 }
 
 const getDateTimeString = (date: Date | null): string => {
