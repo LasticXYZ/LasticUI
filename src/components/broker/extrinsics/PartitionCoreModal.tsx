@@ -93,7 +93,7 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
   let timeslicePeriod = brokerConstants?.timeslicePeriod
   console.log("REGION ID BEGIN", regionId.begin)
   let coreStartBlock = (regionId.begin as unknown as number) * timeslicePeriod!
-  let coreEndBlock = (filteredRegionData![0].owner.end.replace(/,/g, '') as unknown as number)  * timeslicePeriod!
+  // let coreEndBlock = (filteredRegionData![0].owner.end.replace(/,/g, '') as unknown as number)  * timeslicePeriod!
 
   // TODO add async await for blockTimeToUTC
   // let coreStartUtc = relayApi 
@@ -107,7 +107,7 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
       <div className="flex flex-col p-4 ">
       <p className="font-semibold mb-4">Where do you want to split?</p>
       <p >Core begins at {coreStartBlock}</p>
-      <p >Core ends at {coreEndBlock}</p>
+      <p >Core ends at 100</p>
         
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <MobileDateTimePicker
