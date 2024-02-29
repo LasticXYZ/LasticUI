@@ -7,6 +7,7 @@ import { useBrokerConstants } from '@/utils/broker'
 import { MobileDateTimePicker } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { ApiPromise } from '@polkadot/api'
 import {
   CORETIME_CHAIN_BLOCK_TIME,
   RELAY_CHAIN_BLOCK_TIME,
@@ -21,6 +22,8 @@ type regionTimeSpan = {
   start: { region: number; blocknumber: number; utc: Date | null }
   end: { region: number; blocknumber: number; utc: Date | null }
 }
+
+type timeslice = number
 
 interface PartitionCoreModalProps {
   isOpen: boolean
@@ -138,18 +141,49 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
  * @param regionBegin starting timeslice of region.
  * @param regionBegin ending timeslice of region. Used to check that boundaries are not crossed.
  * @param timeslicePeriod the period of each timeslice in blocks.
- * @param blocktime the blocktime of the chain in ms (usually 6000ms for relay).
  * @param target the target datetime to find the closest pivots for.
- * @returns the closest 2 pivots for the given target. One above and one below.
+ * @param relayApi the relay chain api.
+ * @returns the closest 2 timeslice pivots for the given target. One above and one below. Or exactly one if it fits perfectly.
  */
-const getPivotsForDatetime = (
-  regionBegin: number,
-  regionEnd: number,
+const getPivotsForDatetime = async (
+  regionBegin: timeslice,
+  regionEnd: timeslice,
   timeslicePeriod: number,
-  blocktime: number,
   target: Date,
-): number[] => {
-  return [2, 2]
+  relayApi: ApiPromise,
+): Promise<timeslice[]> => {
+  let closestLowerPivot = regionBegin
+  let closestUpperPivot = regionEnd
+
+  for (let timeslice = regionBegin; timeslice <= regionEnd; timeslice++) {
+    const blockNumber = timeslice * timeslicePeriod
+
+    const timesliceDateString = await blockTimeToUTC(relayApi, blockNumber)
+    if (!timesliceDateString) {
+      continue
+    }
+    const timesliceDateUTC = new Date(timesliceDateString)
+
+    if (timesliceDateUTC === target) {
+      return [timeslice] // Found a perfect match
+    } else if (timesliceDateUTC < target) {
+      closestLowerPivot = timeslice // Found a new lower pivot
+    } else {
+      closestUpperPivot = timeslice // Found the first upper pivot
+      break // Exit the loop as we found our upper boundary
+    }
+  }
+
+  // Ensure we have two distinct pivots (handle edge cases)
+  if (closestLowerPivot === closestUpperPivot) {
+    if (closestLowerPivot > regionBegin) {
+      closestLowerPivot--
+    } else if (closestUpperPivot < regionEnd) {
+      closestUpperPivot++
+    }
+  }
+
+  return [closestLowerPivot, closestUpperPivot]
 }
 
 /**
