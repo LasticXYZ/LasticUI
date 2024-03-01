@@ -34,7 +34,7 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
   const { api, activeSigner, activeAccount, activeChain, relayApi } = useInkathon()
   const { brokerConstants, isLoading: isConstantsLoading } = useBrokerConstants(api)
   const [selectedDateTime, setSelectedDateTime] = useState<Date | undefined>()
-  const [pivotOptions, setPivotOptions] = useState<timeslice[]>([])
+  const [pivotOptions, setPivotOptions] = useState<pivotInfo[]>([])
   const [selectedPivot, setSelectedPivot] = useState<timeslice | null>(null)
   const txButtonProps: TxButtonProps = {
     api,
@@ -164,9 +164,13 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
 
         {pivotOptions.length > 0 && (
           <div className="flex flex-col mt-8">
-            <p className="font-semibold mb-4">Nearest pivots</p>
+            <p className="font-semibold mb-4">Nearest valid pivots</p>
             {pivotOptions.map((pivot, index) => {
-              return <li>{pivot}</li>
+              return (
+                <li>
+                  {pivot.timeslice} At Time: {getDateTimeString(pivot.utc)}
+                </li>
+              )
             })}
           </div>
         )}
@@ -180,11 +184,17 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
   )
 }
 
+type pivotInfo = {
+  timeslice: timeslice
+  utc: Date
+}
+
 /**
  * Finds the closest 2 timeslice pivots for a given target datetime within a region.
  *
  * @remarks
  * The pivots are found by estimating the closest timeslice to the target and then refining the estimate by fetching the exact timeslices around the estimated point.
+ * Note: No tests written. Failing edge cases can exist.
  *
  * @param regionBegin starting timeslice of region.
  * @param regionBegin ending timeslice of region. Used to check that boundaries are not crossed.
@@ -202,12 +212,19 @@ const getPivotsForDatetime = async (
   target: Date,
   blockTime: number,
   relayApi: ApiPromise,
-): Promise<timeslice[]> => {
+): Promise<pivotInfo[]> => {
+  // helper function to fetch timeslice date and return pivotInfo
+  const fetchPivotInfo = async (timeslice: timeslice): Promise<pivotInfo> => {
+    const blockNumber = timeslice * timeslicePeriod
+    const dateString = await blockTimeToUTC(relayApi, blockNumber)
+    if (!dateString) throw new Error('Failed to fetch block utc time')
+    return { timeslice, utc: new Date(dateString) }
+  }
+
   // Convert the regionBegin timeslice to a datetime
   const regionBeginBlockNumber = regionBegin * timeslicePeriod
   const regionBeginDateString = await blockTimeToUTC(relayApi, regionBeginBlockNumber)
   if (!regionBeginDateString) throw new Error('Failed to fetch region begin date')
-
   const regionBeginDateUTC = new Date(regionBeginDateString)
 
   // Calculate the difference in seconds between target and regionBegin
@@ -218,46 +235,49 @@ const getPivotsForDatetime = async (
   let estimatedTimeslice = regionBegin + estimatedTimesliceOffset
 
   // Adjust if estimatedTimeslice is outside the region boundaries
-  if (estimatedTimeslice < regionBegin) estimatedTimeslice = regionBegin
-  if (estimatedTimeslice > regionEnd) estimatedTimeslice = regionEnd
+  estimatedTimeslice = Math.max(Math.min(estimatedTimeslice, regionEnd - 1), regionBegin + 1)
 
-  // Refine the estimate by fetching the exact timeslices around the estimated point
-  let closestLowerPivot = estimatedTimeslice
-  let closestUpperPivot = estimatedTimeslice + 1
+  let closestLowerPivot: timeslice = estimatedTimeslice - 1
+  let closestUpperPivot: timeslice = estimatedTimeslice
 
-  // Refine lower pivot
+  // refine lower pivot
+  let lowerPivotInfo: pivotInfo | undefined
   while (closestLowerPivot >= regionBegin) {
-    const blockNumber = closestLowerPivot * timeslicePeriod
-    const dateString = await blockTimeToUTC(relayApi, blockNumber)
-    if (!dateString) throw new Error('Failed to fetch block utc time')
-
-    const dateUTC = new Date(dateString)
-
-    if (dateUTC <= target) break // Found nearest lower pivot
+    lowerPivotInfo = await fetchPivotInfo(closestLowerPivot)
+    if (lowerPivotInfo.utc < target) {
+      closestUpperPivot = closestLowerPivot + 1
+      break
+    }
     closestLowerPivot--
   }
 
-  // Refine upper pivot
-  while (closestUpperPivot <= regionEnd) {
-    const blockNumber = closestUpperPivot * timeslicePeriod
-    const dateString = await blockTimeToUTC(relayApi, blockNumber)
-    if (!dateString) throw new Error('Failed to fetch block utc time')
-    const dateUTC = new Date(dateString)
+  // set upper pivot (always 1 above lower pivot)
+  lowerPivotInfo = lowerPivotInfo ?? (await fetchPivotInfo(closestLowerPivot))
+  let upperPivotInfo = await fetchPivotInfo(closestUpperPivot)
 
-    if (dateUTC >= target) break // Found nearest upper pivot
+  // Adjust both pivots if they are too low
+  while (upperPivotInfo.utc <= target && closestUpperPivot < regionEnd) {
+    closestLowerPivot++
     closestUpperPivot++
+    lowerPivotInfo = await fetchPivotInfo(closestLowerPivot)
+    upperPivotInfo = await fetchPivotInfo(closestUpperPivot)
   }
 
-  // Ensure we have two distinct pivots (handle edge cases)
+  // Ensure pivots do not include regionBegin or regionEnd
+  if (closestLowerPivot <= regionBegin) {
+    closestLowerPivot = regionBegin + 1
+    lowerPivotInfo = await fetchPivotInfo(closestLowerPivot)
+  }
+  if (closestUpperPivot >= regionEnd) {
+    closestUpperPivot = regionEnd - 1
+    upperPivotInfo = await fetchPivotInfo(closestUpperPivot)
+  }
+
   if (closestLowerPivot === closestUpperPivot) {
-    if (closestLowerPivot > regionBegin) {
-      closestLowerPivot--
-    } else if (closestUpperPivot < regionEnd) {
-      closestUpperPivot++
-    }
+    return [lowerPivotInfo] // Return only one pivot if they are the same
   }
 
-  return [closestLowerPivot, closestUpperPivot]
+  return [lowerPivotInfo, upperPivotInfo]
 }
 
 /**
