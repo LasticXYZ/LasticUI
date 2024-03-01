@@ -181,6 +181,11 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
 }
 
 /**
+ * Finds the closest 2 timeslice pivots for a given target datetime within a region.
+ *
+ * @remarks
+ * The pivots are found by estimating the closest timeslice to the target and then refining the estimate by fetching the exact timeslices around the estimated point.
+ *
  * @param regionBegin starting timeslice of region.
  * @param regionBegin ending timeslice of region. Used to check that boundaries are not crossed.
  * @param timeslicePeriod the period of each timeslice in blocks.
@@ -188,7 +193,7 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
  * @param blockTime the blocktime of the relay chain in seconds.
  * @param relayApi the relay chain api.
  * @returns the closest 2 timeslice pivots for the given target. One above and one below. Or exactly one if it fits perfectly.
- * @throws an error if the regionBegin or regionEnd cannot be converted to UTC.
+ * @throws an error if a block cannot be converted to UTC via lasticSDK.
  */
 const getPivotsForDatetime = async (
   regionBegin: timeslice,
