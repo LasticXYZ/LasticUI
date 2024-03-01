@@ -1,4 +1,5 @@
 'use client'
+import Border from '@/components/border/Border'
 import PrimaryButton from '@/components/button/PrimaryButton'
 import Modal from '@/components/modal/Modal'
 import { useRegionQuery } from '@/hooks/useRegionQuery'
@@ -15,6 +16,7 @@ import {
   useInkathon,
   useTxButton,
 } from '@poppyseed/lastic-sdk'
+import Image from 'next/image'
 import { FC, useEffect, useState } from 'react'
 
 type regionTimeSpan = {
@@ -103,6 +105,8 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
 
   const handleAccept = async (newValue: Date | null) => {
     setSelectedDateTime(newValue || undefined)
+    setPivotOptions([])
+    setSelectedPivot(undefined)
 
     // Ensure newValue is not null, all required data is available, and the selected datetime is within the region's timespan
     if (
@@ -162,14 +166,45 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
 
         {pivotOptions.length > 0 && (
           <div className="flex flex-col mt-8">
-            <p className="font-semibold mb-4">Nearest valid pivots</p>
-            {pivotOptions.map((pivot, index) => {
-              return (
-                <li key={index}>
-                  {pivot.timeslice} At Time: {getDateTimeString(pivot.utc)}
-                </li>
-              )
-            })}
+            <p className="font-semibold mb-4">Select nearest valid pivot</p>
+            <div className="grid gap-3">
+              {pivotOptions.map((pivot, index) => {
+                return (
+                  <div
+                    key={index}
+                    className={`transition-transform duration-500 ease-out cursor-pointer ${
+                      selectedPivot === pivot.timeslice
+                        ? 'ring-2 ring-pink-500 shadow-lg transform scale-105 rounded-2xl'
+                        : 'ring-2 ring-transparent rounded-2xl'
+                    } transition-all duration-300`}
+                    onClick={() => setSelectedPivot(pivot.timeslice)}
+                  >
+                    <Border className="px-6 py-4 hover:bg-pink-1 hover:cursor-pointer">
+                      <div>
+                        <div className="uppercase font-unbounded uppercase tracking-wide text-md text-indigo-500 font-semibold">
+                          Pivot at region {pivot.timeslice}
+                        </div>
+                      </div>
+                      <div className="mx-auto pt-4 flex flex-row items-center justify-between overflow-hidden">
+                        <div className="px-5">
+                          <Image
+                            src="/assets/Images/core1.png"
+                            alt="Lastic Logo"
+                            width={78}
+                            height={60}
+                          />
+                        </div>
+                        <div className="flex w-full text-lg flex-col px-5items-start justify-center">
+                          <div className="flex flex-row text-gray-12 p-1 ">
+                            <p className="px-2">{getDateTimeString(pivot.utc)}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </Border>
+                  </div>
+                )
+              })}
+            </div>
           </div>
         )}
 
