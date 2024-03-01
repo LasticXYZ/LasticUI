@@ -8,7 +8,13 @@ import { MobileDateTimePicker } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { ApiPromise } from '@polkadot/api'
-import { TxButtonProps, blockTimeToUTC, useInkathon, useTxButton } from '@poppyseed/lastic-sdk'
+import {
+  RELAY_CHAIN_BLOCK_TIME,
+  TxButtonProps,
+  blockTimeToUTC,
+  useInkathon,
+  useTxButton,
+} from '@poppyseed/lastic-sdk'
 import { FC, useEffect, useState } from 'react'
 
 type regionTimeSpan = {
@@ -52,6 +58,7 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
     start: { region: 0, blocknumber: 0, utc: null },
     end: { region: 0, blocknumber: 0, utc: null },
   })
+  let blocktimeRelay = RELAY_CHAIN_BLOCK_TIME / 1000
 
   /**
    * useEffect fetches the start and end times of the region and sets the regionTimeSpan state.
@@ -116,6 +123,7 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
           regionTimeSpan.end.region,
           brokerConstants.timeslicePeriod,
           newValue,
+          blocktimeRelay,
           relayApi,
         )
         setPivotOptions(pivots)
@@ -177,37 +185,62 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
  * @param regionBegin ending timeslice of region. Used to check that boundaries are not crossed.
  * @param timeslicePeriod the period of each timeslice in blocks.
  * @param target the target datetime to find the closest pivots for.
+ * @param blockTime the blocktime of the relay chain in seconds.
  * @param relayApi the relay chain api.
  * @returns the closest 2 timeslice pivots for the given target. One above and one below. Or exactly one if it fits perfectly.
+ * @throws an error if the regionBegin or regionEnd cannot be converted to UTC.
  */
 const getPivotsForDatetime = async (
   regionBegin: timeslice,
   regionEnd: timeslice,
   timeslicePeriod: number,
   target: Date,
+  blockTime: number,
   relayApi: ApiPromise,
 ): Promise<timeslice[]> => {
-  let closestLowerPivot = regionBegin
-  let closestUpperPivot = regionEnd
+  // Convert the regionBegin timeslice to a datetime
+  const regionBeginBlockNumber = regionBegin * timeslicePeriod
+  const regionBeginDateString = await blockTimeToUTC(relayApi, regionBeginBlockNumber)
+  if (!regionBeginDateString) throw new Error('Failed to fetch region begin date')
 
-  for (let timeslice = regionBegin; timeslice <= regionEnd; timeslice++) {
-    const blockNumber = timeslice * timeslicePeriod
+  const regionBeginDateUTC = new Date(regionBeginDateString)
 
-    // TODO optimize runtime
-    const timesliceDateString = await blockTimeToUTC(relayApi, blockNumber)
-    if (!timesliceDateString) {
-      continue
-    }
-    const timesliceDateUTC = new Date(timesliceDateString)
+  // Calculate the difference in seconds between target and regionBegin
+  const secondsDifference = (target.getTime() - regionBeginDateUTC.getTime()) / 1000
 
-    if (timesliceDateUTC === target) {
-      return [timeslice] // Found a perfect match
-    } else if (timesliceDateUTC < target) {
-      closestLowerPivot = timeslice // Found a new lower pivot
-    } else {
-      closestUpperPivot = timeslice // Found the first upper pivot
-      break // Exit the loop as we found our upper boundary
-    }
+  // Estimate the timeslice close to the target
+  const estimatedTimesliceOffset = Math.floor(secondsDifference / (blockTime * timeslicePeriod))
+  let estimatedTimeslice = regionBegin + estimatedTimesliceOffset
+
+  // Adjust if estimatedTimeslice is outside the region boundaries
+  if (estimatedTimeslice < regionBegin) estimatedTimeslice = regionBegin
+  if (estimatedTimeslice > regionEnd) estimatedTimeslice = regionEnd
+
+  // Refine the estimate by fetching the exact timeslices around the estimated point
+  let closestLowerPivot = estimatedTimeslice
+  let closestUpperPivot = estimatedTimeslice + 1
+
+  // Refine lower pivot
+  while (closestLowerPivot >= regionBegin) {
+    const blockNumber = closestLowerPivot * timeslicePeriod
+    const dateString = await blockTimeToUTC(relayApi, blockNumber)
+    if (!dateString) throw new Error('Failed to fetch block utc time')
+
+    const dateUTC = new Date(dateString)
+
+    if (dateUTC <= target) break // Found nearest lower pivot
+    closestLowerPivot--
+  }
+
+  // Refine upper pivot
+  while (closestUpperPivot <= regionEnd) {
+    const blockNumber = closestUpperPivot * timeslicePeriod
+    const dateString = await blockTimeToUTC(relayApi, blockNumber)
+    if (!dateString) throw new Error('Failed to fetch block utc time')
+    const dateUTC = new Date(dateString)
+
+    if (dateUTC >= target) break // Found nearest upper pivot
+    closestUpperPivot++
   }
 
   // Ensure we have two distinct pivots (handle edge cases)
