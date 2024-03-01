@@ -46,8 +46,8 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
       callable: 'partition',
       inputParams: [regionId, selectedPivot],
       paramFields: [
-        { name: 'regionId', type: 'Object', optional: false },
-        { name: 'pivot', type: 'string', optional: false }, // unsure if string is correct
+        { name: 'region_id', type: 'Object', optional: false },
+        { name: 'pivot', type: 'string', optional: false },
       ],
     },
     type: 'SIGNED-TX',
