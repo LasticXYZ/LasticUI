@@ -103,10 +103,13 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
     fetchTimes()
   }, [regionData, relayApi])
 
-  const handleAccept = async (newValue: Date | null) => {
-    setSelectedDateTime(newValue || undefined)
+  useEffect(() => {
     setPivotOptions([])
     setSelectedPivot(undefined)
+  }, [selectedDateTime])
+
+  const handleAccept = async (newValue: Date | null) => {
+    setSelectedDateTime(newValue || undefined)
 
     // Ensure newValue is not null, all required data is available, and the selected datetime is within the region's timespan
     if (
