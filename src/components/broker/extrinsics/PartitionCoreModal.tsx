@@ -33,16 +33,16 @@ interface PartitionCoreModalProps {
 const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regionId }) => {
   const { api, activeSigner, activeAccount, activeChain, relayApi } = useInkathon()
   const { brokerConstants, isLoading: isConstantsLoading } = useBrokerConstants(api)
-  const [selectedDateTime, setSelectedDateTime] = useState<Date | undefined>()
+  const [selectedDateTime, setSelectedDateTime] = useState<Date | undefined | null>(null)
   const [pivotOptions, setPivotOptions] = useState<pivotInfo[]>([])
-  const [selectedPivot, setSelectedPivot] = useState<timeslice | null>(null)
+  const [selectedPivot, setSelectedPivot] = useState<timeslice | undefined>(undefined)
   const txButtonProps: TxButtonProps = {
     api,
     setStatus: (status: string | null) => console.log('tx status:', status),
     attrs: {
       palletRpc: 'broker',
       callable: 'partition',
-      inputParams: [regionId, selectedDateTime],
+      inputParams: [regionId, selectedPivot],
       paramFields: [
         { name: 'regionId', type: 'Object', optional: false },
         { name: 'pivot', type: 'string', optional: false }, // unsure if string is correct
@@ -102,7 +102,6 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
   }, [regionData, relayApi])
 
   const handleAccept = async (newValue: Date | null) => {
-    console.log('Selected datetime:', newValue)
     setSelectedDateTime(newValue || undefined)
 
     // Ensure newValue is not null, all required data is available, and the selected datetime is within the region's timespan
@@ -117,7 +116,6 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
       regionTimeSpan.end.utc > newValue
     ) {
       try {
-        console.log('Finding closest pivots for:', newValue)
         const pivots = await getPivotsForDatetime(
           regionTimeSpan.start.region,
           regionTimeSpan.end.region,
@@ -167,7 +165,7 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
             <p className="font-semibold mb-4">Nearest valid pivots</p>
             {pivotOptions.map((pivot, index) => {
               return (
-                <li>
+                <li key={index}>
                   {pivot.timeslice} At Time: {getDateTimeString(pivot.utc)}
                 </li>
               )
@@ -175,8 +173,12 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
           </div>
         )}
 
-        <div className="flex justify-center pt-10">
-          <PrimaryButton title="Split Core" onClick={transaction} disabled={!allParamsFilled()} />
+        <div className="flex justify-center pt-10 ">
+          <PrimaryButton
+            title="Split Core"
+            onClick={transaction}
+            disabled={!allParamsFilled() || !selectedPivot}
+          />
           <div className="mt-5 text-sm text-gray-16 ">{status}</div>
         </div>
       </div>
@@ -218,6 +220,7 @@ const getPivotsForDatetime = async (
     const blockNumber = timeslice * timeslicePeriod
     const dateString = await blockTimeToUTC(relayApi, blockNumber)
     if (!dateString) throw new Error('Failed to fetch block utc time')
+
     return { timeslice, utc: new Date(dateString) }
   }
 
