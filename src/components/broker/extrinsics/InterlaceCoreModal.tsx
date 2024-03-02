@@ -1,15 +1,14 @@
 'use client'
+import BoxesContainer from '@/components/activityBoxes/BoxesContainer'
 import PrimaryButton from '@/components/button/PrimaryButton'
 import Modal from '@/components/modal/Modal'
 import { RegionIdProps } from '@/types/broker'
-import { truncateHash } from '@/utils/truncateHash'
-import { encodeAddress } from '@polkadot/util-crypto'
 import { TxButtonProps, useInkathon, useTxButton } from '@poppyseed/lastic-sdk'
 import { FC, useState } from 'react'
 
 /**
  *
- * TODO. Still in progress! Just copied the SplitCoreModal and changed the title
+ * TODO.
  *
  *
  */
@@ -26,11 +25,11 @@ const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regi
   const [finality, setFinality] = useState('Provisional')
 
   const txButtonProps: TxButtonProps = {
-    api, // api is guaranteed to be defined here
+    api, 
     setStatus: (status: string | null) => console.log('tx status:', status),
     attrs: {
       palletRpc: 'broker',
-      callable: 'assign',
+      callable: 'interlace',
       inputParams: [regionId, task, finality],
       paramFields: [
         { name: 'regionId', type: 'Object', optional: false },
@@ -47,41 +46,17 @@ const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regi
 
   if (!isOpen) return null
 
+  const startTime = new Date('2023-01-01T01:00:00')
+  const endTime = new Date('2023-01-01T11:40:00')
+  const size: [number, number] = [40, 40] // Size of each SquareBox
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={`Assign Core Nb: ${regionId.core} To Para ID`}>
+    <Modal isOpen={isOpen} onClose={onClose} title={`Create mask for Core NB: ${regionId.core} `}>
       <div className="flex flex-col p-4">
+        <BoxesContainer startTime={startTime} endTime={endTime} size={size} />
         <div className="flex flex-col mb-4">
-          <p className="text-lg font-semibold mb-2">Assing Core Nb: {regionId.core}</p>
-          <p className="text-lg mb-2">
-            Account:{' '}
-            {activeAccount
-              ? truncateHash(encodeAddress(activeAccount.address, activeChain?.ss58Prefix || 42), 8)
-              : 'error'}
-          </p>
-          <label htmlFor="task" className="text-lg font-semibold mb-2">
-            To para ID:
-          </label>
-          <input
-            id="task"
-            className="text-lg border border-gray-300 rounded-md p-2 mb-4 focus:ring-blue-500 focus:border-blue-500"
-            type="number"
-            value={task}
-            onChange={(e) => setTask(parseInt(e.target.value, 10))}
-          />
-          <label htmlFor="finality" className="text-lg font-semibold mb-2">
-            Finality:
-          </label>
-          <select
-            id="finality"
-            className="text-lg border border-gray-300 rounded-md p-2 mb-4 focus:ring-blue-500 focus:border-blue-500"
-            value={finality}
-            onChange={(e) => setFinality(e.target.value)}
-          >
-            <option value="Provisional">Provisional</option>
-            <option value="Final">Final</option>
-          </select>
           <p className="text-lg mb-2">Region Begin: {regionId.begin}</p>
-          <p className="text-md">Core Mask: {regionId.mask}</p>
+          <p className="text-md">Current Core Mask: {regionId.mask}</p>
         </div>
         <div className="flex justify-center pt-5">
           <PrimaryButton title="Assign Core" onClick={transaction} disabled={!allParamsFilled()} />
