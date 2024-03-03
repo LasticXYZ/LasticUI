@@ -32,24 +32,42 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
                 >
                   <div className="flex-shrink-0 flex items-center justify-between space-x-5 border-b border-gray-9  pl-6 pr-2 py-6 mt-2">
                     {!isCollapsed && (
-                      <>
-                        <Link href="/" className="font-bold">
+                      <div className="flex flex-col gap-1 items-center">
+                        <Link href="/" className="font-bold flex items-center mb-4">
                           <Image
                             src="/assets/Images/Logos/lastic-logo.png"
                             width={130}
                             height="0"
                             style={{ width: '10em', height: 'auto' }}
                             quality={100}
-                            alt="lastic Logo"
+                            alt="Lastic Logo"
                           />
                         </Link>
+
+                        <p className="text-lg "> AND</p>
+
+                        <Link href="/second-company" className="font-bold flex items-center mb-4">
+                          <Image
+                            src="/assets/Images/Logos/coresplitters-logo.png"
+                            width={130}
+                            height="0"
+                            style={{ width: '3em', height: 'auto' }}
+                            quality={100}
+                            alt="CoretimeSplitters Logo"
+                            className="w-24 h-24 bg-black rounded-full object-cover"
+                          />
+                          <span className="pl-3 text-lg">CoretimeSplitters</span>{' '}
+                        </Link>
+
+                        {/* Chevron Icon */}
                         <ChevronLeftIcon
                           className="h-4 w-5 hover:text-gray-12 cursor-pointer"
                           aria-hidden="true"
                           onClick={toggleSidebar}
                         />
-                      </>
+                      </div>
                     )}
+
                     {isCollapsed && (
                       <div className="flex flex-col items-center">
                         <ChevronRightIcon
