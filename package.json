@@ -24,11 +24,13 @@
   "dependencies": {
     "@azns/resolver-core": "^1.6.0",
     "@azns/resolver-react": "^1.6.0",
-    "@emotion/react": "^11.11.3",
+    "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.1.1",
     "@material-tailwind/react": "^1.4.2",
+    "@mui/material": "^5.15.11",
+    "@mui/x-date-pickers": "^6.19.5",
     "@polkadot/api-base": "^10.11.2",
     "@poppyseed/lastic-sdk": "^0.1.0",
     "@poppyseed/squid-sdk": "^0.0.5",
@@ -59,6 +61,7 @@
     "autoprefixer": "^10.4.16",
     "eslint-config-next": "^13.5.6",
     "postcss": "^8.4.33",
+    "prettier": "^3.2.5",
     "react-hot-toast": "^2.4.1",
     "tailwindcss": "^3.4.1"
   }

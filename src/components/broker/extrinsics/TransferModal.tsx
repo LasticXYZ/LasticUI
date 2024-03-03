@@ -1,5 +1,6 @@
 import PrimaryButton from '@/components/button/PrimaryButton'
 import Modal from '@/components/modal/Modal'
+import { RegionId, RegionIdProps } from '@/types/broker'
 import { truncateHash } from '@/utils/truncateHash'
 import { encodeAddress } from '@polkadot/util-crypto'
 import { TxButtonProps, useInkathon, useTxButton } from '@poppyseed/lastic-sdk'
@@ -8,15 +9,7 @@ import { FC, useState } from 'react'
 interface TransferModalProps {
   isOpen: boolean
   onClose: () => void
-  coreNb: string
-  mask: string
-  begin: string
-}
-
-interface RegionId {
-  begin: number
-  core: number
-  mask: Uint8Array
+  regionId: RegionIdProps
 }
 
 interface TransferCall {
@@ -24,15 +17,9 @@ interface TransferCall {
   newOwner: Uint8Array
 }
 
-const TransferModal: FC<TransferModalProps> = ({ isOpen, onClose, coreNb, begin, mask }) => {
+const TransferModal: FC<TransferModalProps> = ({ isOpen, onClose, regionId }) => {
   const { api, activeSigner, activeAccount, activeChain } = useInkathon()
   const [newOwner, setNewOwner] = useState('')
-
-  const regionId = {
-    begin: begin.replace(/,/g, ''),
-    core: coreNb,
-    mask: mask,
-  }
 
   const txButtonProps: TxButtonProps = {
     api, // api is guaranteed to be defined here
@@ -59,11 +46,11 @@ const TransferModal: FC<TransferModalProps> = ({ isOpen, onClose, coreNb, begin,
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={`Transfer Core Nb: ${coreNb} To Another Account`}
+      title={`Transfer Core Nb: ${regionId.core} To Another Account`}
     >
       <div className="flex flex-col p-4">
         <div className="flex flex-col mb-4">
-          <p className="text-lg font-semibold mb-2">Transfer Core Nb: {coreNb}</p>
+          <p className="text-lg font-semibold mb-2">Transfer Core Nb: {regionId.core}</p>
           <p className="text-lg mb-2">
             From:{' '}
             {activeAccount
@@ -80,8 +67,8 @@ const TransferModal: FC<TransferModalProps> = ({ isOpen, onClose, coreNb, begin,
             value={newOwner}
             onChange={(e) => setNewOwner(e.target.value)}
           />
-          <p className="text-lg mb-2">Region Begin: {begin}</p>
-          <p className="text-md">Core Mask: {mask}</p>
+          <p className="text-lg mb-2">Region Begin: {regionId.begin}</p>
+          <p className="text-md">Core Mask: {regionId.mask}</p>
         </div>
         <div className="flex justify-center pt-5">
           <PrimaryButton

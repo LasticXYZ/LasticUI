@@ -1,26 +1,39 @@
+import { Dialog } from '@headlessui/react'
 import { FC, ReactNode } from 'react'
 
 interface ModalProps {
   isOpen: boolean
   onClose: () => void
-  title: string // Add title prop for custom modal titles
-  children?: ReactNode // This line is already perfect for children content
+  title: string
+  children?: ReactNode
 }
 
 const Modal: FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
-  if (!isOpen) return null
-
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="absolute inset-0 bg-black opacity-50" onClick={onClose}></div>
-      <div className="relative w-96 bg-white p-10 overflow-hidden rounded shadow-lg">
-        <button className="absolute top-3 right-3" onClick={onClose}>
-          X
-        </button>
-        <h2 className="text-xl mb-4 font-unbounded uppercase font-bold">{title}</h2>
-        {children}
+    <Dialog as="div" className="fixed inset-0 z-50 overflow-y-auto" open={isOpen} onClose={onClose}>
+      <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        {/* Background overlay, show behind modal */}
+        <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+
+        <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
+          &#8203;
+        </span>
+
+        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full p-6">
+          <div className="absolute top-0 right-0 pt-4 pr-4">
+            <button type="button" className="text-gray-400 hover:text-gray-500" onClick={onClose}>
+              <span className="sr-only">Close</span>X
+            </button>
+          </div>
+
+          <Dialog.Title as="h2" className="text-2xl mb-4 font-unbounded uppercase font-bold">
+            {title}
+          </Dialog.Title>
+
+          <div className="mt-2">{children}</div>
+        </div>
       </div>
-    </div>
+    </Dialog>
   )
 }
 
