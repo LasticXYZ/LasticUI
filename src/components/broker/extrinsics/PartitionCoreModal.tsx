@@ -180,7 +180,7 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
                         ? 'ring-2 ring-pink-500 shadow-lg transform scale-105 rounded-2xl'
                         : 'ring-2 ring-transparent rounded-2xl'
                     } transition-all duration-300`}
-                    onClick={() => setSelectedPivot(pivot.timeslice)}
+                    onClick={() => setSelectedPivot(pivot.timeslice - regionTimeSpan.start.region)}
                   >
                     <Border className="px-6 py-4 hover:bg-pink-1 hover:cursor-pointer">
                       <div>
