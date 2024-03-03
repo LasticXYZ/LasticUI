@@ -1,17 +1,21 @@
-import Hero from './Hero'
-import BlockspaceMarketplace from './BlockspaceMarketplace'
-import HowItWorks from './HowItWorks'
-import About from './About'
-import DeeperDive from './DeeperDive'
+import About from '@/app/(Website)/About'
+import BlockspaceMarketplace from '@/app/(Website)/BlockspaceMarketplace'
+import DeeperDive from '@/app/(Website)/DeeperDive'
+import Hero from '@/app/(Website)/Hero'
+import HowItWorks from '@/app/(Website)/HowItWorks'
+import { redirect } from 'next/navigation'
 
-const Home = () => (
-  <>
-    <Hero />
-    <BlockspaceMarketplace />
-    <HowItWorks />
-    <About />
-    <DeeperDive />
-  </>
-)
+const Home = () => {
+  redirect('/my-cores')
+  return (
+    <>
+      <Hero />
+      <BlockspaceMarketplace />
+      <HowItWorks />
+      <About />
+      <DeeperDive />
+    </>
+  )
+}
 
 export default Home
