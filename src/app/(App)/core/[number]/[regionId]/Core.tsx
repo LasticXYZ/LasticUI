@@ -221,52 +221,12 @@ export default function BrokerRegionData({
                   </div>
 
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 py-10">
-                    {/* Modals*/}
-                    <TransferModal
-                      isOpen={isTransferModalOpen}
-                      onClose={() => setIsTransferModalOpen(false)}
-                      regionId={{
-                        begin: region.detail[0].begin.replace(/,/g, ''),
-                        core: region.detail[0].core,
-                        mask: region.detail[0].mask,
-                      }}
-                    />
-
-                    <AssignModal
-                      isOpen={isAssignModalOpen}
-                      onClose={() => setIsAssignModalOpen(false)}
-                      regionId={{
-                        begin: region.detail[0].begin.replace(/,/g, ''),
-                        core: region.detail[0].core,
-                        mask: region.detail[0].mask,
-                      }}
-                    />
-
-                    <PartitionCoreModal
-                      isOpen={isPartitionModalOpen}
-                      onClose={() => setIsPartitionModalOpen(false)}
-                      regionId={{
-                        begin: region.detail[0].begin.replace(/,/g, ''),
-                        core: region.detail[0].core,
-                        mask: region.detail[0].mask,
-                      }}
-                    />
-
-                    <InterlaceCoreModal
-                      isOpen={isInterlaceModalOpen}
-                      onClose={() => setIsInterlaceModalOpen(false)}
-                      regionId={{
-                        begin: region.detail[0].begin.replace(/,/g, ''),
-                        core: region.detail[0].core,
-                        mask: region.detail[0].mask,
-                      }}
-                    />
-
                     {/* Buttons*/}
                     <div className="text-2xl font-bold font-unbounded uppercase text-gray-21">
                       <SecondaryButton
                         title="Transfer Core"
                         onClick={() => setIsTransferModalOpen(true)}
+                        className="w-full"
                       />
                     </div>
 
@@ -274,6 +234,7 @@ export default function BrokerRegionData({
                       <SecondaryButton
                         title="Assign Core"
                         onClick={() => setIsAssignModalOpen(true)}
+                        className="w-full"
                       />
                     </div>
 
@@ -281,6 +242,7 @@ export default function BrokerRegionData({
                       <SecondaryButton
                         title="Change Frequency"
                         onClick={() => setIsInterlaceModalOpen(true)}
+                        className="w-full"
                       />
                     </div>
 
@@ -288,14 +250,7 @@ export default function BrokerRegionData({
                       <SecondaryButton
                         title="Split Core"
                         onClick={() => setIsPartitionModalOpen(true)}
-                      />
-                    </div>
-
-                    <div className="text-2xl font-bold font-unbounded uppercase text-gray-21">
-                      <SecondaryButton
-                        title="Combine core"
-                        onClick={() => console.log('Combine')}
-                        disabled={true}
+                        className="w-full"
                       />
                     </div>
                   </div>
@@ -303,13 +258,56 @@ export default function BrokerRegionData({
               ) : (
                 <div className="flex flex-col italic max-w-3xl text-gray-12 items-center justify-center px-2 py-8">
                   Note: You do not own this core. After buying a core you will be able to: Transfer
-                  it, Utilize it, Split it up and Recombine it.
+                  it, Utilize it, Split it up, or change its frequency.
                 </div>
               )}
             </div>
           </div>
         </Border>
       </section>
+
+      <>
+        {/* Modals*/}
+        <TransferModal
+          isOpen={isTransferModalOpen}
+          onClose={() => setIsTransferModalOpen(false)}
+          regionId={{
+            begin: region.detail[0].begin.replace(/,/g, ''),
+            core: region.detail[0].core,
+            mask: region.detail[0].mask,
+          }}
+        />
+
+        <AssignModal
+          isOpen={isAssignModalOpen}
+          onClose={() => setIsAssignModalOpen(false)}
+          regionId={{
+            begin: region.detail[0].begin.replace(/,/g, ''),
+            core: region.detail[0].core,
+            mask: region.detail[0].mask,
+          }}
+        />
+
+        <PartitionCoreModal
+          isOpen={isPartitionModalOpen}
+          onClose={() => setIsPartitionModalOpen(false)}
+          regionId={{
+            begin: region.detail[0].begin.replace(/,/g, ''),
+            core: region.detail[0].core,
+            mask: region.detail[0].mask,
+          }}
+        />
+
+        <InterlaceCoreModal
+          isOpen={isInterlaceModalOpen}
+          onClose={() => setIsInterlaceModalOpen(false)}
+          regionId={{
+            begin: region.detail[0].begin.replace(/,/g, ''),
+            core: region.detail[0].core,
+            mask: region.detail[0].mask,
+          }}
+        />
+      </>
     </>
   )
 }
