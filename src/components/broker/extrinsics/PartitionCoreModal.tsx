@@ -34,17 +34,17 @@ interface PartitionCoreModalProps {
 
 const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regionId }) => {
   const { api, activeSigner, activeAccount, activeChain, relayApi } = useInkathon()
-  const { brokerConstants, isLoading: isConstantsLoading } = useBrokerConstants(api)
+  const { brokerConstants } = useBrokerConstants(api)
   const [selectedDateTime, setSelectedDateTime] = useState<Date | undefined | null>(null)
   const [pivotOptions, setPivotOptions] = useState<pivotInfo[]>([])
-  const [selectedPivot, setSelectedPivot] = useState<timeslice | undefined>(undefined)
+  const [selectedPivotOffset, setSelectedPivotOffset] = useState<timeslice | undefined>(undefined)
   const txButtonProps: TxButtonProps = {
     api,
     setStatus: (status: string | null) => console.log('tx status:', status),
     attrs: {
       palletRpc: 'broker',
       callable: 'partition',
-      inputParams: [regionId, selectedPivot],
+      inputParams: [regionId, selectedPivotOffset],
       paramFields: [
         { name: 'region_id', type: 'Object', optional: false },
         { name: 'pivot', type: 'string', optional: false },
@@ -105,7 +105,7 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
 
   useEffect(() => {
     setPivotOptions([])
-    setSelectedPivot(undefined)
+    setSelectedPivotOffset(undefined)
   }, [selectedDateTime])
 
   const handleAccept = async (newValue: Date | null) => {
@@ -176,11 +176,13 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
                   <div
                     key={index}
                     className={`transition-transform duration-500 ease-out cursor-pointer ${
-                      selectedPivot === pivot.timeslice
+                      selectedPivotOffset === pivot.timeslice - regionTimeSpan.start.region
                         ? 'ring-2 ring-pink-500 shadow-lg transform scale-105 rounded-2xl'
                         : 'ring-2 ring-transparent rounded-2xl'
                     } transition-all duration-300`}
-                    onClick={() => setSelectedPivot(pivot.timeslice - regionTimeSpan.start.region)}
+                    onClick={() =>
+                      setSelectedPivotOffset(pivot.timeslice - regionTimeSpan.start.region)
+                    }
                   >
                     <Border className="px-6 py-4 hover:bg-pink-1 hover:cursor-pointer">
                       <div>
@@ -211,11 +213,11 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
           </div>
         )}
 
-        <div className="flex justify-center pt-10 ">
+        <div className="flex flex-col items-center justify-center pt-10 ">
           <PrimaryButton
             title="Split Core"
             onClick={transaction}
-            disabled={!allParamsFilled() || !selectedPivot}
+            disabled={!allParamsFilled() || !selectedPivotOffset}
           />
           <div className="mt-5 text-sm text-gray-16 ">{status}</div>
         </div>
