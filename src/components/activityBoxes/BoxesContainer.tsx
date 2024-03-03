@@ -5,14 +5,16 @@ interface SquareBoxesContainerProps {
   startTime: Date
   endTime: Date
   size: [number, number]
+  onMaskUpdate: (bits: Array<boolean>) => void
 }
 
 const SquareBoxesContainer: React.FC<SquareBoxesContainerProps> = ({
   startTime,
   endTime,
   size,
+  onMaskUpdate
 }) => {
-  const subIntervalDurationInMinutes = 8 // Minuts
+  const subIntervalDurationInMinutes = 8 // Minutes
   const intervalInSeconds = subIntervalDurationInMinutes * 60
   // Number of coremask bits
   const countOfBits = 80
@@ -32,22 +34,10 @@ const SquareBoxesContainer: React.FC<SquareBoxesContainerProps> = ({
     const newBits = [...bits]
     newBits[index] = !newBits[index]
     setBits(newBits)
-    console.log(newBits)
-  }
-  const generateHexStringFromBooleans = (bools: Array<boolean>) => {
-    const bitString = bools.map((b) => (b ? '1' : '0')).join('')
-    let hexString = ''
-    for (let i = 0; i < bitString.length; i += 4) {
-      const chunk = bitString.substring(i, i + 4)
-      const hexDigit = parseInt(chunk, 2).toString(16)
-      hexString += hexDigit
-    }
-
-    return hexString
+    onMaskUpdate(newBits)
+    // console.log(newBits)
   }
 
-  const hexString = generateHexStringFromBooleans(bits)
-  console.log(hexString)
 
   for (let i = 0; i < countOfBits; i++) {
     const partEndTime = addSeconds(partStartTime, intervalInSeconds - 1) // Subtract one second to make room for the next interval starting one second later
@@ -70,7 +60,6 @@ const SquareBoxesContainer: React.FC<SquareBoxesContainerProps> = ({
   return (
     <>
       <div className="flex flex-wrap justify-center items-center gap-4">{squareBoxes} </div>
-      <p className="text-sm font-bold">New Core Mask: {hexString}</p>
     </>
   )
 }
