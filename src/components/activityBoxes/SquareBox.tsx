@@ -19,20 +19,19 @@ const SquareBox: React.FC<SquareBoxProps> = ({
   const boxStyle: React.CSSProperties = {
     width: `${size[0]}px`,
     height: `${size[1]}px`,
-    backgroundColor: clicked ? 'green' : 'gray',
+    backgroundColor: clicked ? '#FA857B' : 'gray',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     border: '2px solid gray',
     cursor: 'pointer',
+    borderRadius: '10px'
   }
 
   return (
-    <div style={boxStyle} onClick={() => onClick(id)}>
+    <div style={boxStyle} onClick={() => onClick(id)} title={`Start: ${startTime} End: ${endTime}`}>
       <p className="text-sm font-bold">{id + 1}</p>
-      {/* <p>Start: {startTime}</p>
-            <p>End: {endTime}</p> */}
     </div>
   )
 }
