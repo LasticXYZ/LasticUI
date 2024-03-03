@@ -7,20 +7,11 @@ import { RegionIdProps } from '@/types/broker'
 import { useBrokerConstants } from '@/utils/broker'
 import { TxButtonProps, blockTimeToUTC, useInkathon, useTxButton } from '@poppyseed/lastic-sdk'
 import { FC, useEffect, useState } from 'react'
-
-
 import {
   CoreMask,
   generateHexStringFromBooleans,
   getCoreMaskFromBits,
 } from '../../../utils/common/commonFuncs'
-
-/**
- *
- * TODO.
- *
- *
- */
 
 interface InterlaceCoreModalProps {
   isOpen: boolean
@@ -68,11 +59,10 @@ const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regi
     const mask = getCoreMaskFromBits(bits)
     setSelectedMask(mask)
     const hexCoreMask = generateHexStringFromBooleans(bits)
-    setHexCoreMask('0x'+ hexCoreMask)
+    setHexCoreMask('0x' + hexCoreMask)
     console.log(hexCoreMask)
     console.log(mask)
   }
-
 
   /**
    * useEffect fetches the start and end times of the region and sets the regionTimeSpan state.
@@ -132,12 +122,23 @@ const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regi
           size={size}
           onMaskUpdate={updateMask}
         />
-        <div className="flex flex-col mb-4 mt-4">
-          <p className="text-lg mb-2">Region Begin: {regionId.begin}</p>
-          <p className="text-md">Current Core Mask: {regionId.mask}</p>
-          <p className="text-md">New   &nbsp;  Core &nbsp; Mask : {hexCoreMask}</p>
+
+        <div className="flex flex-col mt-8 border border-gray-9 bg-[#F6FDFF] rounded-2xl bg-opacity-60 p-4">
+          <table className="table-fixed">
+            <tbody>
+              <tr>
+                <td className="text-md font-semibold">Current Core Mask:</td>
+                <td className="text-md font-normal text-blue-500">{regionId.mask}</td>
+              </tr>
+              <tr>
+                <td className="text-md font-semibold">New Core Mask:</td>
+                <td className="text-md font-normal text-green-500">{hexCoreMask}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div className="flex justify-center pt-5">
+
+        <div className="flex flex-col items-center justify-center pt-10 ">
           <PrimaryButton
             title="Interlace Core"
             onClick={transaction}

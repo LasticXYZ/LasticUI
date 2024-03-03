@@ -12,7 +12,7 @@ const SquareBoxesContainer: React.FC<SquareBoxesContainerProps> = ({
   startTime,
   endTime,
   size,
-  onMaskUpdate
+  onMaskUpdate,
 }) => {
   const subIntervalDurationInMinutes = 8 // Minutes
   const intervalInSeconds = subIntervalDurationInMinutes * 60
@@ -37,7 +37,6 @@ const SquareBoxesContainer: React.FC<SquareBoxesContainerProps> = ({
     onMaskUpdate(newBits)
     // console.log(newBits)
   }
-
 
   for (let i = 0; i < countOfBits; i++) {
     const partEndTime = addSeconds(partStartTime, intervalInSeconds - 1) // Subtract one second to make room for the next interval starting one second later
