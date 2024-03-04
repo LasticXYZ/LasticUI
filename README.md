@@ -65,10 +65,6 @@ Both these features do not transfer any NFT's. In both cases the original NFT is
 
 After the hackathon we will continue this project, by intregrating the new features into Lastic. Also we will further research and build additional features that can improve user experience on Lastic.
 
-## Hackathon bounties
-
-- Best use of Polkadot
-
 ## Links
 
 - [Video demo]()
