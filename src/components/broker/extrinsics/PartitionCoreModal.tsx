@@ -144,13 +144,41 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
     <Modal isOpen={isOpen} onClose={onClose} title={`Split Core ${regionId.core} `}>
       <div className="flex flex-col p-4 ">
         <div className="pb-8">
-          <p className="font-semibold mb-4">Core details</p>
+          <div className="mx-10 mt-4 mb-24 relative">
+            <div className="w-full bg-pink-4 bg-opacity-20 h-3 rounded-full overflow-hidden">
+              <div className="bg-pink-4 bg-opacity-50 h-full" style={{ width: `${100}%` }}></div>
+            </div>
+
+            {/* Marker for Start */}
+            <div className="absolute top-0 -mt-1" style={{ left: `${0}%` }}>
+              <div className="w-5 h-5 bg-red-4 rounded-full mb-2"></div>
+              <div className="text-sm text-left +mt-12 -ml-8">
+                <p>{getDateString(regionTimeSpan.start.utc)}</p>
+                <p>{getTimeString(regionTimeSpan.start.utc)}</p>
+                <p>Region {regionTimeSpan.start.region}</p>
+                <p>Block {regionTimeSpan.end.blocknumber}</p>
+              </div>
+            </div>
+
+            {/* Marker for End */}
+            <div className="absolute top-0 -mt-1" style={{ left: '98%' }}>
+              <div className="w-5 h-5 bg-red-4 rounded-full mb-2"></div>
+              <div className="text-sm text-left text-nowrap +mt-12 -ml-20">
+                <p>{getDateString(regionTimeSpan.end.utc)}</p>
+                <p>{getTimeString(regionTimeSpan.end.utc)}</p>
+                <p>Region {regionTimeSpan.end.region}</p>
+                <p>Block {regionTimeSpan.end.blocknumber}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* <p className="font-semibold mb-4">Core details</p>
           <li>
             {getDateTimeString(regionTimeSpan.start.utc)} {' to '}
             {getDateTimeString(regionTimeSpan.end.utc)}
           </li>
           <li>{`Region range: ${regionTimeSpan.start.region} to ${regionTimeSpan.end.region}`}</li>
-          <li>{`Block range: ${regionTimeSpan.start.blocknumber} to ${regionTimeSpan.end.blocknumber}`}</li>
+          <li>{`Block range: ${regionTimeSpan.start.blocknumber} to ${regionTimeSpan.end.blocknumber}`}</li> */}
         </div>
 
         <p className="font-semibold mb-4">Where do you want to split?</p>
@@ -350,6 +378,39 @@ const getDateTimeString = (date: Date | null): string => {
   })
 
   return `${dateString}, ${timeString} (${timeZoneString})`
+}
+
+const getDateString = (date: Date | null): string => {
+  if (!date) {
+    return 'N/A'
+  }
+
+  return date.toLocaleDateString('en-US', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  })
+}
+
+const getTimeString = (date: Date | null): string => {
+  if (!date) {
+    return 'N/A'
+  }
+
+  const timeZoneString = date
+    .toLocaleTimeString('en-US', {
+      timeZoneName: 'short',
+    })
+    .split(' ')
+    .pop()
+
+  const timeString = date.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  })
+
+  return `${timeString} (${timeZoneString})`
 }
 
 /**
