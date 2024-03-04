@@ -57,15 +57,15 @@ export function hexStringToBoolArray(hex: string): boolean[] {
   return boolArray
 }
 
-export function setAllToTrue(boolArray: boolean[]): boolean[] {
-  const allTrueArray = new Array(boolArray.length).fill(true)
+export function setAllToTrue(boolArray: boolean[], allTrue: boolean): boolean[] {
+  const allTrueArray = new Array(boolArray.length).fill(!allTrue)
   return allTrueArray
 }
 
-export function setAlternateToTrue(boolArray: boolean[]): boolean[] {
-  const updatedArray = new Array(boolArray.length).fill(false)
+export function setAlternateToTrue(boolArray: boolean[], oddTrue: boolean): boolean[] {
+  const updatedArray = new Array(boolArray.length).fill(!oddTrue)
   for (let i = 0; i < updatedArray.length; i += 2) {
-    updatedArray[i] = true
+    updatedArray[i] = oddTrue
   }
 
   return updatedArray
@@ -77,11 +77,11 @@ export function toggleArrayValues(boolArray: boolean[]): boolean[] {
   return toggledArray
 }
 
-export function setFirstHalf(length: number): boolean[] {
+export function setHalf(length: number, first: boolean): boolean[] {
   const halfPoint = Math.floor(length / 2)
 
-  const firstHalf = new Array(halfPoint).fill(true)
-  const secondHalf = new Array(length - halfPoint).fill(false)
+  const firstHalf = new Array(halfPoint).fill(!first)
+  const secondHalf = new Array(length - halfPoint).fill(first)
 
   const resultArray = firstHalf.concat(secondHalf)
 
