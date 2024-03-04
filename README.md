@@ -43,7 +43,7 @@ Coretime in Polkadot can be split/partitioned at the region level. By calling th
 
 
 ### Interlacing coretime
-It's also possible to divide at a more detailed level, by applying a Core Mask. Each single region consists of 80 blocks. a Core Mask is an 80-bit bitmap, which indicates which of the 80 blocks can be utilized by the owner of this nft. By interlacing, a Core Mask is applied, which creates two new NFT's:
+It's also possible to divide a Coretime NFT by applying a Core Mask. A Core Mask is an 80-bit bitmap, which indicates which part of the Coretime can be utilized by the owner of this nft. By interlacing, a Core Mask is applied, which creates two new NFT's:
 - One with the Core Mask
 - Another one with the opposite Core Mask (XOR)
 
