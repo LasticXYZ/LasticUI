@@ -56,3 +56,34 @@ export function hexStringToBoolArray(hex: string): boolean[] {
   const boolArray = Array.from(binaryString).map((bit) => bit === '1')
   return boolArray
 }
+
+export function setAllToTrue(boolArray: boolean[]): boolean[] {
+  const allTrueArray = new Array(boolArray.length).fill(true)
+  return allTrueArray
+}
+
+export function setAlternateToTrue(boolArray: boolean[]): boolean[] {
+  const updatedArray = new Array(boolArray.length).fill(false)
+  for (let i = 0; i < updatedArray.length; i += 2) {
+    updatedArray[i] = true
+  }
+
+  return updatedArray
+}
+
+export function toggleArrayValues(boolArray: boolean[]): boolean[] {
+  const toggledArray = boolArray.map((value) => !value)
+
+  return toggledArray
+}
+
+export function setFirstHalf(length: number): boolean[] {
+  const halfPoint = Math.floor(length / 2)
+
+  const firstHalf = new Array(halfPoint).fill(true)
+  const secondHalf = new Array(length - halfPoint).fill(false)
+
+  const resultArray = firstHalf.concat(secondHalf)
+
+  return resultArray
+}

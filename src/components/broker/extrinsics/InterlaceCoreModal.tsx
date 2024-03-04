@@ -128,12 +128,12 @@ const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regi
           <table className="table-fixed">
             <tbody>
               <tr>
-                <td className="text-md font-semibold">Current Core Mask:</td>
-                <td className="text-md font-normal text-blue-500">{regionId.mask}</td>
+                <td className="w-1/2 text-md font-semibold">Current Core Mask:</td>
+                <td className="text-left text-md font-normal text-blue-500">{regionId.mask}</td>
               </tr>
               <tr>
-                <td className="text-md font-semibold">New Core Mask:</td>
-                <td className="text-md font-normal text-green-500">{hexCoreMask}</td>
+                <td className="w-1/2 text-md font-semibold">New Core Mask:</td>
+                <td className="text-left text-md font-normal text-green-500">{hexCoreMask}</td>
               </tr>
             </tbody>
           </table>
