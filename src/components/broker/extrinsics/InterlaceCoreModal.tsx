@@ -21,7 +21,8 @@ interface InterlaceCoreModalProps {
 
 const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regionId }) => {
   const { api, activeSigner, activeAccount, activeChain } = useInkathon()
-  const [pivot, setPivot] = useState('0xffffffffffffffffffff')
+  const [task, setTask] = useState(0)
+  const [finality, setFinality] = useState('Provisional')
 
   const txButtonProps: TxButtonProps = {
     api, 
@@ -29,10 +30,11 @@ const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regi
     attrs: {
       palletRpc: 'broker',
       callable: 'interlace',
-      inputParams: [regionId, pivot],
+      inputParams: [regionId, task, finality],
       paramFields: [
         { name: 'regionId', type: 'Object', optional: false },
-        { name: 'pivot', type: 'Number', optional: false },
+        { name: 'task', type: 'Number', optional: false },
+        { name: 'finality', type: 'String', optional: false },
       ],
     },
     type: 'SIGNED-TX',
