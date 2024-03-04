@@ -29,7 +29,7 @@ const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regi
   const { brokerConstants, isLoading: isConstantsLoading } = useBrokerConstants(api)
 
   const [selectedMask, setSelectedMask] = useState<CoreMask | undefined>(undefined)
-  const [hexCoreMask, setHexCoreMask] = useState<string | undefined>('0x00000000000000000000')
+  const [hexCoreMask, setHexCoreMask] = useState<string | undefined>('Not Available')
   const regionData = useRegionQuery()
   const [regionTimeSpan, setRegionTimeSpan] = useState<regionTimeSpan>({
     start: { region: 0, blocknumber: 0, utc: null },
@@ -121,6 +121,7 @@ const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regi
           endTime={endTime}
           size={size}
           onMaskUpdate={updateMask}
+          mask={regionId.mask}
         />
 
         <div className="flex flex-col mt-8 border border-gray-9 bg-[#F6FDFF] rounded-2xl bg-opacity-60 p-4">

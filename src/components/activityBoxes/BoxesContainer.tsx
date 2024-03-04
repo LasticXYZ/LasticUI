@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { hexStringToBoolArray } from '../../utils/common/commonFuncs'
 import SquareBox from './SquareBox'
 
 interface SquareBoxesContainerProps {
@@ -6,6 +7,7 @@ interface SquareBoxesContainerProps {
   endTime: Date
   size: [number, number]
   onMaskUpdate: (bits: Array<boolean>) => void
+  mask: string
 }
 
 const SquareBoxesContainer: React.FC<SquareBoxesContainerProps> = ({
@@ -13,6 +15,7 @@ const SquareBoxesContainer: React.FC<SquareBoxesContainerProps> = ({
   endTime,
   size,
   onMaskUpdate,
+  mask,
 }) => {
   const subIntervalDurationInMinutes = 8 // Minutes
   const intervalInSeconds = subIntervalDurationInMinutes * 60
@@ -20,7 +23,7 @@ const SquareBoxesContainer: React.FC<SquareBoxesContainerProps> = ({
   const countOfBits = 80
 
   // Initialize an array of n bits set to 0 // its core-mask bits
-  const [bits, setBits] = useState<Array<boolean>>(new Array(countOfBits).fill(false))
+  const [bits, setBits] = useState<Array<boolean>>(hexStringToBoolArray(mask))
 
   const addSeconds = (date: Date, seconds: number) => new Date(date.getTime() + seconds * 1000)
   const formatTime = (date: Date) => date.toISOString().substring(0, 16).replace('T', ' ')

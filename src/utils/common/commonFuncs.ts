@@ -44,3 +44,15 @@ export const generateHexStringFromBooleans = (bools: Array<boolean>) => {
 
   return hexString
 }
+
+export function hexStringToBoolArray(hex: string): boolean[] {
+  const normalizedHex = hex.startsWith('0x') ? hex.substring(2) : hex
+  const binaryString = Array.from(normalizedHex)
+    .map(
+      // Convert each hex digit to a 4-bit binary string
+      (hexDigit) => parseInt(hexDigit, 16).toString(2).padStart(4, '0'),
+    )
+    .join('')
+  const boolArray = Array.from(binaryString).map((bit) => bit === '1')
+  return boolArray
+}
