@@ -3,8 +3,7 @@ import {
   hexStringToBoolArray,
   setAllToTrue,
   setAlternateToTrue,
-  setFirstHalf,
-  toggleArrayValues,
+  setHalf,
 } from '../../utils/common/commonFuncs'
 import SquareBox from './SquareBox'
 
@@ -30,6 +29,9 @@ const SquareBoxesContainer: React.FC<SquareBoxesContainerProps> = ({
 
   // Initialize an array of n bits set to 0 // its core-mask bits
   const [bits, setBits] = useState<Array<boolean>>(hexStringToBoolArray(mask))
+  const [oddTrue, setOddTrue] = useState<boolean>(false)
+  const [firstHalfTrue, setFirstHalfTrue] = useState<boolean>(false)
+  const [allTrue, setAllTrue] = useState<boolean>(false)
 
   const addSeconds = (date: Date, seconds: number) => new Date(date.getTime() + seconds * 1000)
   const formatTime = (date: Date) => date.toISOString().substring(0, 16).replace('T', ' ')
@@ -48,25 +50,22 @@ const SquareBoxesContainer: React.FC<SquareBoxesContainerProps> = ({
   }
 
   const handleSetAllToTrue = () => {
-    const updatedBits = setAllToTrue(bits)
+    const updatedBits = setAllToTrue(bits, allTrue)
+    setAllTrue(!allTrue)
     setBits(updatedBits)
     onMaskUpdate(updatedBits)
   }
 
-  const handleToggleBits = () => {
-    const updatedBits = toggleArrayValues(bits)
-    setBits(updatedBits)
-    onMaskUpdate(updatedBits)
-  }
-
-  const handleSetFirstHalfToTrue = () => {
-    const updatedBits = setFirstHalf(bits.length)
+  const handleSetHalfToTrue = () => {
+    const updatedBits = setHalf(bits.length, firstHalfTrue)
+    setFirstHalfTrue(!firstHalfTrue)
     setBits(updatedBits)
     onMaskUpdate(updatedBits)
   }
 
   const handleSetAlternateToTrue = () => {
-    const updatedBits = setAlternateToTrue(bits)
+    const updatedBits = setAlternateToTrue(bits, oddTrue)
+    setOddTrue(!oddTrue)
     setBits(updatedBits)
     onMaskUpdate(updatedBits)
   }
@@ -103,28 +102,21 @@ const SquareBoxesContainer: React.FC<SquareBoxesContainerProps> = ({
           className="rounded-ful font-black rounded-2xl bg-pink-2 hover:bg-pink-4 border border-gray-8 text-xs inline-flex items-center justify-center p-2 text-center text-black hover:bg-primary-800 focus:ring-4 focus:ring-primary-3"
           onClick={handleSetAllToTrue}
         >
-          Set All to True
+          Set/Clear All
         </button>
 
         <button
           className="rounded-ful font-black rounded-2xl bg-pink-2 hover:bg-pink-4 border border-gray-8 text-xs inline-flex items-center justify-center p-2 text-center text-black hover:bg-primary-800 focus:ring-4 focus:ring-primary-3"
-          onClick={handleSetFirstHalfToTrue}
+          onClick={handleSetHalfToTrue}
         >
-          Set First Half to True
+          50/50
         </button>
 
         <button
           className="rounded-ful font-black rounded-2xl bg-pink-2 hover:bg-pink-4 border border-gray-8 text-xs inline-flex items-center justify-center p-2 text-center text-black hover:bg-primary-800 focus:ring-4 focus:ring-primary-3"
           onClick={handleSetAlternateToTrue}
         >
-          Set Alternate to True
-        </button>
-
-        <button
-          className="rounded-ful font-black rounded-2xl bg-pink-2 hover:bg-pink-4 border border-gray-8 text-xs inline-flex items-center justify-center p-2 text-center text-black hover:bg-primary-800 focus:ring-4 focus:ring-primary-3"
-          onClick={handleToggleBits}
-        >
-          Toggle Bits
+          Alternating
         </button>
 
         <button
