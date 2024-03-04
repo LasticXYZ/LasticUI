@@ -48,17 +48,18 @@ It's also possible to divide a Coretime NFT by applying a Core Mask. A Core Mask
 
 Both these features do not transfer any NFT's. In both cases the original NFT is destroyed, and two new NFT's are minted to the original owner.
 
-## Visual Resources
-
-### Flow Chart:
-
-TODO
-<!-- Click on the image below to access the full-sized flow chart:
-
-[Click to visit Flow Chart](https://www.figma.com/file/aFn15lyvti5hqLJBNUDZlU/Lastic-Flow-Chart-%231?type=whiteboard&node-id=0%3A1&t=ZiWNv9gRsH68D5Km-1)
-
-![FLOW CHART](https://github.com/LasticXYZ/LasticUI/assets/30662672/a08dd7b3-bc14-4d51-9689-75bac7895b26) -->
-
+<p align="center">
+  <table>
+    <tr>
+      <td align="center"><strong>Splitting</strong></td>
+      <td align="center"><strong>Interlacing</strong></td>
+    </tr>
+    <tr>
+      <td><img src="screenshot-partition.png" width="100%" /></td>
+      <td><img src="screenshot-interlace.png" width="100%" /></td>
+    </tr>
+  </table>
+</p>
 
 ## Next steps
 
