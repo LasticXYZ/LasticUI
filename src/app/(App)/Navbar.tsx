@@ -46,7 +46,7 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
 
                         <p className="text-lg "> AND</p>
 
-                        <Link href="/second-company" className="font-bold flex items-center mb-4">
+                        <Link href="/" className="font-bold flex items-center mb-4">
                           <Image
                             src="/assets/Images/Logos/coresplitters-logo.png"
                             width={130}
