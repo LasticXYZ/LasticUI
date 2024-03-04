@@ -71,9 +71,8 @@ After the hackathon we will continue this project, by intregrating the new featu
 ## Links
 
 - [Video demo]()
-- [Presentation slides]()
-- [Vercel deployment]()
-
+- [Presentation slides](https://docs.google.com/presentation/d/1R3a4RzGgCAwP-xCRWhWLP3KRvVsGh-guHrSSnsNFQkk/edit?usp=sharing)
+- [Vercel deployment](https://coretime-splitters-ipopifsl3-arjanjohan.vercel.app)
 
 ## Team
 This project was build during Encode X Polkadot hackathon 2024 by:
