@@ -62,6 +62,11 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
   })
   let blocktimeRelay = RELAY_CHAIN_BLOCK_TIME / 1000
 
+  const pivotPercentage =
+    selectedPivotOffset && regionTimeSpan.end.region
+      ? (selectedPivotOffset / (regionTimeSpan.end.region - regionTimeSpan.start.region)) * 100
+      : 0
+
   /**
    * useEffect fetches the start and end times of the region and sets the regionTimeSpan state.
    */
@@ -146,24 +151,46 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
         <div className="pb-8">
           <div className="mx-10 mt-4 mb-24 relative">
             <div className="w-full bg-pink-4 bg-opacity-20 h-3 rounded-full overflow-hidden">
-              <div className="bg-pink-4 bg-opacity-50 h-full" style={{ width: `${100}%` }}></div>
+              <div
+                className="bg-pink-4 bg-opacity-50 h-full"
+                style={{ width: `${pivotPercentage}%` }}
+              ></div>
             </div>
 
             {/* Marker for Start */}
             <div className="absolute top-0 -mt-1" style={{ left: `${0}%` }}>
-              <div className="w-5 h-5 bg-red-4 rounded-full mb-2"></div>
+              <div className="w-5 h-5 bg-red-4 rounded-full mb-2">
+                <p className="absolute -mt-8 font-bold">Start</p>
+              </div>
               <div className="text-sm text-left +mt-12 -ml-8">
                 <p>{getDateString(regionTimeSpan.start.utc)}</p>
                 <p>{getTimeString(regionTimeSpan.start.utc)}</p>
                 <p>Region {regionTimeSpan.start.region}</p>
-                <p>Block {regionTimeSpan.end.blocknumber}</p>
+                <p>Block {regionTimeSpan.start.blocknumber}</p>
+              </div>
+            </div>
+
+            {/* Marker for Pivot */}
+            <div
+              className={`absolute top-0 -mt-1 ${pivotPercentage < 2 ? 'hidden' : ''}`}
+              style={{ left: `${pivotPercentage}%` }}
+            >
+              <div className="w-2 h-5 bg-red-4 rounded-full mb-4">
+                <p
+                  className={`absolute -mt-8 font-bold ${pivotPercentage < 10 || pivotPercentage > 90 ? 'hidden' : ''}`}
+                >
+                  Split
+                </p>
               </div>
             </div>
 
             {/* Marker for End */}
             <div className="absolute top-0 -mt-1" style={{ left: '98%' }}>
-              <div className="w-5 h-5 bg-red-4 rounded-full mb-2"></div>
-              <div className="text-sm text-left text-nowrap +mt-12 -ml-20">
+              <div className="w-5 h-5 bg-red-4 rounded-full mb-2">
+                <p className="absolute -mt-8 font-bold">End</p>
+              </div>
+
+              <div className="text-sm text-right text-nowrap +mt-12 -ml-24">
                 <p>{getDateString(regionTimeSpan.end.utc)}</p>
                 <p>{getTimeString(regionTimeSpan.end.utc)}</p>
                 <p>Region {regionTimeSpan.end.region}</p>
@@ -171,14 +198,6 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
               </div>
             </div>
           </div>
-
-          {/* <p className="font-semibold mb-4">Core details</p>
-          <li>
-            {getDateTimeString(regionTimeSpan.start.utc)} {' to '}
-            {getDateTimeString(regionTimeSpan.end.utc)}
-          </li>
-          <li>{`Region range: ${regionTimeSpan.start.region} to ${regionTimeSpan.end.region}`}</li>
-          <li>{`Block range: ${regionTimeSpan.start.blocknumber} to ${regionTimeSpan.end.blocknumber}`}</li> */}
         </div>
 
         <p className="font-semibold mb-4">Where do you want to split?</p>
