@@ -231,13 +231,8 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
                       setSelectedPivotOffset(pivot.timeslice - regionTimeSpan.start.region)
                     }
                   >
-                    <Border className="px-6 py-4 hover:bg-pink-1 hover:cursor-pointer">
-                      <div>
-                        <div className="uppercase font-unbounded uppercase tracking-wide text-md text-indigo-500 font-semibold">
-                          Pivot at region {pivot.timeslice}
-                        </div>
-                      </div>
-                      <div className="mx-auto pt-4 flex flex-row items-center justify-between overflow-hidden">
+                    <Border className="flex justify-center py-3 hover:bg-pink-1 hover:cursor-pointer">
+                      <div className="mx-auto flex flex-row items-center justify-between overflow-hidden">
                         <div className="px-5">
                           <Image
                             src="/assets/Images/core1.png"
@@ -246,10 +241,13 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
                             height={60}
                           />
                         </div>
+
                         <div className="flex w-full text-lg flex-col px-5items-start justify-center">
-                          <div className="flex flex-row text-gray-12 p-1 ">
-                            <p className="px-2">{getDateTimeString(pivot.utc)}</p>
+                          <div className="uppercase font-unbounded tracking-wide text-md text-indigo-500 font-semibold">
+                            Pivot at region {pivot.timeslice}
                           </div>
+
+                          <p className="text-gray-12 text-md">{getDateTimeString(pivot.utc)}</p>
                         </div>
                       </div>
                     </Border>
