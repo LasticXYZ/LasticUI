@@ -46,14 +46,14 @@ Both these features do not transfer any NFT's. In both cases the original NFT is
 In these new features, we focus on providing the best user experience. In the screenshots below it is easy to see how user's are expected to split or change frequency. During the hackathon we got lots of feedback from the Lastic team, which helped us improve the UI a lot!
 
 <p align="center">
-  <table>
-    <tr>
-      <td align="center"><strong>Split</strong></td>
-      <td align="center"><strong>Change frequency</strong></td>
+  <table style="width: 100%; table-layout: fixed;">
+      <tr>
+      <td align="center" style="width: 50%;"><strong>Split</strong></td>
+      <td align="center" style="width: 50%;"><strong>Change frequency</strong></td>
     </tr>
     <tr>
-      <td><img src="screenshot-split.png" width="100%" /></td>
-      <td><img src="screenshot-change-frequency.png" width="100%" /></td>
+      <td><img src="screenshot-split.png"/></td>
+      <td><img src="screenshot-change-frequency.png"/></td>
     </tr>
   </table>
 </p>
