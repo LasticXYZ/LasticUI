@@ -8,11 +8,6 @@ Agile Coretime is set to debut on Polkadot, introducing a new system that optimi
 
 ⚙️ Built using [Next.js](https://nextjs.org/), uses pnpm and Tailwind css.
 
-<!-- - 💸 **High-Efficiency Liquidity Pools**: Maximize your returns with our unique liquidity pool structure.
-- 🤑 **Robust Fee Structure**: Benefit from our competitive 3% fee, optimized to reward liquidity providers generously.
-- 🗄️ **Advanced Storage Solutions**: Utilize our dual mapping system for efficient and secure asset management.
-- 🌊 **Smart Pool Management**: Experience seamless pool creation, modification, and destruction, ensuring optimal operational efficiency. -->
-
 ## 🚀 Quick Start
 
 ## Getting Started
@@ -60,6 +55,18 @@ Both these features do not transfer any NFT's. In both cases the original NFT is
     </tr>
   </table>
 </p>
+
+## Testing instructions
+
+Want to try it out? Follow these steps
+1. Go to our deployed dapp [here](https://polkadot-coretime-splitters.vercel.app/).
+2. Connect your favorite Polkadot wallet.
+3. Buy a core on the [Coretime Sales page](https://polkadot-coretime-splitters.vercel.app/bulkcore1) on our dapp.
+4. Navigate to [My Cores page](https://polkadot-coretime-splitters.vercel.app/my-cores) and click on the core you just bough 
+5. Scroll down a bit and select either *Interlace* or *Split*.
+6. Decide how to split or interlace.
+7. Click the button and confirm the transaction in your wallet.
+8. Go back to the [My Cores page](https://polkadot-coretime-splitters.vercel.app/my-cores) to see the results!
 
 ## Next steps
 
