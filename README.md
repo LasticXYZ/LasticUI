@@ -52,8 +52,8 @@ In these new features, we focus on providing the best user experience. In the sc
       <td align="center"><strong>Change frequency</strong></td>
     </tr>
     <tr>
-      <td><img src="screenshot-partition.png" width="100%" /></td>
-      <td><img src="screenshot-interlace.png" width="100%" /></td>
+      <td><img src="screenshot-split.png" width="100%" /></td>
+      <td><img src="screenshot-change-frequency.png" width="100%" /></td>
     </tr>
   </table>
 </p>
