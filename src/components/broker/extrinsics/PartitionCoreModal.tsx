@@ -137,6 +137,9 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
           relayApi,
         )
         setPivotOptions(pivots)
+        if (pivots.length > 0) {
+          setSelectedPivotOffset(pivots[0].timeslice - regionTimeSpan.start.region)
+        }
       } catch (error) {
         console.error('Error finding closest pivots:', error)
       }
