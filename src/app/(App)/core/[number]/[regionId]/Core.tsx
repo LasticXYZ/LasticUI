@@ -26,18 +26,18 @@ import {
   useBalance,
   useInkathon,
 } from '@poppyseed/lastic-sdk'
-import { useEffect, useMemo, useState } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 
-export default function BrokerRegionData({
-  coreNb,
-  regionId,
-}: {
+interface BrokerRegionDataProps {
   coreNb: number
   regionId: number
-}) {
+  mask?: string
+}
+
+const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask }) => {
   const { activeAccount, relayApi, activeChain, api } = useInkathon()
   let { tokenSymbol, tokenDecimals } = useBalance(activeAccount?.address, true)
-  const region = useQuerySpecificRegion({ api, coreNb, regionId })
+  const region = useQuerySpecificRegion({ api, coreNb, regionId, mask })
 
   const currentBlockNumber = useCurrentBlockNumber(api)
 
@@ -320,3 +320,5 @@ export default function BrokerRegionData({
     </>
   )
 }
+
+export default BrokerRegionData
