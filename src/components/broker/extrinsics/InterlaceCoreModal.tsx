@@ -114,7 +114,7 @@ const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regi
   if (!isOpen) return null
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={`Create mask for Core NB: ${regionId.core} `}>
+    <Modal isOpen={isOpen} onClose={onClose} title={`Change frequency for Core ${regionId.core} `}>
       <div className="flex flex-col p-4">
         <BoxesContainer
           startTime={startTime}
@@ -141,7 +141,7 @@ const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regi
 
         <div className="flex flex-col items-center justify-center pt-10 ">
           <PrimaryButton
-            title="Interlace Core"
+            title="Change frequency"
             onClick={transaction}
             disabled={!allParamsFilled()}
           />
