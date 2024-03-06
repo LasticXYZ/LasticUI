@@ -165,7 +165,7 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
               <div className="w-5 h-5 bg-red-4 rounded-full mb-2">
                 <p className="absolute -mt-8 font-bold">Start</p>
               </div>
-              <div className="text-sm text-left +mt-12 -ml-8">
+              <div className="text-sm text-left +mt-12 -ml-3">
                 <p>{getDateString(regionTimeSpan.start.utc)}</p>
                 <p>{getTimeString(regionTimeSpan.start.utc)}</p>
                 <p>Region {regionTimeSpan.start.region}</p>
@@ -193,9 +193,9 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
                 <p className="absolute -mt-8 font-bold">End</p>
               </div>
 
-              <div className="text-sm text-right text-nowrap +mt-12 -ml-24">
+              <div className="text-sm text-right text-nowrap +mt-12 -ml-28">
                 <p>{getDateString(regionTimeSpan.end.utc)}</p>
-                <p>{getTimeString(regionTimeSpan.end.utc)}</p>
+                <p className="text-nowrap">{getTimeString(regionTimeSpan.end.utc)}</p>
                 <p>Region {regionTimeSpan.end.region}</p>
                 <p>Block {regionTimeSpan.end.blocknumber}</p>
               </div>
@@ -214,6 +214,7 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
             orientation="landscape"
             value={selectedDateTime}
             onAccept={handleAccept}
+            format="MMM dd, yyyy HH:mm:ss"
           />
         </LocalizationProvider>
 
