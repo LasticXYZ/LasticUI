@@ -10,7 +10,9 @@ import { FC, useEffect, useState } from 'react'
 import {
   CoreMask,
   generateHexStringFromBooleans,
+  getComplementaryMaskBits,
   getCoreMaskFromBits,
+  hexStringToBoolArray,
 } from '../../../utils/common/commonFuncs'
 
 interface InterlaceCoreModalProps {
@@ -30,6 +32,10 @@ const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regi
 
   const [selectedMask, setSelectedMask] = useState<CoreMask | undefined>(undefined)
   const [hexCoreMask, setHexCoreMask] = useState<string | undefined>('Not Available')
+  const [hexCoreMaskComplementary, setHexCoreMaskComplementary] = useState<string | undefined>(
+    'Not Available',
+  )
+
   const regionData = useRegionQuery()
   const [regionTimeSpan, setRegionTimeSpan] = useState<regionTimeSpan>({
     start: { region: 0, blocknumber: 0, utc: null },
@@ -60,6 +66,10 @@ const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regi
     setSelectedMask(mask)
     const hexCoreMask = generateHexStringFromBooleans(bits)
     setHexCoreMask('0x' + hexCoreMask)
+    const maskBits2 = getComplementaryMaskBits(bits, hexStringToBoolArray(regionId.mask))
+    const hexCoreMaskComplementary = generateHexStringFromBooleans(maskBits2)
+    setHexCoreMaskComplementary('0x' + hexCoreMaskComplementary)
+
     console.log(hexCoreMask)
     console.log(mask)
   }
@@ -129,11 +139,21 @@ const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regi
             <tbody>
               <tr>
                 <td className="w-1/2 text-md font-semibold">Current Core Mask:</td>
-                <td className="text-left text-md font-normal text-blue-500">{regionId.mask}</td>
+                <td className="text-left text-md font-normal text-blue-500 font-mono">
+                  {regionId.mask}
+                </td>
               </tr>
               <tr>
-                <td className="w-1/2 text-md font-semibold">New Core Mask:</td>
-                <td className="text-left text-md font-normal text-green-500">{hexCoreMask}</td>
+                <td className="w-1/2 text-md font-semibold">New Mask(Core-part-1):</td>
+                <td className="text-left text-md font-normal text-green-500 font-mono">
+                  {hexCoreMask}
+                </td>
+              </tr>
+              <tr>
+                <td className="w-1/2 text-md font-semibold">New Core Mask(Core-part-2):</td>
+                <td className="text-left text-md font-normal text-green-500 font-mono">
+                  {hexCoreMaskComplementary}
+                </td>
               </tr>
             </tbody>
           </table>

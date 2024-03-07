@@ -87,3 +87,14 @@ export function setHalf(length: number, first: boolean): boolean[] {
 
   return resultArray
 }
+
+export function getComplementaryMaskBits(a: boolean[], b: boolean[]): boolean[] {
+  // Ensure arrays are of the same length to avoid errors
+  if (a.length !== b.length) {
+    throw new Error('Arrays must be of the same length')
+  }
+  //XOR
+  const result = a.map((element, index) => element !== b[index])
+
+  return result
+}
