@@ -43,7 +43,7 @@ It's also possible to divide a Coretime NFT by changing the frequency. The frequ
 
 Both these features do not transfer any NFT's. In both cases the original NFT is destroyed, and two new NFT's are minted to the original owner.
 
-In these new features, we focus on providing the best user experience. In the screenshots below it is easy to see how user's are expected to split or change frequency. During the hackathon we got lots of feedback from the Lastic team, which helped us improve the UI a lot!
+In these new features, we focus on providing the best user experience. In the screenshots below it is easy to see how users can split or change frequency. During the hackathon we got lots of feedback from the Lastic team, which helped us improve the UI a lot!
 
 <p align="center">
   <table style="width: 100%; table-layout: fixed;">
