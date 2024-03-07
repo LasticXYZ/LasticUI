@@ -36,7 +36,7 @@ Coretime in Polkadot can be split at the region level. By calling this function,
 - Region 1-25
 - Region 26-50
 
-### Change frequenc
+### Change frequency
 It's also possible to divide a Coretime NFT by changing the frequency. The frequency is defined as a 80-bit bitmap, which indicates which part of the Coretime can be utilized by the owner of this nft. By changing frequency two new coretime NFT's are created:
 - One with the selected frequency
 - Another one with the opposite frequency (XOR)
