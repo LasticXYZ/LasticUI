@@ -1,5 +1,6 @@
 'use client'
 import BoxesContainer from '@/components/activityBoxes/BoxesContainer'
+import Legend from '@/components/activityBoxes/Legend'
 import PrimaryButton from '@/components/button/PrimaryButton'
 import Modal from '@/components/modal/Modal'
 import { useRegionQuery } from '@/hooks/useRegionQuery'
@@ -35,6 +36,7 @@ const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regi
   const [hexCoreMaskComplementary, setHexCoreMaskComplementary] = useState<string | undefined>(
     'Not Available',
   )
+  const [isFreshCore, setIsFreshCore] = useState<boolean>(false)
 
   const regionData = useRegionQuery()
   const [regionTimeSpan, setRegionTimeSpan] = useState<regionTimeSpan>({
@@ -115,6 +117,14 @@ const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regi
     fetchTimes()
   }, [regionData, relayApi])
 
+  useEffect(() => {
+    if (hexStringToBoolArray(regionId.mask).indexOf(false) == -1) {
+      setIsFreshCore(true)
+    } else {
+      setIsFreshCore(false)
+    }
+  }, [regionId])
+
   // TODO: take the start time from core
   const startTime = regionTimeSpan.start.utc || new Date('2023-01-01T01:00:00')
   const endTime = regionTimeSpan.end.utc || new Date('2023-01-01T11:40:00')
@@ -125,6 +135,12 @@ const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regi
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={`Change frequency for Core ${regionId.core} `}>
+      <div className="flex justify-center space-x-4 mx-auto">
+        <Legend color="#FA857B" text="Core-1" />
+        <Legend color="gray" text="Core-2" />
+        {!isFreshCore && <Legend color="lightgray" text="Disabled" />}
+      </div>
+
       <div className="flex flex-col p-4">
         <BoxesContainer
           startTime={startTime}
