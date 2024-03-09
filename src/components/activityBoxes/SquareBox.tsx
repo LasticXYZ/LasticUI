@@ -6,6 +6,7 @@ interface SquareBoxProps {
   size: [number, number]
   onClick: (id: number) => void
   clicked: boolean
+  masked: boolean
 }
 
 const SquareBox: React.FC<SquareBoxProps> = ({
@@ -15,18 +16,19 @@ const SquareBox: React.FC<SquareBoxProps> = ({
   size,
   clicked,
   onClick,
+  masked,
 }) => {
   const boxStyle: React.CSSProperties = {
     width: `${size[0]}px`,
     height: `${size[1]}px`,
-    backgroundColor: clicked ? '#FA857B' : 'gray',
+    backgroundColor: masked? 'lightgray' : clicked ? '#FA857B' : 'gray',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     border: '2px solid gray',
     cursor: 'pointer',
-    borderRadius: '10px'
+    borderRadius: '10px',
   }
 
   return (

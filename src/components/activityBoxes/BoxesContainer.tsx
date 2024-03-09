@@ -43,7 +43,7 @@ const SquareBoxesContainer: React.FC<SquareBoxesContainerProps> = ({
   // Function to toggle bit value at a given index
   const toggleBit = (index: number) => {
     const newBits = [...bits]
-    newBits[index] = !newBits[index]
+    newBits[index] = !newBits[index] && hexStringToBoolArray(mask)[index]
     setBits(newBits)
     onMaskUpdate(newBits)
     // console.log(newBits)
@@ -57,14 +57,14 @@ const SquareBoxesContainer: React.FC<SquareBoxesContainerProps> = ({
   }
 
   const handleSetHalfToTrue = () => {
-    const updatedBits = setHalf(bits.length, firstHalfTrue)
+    const updatedBits = setHalf(hexStringToBoolArray(mask), firstHalfTrue)
     setFirstHalfTrue(!firstHalfTrue)
     setBits(updatedBits)
     onMaskUpdate(updatedBits)
   }
 
   const handleSetAlternateToTrue = () => {
-    const updatedBits = setAlternateToTrue(bits, oddTrue)
+    const updatedBits = setAlternateToTrue(bits, oddTrue, hexStringToBoolArray(mask))
     setOddTrue(!oddTrue)
     setBits(updatedBits)
     onMaskUpdate(updatedBits)
@@ -76,6 +76,7 @@ const SquareBoxesContainer: React.FC<SquareBoxesContainerProps> = ({
     onMaskUpdate(originalBits)
   }
 
+  const maskBits = hexStringToBoolArray(mask)
   for (let i = 0; i < countOfBits; i++) {
     const partEndTime = addSeconds(partStartTime, intervalInSeconds - 1)
 
@@ -87,6 +88,7 @@ const SquareBoxesContainer: React.FC<SquareBoxesContainerProps> = ({
         size={size}
         clicked={bits[i]}
         onClick={toggleBit}
+        masked={!maskBits[i]}
       />,
     )
 
@@ -98,13 +100,6 @@ const SquareBoxesContainer: React.FC<SquareBoxesContainerProps> = ({
     <>
       <div className="flex flex-wrap justify-center items-center gap-4">{squareBoxes} </div>
       <div className="flex justify-around mt-8">
-        <button
-          className="rounded-ful font-black rounded-2xl bg-pink-2 hover:bg-pink-4 border border-gray-8 text-xs inline-flex items-center justify-center p-2 text-center text-black hover:bg-primary-800 focus:ring-2 focus:ring-primary-3"
-          onClick={handleSetAllToTrue}
-        >
-          Set/Clear All
-        </button>
-
         <button
           className="rounded-ful font-black rounded-2xl bg-pink-2 hover:bg-pink-4 border border-gray-8 text-xs inline-flex items-center justify-center p-2 text-center text-black hover:bg-primary-800 focus:ring-2 focus:ring-primary-3"
           onClick={handleSetHalfToTrue}

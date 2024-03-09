@@ -62,11 +62,19 @@ export function setAllToTrue(boolArray: boolean[], allTrue: boolean): boolean[] 
   return allTrueArray
 }
 
-export function setAlternateToTrue(boolArray: boolean[], oddTrue: boolean): boolean[] {
-  const updatedArray = new Array(boolArray.length).fill(!oddTrue)
-  for (let i = 0; i < updatedArray.length; i += 2) {
-    updatedArray[i] = oddTrue
-  }
+export function setAlternateToTrue(
+  boolArray: boolean[],
+  oddTrue: boolean,
+  currentMask: boolean[],
+): boolean[] {
+  const updatedArray = boolArray.map((element, index) => {
+    // Determine if the current index should be set to true based on oddTrue
+    const shouldBeTrue = oddTrue ? index % 2 !== 0 : index % 2 === 0
+
+    // Return the new value based on shouldBeTrue and currentMask
+    // If shouldBeTrue and the corresponding mask bit is true, keep it true; otherwise, false
+    return shouldBeTrue && currentMask[index]
+  })
 
   return updatedArray
 }
@@ -77,13 +85,31 @@ export function toggleArrayValues(boolArray: boolean[]): boolean[] {
   return toggledArray
 }
 
-export function setHalf(length: number, first: boolean): boolean[] {
-  const halfPoint = Math.floor(length / 2)
+export function setHalf(currentMask: boolean[], first: boolean): boolean[] {
+  // Calculate the total number of true bits in currentMask
+  const trueCount = currentMask.filter((bit) => bit).length
 
-  const firstHalf = new Array(halfPoint).fill(!first)
-  const secondHalf = new Array(length - halfPoint).fill(first)
+  // Calculate the number of true bits to set based on the first parameter
+  const trueToSet = Math.floor(trueCount / 2)
 
-  const resultArray = firstHalf.concat(secondHalf)
+  // Initialize a counter for how many true bits we've set
+  let setCount = 0
+
+  // Create the result array by mapping over the currentMask
+  const resultArray = currentMask.map((bit, index) => {
+    if (!bit) {
+      // If the current mask bit is false, the result bit should also be false
+      return false
+    } else {
+      setCount++ // Increment setCount since we're setting this bit to true
+      // For true bits in the mask, decide based on setCount and trueToSet
+      if (setCount <= trueToSet) {
+        return first
+      } else {
+        return !first
+      }
+    }
+  })
 
   return resultArray
 }
