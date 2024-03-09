@@ -1,8 +1,8 @@
 'use client'
 
 import SubTitle from '../../../../samesections/SubTitle'
-import Core from '../Core'
-import PastTransactions from '../PastTransactions'
+import Core from './Core'
+import PastTransactions from './PastTransactions'
 
 export default function PageCore({
   params,
