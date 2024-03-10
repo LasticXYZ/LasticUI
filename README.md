@@ -72,13 +72,14 @@ Want to try it out? Follow these steps
 
 ## Next steps
 
-After the hackathon we will continue this project, by intregrating the new features into Lastic. Also we will further research and build additional features that can improve user experience on Lastic.
+After the hackathon we will continue this project, by intregrating the new features into Lastic. Also we will further research and build additional features that can improve user experience on Lastic. Lastic is excited about our new features, and they [tweeted](https://twitter.com/lastic_xyz/status/1766472377704083898) about our project during this hackathon.
 
 ## Links
 
 - [Video demo](https://www.loom.com/share/bbbaaaf7c22c4ec59c1ab3ba97a31382)
 - [Presentation slides](https://docs.google.com/presentation/d/1R3a4RzGgCAwP-xCRWhWLP3KRvVsGh-guHrSSnsNFQkk/edit?usp=sharing)
 - [Vercel deployment](https://polkadot-coretime-splitters.vercel.app/)
+- [Tweet about our project from Lastic](https://twitter.com/lastic_xyz/status/1766472377704083898)
 
 ## Team
 This project was build during Encode X Polkadot hackathon 2024 by:
