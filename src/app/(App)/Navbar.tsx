@@ -32,7 +32,7 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
                 >
                   <div className="flex-shrink-0 flex items-center justify-between space-x-5 border-b border-gray-9  pl-6 pr-2 py-6 mt-2">
                     {!isCollapsed && (
-                      <div className="flex flex-col gap-1 items-center">
+                      <div className="flex gap-1 items-center">
                         <Link href="/" className="font-bold flex items-center mb-4">
                           <Image
                             src="/assets/Images/Logos/lastic-logo.png"
@@ -42,21 +42,6 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
                             quality={100}
                             alt="Lastic Logo"
                           />
-                        </Link>
-
-                        <p className="text-lg "> AND</p>
-
-                        <Link href="/" className="font-bold flex items-center mb-4">
-                          <Image
-                            src="/assets/Images/Logos/coresplitters-logo.png"
-                            width={130}
-                            height="0"
-                            style={{ width: '3em', height: 'auto' }}
-                            quality={100}
-                            alt="CoretimeSplitters Logo"
-                            className="w-24 h-24 bg-black rounded-full object-cover"
-                          />
-                          <span className="pl-3 text-lg">CoretimeSplitters</span>{' '}
                         </Link>
 
                         {/* Chevron Icon */}
