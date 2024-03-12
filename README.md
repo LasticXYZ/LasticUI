@@ -1,12 +1,27 @@
-<div align="center">
-  <h1 align="center">🔄 CoretimeSplitters</h1>
-  <h3>Selling Coretime made easier</h3>
-  <img src="logo.png" alt="logo" />
-</div>
+# LasticUI
 
-Agile Coretime is set to debut on Polkadot, introducing a new system that optimizes blockspace allocation, enabling users to purchase and manage time-based assets efficiently. This innovation has spurred the creation of secondary marketplaces like Lastic, where users can trade Coretime in a user-friendly environment. Our hackathon project enhances Lastic by adding a feature for the splitting and changing frequency of Coretime NFTs, aiming to boost market efficiency. We're prioritizing user experience and interface design to ensure that dividing Coretime assets is straightforward for all users.
+Welcome to the **LasticUI** repository! This repository is dedicated to enabling seamless interaction with the Coretime Parachain.
 
-⚙️ Built using [Next.js](https://nextjs.org/), uses pnpm and Tailwind css.
+## 🌿 Branch Structure
+
+There are 3 main branches that are relevant:
+
+- `development` - this branch contains most recent development
+- `main` - this branch is features deployments that have yet to be tested and released to the public. The deployment of [main branch inside folder `./static-frontend`](https://github.com/LasticXYZ/LasticUI/tree/main/static_frontend) can be also accessed on [test.lastic.xyz](https://test.lastic.xyz/)
+- `stable` - features the stable branch that is tested, this is the branch that is deployed on [lastic.xyz](https://lastic.xyz/)
+
+## 📁 Directory Overview
+
+The repository is organized into two primary directories:
+
+1. `./static-frontend`:
+   - Contains the static frontend integrated with wallet connection functionality.
+   - Serves as the boilerplate code that will evolve into the official Lastic website.
+   - Design mirrors what's showcased in the `Figma UI`. As of now, the graphs are populated with mockup data.
+
+### 🚚 Repository Migration
+
+- `./core_chain_sdk` has moved! Check out [LasticSDK](https://github.com/LasticXYZ/lastic-sdk) for the SDK development tailored for Coretime chain interactions.
 
 ## 🚀 Quick Start
 
@@ -28,62 +43,43 @@ Set up the environmental variables, copy and rename `.env.local.example`.
 pnpm run dev
 ```
 
-## Features
-We forked the LasticUI repo from Lastic as starting point. We implemented 2 new features to improve the functionality of Lastic in a user-friendly manner. Both features and their inner workings are explained below.
+## Visual Resources
 
-### Splitting coretime
-Coretime in Polkadot can be split at the region level. By calling this function, a single Coretime NFT is divided in two Coretime NFT's at a certain point (pivot). For example, a Coretime NFT containing region 1-50 is split at pivot 26. This results in two new Coretime NFT's with these regions:
-- Region 1-25
-- Region 26-50
+### Flow Chart:
 
-### Change frequency
-It's also possible to divide a Coretime NFT by changing the frequency. The frequency is defined as a 80-bit bitmap, which indicates which part of the Coretime can be utilized by the owner of this nft. By changing frequency two new coretime NFT's are created:
-- One with the selected frequency
-- Another one with the opposite frequency (XOR)
+Click on the image below to access the full-sized flow chart:
 
-Both these features do not transfer any NFT's. In both cases the original NFT is destroyed, and two new NFT's are minted to the original owner.
+[Click to visit Flow Chart](https://www.figma.com/file/aFn15lyvti5hqLJBNUDZlU/Lastic-Flow-Chart-%231?type=whiteboard&node-id=0%3A1&t=ZiWNv9gRsH68D5Km-1)
 
-In these new features, we focus on providing the best user experience. In the screenshots below it is easy to see how users can split or change frequency. During the hackathon we got lots of feedback from the Lastic team, which helped us improve the UI a lot!
+![FLOW CHART](https://github.com/LasticXYZ/LasticUI/assets/30662672/a08dd7b3-bc14-4d51-9689-75bac7895b26)
 
-<p align="center">
-  <table style="width: 100%; table-layout: fixed;">
-      <tr>
-      <td align="center" style="width: 50%;"><strong>Split</strong></td>
-      <td align="center" style="width: 50%;"><strong>Change frequency</strong></td>
-    </tr>
-    <tr>
-      <td><img src="screenshot-split.png"/></td>
-      <td><img src="screenshot-change-frequency.png"/></td>
-    </tr>
-  </table>
-</p>
+### Figma UI:
 
-## Testing instructions
+After launching, navigate to Options > Fit Width for the best view.
+[Click to visit Figma UI](https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fproto%2FYzHexLzhb9Q4FPkM19cl1y%2FLastic%3Fpage-id%3D0%253A1%26type%3Ddesign%26node-id%3D203-897%26viewport%3D1012%252C165%252C0.06%26t%3DFBfVL9tIBH4OQJ1A-1%26scaling%3Dmin-zoom%26starting-point-node-id%3D203%253A897%26mode%3Ddesign)
 
-Want to try it out? Follow these steps
-1. Go to our deployed dapp [here](https://polkadot-coretime-splitters.vercel.app/).
-2. Connect your favorite Polkadot wallet.
-3. Buy a core on the [Coretime Sales page](https://polkadot-coretime-splitters.vercel.app/bulkcore1) on our dapp.
-4. Navigate to [My Cores page](https://polkadot-coretime-splitters.vercel.app/my-cores) and click on the core you just bough 
-5. Scroll down a bit and select either *Change frequency* or *Split*.
-6. Decide how to split or change frequency.
-7. Click the button and confirm the transaction in your wallet.
-8. Go back to the [My Cores page](https://polkadot-coretime-splitters.vercel.app/my-cores) to see the results!
+![FIGMA UI](https://github.com/LasticXYZ/LasticUI/assets/30662672/442e1f73-8bd9-48a2-8139-1057ec2dddd1)
 
-## Next steps
+## Articles
 
-After the hackathon we will continue this project, by intregrating the new features into Lastic. Also we will further research and build additional features that can improve user experience on Lastic. Lastic is excited about our new features, and they [tweeted](https://twitter.com/lastic_xyz/status/1766472377704083898) about our project during this hackathon.
+Articles to check out:
 
-## Links
+- [Unlocking the Future of Blockspace](https://medium.com/lastic-marketplace/unlocking-the-future-of-blockspace-introducing-lastic-9036b9d6637)
+- [The Genesis of Lastic](https://medium.com/lastic-marketplace/the-genesis-of-lastic-a-coretime-marketplace-for-polkadot-75130e40306c)
+- [Simplifying RFC-1: Understanding Agile Coretime for the Polkadot Network](https://medium.com/lastic-marketplace/the-genesis-of-lastic-a-coretime-marketplace-for-polkadot-75130e40306c)
+- [Polkadot 2.0: A New Era of Decentralization](https://medium.com/lastic-marketplace/polkadot-2-0-a-new-era-of-decentralization-d5626a6e63e5)
+- [Unraveling Agile Coretime: Polkadot’s Innovative Resource Allocation](https://medium.com/lastic-marketplace/unraveling-agile-coretime-polkadots-innovative-resource-allocation-2c025d0daa59)
 
-- [Video demo](https://www.loom.com/share/bbbaaaf7c22c4ec59c1ab3ba97a31382)
-- [Presentation slides](https://docs.google.com/presentation/d/1R3a4RzGgCAwP-xCRWhWLP3KRvVsGh-guHrSSnsNFQkk/edit?usp=sharing)
-- [Vercel deployment](https://polkadot-coretime-splitters.vercel.app/)
-- [Tweet about our project from Lastic](https://twitter.com/lastic_xyz/status/1766472377704083898)
+# Lastic Static Frontend
 
-## Team
-This project was build during Encode X Polkadot hackathon 2024 by:
+This repository contains the boilerplate code for the Lastic website. The frontend is designed to integrate with wallet connection functionality and is based on the designs showcased in the `Figma UI`.
 
-- [Noah](https://www.linkedin.com/in/njoeris/)
-- [Gunjan](https://www.linkedin.com/in/gunjan321/)
-- [arjanjohan](https://x.com/arjanjohan/)
+Functionality:
+
+- Houses the static frontend with wallet connection features.
+- Will be further developed into the official Lastic website.
+- The design closely follows the `Figma UI`. Currently, the graphs use mockup data for demonstration.
+
+## Project Framework
+
+This project is built using [Next.js](https://nextjs.org/), uses pnpm and Tailwind css.
