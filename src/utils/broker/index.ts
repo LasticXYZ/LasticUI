@@ -21,10 +21,12 @@ export function useQuerySpecificRegion({
   api,
   coreNb,
   regionId,
+  mask,
 }: {
   api?: ApiPromise
   coreNb: number
   regionId: number
+  mask?: string
 }) {
   const [data, setData] = useState<Region | null>(null)
 
@@ -39,15 +41,30 @@ export function useQuerySpecificRegion({
             return { detail, owner }
           })
 
-          const filteredRegion = regions.find((region) =>
+          const filteredRegionsByNbAndRegion = regions.filter((region) =>
             region.detail.some(
               (detailItem) =>
                 parseInt(detailItem.core) === coreNb &&
                 detailItem.begin.replace(/,/g, '') === regionId.toString(),
             ),
           )
+         // console.log(`filteredRegionsByNbAndRegion`)
 
-          setData(filteredRegion || null)
+          if (mask) {
+            const filteredRegionsByMask = filteredRegionsByNbAndRegion.filter((region) =>
+              region.detail.some(
+                (detailItem) =>
+                  detailItem.mask === mask &&
+                  parseInt(detailItem.core) === coreNb &&
+                  detailItem.begin.replace(/,/g, '') === regionId.toString(),
+              ),
+            )
+            console.log(`filteredRegionsByMask`)
+            console.log(filteredRegionsByMask)
+            setData(filteredRegionsByMask[0] || null)
+          } else {
+            setData(filteredRegionsByNbAndRegion[0] || null)
+          }
         } catch (error) {
           console.error('Failed to fetch regions:', error)
         }

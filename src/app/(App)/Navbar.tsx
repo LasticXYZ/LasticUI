@@ -32,24 +32,27 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
                 >
                   <div className="flex-shrink-0 flex items-center justify-between space-x-5 border-b border-gray-9  pl-6 pr-2 py-6 mt-2">
                     {!isCollapsed && (
-                      <>
-                        <Link href="/" className="font-bold">
+                      <div className="flex gap-1 items-center">
+                        <Link href="/" className="font-bold flex items-center mb-4">
                           <Image
                             src="/assets/Images/Logos/lastic-logo.png"
                             width={130}
                             height="0"
                             style={{ width: '10em', height: 'auto' }}
                             quality={100}
-                            alt="lastic Logo"
+                            alt="Lastic Logo"
                           />
                         </Link>
+
+                        {/* Chevron Icon */}
                         <ChevronLeftIcon
                           className="h-4 w-5 hover:text-gray-12 cursor-pointer"
                           aria-hidden="true"
                           onClick={toggleSidebar}
                         />
-                      </>
+                      </div>
                     )}
+
                     {isCollapsed && (
                       <div className="flex flex-col items-center">
                         <ChevronRightIcon
