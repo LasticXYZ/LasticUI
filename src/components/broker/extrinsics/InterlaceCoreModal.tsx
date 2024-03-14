@@ -72,8 +72,8 @@ const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regi
     const hexCoreMaskComplementary = generateHexStringFromBooleans(maskBits2)
     setHexCoreMaskComplementary('0x' + hexCoreMaskComplementary)
 
-    console.log(hexCoreMask)
-    console.log(mask)
+    //console.log(hexCoreMask)
+    //console.log(mask)
   }
 
   /**
