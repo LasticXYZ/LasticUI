@@ -49,7 +49,6 @@ export function useQuerySpecificRegion({
             ),
           )
           console.log(`filteredRegionsByNbAndRegion`)
-          console.log(filteredRegionsByNbAndRegion)
 
           if (mask) {
             const filteredRegionsByMask = filteredRegionsByNbAndRegion.filter((region) =>
