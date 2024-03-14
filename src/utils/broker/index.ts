@@ -48,7 +48,7 @@ export function useQuerySpecificRegion({
                 detailItem.begin.replace(/,/g, '') === regionId.toString(),
             ),
           )
-          console.log(`filteredRegionsByNbAndRegion`)
+         // console.log(`filteredRegionsByNbAndRegion`)
 
           if (mask) {
             const filteredRegionsByMask = filteredRegionsByNbAndRegion.filter((region) =>
