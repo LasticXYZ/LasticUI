@@ -75,7 +75,7 @@ export function useQuerySpecificRegion({
     const intervalId = setInterval(fetchData, 5000)
 
     return () => clearInterval(intervalId)
-  }, [api, coreNb, regionId])
+  }, [api, coreNb, regionId, mask])
 
   return data
 }

@@ -106,7 +106,7 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
     }
 
     fetchTimes()
-  }, [regionData, relayApi])
+  }, [regionData, relayApi, activeAccount?.address, brokerConstants?.timeslicePeriod, regionId.begin, regionId.core])
 
   useEffect(() => {
     setPivotOptions([])
