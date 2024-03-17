@@ -7,7 +7,7 @@ const ModalTranasaction = (
   
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-        <div className="bg-white font-montserrat p-10 rounded-lg shadow-lg">
+        <div className="bg-white font-montserrat p-10 rounded-2xl shadow-lg">
           <p>{message}</p>
           <div className="flex justify-center mt-5">
             <svg aria-hidden="true" className="w-8 h-8 text-gray-12 animate-spin fill-pink-5" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">

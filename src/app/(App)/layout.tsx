@@ -3,7 +3,7 @@
 import './globals.css'
 //import type { Metadata } from 'next'
 import { env } from '@/config/environment'
-import { ArrowPathIcon, BoltIcon, HomeIcon, ShoppingCartIcon } from '@heroicons/react/24/outline'
+import { ArrowPathIcon, BoltIcon, HomeIcon, ShoppingCartIcon } from '@heroicons/react/24/solid'
 import { UseInkathonProvider } from '@poppyseed/lastic-sdk'
 import { Montserrat, Syncopate, Unbounded } from 'next/font/google'
 import Background from './Background'

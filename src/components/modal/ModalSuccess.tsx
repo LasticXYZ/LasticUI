@@ -5,7 +5,7 @@ const ModalSuccess = (
     if (!isVisible) return null;
   
     return (
-      <div className="fixed max-w-screen-sm font-montserrat top-5 right-5 bg-green-6 p-4 rounded-lg shadow-lg">
+      <div className="fixed max-w-screen-sm font-montserrat top-5 right-5 bg-green-6 p-4 rounded-2xl shadow-lg">
         <div className="pr-5">
           <p>{message}</p>
         </div>

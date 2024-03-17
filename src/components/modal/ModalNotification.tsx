@@ -8,14 +8,15 @@ interface ModalNotificationProps {
 }
 
 export const notificationTypes = {
-  success: 'success',
-  info: 'info',
-  danger: 'danger',
-  warn: 'warning',
+  success: 'bg-green-6',
+  info: 'bg-teal-3',
+  danger: 'bg-red-6',
+  warn: 'bg-yellow-2',
 }
 
 const ModalNotification: React.FC<ModalNotificationProps> = (
   { 
+    type,
     isVisible, 
     message, 
     onClose 
@@ -25,13 +26,15 @@ const ModalNotification: React.FC<ModalNotificationProps> = (
     if (isVisible) {
       timer = setTimeout(onClose, 5000); // Set timeout for 5 seconds
     }
-    return () => clearTimeout(timer); // Clear timeout on component unmount or if isVisible changes
+    return () => clearTimeout(timer);
   }, [isVisible, onClose]);
+
+  const bgColor: string = notificationTypes[type];
 
   if (!isVisible) return null;
 
   return (
-    <div className="fixed max-w-screen-sm font-montserrat top-5 right-5 bg-red-6 p-4 rounded-lg shadow-lg">
+    <div className={`${bgColor} fixed max-w-screen-sm font-montserrat top-5 right-5  p-4 rounded-2xl shadow-lg`}>
       <div className="pr-5">
         <p>{message}</p>
       </div>
