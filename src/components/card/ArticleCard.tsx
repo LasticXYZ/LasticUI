@@ -27,7 +27,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ imageUrl, title, link, pubDat
     <Border>
       <a href={link} className="block text-current no-underline">
         <div className="">
-          <img className="h-64 w-full object-cover rounded-t-lg" src={imageUrl} alt={title} ></img>
+          <img className="h-64 w-full object-cover rounded-t-lg" src={imageUrl} alt={title}></img>
           <div className="p-5">
             <h4 className="font-semibold font-unbounded uppercase">{title}</h4>
             <div className="w-10 h-1 my-3 rounded-full bg-pink-3"></div>

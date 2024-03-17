@@ -48,7 +48,7 @@ export function useQuerySpecificRegion({
                 detailItem.begin.replace(/,/g, '') === regionId.toString(),
             ),
           )
-         // console.log(`filteredRegionsByNbAndRegion`)
+          // console.log(`filteredRegionsByNbAndRegion`)
 
           if (mask) {
             const filteredRegionsByMask = filteredRegionsByNbAndRegion.filter((region) =>
@@ -75,7 +75,7 @@ export function useQuerySpecificRegion({
     const intervalId = setInterval(fetchData, 5000)
 
     return () => clearInterval(intervalId)
-  }, [api, coreNb, regionId])
+  }, [api, coreNb, regionId, mask])
 
   return data
 }

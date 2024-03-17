@@ -5,6 +5,8 @@ import { SideBarAccountName } from '@/components/web3/SideBarAccountName'
 import SupportedChains from '@/components/web3/SupportedChains'
 import { Disclosure } from '@headlessui/react'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
+import { LinkIcon } from '@heroicons/react/24/solid'
+import { useInkathon } from '@poppyseed/lastic-sdk'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { FC, useState } from 'react'
@@ -16,6 +18,7 @@ type NavbarProps = {
 
 const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
   const [isCollapsed, setIsCollapsed] = useState(false)
+  const { activeChain } = useInkathon()
 
   const toggleSidebar = () => setIsCollapsed(!isCollapsed)
 
@@ -83,10 +86,8 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
                         <Link
                           key={item.name}
                           href={item.href}
-                          className={` py-3 px-2 text-l flex flex-row items-center font-semibold transition duration-150 ease-in-out hover:text-teal-5 hover:bg-teal-1 hover:bg-opacity-60 hover:rounded-xl ${
-                            item.current
-                              ? 'text-gray-600 bg-gray-200'
-                              : 'text-gray-600 hover:bg-gray-100'
+                          className={` py-3 px-2 text-l flex flex-row items-center font-semibold transition duration-150 ease-in-out hover:text-teal-5 hover:bg-teal-1 hover:bg-opacity-60 hover:rounded-2xl ${
+                            item.current ? 'text-gray- bg-gray-2' : 'text-gray-19 hover:bg-gray-1'
                           }`}
                           aria-current={item.current ? 'page' : undefined}
                         >
@@ -99,12 +100,16 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
                   </div>
                   {!isCollapsed && (
                     <>
+                      <SideBarAccountName />
                       <div className="text-gray-8 border-t border-gray-9 mt-20 font-montserrat text-xs font-semibold px-4 pt-6">
-                        ACCOUNT
+                        CHAIN
                       </div>
                       <div className="mt-2 text-gray-18 flex flex-col px-2">
-                        <div className="ml-3">
-                          <SideBarAccountName />
+                        <div className="py-3 px-2 text-l italic text-gray-19 flex flex-row items-center font-semibold transition duration-150 ease-in-out">
+                          <span className="px-2">
+                            <LinkIcon className="h-5 w-5 stroke-3" aria-hidden="true" />
+                          </span>
+                          {activeChain?.name}
                         </div>
                       </div>
                     </>

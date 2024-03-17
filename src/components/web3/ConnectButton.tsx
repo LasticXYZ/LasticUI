@@ -5,8 +5,11 @@ import { encodeAddress } from '@polkadot/util-crypto'
 import {
   SubstrateWallet,
   SubstrateWalletPlatform,
-  allSubstrateWallets,
   isWalletInstalled,
+  nova,
+  polkadotjs,
+  subwallet,
+  talisman,
   useBalance,
   useInkathon,
 } from '@poppyseed/lastic-sdk'
@@ -14,7 +17,9 @@ import Link from 'next/link'
 import { FC, useState } from 'react'
 import { AiOutlineCheckCircle, AiOutlineDisconnect } from 'react-icons/ai'
 import { FiExternalLink } from 'react-icons/fi'
-import { AccountName } from './AccountName'; // Assuming AccountName is in the same directory
+import { AccountName } from './AccountName' // Assuming AccountName is in the same directory
+
+export const allWallets: SubstrateWallet[] = [talisman, polkadotjs, subwallet, nova]
 
 export interface ConnectButtonProps {}
 export const ConnectButton: FC<ConnectButtonProps> = () => {
@@ -26,7 +31,7 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
     removeTrailingZeros: true,
   })
   const [browserWallets] = useState(
-    allSubstrateWallets.filter((w) => w.platforms.includes(SubstrateWalletPlatform.Browser)),
+    allWallets.filter((w) => w.platforms.includes(SubstrateWalletPlatform.Browser)),
   )
   const isSSR = useIsSSR()
   const [openConnect, setOpenConnect] = useState(false)
@@ -46,7 +51,7 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
           </button>
 
           <WalletModal isOpen={openConnect} onClose={() => setOpenConnect(false)}>
-            <ul className="rounded-lg border border-gray-9 bg-white divide-y divide-gray-2">
+            <ul className="rounded-2xl border border-gray-9 bg-white divide-y divide-gray-2">
               {/* Installed Wallets */}
               {!isSSR &&
                 !activeAccount &&
@@ -60,8 +65,13 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
                         connect?.(undefined, undefined, w)
                         setChosenWallet(w)
                       }}
-                      className="p-3 cursor-pointer hover:bg-gray-1 transition duration-300"
+                      className="p-3 flex flex-row cursor-pointer hover:bg-gray-1 transition duration-300"
                     >
+                      <img
+                        src={w.logoUrls[0]}
+                        alt={w.name}
+                        className="w-6 h-6 mr-2 inline-block"
+                      ></img>
                       {w.name}
                     </li>
                   ) : (

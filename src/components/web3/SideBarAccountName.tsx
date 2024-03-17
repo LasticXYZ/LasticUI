@@ -1,7 +1,8 @@
-import { toShortAddress } from '@/utils/account/token'
+import { parseNativeTokenToHuman, toShortAddress } from '@/utils/account/token'
 import { SupportedChainId } from '@azns/resolver-core'
 import { useResolveAddressToDomain } from '@azns/resolver-react'
-import { useInkathon } from '@poppyseed/lastic-sdk'
+import { UserIcon, WalletIcon } from '@heroicons/react/24/solid'
+import { useBalance, useInkathon, useRelayBalance } from '@poppyseed/lastic-sdk'
 import { useMemo } from 'react'
 
 export const SideBarAccountName = () => {
@@ -17,18 +18,65 @@ export const SideBarAccountName = () => {
       debug: true,
     },
   )
-  //console.log("Address:", account.address);
-  //console.log("ss58Prefix:", activeChain?.ss58Prefix);
+  const { freeBalance, tokenSymbol, tokenDecimals } = useBalance(activeAccount?.address, true)
+  const { freeBalance: freeRelayBalance } = useRelayBalance(activeAccount?.address, true)
+
+  const coreBalance = parseNativeTokenToHuman({
+    paid: freeBalance?.toString(),
+    decimals: tokenDecimals,
+    reduceDecimals: 2,
+  })
+  const relayBalance = parseNativeTokenToHuman({
+    paid: freeRelayBalance?.toString(),
+    decimals: tokenDecimals,
+    reduceDecimals: 2,
+  })
+
+  if (!activeAccount) {
+    return null
+  }
 
   return (
-    <>
-      <div className="flex font-bold text-sm py-1">Connected to: {activeChain?.name}</div>
-      <div className="flex font-bold text-sm py-1">
-        Name: {primaryDomain || activeAccount?.name}
+    <div>
+      <div className="text-gray-8 border-t border-gray-9 mt-20 font-montserrat text-xs font-semibold px-4 pt-6">
+        ACCOUNT
       </div>
-      <div className="flex font-bold text-sm py-1">
-        Address: {toShortAddress(activeAccount?.address, 6)}
+      <div className="mt-2 text-gray-18 flex flex-col px-2">
+        <div className="py-3 px-2 text-l text-gray-19 flex flex-row items-center font-semibold transition duration-150 ease-in-out">
+          <span className="px-2">
+            <UserIcon className="h-5 w-5" aria-hidden="true" />
+          </span>
+          {primaryDomain || activeAccount?.name}
+        </div>
+        <div className="py-3 px-2 text-l text-gray-19 flex flex-row items-center font-semibold transition duration-150 ease-in-out">
+          <span className="px-2">
+            <WalletIcon className="h-5 w-5" aria-hidden="true" />
+          </span>
+          {toShortAddress(activeAccount?.address, 6)}
+        </div>
+
+        <div className="text-gray-8 border-t border-gray-9 mt-20 font-montserrat text-xs font-semibold px-4 pt-6">
+          BALANCES
+        </div>
+        <div className="mt-2 text-gray-18 flex flex-col px-2">
+          <table className="w-full text-md">
+            <tbody>
+              <tr>
+                <td className="py-1">Coretime Chain:</td>
+                <td className="text-right">
+                  {coreBalance} {tokenSymbol}
+                </td>
+              </tr>
+              <tr>
+                <td className="py-1">Relay Chain Balance:</td>
+                <td className="text-right">
+                  {relayBalance} {tokenSymbol}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </>
+    </div>
   )
 }

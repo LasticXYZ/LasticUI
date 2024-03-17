@@ -1,5 +1,5 @@
 import { joinClassNames } from '@/utils/helperFunc'
-import React, { FC, useState } from 'react'
+import { FC } from 'react'
 
 type SwitchDisplaysProps = {
   displayOptions: Array<{ key: string; value: string }>
@@ -27,13 +27,13 @@ const SwitchDisplays: FC<SwitchDisplaysProps> = ({
 
   return (
     <div className="flex items-center">
-      <ul className="flex bg-gray-23 rounded-xl">
+      <ul className="flex bg-gray-23 rounded-2xl">
         {displayOptions.map((option) => (
           <li
             key={option.key}
             className={joinClassNames(
               option.key === active
-                ? 'cursor-pointer bg-primary-8 rounded-xl text-center'
+                ? 'cursor-pointer bg-primary-8 rounded-2xl text-center'
                 : 'cursor-pointer mr-2 text-center',
               'cursor-pointer',
               className,

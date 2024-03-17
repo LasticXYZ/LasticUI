@@ -7,7 +7,7 @@ import React from 'react'
 interface CardProps {
   coreNumber: string
   size: string
-  cost: number
+  cost: string
   reward: string
   currencyCost: string
   currencyReward: string

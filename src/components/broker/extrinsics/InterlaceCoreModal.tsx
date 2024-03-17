@@ -115,7 +115,7 @@ const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regi
     }
 
     fetchTimes()
-  }, [regionData, relayApi])
+  }, [regionData, relayApi, activeAccount?.address, brokerConstants?.timeslicePeriod, regionId.begin, regionId.core])
 
   useEffect(() => {
     if (hexStringToBoolArray(regionId.mask).indexOf(false) == -1) {

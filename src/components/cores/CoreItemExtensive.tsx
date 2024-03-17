@@ -11,7 +11,7 @@ interface CardProps {
   coreNumber: string
   size: string
   phase: string
-  cost: number
+  cost: string
   reward: string
   currencyCost: string
   currencyReward: string
