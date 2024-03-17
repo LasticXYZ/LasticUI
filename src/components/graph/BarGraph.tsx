@@ -65,7 +65,9 @@ const BarGraph: React.FC<BarGraphProps> = ({ auctionIndices, dotAmounts }) => {
   return (
     <div className="flex flex-col justify-between">
       <div className="flex justify-start py-2 px-3">
-        <h5 className="text-black text-l font-unbounded uppercase px-3 font-light">Monthly PRICE PER CORE</h5>
+        <h5 className="text-black text-l font-unbounded uppercase px-3 font-light">
+          Monthly PRICE PER CORE
+        </h5>
       </div>
       <div className="px-5 py-3">
         <Bar data={data} height={200} options={options} />

@@ -1,5 +1,5 @@
-import { joinClassNames } from '@/utils/helperFunc';
-import { FC } from 'react';
+import { joinClassNames } from '@/utils/helperFunc'
+import { FC } from 'react'
 
 type SwitchDisplaysProps = {
   displayOptions: Array<{ key: string; value: string }>

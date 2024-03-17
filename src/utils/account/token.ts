@@ -9,9 +9,8 @@ export function parseNativeTokenToHuman({
 }) {
   const numberWithoutCommas = paid?.replace(/,/g, '')
   const number = parseInt(numberWithoutCommas ? numberWithoutCommas : '0', 10)
-  const result = number / 10 ** decimals;
-  return result.toFixed(reduceDecimals);
-
+  const result = number / 10 ** decimals
+  return result.toFixed(reduceDecimals)
 }
 
 export function toShortAddress(address?: string | null, howMany: number = 6) {

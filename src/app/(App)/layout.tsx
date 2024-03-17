@@ -54,8 +54,6 @@ const montserrat = Montserrat({
   variable: '--font-montserrat',
 })
 
-
-
 // export const metadata: Metadata = {
 //   title: 'Lastic',
 //   description: 'Blockspace marketplace for Polkadot.',

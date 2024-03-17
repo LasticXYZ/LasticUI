@@ -11,7 +11,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React, { FC, useState } from 'react'
 
-
 type NavbarProps = {
   navigation: Array<{ name: string; href: string; icon: React.ReactElement; current: boolean }>
   children?: React.ReactNode
@@ -88,9 +87,7 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
                           key={item.name}
                           href={item.href}
                           className={` py-3 px-2 text-l flex flex-row items-center font-semibold transition duration-150 ease-in-out hover:text-teal-5 hover:bg-teal-1 hover:bg-opacity-60 hover:rounded-2xl ${
-                            item.current
-                              ? 'text-gray- bg-gray-2'
-                              : 'text-gray-19 hover:bg-gray-1'
+                            item.current ? 'text-gray- bg-gray-2' : 'text-gray-19 hover:bg-gray-1'
                           }`}
                           aria-current={item.current ? 'page' : undefined}
                         >

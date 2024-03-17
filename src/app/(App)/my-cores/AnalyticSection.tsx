@@ -5,12 +5,19 @@ import { useBalance, useInkathon, useRelayBalance } from '@poppyseed/lastic-sdk'
 const AnalyticSection = () => {
   const { activeAccount, activeChain } = useInkathon()
 
-  const {freeBalance, tokenSymbol, tokenDecimals} = useBalance(activeAccount?.address, true)
-  const {freeBalance: freeRelayBalance} = useRelayBalance(activeAccount?.address, true)
+  const { freeBalance, tokenSymbol, tokenDecimals } = useBalance(activeAccount?.address, true)
+  const { freeBalance: freeRelayBalance } = useRelayBalance(activeAccount?.address, true)
 
-  const coreBalance = parseNativeTokenToHuman({ paid: freeBalance?.toString(), decimals: tokenDecimals, reduceDecimals: 2 })
-  const relayBalance = parseNativeTokenToHuman({ paid: freeRelayBalance?.toString(), decimals: tokenDecimals, reduceDecimals: 2 })
-
+  const coreBalance = parseNativeTokenToHuman({
+    paid: freeBalance?.toString(),
+    decimals: tokenDecimals,
+    reduceDecimals: 2,
+  })
+  const relayBalance = parseNativeTokenToHuman({
+    paid: freeRelayBalance?.toString(),
+    decimals: tokenDecimals,
+    reduceDecimals: 2,
+  })
 
   if (!activeAccount || !activeChain) {
     return (

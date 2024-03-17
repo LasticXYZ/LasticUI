@@ -21,7 +21,7 @@ const SquareBox: React.FC<SquareBoxProps> = ({
   const boxStyle: React.CSSProperties = {
     width: `${size[0]}px`,
     height: `${size[1]}px`,
-    backgroundColor: masked? 'lightgray' : clicked ? '#FA857B' : 'gray',
+    backgroundColor: masked ? 'lightgray' : clicked ? '#FA857B' : 'gray',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',

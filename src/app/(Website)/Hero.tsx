@@ -81,7 +81,7 @@ const Hero = () => {
             height={692}
             quality={100}
             className="object-center justify-center items-center mx-auto lg:py-20 xl:object-scale-down"
-            />
+          />
         </div>
       </div>
     </div>

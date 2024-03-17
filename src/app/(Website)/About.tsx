@@ -49,7 +49,9 @@ export default function About() {
           <h1 className="text-2xl md:text-3xl font-unbounded uppercase font-bold text-center mb-4">
             Features
           </h1>
-          <h2 className="text-xl font-unbounded uppercase text-center mb-10">What sets Lastic apart </h2>
+          <h2 className="text-xl font-unbounded uppercase text-center mb-10">
+            What sets Lastic apart{' '}
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-5 gap-6">
             {features.map((feature, index) => (
               <AboutCard key={index} title={feature.title} description={feature.description} />

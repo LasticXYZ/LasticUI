@@ -11,20 +11,15 @@ import {
   subwallet,
   talisman,
   useBalance,
-  useInkathon
+  useInkathon,
 } from '@poppyseed/lastic-sdk'
 import Link from 'next/link'
 import { FC, useState } from 'react'
 import { AiOutlineCheckCircle, AiOutlineDisconnect } from 'react-icons/ai'
 import { FiExternalLink } from 'react-icons/fi'
-import { AccountName } from './AccountName'; // Assuming AccountName is in the same directory
+import { AccountName } from './AccountName' // Assuming AccountName is in the same directory
 
-export const allWallets: SubstrateWallet[] = [
-  talisman,
-  polkadotjs,
-  subwallet,
-  nova,
-]
+export const allWallets: SubstrateWallet[] = [talisman, polkadotjs, subwallet, nova]
 
 export interface ConnectButtonProps {}
 export const ConnectButton: FC<ConnectButtonProps> = () => {

@@ -11,7 +11,9 @@ const BlockspaceMarketplace = () => {
           </h1>
 
           {/* Subtitle */}
-          <h2 className="text-lg sm:text-xl font-unbounded uppercase text-center mb-5">What you can do</h2>
+          <h2 className="text-lg sm:text-xl font-unbounded uppercase text-center mb-5">
+            What you can do
+          </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 items-center justify-between gap-4 md:py-12">
