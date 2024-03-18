@@ -169,11 +169,7 @@ export function saleStatus(
   config: ConfigurationType,
   constant: BrokerConstantsType,
 ) {
-  const divide_by_2_or_not: 1 | 2 = typeOfChain === 'PARA' ? 2 : 1
-  const saleEnds: number =
-    saleInfo.saleStart +
-    (config.regionLength * constant.timeslicePeriod) / divide_by_2_or_not -
-    config.interludeLength
+  const saleEnds: number = saleInfo.saleStart + (config.regionLength * constant.timeslicePeriod) - config.interludeLength
 
   let statusMessage = ''
   let timeRemaining = ''

@@ -10,7 +10,7 @@ type SliderPropeTypes = {
 }
 
 const Slider: FC<SliderPropeTypes> = ({ currentBlockNumber, saleInfo, config, constants }) => {
-  const saleDuration = (config.regionLength * constants.timeslicePeriod) / 2
+  const saleDuration = (config.regionLength * constants.timeslicePeriod)
 
   // Calculate percentages for each period
   const startSalePercentage = (config.interludeLength / saleDuration) * 100
