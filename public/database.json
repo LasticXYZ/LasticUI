@@ -1,0 +1,44 @@
+{
+  "listings": [
+    {
+      "id": 1,
+      "coreNumber": 1,
+      "size": 1,
+      "cost": 100,
+      "reward": 0,
+      "owner": "0x1234567890",
+      "currencyCost": "DOT",
+      "currencyReward": "LASTIC",
+      "mask": "0x1234567890",
+      "begin": "172900",
+      "end": "119130"
+    },
+    {
+      "id": 2,
+      "coreNumber": 2,
+      "size": 1,
+      "cost": 100,
+      "reward": 0,
+      "owner": "0x1234567890",
+      "currencyCost": "DOT",
+      "currencyReward": "LASTIC",
+      "mask": "0x1234567890",
+      "begin": "172900",
+      "end": "119130"
+    },
+    {
+      "id": 3,
+      "coreNumber": 3,
+      "size": 1,
+      "cost": 100,
+      "reward": 0,
+      "owner": "0x1234567890",
+      "currencyCost": "DOT",
+      "currencyReward": "LASTIC",
+      "mask": "0x1234567890",
+      "begin": "172900",
+      "end": "119130"
+    },
+    null
+  ]
+}
