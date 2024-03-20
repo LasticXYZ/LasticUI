@@ -39,6 +39,18 @@
       "begin": "172900",
       "end": "119130"
     },
-    null
+    {
+      "id": 1710959926502,
+      "coreNumber": "60",
+      "size": 1,
+      "cost": 20,
+      "reward": 0,
+      "owner": "5HNJjkjo3KGA3R1DanS82R47tV7G3avEZ8GzLDW9CQtkNjVW",
+      "currencyCost": "ROC",
+      "currencyReward": "",
+      "mask": "0xaaaaaaaaaaaaaaaaaaa0",
+      "begin": "117870",
+      "end": ""
+    }
   ]
 }

@@ -58,6 +58,12 @@ const ListingsModal: FC<ListingsModalProps> = ({ isOpen, onClose, regionId }) =>
         },
         body: JSON.stringify({ listing: coreData }),
       });
+      console.log(response)
+      if(response.ok){
+            console.log("Yeai!")
+        }else{
+            console.log("Oops! Something is wrong.")
+        }
       
       if (!response.ok) throw new Error('Failed to update database');
       alert('Core listed for sale successfully'); // Replace with more user-friendly feedback

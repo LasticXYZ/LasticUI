@@ -1,6 +1,6 @@
 // app/api/updateDatabase/route.ts
 import fs from 'fs/promises';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
 
 interface Core {
@@ -17,31 +17,32 @@ interface Core {
   end: string;
 }
 
+interface SentData {
+  listing: Core;
+}
+
 interface Database {
   listings: Core[];
 }
 
-export async function POST(req: NextApiRequest, res: NextApiResponse){
-  try {
-    const file = path.join(process.cwd(), 'public', 'database.json');
-    const data = JSON.parse(await fs.readFile(file, 'utf8')) as Database;
+export async function POST(req: NextRequest, res: NextResponse){
 
-    // Here, ensure the incoming listing matches the Core interface
-    const newListing: Core = req.body.listing;
+    const data: SentData = await req.json()
+    console.log(data['listing'])
 
-    // Add the new listing to your database structure
-    data.listings.push(newListing);
+    // Specify the path to the JSON database
+    const filePath = path.join(process.cwd(), 'public', 'database.json'); // Only works server-side!
 
-    await fs.writeFile(file, JSON.stringify(data, null, 2), 'utf8');
-    res.status(200).json({ message: 'Database updated successfully' });
-  } catch (error) {
-    console.error('Error updating the database:', error);
-    res.status(500).json({ message: 'Error updating the database', error: (error as Error).message });
-  }
+    // Read the existing database
+    const fileContents = await fs.readFile(filePath, 'utf8');
+    const database: Database = JSON.parse(fileContents);
+
+    // Add the new listing
+    database.listings.push(data.listing);
+
+    // Write the updated database back to the file
+    await fs.writeFile(filePath, JSON.stringify(database, null, 2), 'utf8');
 
 
-  // const data  =await req.json()
-  // console.log(data)
-
-  // return NextResponse.json(data)
+    return NextResponse.json(data)
 }
