@@ -1,6 +1,5 @@
 interface InputFileProps {
     label: string;
-    accept: string;
     onChange: (file: File | null) => void;
     isError?: boolean;
   }

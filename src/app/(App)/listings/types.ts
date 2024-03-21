@@ -1,13 +1,56 @@
 // Copyright 2017-2024 @polkadot/app-accounts authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ActionStatus } from '@polkadot/react-components/Status/types';
+import { GenericCall } from '@polkadot/types';
 import type { Balance, Conviction } from '@polkadot/types/interfaces';
+import { Weight } from '@polkadot/types/interfaces';
 import type { KeyringAddress } from '@polkadot/ui-keyring/types';
 import type { BN } from '@polkadot/util';
-import type { HexString } from '@polkadot/util/types';
 
-export type { AppProps as ComponentProps } from '@polkadot/react-components/types';
+export interface MultisigStorageInfo {
+  approvals: string[]
+  deposit: number
+  depositor: string
+  when: { height: number; index: number }
+}
+
+export type IconSizeVariant = 'small' | 'medium' | 'large'
+
+export enum AccountBadge {
+  PURE = 'pure',
+  MULTI = 'multi'
+}
+
+export type HexString = `0x${string}`
+
+export interface SubmittingCall {
+  call?: GenericCall
+  method?: string
+  section?: string
+  weight?: Weight
+}
+
+
+export interface MultisigActionStatus {
+  action: string;
+  status: 'success' | 'error' | 'pending'; // Or any other status values you need
+  message?: string;
+  account?: string; // Include other fields as necessary
+}
+
+export interface MultisigProps extends ModalProps {
+  isOpen: boolean;
+  className?: string;
+  onClose: () => void;
+  onStatusChange: (status: MultisigActionStatus) => void; // Updated to use new type
+}
+
+export interface CreateOptions {
+  genesisHash?: HexString;
+  name: string;
+  tags?: string[];
+}
+
 
 export interface BareProps {
   className?: string;
@@ -15,7 +58,7 @@ export interface BareProps {
 
 export interface ModalProps {
   onClose: () => void;
-  onStatusChange: (status: ActionStatus) => void;
+  onStatusChange: (status: MultisigActionStatus) => void;
 }
 
 export interface Delegation {
@@ -45,7 +88,7 @@ export type PairType = 'ecdsa' | 'ed25519' | 'ed25519-ledger' | 'ethereum' | 'sr
 export interface CreateProps extends ModalProps {
   className?: string;
   onClose: () => void;
-  onStatusChange: (status: ActionStatus) => void;
+  onStatusChange: (status: MultisigActionStatus) => void;
   seed?: string;
   type?: PairType;
 }

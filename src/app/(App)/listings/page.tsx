@@ -51,9 +51,7 @@ const ParaIdPage = () => {
     <>
       <SubTitle subtitle='Cores for Sale' /> 
 
-      {isMultisigVisible && (
-        <Multisig onClose={closeMultisig} onStatusChange={() => {}} /> // Adjust props as needed
-      )}
+      <Multisig isOpen={isMultisigVisible} onClose={closeMultisig} onStatusChange={() => {}} />
 
       <section className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8 flex flex-col items-stretch">
         <div>

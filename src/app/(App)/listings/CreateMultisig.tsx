@@ -2,84 +2,18 @@
 // SPDX-License-Identifier: Apache-2.0
 
 //import type { ActionStatus } from '@polkadot/react-components/Status/types';
-import type { HexString } from '@polkadot/util/types';
-import type { ModalProps } from './types.js';
 
-import React, { useCallback, useState } from 'react';
+import { FC, useCallback } from 'react';
 
-//import { AddressMini, Button, IconLink, Input, InputAddressMulti, InputFile, InputNumber, Labelled, Modal, Toggle } from '@polkadot/react-components';
-import IconLink from '@/app/(App)/listings/IconLink.jsx';
-import InputComp from '@/app/(App)/listings/InputComp.jsx';
-import InputFile from '@/app/(App)/listings/InputFileProps.jsx';
-import InputNumber from '@/app/(App)/listings/InputNumber.jsx';
-import Labelled from '@/app/(App)/listings/Labelled.jsx';
-import ToggleComp from '@/app/(App)/listings/ToggleComp.jsx';
-import SecondaryButton from '@/components/button/SecondaryButton.jsx';
+import SecondaryButton from '@/components/button/SecondaryButton';
+import Modal from '@/components/modal/Modal';
 import { keyring } from '@polkadot/ui-keyring';
-import { BN, u8aToString } from '@polkadot/util';
-import { validateAddress } from '@polkadot/util-crypto';
+import { BN } from '@polkadot/util';
 import { useInkathon } from '@poppyseed/lastic-sdk';
+import AddressMini from './AddressMini';
 import ModalColumns from './Modal-Col';
-
+import { MultisigActionStatus, MultisigProps } from './types';
 //import useKnownAddresses from '../Accounts/useKnownAddresses.js';
-
-interface MultisigActionStatus {
-    action: string;
-    status: 'success' | 'error' | 'pending'; // Or any other status values you need
-    message?: string;
-    account?: string; // Include other fields as necessary
-  }
-  
-interface Props extends ModalProps {
-    className?: string;
-    onClose: () => void;
-    onStatusChange: (status: MultisigActionStatus) => void; // Updated to use new type
-}
-  
-interface CreateOptions {
-  genesisHash?: HexString;
-  name: string;
-  tags?: string[];
-}
-
-interface UploadedFileData {
-  isUploadedFileValid: boolean;
-  uploadedFileError: string;
-  uploadedSignatories: string[];
-}
-
-const MAX_SIGNATORIES = 16;
-const BN_TWO = new BN(2);
-
-function parseFile (file: Uint8Array): UploadedFileData {
-  let uploadError = '';
-  let items: string[];
-
-  try {
-    items = JSON.parse(u8aToString(file)) as string[];
-    if (!Array.isArray(items) || !items.length) {
-        throw new Error('JSON file should contain an array of signatories');
-      }
-  
-    //asserArray.isArray(items) && !!items.length, 'JSON file should contain an array of signatories';
-
-    items = items.filter((item) => validateAddress(item));
-    items = Array.from(new Set(items))  // remove duplicates
-
-    if (items.length > MAX_SIGNATORIES) {
-        throw new Error(`Maximum you can have ${MAX_SIGNATORIES} signatories`);
-      }
-    } catch (error) {
-    items = [];
-    uploadError = (error as Error).message ? (error as Error).message : (error as Error).toString();
-  }
-
-  return {
-    isUploadedFileValid: !uploadError,
-    uploadedFileError: uploadError,
-    uploadedSignatories: items
-  };
-}
 
 function createMultisig (signatories: string[], threshold: BN | number, { genesisHash, name, tags = [] }: CreateOptions, success: string): MultisigActionStatus {
   // we will fill in all the details below
@@ -87,6 +21,18 @@ function createMultisig (signatories: string[], threshold: BN | number, { genesi
 
   try {
     const result = keyring.addMultisig(signatories, threshold, { genesisHash, name, tags });
+    remarkCall
+      .signAndSend(selectedAccount.address, { signer: selectedSigner }, signCallBack)
+      .catch((error: Error) => {
+        setIsSubmitted(false)
+
+        addToast({
+          title: error.message,
+          type: 'error',
+          link: getSubscanExtrinsicLink(remarkCall.hash.toHex())
+        })
+      })
+
     const { address } = result.pair;
 
     status.account = address;
@@ -102,22 +48,16 @@ function createMultisig (signatories: string[], threshold: BN | number, { genesi
   return status;
 }
 
-export default function Multisig ({ onClose, onStatusChange }: Props): React.ReactElement<Props> {
+const Multisig: FC<MultisigProps> = ({ isOpen, onClose, onStatusChange }) => {
   const { api } = useInkathon();
   const isDevelopment = false;
   if (!api) {
     return <div>API not available</div>;
   }
-  const availableSignatories = ['5FLRCTbjEwumqTcMYsQ7t6E3DDCoQxCgNJeE4A9LYzUJ4RvB', '5D7wsEFq9rXS4cTAfZ8Uo1Dt8aTD3JTKjnHAEn3Ku4mNL1bJ', '5HNJjkjo3KGA3R1DanS82R47tV7G3avEZ8GzLDW9CQtkNjVW']
-  const [{ isNameValid, name }, setName] = useState({ isNameValid: false, name: '' });
-  const [{ isUploadedFileValid, uploadedFileError, uploadedSignatories }, setUploadedFile] = useState<UploadedFileData>({
-    isUploadedFileValid: true,
-    uploadedFileError: '',
-    uploadedSignatories: []
-  });
-  const [signatories, setSignatories] = useState<string[]>(['']);
-  const [showSignaturesUpload, setShowSignaturesUpload] = useState(false);
-  const [{ isThresholdValid, threshold }, setThreshold] = useState({ isThresholdValid: true, threshold: BN_TWO });
+  
+  const signatories = ['5FLRCTbjEwumqTcMYsQ7t6E3DDCoQxCgNJeE4A9LYzUJ4RvB', '5D7wsEFq9rXS4cTAfZ8Uo1Dt8aTD3JTKjnHAEn3Ku4mNL1bJ', '5HNJjkjo3KGA3R1DanS82R47tV7G3avEZ8GzLDW9CQtkNjVW']
+  const threshold = new BN(2);
+  const name = 'lastic-multisig-1';
 
   const _createMultisig = useCallback(
     (): void => {
@@ -130,64 +70,15 @@ export default function Multisig ({ onClose, onStatusChange }: Props): React.Rea
     [api.genesisHash, isDevelopment, name, onClose, onStatusChange, signatories, threshold]
   );
 
-  const _onChangeName = useCallback(
-    (name: string) => setName({ isNameValid: (name.trim().length >= 3), name }),
-    []
-  );
-
-  const _onChangeThreshold = useCallback(
-    (threshold: BN | undefined) =>
-      threshold && setThreshold({ isThresholdValid: threshold.gte(BN_TWO) && threshold.lten(signatories.length), threshold }),
-    [signatories]
-  );
-
-  const _onChangeFile = useCallback(
-    (file: Uint8Array) => {
-      const fileData = parseFile(file);
-
-      setUploadedFile(fileData);
-
-      if (fileData.isUploadedFileValid || uploadedSignatories.length) {
-        setSignatories(fileData.uploadedSignatories.length ? fileData.uploadedSignatories : ['']);
-      }
-    },
-    [uploadedSignatories]
-  );
-
-  const resetFileUpload = useCallback(
-    () => {
-      setUploadedFile({
-        isUploadedFileValid,
-        uploadedFileError,
-        uploadedSignatories: []
-      });
-    },
-    [uploadedFileError, isUploadedFileValid]
-  );
-
-  const _onChangeAddressMulti = useCallback(
-    (items: string[]) => {
-      resetFileUpload();
-      setSignatories(items);
-    },
-    [resetFileUpload]
-  );
-
-  const isValid = isNameValid && isThresholdValid;
+  if (!isOpen) return null
 
   return (
-    <div
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={`Create Multisig`}
     >
-        <div> Add Multisig</div>
       <div>
-        <ModalColumns>
-          <ToggleComp
-            label={'Upload JSON file with signatories'}
-            onChange={setShowSignaturesUpload}
-            value={showSignaturesUpload}
-          />
-        </ModalColumns>
-        {!showSignaturesUpload && (
           <ModalColumns
             hint={
               <>
@@ -196,79 +87,35 @@ export default function Multisig ({ onClose, onStatusChange }: Props): React.Rea
               </>
             }
           >
-            <InputAddressMulti
-              available={availableSignatories}
-              label='available signatories'
-              maxCount={MAX_SIGNATORIES}
-              onChange={_onChangeAddressMulti}
-              value={signatories}
-              help='Select signatories for the multisig wallet' // Example help text
-
-            />
+            <div>
+                {
+                    signatories.map((address) => (
+                        <AddressMini
+                            key={address}
+                            value={address}
+                            withSidebar={false}
+                        />
+                    ))
+                }
+            </div>
           </ModalColumns>
-        )}
-        {showSignaturesUpload && (
-          <ModalColumns hint={'Supply a JSON file with the list of signatories.'}>
-            <InputFile
-              className='full'
-              clearContent={!uploadedSignatories.length && isUploadedFileValid}
-              isError={!isUploadedFileValid}
-              label={'upload signatories list'}
-              onChange={_onChangeFile}
-              withLabel
-            />
-            {!!uploadedSignatories.length && (
-              <Labelled
-                label={'found signatories'}
-                labelExtra={(
-                  <IconLink
-                    icon='sync'
-                    label={'Reset'}
-                    onClick={resetFileUpload}
-                  />
-                )}
-              >
-                <div className='ui--Static ui dropdown selection'>
-                  {uploadedSignatories.map((address): React.ReactNode => (
-                    <div key={address}>
-                      <AddressMini
-                        value={address}
-                        withSidebar={false}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </Labelled>
-            )}
-            {uploadedFileError && (
-              <div>{uploadedFileError}</div>
-            )}
-          </ModalColumns>
-        )}
         <ModalColumns hint={'The threshold for approval should be less or equal to the number of signatories for this multisig.'}>
-          <InputNumber
-            isError={!isThresholdValid}
-            label={'threshold'}
-            onChange={_onChangeThreshold}
-            value={threshold}
-          />
-        </ModalColumns>
-        <ModalColumns hint={'The name is for unique identification of the account in your owner lists.'}>
-          <InputComp
-            autoFocus
-            value={name}
-            isError={!isNameValid}
-            label={'name'}
-            onChange={_onChangeName}
-            placeholder={'multisig name'}
-          />
+            <p>
+                Threshold: {threshold.toString()}
+            </p>
+            <p>
+                Name: {name}
+            </p>
         </ModalColumns>
       </div>
         <SecondaryButton
-          disabled={!isValid}
+          disabled={false}
           title='Create'
           onClick={_createMultisig}
         />
-    </div>
+    </Modal>
   );
 }
+
+
+export default Multisig;
