@@ -1,5 +1,6 @@
 'use client';
 
+import Multisig from '@/app/(App)/listings/CreateMultisig';
 import CoreItemPurchase from '@/components/cores/CoreItemPurchase';
 import { useEffect, useState } from 'react';
 import SubTitle from '../samesections/SubTitle';
@@ -25,6 +26,8 @@ interface Database {
 
 const ParaIdPage = () => {
   const [cores, setCores] = useState<Core[]>([]);
+  const [isMultisigVisible, setIsMultisigVisible] = useState(false); // State to control the visibility of the Multisig modal
+
 
   useEffect(() => {
     async function fetchCores() {
@@ -36,14 +39,27 @@ const ParaIdPage = () => {
     fetchCores().catch(console.error);
   }, []);
 
+  const openMultisig = () => {
+    setIsMultisigVisible(true);
+  };
+
+  const closeMultisig = () => {
+    setIsMultisigVisible(false);
+  };
+
   return (
     <>
       <SubTitle subtitle='Cores for Sale' /> 
+
+      {isMultisigVisible && (
+        <Multisig onClose={closeMultisig} onStatusChange={() => {}} /> // Adjust props as needed
+      )}
 
       <section className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8 flex flex-col items-stretch">
         <div>
           {cores.map((core) => (
             <div key={core.id} className="p-6">
+              <div onClick={openMultisig}> {/* Assign the openMultisig function to the onClick event */}
               <CoreItemPurchase
                 coreNumber={core.coreNumber.toString()}
                 size={core.size.toString()}
@@ -55,6 +71,7 @@ const ParaIdPage = () => {
                 begin={core.begin}
                 end={core.end}
               />
+              </div>
             </div>
           ))}
         </div>
