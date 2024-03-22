@@ -4,7 +4,11 @@ import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
 import { useEffect, useState } from 'react'
 
 type AssignmentItem = {
-  Task: string | number
+  Task: number
+}
+
+type AssignmentItemUnf = {
+  Task: string
 }
 
 type WorkplanAssignmentInfo = {
@@ -12,14 +16,14 @@ type WorkplanAssignmentInfo = {
   assignment: AssignmentItem | 'Pool'
 }
 
+type WorkplanAssignmentInfoUnf = {
+  mask: string
+  assignment: AssignmentItemUnf | 'Pool'
+}
+
 type WorkplanCoreInfo = {
   begin: number
   core: number
-}
-
-type WorkplanUnformatted = {
-  coreInfo: string[]
-  assignmentInfo: WorkplanAssignmentInfo[]
 }
 
 type Workplan = {
@@ -62,11 +66,12 @@ const useWorkplanQuery = () => {
             } else {
                 console.error("Unexpected coreInfoUnf structure:", coreInfoUnf);
             }
-            const assignmentInfo = value.toHuman() as WorkplanAssignmentInfo[]
-            assignmentInfo.map(info => {
+            const assignmentInfoUnf = value.toHuman() as WorkplanAssignmentInfoUnf[]
+            const assignmentInfo = assignmentInfoUnf.map(info => {
               if (typeof info.assignment === 'object') {
                 info.assignment.Task = parseFormattedNumber(info.assignment.Task)
               }
+              return info
             })
             return { coreInfo, assignmentInfo }
           })
@@ -95,9 +100,9 @@ export default function MyCores() {
 
   let filteredData = workplanData;
 
-  const task = undefined;
-  const core = undefined;
-  const begin = 121650;
+  const [task, setTask] = useState<number|null>(null);
+  const [core, setCore] = useState(null);
+  const [begin, setBegin] = useState(null);
 
   if (workplanData && filter !== 'pool') {
     filteredData = workplanData.filter(
@@ -109,7 +114,6 @@ export default function MyCores() {
   } else if (workplanData && filter === 'pool') {
     filteredData = workplanData.filter(plan => plan.assignmentInfo.some(info => info.assignment === 'Pool'));
   }
-  console.log('filteredData:', filteredData)
   
   if (!activeAccount || !activeChain) {
     return (
@@ -132,6 +136,29 @@ export default function MyCores() {
             <option value="tasks">Tasks</option>
             <option value="pool">Pool</option>
           </select>
+        </div>
+        <div className="pt-5 pl-10">
+          <input
+            type="number"
+            value={task}
+            onChange={(e) => setTask(e.target.value)}
+            placeholder="Enter Task"
+            className="mb-5 p-2 border rounded"
+          />
+          <input
+            type="number"
+            value={begin}
+            onChange={(e) => setBegin(e.target.value)}
+            placeholder="Enter Begin"
+            className="mb-5 p-2 border rounded"
+          />
+          <input
+            type="number"
+            value={core}
+            onChange={(e) => setCore(e.target.value)}
+            placeholder="Enter Core"
+            className="mb-5 p-2 border rounded"
+          />
         </div>
         <div>
           <ul>
