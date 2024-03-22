@@ -2,9 +2,9 @@
 import PrimaryButton from '@/components/button/PrimaryButton'
 import Modal from '@/components/modal/Modal'
 import { useBrokerConstants } from '@/utils/broker'
-import { FormControl, InputAdornment, InputLabel, OutlinedInput } from '@mui/material'
+import { FormControl, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material'
 import { TxButtonProps, useInkathon, useTxButton } from '@poppyseed/lastic-sdk'
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 
 interface PurchaseCreditsProps {
   isOpen: boolean
@@ -15,6 +15,13 @@ const PurchaseCreditsModal: FC<PurchaseCreditsProps> = ({ isOpen, onClose }) => 
   const { api, activeSigner, activeAccount, activeChain, relayApi } = useInkathon()
   const { brokerConstants } = useBrokerConstants(api)
   const [dotAmount, setDotAmount] = useState<number | undefined>(0)
+  const [receiver, setReceiver] = useState<string | undefined>(activeAccount?.address)
+
+  useEffect(() => {
+    if (!receiver) {
+      setReceiver(activeAccount?.address)
+    }
+  }, [activeAccount])
 
   const planck = activeChain?.testnet
     ? BigInt(1e12 * (dotAmount || 0)) // ROC to Planck conversion
@@ -28,7 +35,7 @@ const PurchaseCreditsModal: FC<PurchaseCreditsProps> = ({ isOpen, onClose }) => 
     attrs: {
       palletRpc: 'broker',
       callable: 'purchaseCredit',
-      inputParams: [planck, activeAccount?.address],
+      inputParams: [planck, receiver],
       paramFields: [
         { name: 'amount', type: 'number', optional: false },
         { name: 'beneficiary', type: 'Object', optional: false },
@@ -43,9 +50,20 @@ const PurchaseCreditsModal: FC<PurchaseCreditsProps> = ({ isOpen, onClose }) => 
   // console.log(api?.tx.broker.purchaseCredit)
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Purchase Credits">
+    <Modal
+      isOpen={isOpen}
+      onClose={() => {
+        setDotAmount(0)
+        setReceiver(activeAccount?.address)
+        onClose()
+      }}
+      title="Purchase Credits"
+    >
       <div className="flex flex-col p-4 ">
         <p className="font-semibold mb-4">{`How many ${tokenName}s do you want to spend?`}</p>
+        <p className="italic text-xs mb-4">
+          {'Note: Credits are non-transferable and non-refundable'}
+        </p>
 
         <FormControl sx={{ m: 1 }}>
           <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
@@ -58,11 +76,23 @@ const PurchaseCreditsModal: FC<PurchaseCreditsProps> = ({ isOpen, onClose }) => 
           />
         </FormControl>
 
+        <TextField
+          sx={{ m: 1 }}
+          label="Receiver Address"
+          value={receiver}
+          onChange={(e) => setReceiver(e.target.value)}
+          helperText={
+            activeAccount?.address && receiver === activeAccount?.address
+              ? 'Your wallet address'
+              : 'Be aware: Not your wallet address'
+          }
+        />
+
         <div className="flex flex-col items-center justify-center pt-10 ">
           <PrimaryButton
             title="Purchase"
             onClick={transaction}
-            disabled={!allParamsFilled() || !dotAmount || dotAmount <= 0}
+            disabled={!allParamsFilled() || !dotAmount || dotAmount <= 0 || !receiver}
           />
           <div className="mt-5 text-sm text-gray-16 ">{status}</div>
         </div>
