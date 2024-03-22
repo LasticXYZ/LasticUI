@@ -16,7 +16,11 @@ const PurchaseCreditsModal: FC<PurchaseCreditsProps> = ({ isOpen, onClose }) => 
   const { brokerConstants } = useBrokerConstants(api)
   const [dotAmount, setDotAmount] = useState<number | undefined>(0)
 
-  const planck: bigint = BigInt(1e10 * (dotAmount || 0))
+  const planck = activeChain?.testnet
+    ? BigInt(1e12 * (dotAmount || 0)) // ROC to Planck conversion
+    : BigInt(1e10 * (dotAmount || 0)) // DOT to Planck conversion
+
+  const tokenName = activeChain?.testnet ? 'ROC' : 'DOT'
 
   const txButtonProps: TxButtonProps = {
     api,
@@ -41,7 +45,7 @@ const PurchaseCreditsModal: FC<PurchaseCreditsProps> = ({ isOpen, onClose }) => 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Purchase Credits">
       <div className="flex flex-col p-4 ">
-        <p className="font-semibold mb-4">How many DOTs do you want to spend?</p>
+        <p className="font-semibold mb-4">{`How many ${tokenName}s do you want to spend?`}</p>
 
         <FormControl sx={{ m: 1 }}>
           <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
@@ -49,7 +53,7 @@ const PurchaseCreditsModal: FC<PurchaseCreditsProps> = ({ isOpen, onClose }) => 
             type="number"
             value={dotAmount}
             onChange={(e) => setDotAmount(parseFloat(e.target.value))}
-            startAdornment={<InputAdornment position="start">DOT</InputAdornment>}
+            startAdornment={<InputAdornment position="start">{tokenName}</InputAdornment>}
             label="Amount"
           />
         </FormControl>
