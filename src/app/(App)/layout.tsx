@@ -3,7 +3,7 @@
 import './globals.css'
 //import type { Metadata } from 'next'
 import { env } from '@/config/environment'
-import { ArrowPathIcon, BoltIcon, HomeIcon, ShoppingCartIcon } from '@heroicons/react/24/solid'
+import { ArrowPathIcon, BoltIcon, Cog8ToothIcon, HomeIcon, ShoppingCartIcon, WrenchIcon } from '@heroicons/react/24/solid'
 import { UseInkathonProvider } from '@poppyseed/lastic-sdk'
 import { Montserrat, Syncopate, Unbounded } from 'next/font/google'
 import Background from './Background'
@@ -26,6 +26,18 @@ const navigation_app = [
     name: 'On Demand Cores',
     icon: <BoltIcon className="h-5 w-5" aria-hidden="true" />,
     href: '/instacore',
+    current: false,
+  },
+  {
+    name: 'ParaId Execution',
+    icon: <Cog8ToothIcon className="h-5 w-5" aria-hidden="true" />,
+    href: '/paraId',
+    current: false,
+  },
+  {
+    name: 'Renew Core',
+    icon: <WrenchIcon className="h-5 w-5" aria-hidden="true" />,
+    href: '/renewal',
     current: false,
   },
   {
