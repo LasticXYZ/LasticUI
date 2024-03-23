@@ -1,221 +1,148 @@
-import Border from '@/components/border/Border'
-import GeneralTable from '@/components/table/GeneralTable'
-import WalletStatus from '@/components/walletStatus/WalletStatus'
-import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
-import { useEffect, useState } from 'react'
+import Border from '@/components/border/Border';
+import GeneralTable from '@/components/table/GeneralTable';
+import WalletStatus from '@/components/walletStatus/WalletStatus';
+import { WorkplanAssignmentInfo, WorkplanAssignmentInfoUnf, WorkplanCoreInfo, WorkplanType } from '@/types';
+import { parseFormattedNumber } from '@/utils';
+import { useInkathon } from '@poppyseed/lastic-sdk';
+import { useEffect, useState } from 'react';
 
-type AssignmentItem = {
-  Task: number
-}
-
-type AssignmentItemUnf = {
-  Task: string
-}
-
-type WorkplanAssignmentInfo = {
-  mask: string
-  assignment: AssignmentItem | 'Pool'
-}
-
-type WorkplanAssignmentInfoUnf = {
-  mask: string
-  assignment: AssignmentItemUnf | 'Pool'
-}
-
-type WorkplanCoreInfo = {
-  begin: number
-  core: number
-}
-
-type Workplan = {
-  coreInfo: WorkplanCoreInfo
-  assignmentInfo: WorkplanAssignmentInfo[]
-}
-
-type WorkplanType = Workplan[]
-
-
-function parseFormattedNumber(str?: string | number) {
-  if (!str) {
-    return 0;
-  }
-  if (typeof str === 'number') {
-    return str;
-  }
-  return parseInt(str.replace(/,/g, ''), 10); // Removes all commas before parsing
-}
-
-// Custom hook for querying substrate state
+// Custom hook for querying and transforming workplan data
 const useWorkplanQuery = () => {
-  const { api } = useInkathon()
-  const [data, setData] = useState<WorkplanType | null>(null)
+    const { api } = useInkathon();
+    const [data, setData] = useState<WorkplanType | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (api?.query?.broker?.workplan) {
-        try {
-          const entries = await api.query.broker.workplan.entries()
-          //console.log('entries:', entries)
-          const workplan: WorkplanType = entries.map(([key, value]) => {
-            const coreInfoUnf: string[] = key.toHuman() as string[]
-            let coreInfo: WorkplanCoreInfo = {core: 0, begin: 0};
-            if (coreInfoUnf.length > 0 && coreInfoUnf[0].length > 1) {
-              coreInfo = {
-                  begin: parseFormattedNumber(coreInfoUnf[0][0]), // Convert the first string to a number
-                  core: parseFormattedNumber(coreInfoUnf[0][1]) // Convert the second string to a number
-              };
-            } else {
-                console.error("Unexpected coreInfoUnf structure:", coreInfoUnf);
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!api?.query?.broker?.workplan) return;
+            try {
+                const entries = await api.query.broker.workplan.entries();
+                const workplan: WorkplanType = entries.map(([key, value]) => {
+                    const coreInfoUnf: string[] = key.toHuman() as string[];
+                    const coreInfo: WorkplanCoreInfo = coreInfoUnf.length > 0 && coreInfoUnf[0].length > 1 ? {
+                        begin: parseFormattedNumber(coreInfoUnf[0][0]),
+                        core: parseFormattedNumber(coreInfoUnf[0][1]),
+                    } : { core: 0, begin: 0 };
+
+                    const assignmentInfo: WorkplanAssignmentInfo[] = (value.toHuman() as WorkplanAssignmentInfoUnf[]).map(info => ({
+                        ...info,
+                        assignment: typeof info.assignment === 'object' ? { Task: parseFormattedNumber(info.assignment.Task) } : 'Pool',
+                    }));
+
+                    return { coreInfo, assignmentInfo };
+                });
+                setData(workplan);
+            } catch (error) {
+                console.error('Failed to fetch data:', error);
             }
-            const assignmentInfoUnf = value.toHuman() as WorkplanAssignmentInfoUnf[]
-            const assignmentInfo = assignmentInfoUnf.map(info => {
-              if (typeof info.assignment === 'object') {
-                info.assignment.Task = parseFormattedNumber(info.assignment.Task)
-              }
-              return info
-            })
-            return { coreInfo, assignmentInfo }
-          })
-          //console.log('workplan:', workplan)
-          setData(workplan)
-        } catch (error) {
-          console.error('Failed to fetch regions:', error)
-        }
-      }
+        };
+
+        fetchData();
+        const intervalId = setInterval(fetchData, 5000);
+        return () => clearInterval(intervalId);
+    }, [api]);
+
+    return data;
+};
+
+const MyCores = () => {
+    const { activeAccount, activeChain } = useInkathon();
+    const workplanData = useWorkplanQuery();
+    const [filter, setFilter] = useState('all');
+    const [task, setTask] = useState<number | null>(null);
+    const [core, setCore] = useState<number | null>(null);
+    const [begin, setBegin] = useState<number | null>(null);
+
+    // Data filtering based on user selection
+    const filteredData = workplanData?.filter(plan => {
+        if (filter === 'pool') return plan.assignmentInfo.some(info => info.assignment === 'Pool');
+        if (filter === 'tasks') return plan.assignmentInfo.some(info => typeof info.assignment !== 'string');
+        return true; // 'all' or other cases
+    }).filter(plan => {
+        return (!task || plan.assignmentInfo.some(info => typeof info.assignment === 'object' && info.assignment.Task === task)) &&
+               (!core || plan.coreInfo.core === core) &&
+               (!begin || plan.coreInfo.begin === begin);
+    });
+
+    if (!activeAccount || !activeChain) {
+        return (
+            <Border className="h-full flex flex-row justify-center items-center">
+                <WalletStatus />
+            </Border>
+        );
     }
 
-    fetchData()
-    const intervalId = setInterval(fetchData, 5000)
-
-    return () => clearInterval(intervalId)
-  }, [api])
-
-  return data
-}
-
-export default function MyCores() {
-  const { activeAccount, activeChain } = useInkathon()
-  let { tokenSymbol } = useBalance(activeAccount?.address, true)
-  const workplanData = useWorkplanQuery();
-  const [filter, setFilter] = useState('all'); // New state for tracking the filter
-
-  const TableHeader = [
-    { title: 'Task' },
-    { title: 'Begin' },
-    { title: 'Core' },
-    { title: 'Mask' },
-  ]
-
-  let filteredData = workplanData;
-
-  const [task, setTask] = useState<number|null>(null);
-  const [core, setCore] = useState<number|null>(null);;
-  const [begin, setBegin] = useState<number|null>(null);;
-
-
-  if (workplanData && filter === 'all') {
-    filteredData = workplanData.filter(
-      plan => plan.assignmentInfo.some(info => info.assignment !== 'Pool' &&
-      core ? parseFormattedNumber(plan.coreInfo.core) === core: true &&
-      begin ? parseFormattedNumber(plan.coreInfo.begin) === begin: true
-  ))}
-  else if (workplanData && filter === 'tasks') {
-    filteredData = workplanData.filter(plan => plan.assignmentInfo.some(info => info.assignment !== 'Pool' ));
-    filteredData = filteredData.filter(plan => plan.assignmentInfo.some(info => 
-      task? info.assignment?.Task === task: true &&
-      core ? parseFormattedNumber(plan.coreInfo.core) === core: true &&
-      begin ? parseFormattedNumber(plan.coreInfo.begin) === begin: true
-  ));
-  } else if (workplanData && filter === 'pool') {
-    filteredData = workplanData.filter(plan => plan.assignmentInfo.some(info => info.assignment === 'Pool'));
-    filteredData = filteredData.filter(plan => plan.assignmentInfo.some(info => core ? parseFormattedNumber(plan.coreInfo.core) === core: true &&
-      begin ? parseFormattedNumber(plan.coreInfo.begin) === begin: true
-    ));
-  }
-
-    // Transform filteredData for the GeneralTable component
-    const transformedTableData = filteredData?.map((workplan) => {
-      // Assuming that you want to show the first assignment info in the table.
-      // Adjust this as needed for your application.
-      const assignment = workplan.assignmentInfo[0].assignment;
-      const task = typeof assignment === 'object' ? assignment.Task.toString() : assignment;
-      const begin = workplan.coreInfo.begin.toString();
-      const core = workplan.coreInfo.core.toString();
-      const mask = workplan.assignmentInfo[0].mask;
-  
-      return {
-        // Include 'href' if necessary, for now, it's omitted
-        data: [task, begin, core, mask]
-      };
-    });
-  
-  if (!activeAccount || !activeChain) {
     return (
-      <Border className="h-full flex flex-row justify-center items-center">
-        <WalletStatus />
-      </Border>
-    )
-  }
-  return(
-    <Border className="h-full flex flex-row justify-center items-center">
-      <div className="h-full w-full flex flex-col justify-left items-left">
-        <div className="pt-10 pl-10">
-          <h1 className="text-xl font-unbounded uppercase font-bold">Cores set for execution</h1>
-          <div className='mt-5 flex flex-row items-center gap-3'>
+        <Border className="h-full flex flex-row justify-center items-center">
+            <div className="h-full w-full flex flex-col justify-start items-start p-10">
+                <h1 className="text-xl font-bold uppercase mb-5">Cores set for execution</h1>
+                <div className='flex flex-row items-center gap-3 mb-5'>
+                    <select
+                        value={filter}
+                        onChange={(e) => setFilter(e.target.value)}
+                        className="p-2 border rounded"
+                    >
+                        <option value="all">All</option>
+                        <option value="tasks">Tasks</option>
+                        <option value="pool">Pool</option>
+                    </select>
+                    {filter === 'tasks' && (
+                        <>
+                            <label htmlFor="task">Task:</label>
+                            <input
+                                id="task"
+                                type="number"
+                                placeholder="Task Number"
+                                value={task || ''}
+                                onChange={(e) => setTask(parseFloat(e.target.value) || null)}
+                                className="ml-2 p-2 border rounded"
+                            />
+                        </>
+                    )}
+                    <label htmlFor="begin">Begin:</label>
+                    <input
+                        id="begin"
+                        type="number"
+                        placeholder="Begin Number"
+                        value={begin || ''}
+                        onChange={(e) => setBegin(parseFloat(e.target.value) || null)}
+                        className="p-2 border rounded"
+                    />
+                    <label htmlFor="core">Core:</label>
+                    <input
+                        id="core"
+                        type="number"
+                        placeholder="Core Number"
+                        value={core || ''}
+                        onChange={(e) => setCore(parseFloat(e.target.value) || null)}
+                        className="p-2 border rounded"
+                    />
+                </div>
+                {filteredData && filteredData.length > 0 ? (
+                  <div className="w-full overflow-x-auto">
+                    <GeneralTable
+                        tableData={filteredData.map(({ coreInfo, assignmentInfo }) => ({
+                            data: [
+                                assignmentInfo[0]?.assignment !== 'Pool' && typeof assignmentInfo[0]?.assignment === 'object' ? assignmentInfo[0].assignment.Task.toString() : 'Pool',
+                                coreInfo.begin.toString(),
+                                coreInfo.core.toString(),
+                                assignmentInfo[0]?.mask || 'N/A',
+                            ],
+                        }))}
+                        tableHeader={[
+                            { title: 'Task' },
+                            { title: 'Begin' },
+                            { title: 'Core' },
+                            { title: 'Mask' },
+                        ]}
+                        colClass="grid-cols-4"
+                    />
+                  </div>
+                ) : (
+                    <p>No data available.</p>
+                )}
+            </div>
+        </Border>
+    );
+};
 
-          {/* Dropdown for user to select filter */}
-          <select
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="p-2 border rounded ml-5"
-            >
-            <option value="all">All</option>
-            <option value="tasks">Tasks</option>
-            <option value="pool">Pool</option>
-          </select>
-          {
-            filter === 'tasks' ? (
-              <>
-                <label>Task:</label>
-                <input
-                  type="number"
-                  placeholder="0"
-                  value={task || ''}
-                  onChange={(e) => setTask(parseFloat(e.target.value) || null)} // Modified to handle empty string case
-                  className="ml-2 p-2 border rounded"
-                />
-              </>
-            ) : <></>
-          }
-          <label>Begin:</label>
-          <input
-            type="number"
-            placeholder="0"
-            value={begin || ''}
-            onChange={(e) => setBegin(parseFloat(e.target.value))}
-            className="p-2 border rounded"
-            />
-          <label>Core:</label>
-          <input
-            type="number"
-            placeholder="0"
-            value={core || ''}
-            onChange={(e) => setCore(parseFloat(e.target.value))}
-            className="p-2 border rounded"
-            />
-        </div>
-        </div>
-        <div>
-          { transformedTableData ?
-          <GeneralTable
-          tableData={transformedTableData}
-          tableHeader={TableHeader}
-          colClass="grid-cols-6"
-          />
-          : <p>No data...</p>
-        }
-        </div>
-      </div>
-    </Border>
-  )
-}
+export default MyCores;
