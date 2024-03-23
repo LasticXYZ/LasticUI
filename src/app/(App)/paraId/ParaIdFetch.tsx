@@ -116,14 +116,21 @@ export default function MyCores() {
   if (workplanData && filter === 'all') {
     filteredData = workplanData.filter(
       plan => plan.assignmentInfo.some(info => info.assignment !== 'Pool' &&
-      task? info.assignment?.Task === task: true && 
       core ? parseFormattedNumber(plan.coreInfo.core) === core: true &&
       begin ? parseFormattedNumber(plan.coreInfo.begin) === begin: true
   ))}
   else if (workplanData && filter === 'tasks') {
-    filteredData = workplanData.filter(plan => plan.assignmentInfo.some(info => info.assignment !== 'Pool'));
+    filteredData = workplanData.filter(plan => plan.assignmentInfo.some(info => info.assignment !== 'Pool' ));
+    filteredData = filteredData.filter(plan => plan.assignmentInfo.some(info => 
+      task? info.assignment?.Task === task: true &&
+      core ? parseFormattedNumber(plan.coreInfo.core) === core: true &&
+      begin ? parseFormattedNumber(plan.coreInfo.begin) === begin: true
+  ));
   } else if (workplanData && filter === 'pool') {
     filteredData = workplanData.filter(plan => plan.assignmentInfo.some(info => info.assignment === 'Pool'));
+    filteredData = filteredData.filter(plan => plan.assignmentInfo.some(info => core ? parseFormattedNumber(plan.coreInfo.core) === core: true &&
+      begin ? parseFormattedNumber(plan.coreInfo.begin) === begin: true
+    ));
   }
 
     // Transform filteredData for the GeneralTable component
@@ -166,16 +173,20 @@ export default function MyCores() {
             <option value="tasks">Tasks</option>
             <option value="pool">Pool</option>
           </select>
-          <div className="">
-            <label>Task:</label>
-            <input
-              type="number"
-              placeholder="0"
-              value={task || ''}
-              onChange={(e) => setTask(parseFloat(e.target.value))}
-              className="ml-2 p-2 border rounded"
-              />
-          </div>
+          {
+            filter === 'tasks' ? (
+              <>
+                <label>Task:</label>
+                <input
+                  type="number"
+                  placeholder="0"
+                  value={task || ''}
+                  onChange={(e) => setTask(parseFloat(e.target.value) || null)} // Modified to handle empty string case
+                  className="ml-2 p-2 border rounded"
+                />
+              </>
+            ) : <></>
+          }
           <label>Begin:</label>
           <input
             type="number"

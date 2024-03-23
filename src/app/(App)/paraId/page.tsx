@@ -6,7 +6,7 @@ import AnalyticSection from './AnalyticSection'
 import MyCores from './ParaIdFetch'
 
 const InstaCore = () => {
-  const { activeAccount, activeChain } = useInkathon()
+  const { activeAccount, activeRelayChain } = useInkathon()
 
   if (!activeAccount) {
     return (
@@ -23,10 +23,9 @@ const InstaCore = () => {
   return (
     <>
       <SubTitle
-        subtitle={`Para Id`}
+        subtitle={`Para Id Execution on ${activeRelayChain?.name}`}
       />{' '}
       {/* Corrected syntax */}
-      <AnalyticSection />
       <section className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8 flex flex-col items-stretch">
         <MyCores />
       </section>
