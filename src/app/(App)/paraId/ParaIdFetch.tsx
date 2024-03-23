@@ -1,4 +1,5 @@
 import Border from '@/components/border/Border'
+import GeneralTable from '@/components/table/GeneralTable'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
 import { useEffect, useState } from 'react'
@@ -98,22 +99,48 @@ export default function MyCores() {
   const workplanData = useWorkplanQuery();
   const [filter, setFilter] = useState('all'); // New state for tracking the filter
 
+  const TableHeader = [
+    { title: 'Task' },
+    { title: 'Begin' },
+    { title: 'Core' },
+    { title: 'Mask' },
+  ]
+
   let filteredData = workplanData;
 
   const [task, setTask] = useState<number|null>(null);
-  const [core, setCore] = useState(null);
-  const [begin, setBegin] = useState(null);
+  const [core, setCore] = useState<number|null>(null);;
+  const [begin, setBegin] = useState<number|null>(null);;
 
-  if (workplanData && filter !== 'pool') {
+
+  if (workplanData && filter === 'all') {
     filteredData = workplanData.filter(
       plan => plan.assignmentInfo.some(info => info.assignment !== 'Pool' &&
       task? info.assignment?.Task === task: true && 
       core ? parseFormattedNumber(plan.coreInfo.core) === core: true &&
       begin ? parseFormattedNumber(plan.coreInfo.begin) === begin: true
-    ));
+  ))}
+  else if (workplanData && filter === 'tasks') {
+    filteredData = workplanData.filter(plan => plan.assignmentInfo.some(info => info.assignment !== 'Pool'));
   } else if (workplanData && filter === 'pool') {
     filteredData = workplanData.filter(plan => plan.assignmentInfo.some(info => info.assignment === 'Pool'));
   }
+
+    // Transform filteredData for the GeneralTable component
+    const transformedTableData = filteredData?.map((workplan) => {
+      // Assuming that you want to show the first assignment info in the table.
+      // Adjust this as needed for your application.
+      const assignment = workplan.assignmentInfo[0].assignment;
+      const task = typeof assignment === 'object' ? assignment.Task.toString() : assignment;
+      const begin = workplan.coreInfo.begin.toString();
+      const core = workplan.coreInfo.core.toString();
+      const mask = workplan.assignmentInfo[0].mask;
+  
+      return {
+        // Include 'href' if necessary, for now, it's omitted
+        data: [task, begin, core, mask]
+      };
+    });
   
   if (!activeAccount || !activeChain) {
     return (
@@ -126,55 +153,56 @@ export default function MyCores() {
     <Border className="h-full flex flex-row justify-center items-center">
       <div className="h-full w-full flex flex-col justify-left items-left">
         <div className="pt-10 pl-10">
-          <h1 className="text-xl font-unbounded uppercase font-bold">Cores Owned</h1>
+          <h1 className="text-xl font-unbounded uppercase font-bold">Cores set for execution</h1>
+          <div className='mt-5 flex flex-row items-center gap-3'>
+
           {/* Dropdown for user to select filter */}
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="mb-5"
-          >
+            className="p-2 border rounded ml-5"
+            >
+            <option value="all">All</option>
             <option value="tasks">Tasks</option>
             <option value="pool">Pool</option>
           </select>
+          <div className="">
+            <label>Task:</label>
+            <input
+              type="number"
+              placeholder="0"
+              value={task || ''}
+              onChange={(e) => setTask(parseFloat(e.target.value))}
+              className="ml-2 p-2 border rounded"
+              />
+          </div>
+          <label>Begin:</label>
+          <input
+            type="number"
+            placeholder="0"
+            value={begin || ''}
+            onChange={(e) => setBegin(parseFloat(e.target.value))}
+            className="p-2 border rounded"
+            />
+          <label>Core:</label>
+          <input
+            type="number"
+            placeholder="0"
+            value={core || ''}
+            onChange={(e) => setCore(parseFloat(e.target.value))}
+            className="p-2 border rounded"
+            />
         </div>
-        <div className="pt-5 pl-10">
-          <input
-            type="number"
-            value={task}
-            onChange={(e) => setTask(e.target.value)}
-            placeholder="Enter Task"
-            className="mb-5 p-2 border rounded"
-          />
-          <input
-            type="number"
-            value={begin}
-            onChange={(e) => setBegin(e.target.value)}
-            placeholder="Enter Begin"
-            className="mb-5 p-2 border rounded"
-          />
-          <input
-            type="number"
-            value={core}
-            onChange={(e) => setCore(e.target.value)}
-            placeholder="Enter Core"
-            className="mb-5 p-2 border rounded"
-          />
         </div>
         <div>
-          <ul>
-            {filteredData?.map((workplan, index) => (
-              <li key={index} className="p-1">
-                <p>Task: {' '}
-                {typeof workplan.assignmentInfo[0].assignment === 'object'
-                  ? workplan.assignmentInfo[0].assignment?.Task
-                  : workplan.assignmentInfo[0].assignment}
-                </p>
-                <p>Begin: {workplan.coreInfo.begin}</p>
-                <p>Core: {workplan.coreInfo.core}</p>
-                <p>Mask: {workplan.assignmentInfo[0].mask}</p>
-              </li>
-            ))}
-          </ul>
+          { transformedTableData ?
+          <GeneralTable
+          tableData={transformedTableData}
+          tableHeader={TableHeader}
+          colClass="grid-cols-6"
+          />
+          : <p>No data...</p>
+        }
         </div>
       </div>
     </Border>
