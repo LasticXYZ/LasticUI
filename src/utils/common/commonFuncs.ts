@@ -11,7 +11,6 @@ export type CoreMask = [
   number,
 ]
 
-
 export const getCoreMaskFromBits = (bits: boolean[]): CoreMask => {
   if (bits.length !== 80) {
     throw new Error('Expected an array of 80 bits')
