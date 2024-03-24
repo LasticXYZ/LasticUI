@@ -1,7 +1,6 @@
 'use client'
 import PrimaryButton from '@/components/button/PrimaryButton'
 import Modal from '@/components/modal/Modal'
-import { useBrokerConstants } from '@/utils/broker'
 import { FormControl, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material'
 import { TxButtonProps, useInkathon, useTxButton } from '@poppyseed/lastic-sdk'
 import { FC, useEffect, useState } from 'react'
@@ -12,8 +11,7 @@ interface PurchaseCreditsProps {
 }
 
 const PurchaseCreditsModal: FC<PurchaseCreditsProps> = ({ isOpen, onClose }) => {
-  const { api, activeSigner, activeAccount, activeChain, relayApi } = useInkathon()
-  const { brokerConstants } = useBrokerConstants(api)
+  const { api, activeSigner, activeAccount, activeChain } = useInkathon()
   const [dotAmount, setDotAmount] = useState<number | undefined>(0)
   const [receiver, setReceiver] = useState<string | undefined>(activeAccount?.address)
 
@@ -46,8 +44,6 @@ const PurchaseCreditsModal: FC<PurchaseCreditsProps> = ({ isOpen, onClose }) => 
     activeSigner,
   }
   const { transaction, status, allParamsFilled } = useTxButton(txButtonProps)
-
-  // console.log(api?.tx.broker.purchaseCredit)
 
   return (
     <Modal
