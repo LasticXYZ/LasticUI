@@ -22,10 +22,7 @@ const InstaCore = () => {
 
   return (
     <>
-      <SubTitle
-        subtitle={`Renewals on ${activeRelayChain?.name}`}
-      />{' '}
-      {/* Corrected syntax */}
+      <SubTitle subtitle={`Renewals on ${activeRelayChain?.name}`} /> {/* Corrected syntax */}
       <section className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8 flex flex-col items-stretch">
         <MyCores />
       </section>

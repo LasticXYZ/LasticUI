@@ -19,7 +19,7 @@ const PurchaseCreditsModal: FC<PurchaseCreditsProps> = ({ isOpen, onClose }) => 
     if (!receiver) {
       setReceiver(activeAccount?.address)
     }
-  }, [activeAccount])
+  }, [activeAccount, receiver])
 
   const planck = activeChain?.testnet
     ? BigInt(1e12 * (dotAmount || 0)) // ROC to Planck conversion
