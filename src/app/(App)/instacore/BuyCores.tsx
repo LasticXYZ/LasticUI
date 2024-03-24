@@ -16,7 +16,7 @@ const BuyCores: React.FC = () => {
         <SecondaryButton
           title="Purchase Credits"
           onClick={() => setCreditsModalOpen(true)}
-          className="px-10 mb-8"
+          className="px-14 mb-8 "
         />
       </div>
 
