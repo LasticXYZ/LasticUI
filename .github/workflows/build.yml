@@ -17,10 +17,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '21' # Use the node version that matches your development environment
-          cache: 'pnpm' # This enables caching for pnpm
 
       - name: Install dependencies
-        run: pnpm install # Replace with pnpm install if using pnpm
+        uses: ./.github/actions/pnpm-install
 
       - name: Run Lint
         run: pnpm run lint
@@ -34,10 +33,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '21' # Use the node version that matches your development environment
-          cache: 'pnpm' # This enables caching for pnpm
 
       - name: Install dependencies
-        run: pnpm install # Replace with pnpm install if using pnpm
+        uses: ./.github/actions/pnpm-install
 
       - name: Build the project
         run: pnpm run build
