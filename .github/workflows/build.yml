@@ -13,11 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '21' # Use the node version that matches your development environment
-
       - name: Install dependencies
         uses: ./.github/actions/pnpm-install
 
@@ -28,11 +23,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '21' # Use the node version that matches your development environment
 
       - name: Install dependencies
         uses: ./.github/actions/pnpm-install
