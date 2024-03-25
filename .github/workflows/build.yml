@@ -28,4 +28,8 @@ jobs:
         uses: ./.github/actions/pnpm-install
 
       - name: Build the project
+        env:
+          NEXT_PUBLIC_DEFAULT_CHAIN: rococo-coretime
+          NEXT_PUBLIC_RELAY_CHAIN: rococo
+          NEXT_PUBLIC_SUPPORTED_CHAINS: '[{"coretime": "westend-coretime", "relay": "westend"}, {"coretime": "polkadot", "relay": "polkadot"}, {"coretime": "kusama", "relay": "kusama"}, {"coretime": "rococo-coretime", "relay": "rococo"}]'
         run: pnpm run build
