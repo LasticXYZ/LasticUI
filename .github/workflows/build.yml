@@ -1,45 +1,41 @@
-name: Test & Build app
+name: Test & Build Next.js App
 
 on:
   workflow_dispatch:
-    push:
-      branches: [main]
+  push:
+    branches: [main]
   pull_request:
-    branches: [main, beta, production, nuxt]
+    branches: [main, beta, production, next]
 
 jobs:
-  test:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install dependencies
-        uses: ./.github/actions/pnpm-install
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '21' # Use the node version that matches your development environment
 
-      - name: Run Test
-        run: pnpm test
+      - name: Install dependencies
+        run: pnpm install # Replace with pnpm install if using pnpm
+
+      - name: Run Lint
+        run: pnpm run lint
 
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install dependencies
-        uses: ./.github/actions/pnpm-install
-
-      - name: Run Build
-        run: pnpm generate
-
-      - run: wc -l ./.nuxt/dist/server/client.manifest.mjs
-      - run: stat -c "%s" ./.nuxt/dist/server/client.manifest.mjs
-
-  build-cf:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '21' # Use the node version that matches your development environment
 
       - name: Install dependencies
-        uses: ./.github/actions/pnpm-install
+        run: pnpm install # Replace with pnpm install if using pnpm
 
-      - name: Run Build
-        run: NITRO_PRESET=cloudflare_pages pnpm nuxi build
+      - name: Build the project
+        run: pnpm run build
