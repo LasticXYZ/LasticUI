@@ -1,0 +1,35 @@
+name: Test & Build Next.js App
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main, beta, production, next]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies
+        uses: ./.github/actions/pnpm-install
+
+      - name: Run Lint
+        run: pnpm run lint
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies
+        uses: ./.github/actions/pnpm-install
+
+      - name: Build the project
+        env:
+          NEXT_PUBLIC_DEFAULT_CHAIN: rococo-coretime
+          NEXT_PUBLIC_RELAY_CHAIN: rococo
+          NEXT_PUBLIC_SUPPORTED_CHAINS: '[{"coretime": "westend-coretime", "relay": "westend"}, {"coretime": "polkadot", "relay": "polkadot"}, {"coretime": "kusama", "relay": "kusama"}, {"coretime": "rococo-coretime", "relay": "rococo"}]'
+        run: pnpm run build
