@@ -5,7 +5,6 @@ import Footer from './Footer'
 import Navbar from './Navbar'
 import './globals.css'
 
-
 const navigation_app = [
   { name: 'Docs', href: 'https://docs.lastic.xyz/', current: false },
   { name: 'Articles', href: '/articles', current: true },
@@ -17,7 +16,6 @@ const navigation_app = [
 //   weight: ['400', '700'],
 //   variable: '--font-unbounded',
 // })
-
 
 const unbounded = Unbounded({
   subsets: ['latin'],
