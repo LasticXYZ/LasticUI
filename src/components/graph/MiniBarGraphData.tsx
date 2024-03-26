@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from 'react'
 
 import {
   BarController,
@@ -11,8 +11,8 @@ import {
   PointElement,
   Title,
   Tooltip,
-} from 'chart.js';
-import { Bar } from 'react-chartjs-2';
+} from 'chart.js'
+import { Bar } from 'react-chartjs-2'
 
 ChartJS.register(
   BarController,
@@ -27,10 +27,10 @@ ChartJS.register(
 )
 
 type MiniBarGraphDataProps = {
-  title: string;
-  dataPoints: number[];  // Assuming your data points are an array of numbers
-  labels: string[];      // Assuming your labels are an array of strings
-};
+  title: string
+  dataPoints: number[] // Assuming your data points are an array of numbers
+  labels: string[] // Assuming your labels are an array of strings
+}
 
 const MiniBarGraphData: React.FC<MiniBarGraphDataProps> = ({ title, dataPoints, labels }) => {
   const displayOptions = [
@@ -75,9 +75,7 @@ const MiniBarGraphData: React.FC<MiniBarGraphDataProps> = ({ title, dataPoints, 
     <>
       <div className="flex flex-col justify-betwee">
         <div className="flex justify-start  py-2 px-3">
-          <h5 className="text-black text-l font-unbounded uppercase px-3 font-light">
-            {title}
-          </h5>
+          <h5 className="text-black text-l font-unbounded uppercase px-3 font-light">{title}</h5>
 
           {/* <SwitchDisplays displayOptions={displayOptions} active={curentlyDisplayed} setActive={setCurrentDisplay} /> */}
         </div>
