@@ -11,7 +11,6 @@
 ## Context
 
 - [ ] Closes #<issue_number>
-- [ ] Requires deployment <worker/stick/speck>
 
 #### Did your issue had any of the "$" label on it?
 
