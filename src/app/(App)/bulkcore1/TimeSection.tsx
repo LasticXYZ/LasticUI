@@ -21,7 +21,6 @@ import { saleStatus } from '@/utils'
 // Define a type for the queryParams
 type QueryParams = (string | number | Record<string, unknown>)[]
 
-
 // Custom hook for querying substrate state
 function useSubstrateQuery(
   api: ApiPromise | undefined,
@@ -104,8 +103,6 @@ function useBrokerConstants(api: ApiPromise | undefined) {
 
   return { brokerConstants, isLoading }
 }
-
-
 
 function calculateCurrentPrice(
   currentBlockNumber: number,
