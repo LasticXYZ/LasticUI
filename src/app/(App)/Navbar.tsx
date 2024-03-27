@@ -23,15 +23,13 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
   const toggleSidebar = () => setIsCollapsed(!isCollapsed)
 
   return (
-    <>
-      <div className="min-h-full font-montserrat">
+    <div className="min-h-full font-montserrat">
         <Disclosure as="nav" className="">
           {({ open }) => (
-            <>
-              <div className="flex">
+            <div className="flex">
                 {/* Sidebar Section */}
                 <div
-                  className={`fixed top-0 left-0 h-screen z-10 transition-width duration-300 ${isCollapsed ? 'w-16' : 'w-56'}`}
+                  className={`fixed top-0 left-0 h-screen z-10 transition-width duration-300 ${isCollapsed ? 'w-16' : 'w-56 overflow-y-auto'}`}
                 >
                   <div className="flex-shrink-0 flex items-center justify-between space-x-5 border-b border-gray-9  pl-6 pr-2 py-6 mt-2">
                     {!isCollapsed && (
@@ -128,11 +126,9 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
                   {children}
                 </div>
               </div>
-            </>
           )}
         </Disclosure>
       </div>
-    </>
   )
 }
 
