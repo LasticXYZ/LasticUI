@@ -19,6 +19,7 @@ export const useTeleport = () => {
   })
 
   const [isTeleporting, setIsTeleporting] = useState(false)
+  const [teleportMessage, setTeleportMessage] = useState('Teleporting. Please wait...')
 
   const { api, relayApi, activeAccount, activeChain, activeRelayChain, activeSigner } =
     useInkathon()
@@ -72,6 +73,9 @@ export const useTeleport = () => {
 
   const teleportToRelay = async (amount: string | number | bigint) => {
     if (!activeAccount || !api) return
+    setTeleportMessage(
+      `Teleporting ${Number(amount) / 10 ** tokenDecimalsOnCoretimeChain} ${tokenSymbolOnCoretimeChain} to Relay Chain. Please wait...`,
+    )
     const ext = await Builder(api)
       .from('CoretimeKusama')
       .amount(amount)
@@ -83,6 +87,9 @@ export const useTeleport = () => {
 
   const teleportToCoretimeChain = async (amount: string | number | bigint) => {
     if (!activeAccount || !relayApi) return
+    setTeleportMessage(
+      `Teleporting ${Number(amount) / 10 ** tokenDecimalsOnRelayChain} ${tokenSymbolOnRelayChain} to Coretime Chain. Please wait...`,
+    )
     const ext = await Builder(relayApi)
       .to('CoretimeKusama')
       .amount(amount)
@@ -160,5 +167,6 @@ export const useTeleport = () => {
     notification,
     setNotification,
     isTeleporting,
+    teleportMessage,
   }
 }

@@ -51,8 +51,14 @@ const chainOptions: { [key: string]: string } = {
 const Teleport = () => {
   const [amount, setAmount] = useState<number>(0)
   const [isRelayToPara, setIsRelayToPara] = useState<boolean>(true)
-  const { notification, setNotification, isTeleporting, teleportToRelay, teleportToCoretimeChain } =
-    useTeleport()
+  const {
+    notification,
+    setNotification,
+    isTeleporting,
+    teleportToRelay,
+    teleportToCoretimeChain,
+    teleportMessage,
+  } = useTeleport()
   const { activeAccount, activeChain, activeRelayChain } = useInkathon()
 
   const {
@@ -199,7 +205,13 @@ const Teleport = () => {
             <PrimaryButton
               disabled={amount <= 0}
               title={isTeleporting ? 'Processing...' : 'Proceed To Confirmation'}
-              onClick={() => doTeleport(amount * 10 ** tokenDecimalsOnCoretimeChain)}
+              onClick={() =>
+                doTeleport(
+                  amount *
+                    10 **
+                      (isRelayToPara ? tokenDecimalsOnRelayChain : tokenDecimalsOnCoretimeChain),
+                )
+              }
             />
           </div>
 
@@ -210,10 +222,7 @@ const Teleport = () => {
           </p>
         </div>
 
-        <ModalTranasaction
-          isVisible={isTeleporting}
-          message="Transaction is being processed. Please wait..."
-        />
+        <ModalTranasaction isVisible={isTeleporting} message={teleportMessage} />
 
         <ModalNotification
           type={notification.type}
