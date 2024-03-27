@@ -1,10 +1,4 @@
-import {
-  QueryParams,
-  Region,
-  RegionDetail,
-  RegionOwner,
-  RegionsType,
-} from '@/types/broker'
+import { QueryParams, Region, RegionDetail, RegionOwner, RegionsType } from '@/types/broker'
 import { ApiPromise } from '@polkadot/api'
 import {
   BrokerConstantsType,
