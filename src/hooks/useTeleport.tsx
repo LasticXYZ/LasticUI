@@ -2,7 +2,7 @@ import { TxCbOnSuccessParams } from '@/app/(App)/teleport/page'
 import { notificationTypes } from '@/components/modal/ModalNotification'
 import { DispatchError } from '@polkadot/types/interfaces'
 import { ISubmittableResult } from '@polkadot/types/types'
-import { useInkathon } from '@poppyseed/lastic-sdk'
+import { useBalance, useInkathon, useRelayBalance } from '@poppyseed/lastic-sdk'
 import { Builder, Extrinsic } from '@poppyseed/xcm-sdk'
 import { useState } from 'react'
 
@@ -23,10 +23,21 @@ export const useTeleport = () => {
   const { api, relayApi, activeAccount, activeChain, activeRelayChain, activeSigner } =
     useInkathon()
 
-  /*   const { balanceFormatted, balance, tokenSymbol, tokenDecimals } = useBalance(
-    activeAccount?.address,
-    true,
-  ) */
+  // used for auto teleport
+  const {
+    balanceFormatted: balanceFormattedOnCoretime,
+    balance: balanceOnCoretimeChain,
+    tokenSymbol: tokenSymbolOnCoretimeChain,
+    tokenDecimals: tokenDecimalsOnCoretimeChain,
+  } = useBalance(activeAccount?.address, true)
+
+  // used for auto teleport
+  const {
+    balanceFormatted: balanceFormattedOnRelayChain,
+    balance: balanceOnRelayChain,
+    tokenSymbol: tokenSymbolOnRelayChain,
+    tokenDecimals: tokenDecimalsOnRelayChain,
+  } = useRelayBalance(activeAccount?.address, true)
 
   const teleport = async (ext: Extrinsic) => {
     if (!activeAccount) return

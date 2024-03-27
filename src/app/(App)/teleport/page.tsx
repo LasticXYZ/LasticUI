@@ -11,7 +11,7 @@ import { toShortAddress } from '@/utils/account/token'
 import { ArrowPathIcon } from '@heroicons/react/24/outline'
 import { DispatchError, Hash } from '@polkadot/types/interfaces'
 import { ISubmittableResult } from '@polkadot/types/types'
-import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
+import { useBalance, useInkathon, useRelayBalance } from '@poppyseed/lastic-sdk'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -50,15 +50,24 @@ const chainOptions: { [key: string]: string } = {
 
 const Teleport = () => {
   const [amount, setAmount] = useState<number>(0)
-  const [isRelayToPara, setIsRelayToPara] = useState<boolean>(true) // State to toggle direction
+  const [isRelayToPara, setIsRelayToPara] = useState<boolean>(true)
   const { notification, setNotification, isTeleporting, teleportToRelay, teleportToCoretimeChain } =
     useTeleport()
   const { activeAccount, activeChain, activeRelayChain } = useInkathon()
 
-  const { balanceFormatted, balance, tokenSymbol, tokenDecimals } = useBalance(
-    activeAccount?.address,
-    true,
-  )
+  const {
+    balanceFormatted: balanceFormattedOnCoretime,
+    balance: balanceOnCoretimeChain,
+    tokenSymbol: tokenSymbolOnCoretimeChain,
+    tokenDecimals: tokenDecimalsOnCoretimeChain,
+  } = useBalance(activeAccount?.address, true)
+
+  const {
+    balanceFormatted: balanceFormattedOnRelayChain,
+    balance: balanceOnRelayChain,
+    tokenSymbol: tokenSymbolOnRelayChain,
+    tokenDecimals: tokenDecimalsOnRelayChain,
+  } = useRelayBalance(activeAccount?.address, true)
 
   const doTeleport = async (amountToSend: number) => {
     isRelayToPara
@@ -67,7 +76,8 @@ const Teleport = () => {
   }
 
   const handleMaxClick = () => {
-    setAmount(Number(balance) / 10 ** tokenDecimals)
+    if (isRelayToPara) setAmount(Number(balanceOnRelayChain) / 10 ** tokenDecimalsOnRelayChain)
+    else setAmount(Number(balanceOnCoretimeChain) / 10 ** tokenDecimalsOnCoretimeChain)
   }
 
   const toggleDirection = () => {
@@ -173,11 +183,14 @@ const Teleport = () => {
                 onChange={(e) => setAmount(parseFloat(e.target.value))}
                 className="flex-1 p-2 pl-5 bg-transparent border border-gray-9 rounded-2xl focus:outline-none focus:ring-2 focus:ring-gray-7 focus:border-transparent"
               />
-              <span className="ml-2">{tokenSymbol}</span>
+              <span className="ml-2">{tokenSymbolOnCoretimeChain}</span>
             </div>
             <div className="flex justify-between items-center mt-2">
               <span>
-                Balance on {activeChain?.name}: {balanceFormatted}
+                Balance on {activeChain?.name}: {balanceFormattedOnCoretime}
+              </span>
+              <span>
+                Balance on {activeRelayChain?.name}: {balanceFormattedOnRelayChain}
               </span>
               <SideButton title="Max" onClick={handleMaxClick} />
             </div>
@@ -186,12 +199,12 @@ const Teleport = () => {
             <PrimaryButton
               disabled={amount <= 0}
               title={isTeleporting ? 'Processing...' : 'Proceed To Confirmation'}
-              onClick={() => doTeleport(amount * 10 ** tokenDecimals)}
+              onClick={() => doTeleport(amount * 10 ** tokenDecimalsOnCoretimeChain)}
             />
           </div>
 
           <p className="mt-6">
-            You will receive {amount || 0} {tokenSymbol} on{' '}
+            You will receive {amount || 0} {tokenSymbolOnCoretimeChain} on{' '}
             {isRelayToPara ? activeChain?.name : activeRelayChain?.name} to{' '}
             {toShortAddress(activeAccount?.address, 4)}
           </p>
