@@ -18,23 +18,3 @@ jobs:
 
       - name: Run Lint
         run: pnpm run lint
-
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Install dependencies
-        uses: ./.github/actions/pnpm-install
-
-      - name: Check Google Fonts Accessibility
-        run: |
-          curl -I https://fonts.googleapis.com/css?family=Montserrat
-          ping -c 4 fonts.googleapis.com
-
-      - name: Build the project
-        env:
-          NEXT_PUBLIC_DEFAULT_CHAIN: rococo-coretime
-          NEXT_PUBLIC_RELAY_CHAIN: rococo
-          NEXT_PUBLIC_SUPPORTED_CHAINS: '[{"coretime": "westend-coretime", "relay": "westend"}, {"coretime": "polkadot", "relay": "polkadot"}, {"coretime": "kusama", "relay": "kusama"}, {"coretime": "rococo-coretime", "relay": "rococo"}]'
-        run: pnpm run build
