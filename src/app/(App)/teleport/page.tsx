@@ -3,15 +3,15 @@
 import Border from '@/components/border/Border'
 import PrimaryButton from '@/components/button/PrimaryButton'
 import SideButton from '@/components/button/SideButton'
-import ModalNotification, { notificationTypes } from '@/components/modal/ModalNotification'
+import ModalNotification from '@/components/modal/ModalNotification'
 import ModalTranasaction from '@/components/modal/ModalTransaction'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
+import { useTeleport } from '@/hooks/useTeleport'
 import { toShortAddress } from '@/utils/account/token'
 import { ArrowPathIcon } from '@heroicons/react/24/outline'
 import { DispatchError, Hash } from '@polkadot/types/interfaces'
 import { ISubmittableResult } from '@polkadot/types/types'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
-import { Builder } from '@poppyseed/xcm-sdk'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -51,105 +51,19 @@ const chainOptions: { [key: string]: string } = {
 const Teleport = () => {
   const [amount, setAmount] = useState<number>(0)
   const [isRelayToPara, setIsRelayToPara] = useState<boolean>(true) // State to toggle direction
-  const [showTransactionPopup, setShowTransactionPopup] = useState(false)
-  const [notification, setNotification] = useState<{
-    type: keyof typeof notificationTypes
-    message: string
-    isVisible: boolean
-  }>({
-    type: 'info',
-    message: '',
-    isVisible: false,
-  })
-  const { api, relayApi, activeAccount, activeChain, activeRelayChain, activeSigner } =
-    useInkathon()
+  const { notification, setNotification, isTeleporting, teleportToRelay, teleportToCoretimeChain } =
+    useTeleport()
+  const { activeAccount, activeChain, activeRelayChain } = useInkathon()
 
   const { balanceFormatted, balance, tokenSymbol, tokenDecimals } = useBalance(
     activeAccount?.address,
     true,
   )
 
-  const transactionCallback = handleTransaction({
-    onSuccess: ({ blockHash }) => {
-      setShowTransactionPopup(false) // Hide transaction popup
-      setNotification({
-        type: 'success',
-        message: `Transaction finalized at blockHash ${blockHash}`,
-        isVisible: true,
-      })
-    },
-    onError: (error) => {
-      setShowTransactionPopup(false) // Hide the popup in case of error too
-      let errorMessage = 'An unexpected error occurred.'
-      if (error instanceof Error) {
-        errorMessage = error.message
-        setNotification({
-          type: 'danger',
-          message: `Error in XCM transaction: ${errorMessage}`,
-          isVisible: true,
-        })
-      } else {
-        setNotification({ type: 'danger', message: errorMessage, isVisible: true })
-      }
-    },
-    onResult: (result) => {
-      console.log('Transaction result:', result)
-    },
-  })
-
-  const errorHandler = () => {
-    setNotification({
-      type: 'warn',
-      message: 'Transaction was cancelled by the user.',
-      isVisible: true,
-    })
-    setShowTransactionPopup(false)
-  }
-
-  const functionSendXCM = async (amountToSend: number) => {
-    if (!activeAccount || !relayApi || !api) return
-
-    setShowTransactionPopup(true)
-
-    try {
-      const call = isRelayToPara
-        ? await Builder(relayApi)
-            .to('CoretimeKusama')
-            .amount(amountToSend)
-            .address(activeAccount.address)
-            .build()
-        : await Builder(api)
-            .from('CoretimeKusama')
-            .amount(amountToSend)
-            .address(activeAccount.address)
-            .build()
-
-      call
-        .signAndSend(activeAccount.address, { signer: activeSigner }, transactionCallback)
-        .catch(errorHandler)
-    } catch (error) {
-      console.error('Error in XCM transaction:', error)
-
-      setShowTransactionPopup(false)
-      if (error instanceof Error && error.message === 'Cancelled') {
-        setNotification({
-          type: 'warn',
-          message: 'Transaction was cancelled by the user.',
-          isVisible: true,
-        })
-      } else {
-        // Handle other errors differently
-        setNotification({
-          type: 'danger',
-          message:
-            error instanceof Error
-              ? `Error in XCM transaction: ${error.message}`
-              : 'Error in XCM transaction: An unexpected error occurred.',
-          isVisible: true,
-        })
-      }
-    } finally {
-    }
+  const doTeleport = async (amountToSend: number) => {
+    isRelayToPara
+      ? await teleportToCoretimeChain(amountToSend)
+      : await teleportToRelay(amountToSend)
   }
 
   const handleMaxClick = () => {
@@ -271,8 +185,8 @@ const Teleport = () => {
           <div className="flex justify-center items-center">
             <PrimaryButton
               disabled={amount <= 0}
-              title={showTransactionPopup ? 'Processing...' : 'Proceed To Confirmation'}
-              onClick={() => functionSendXCM(amount * 10 ** tokenDecimals)}
+              title={isTeleporting ? 'Processing...' : 'Proceed To Confirmation'}
+              onClick={() => doTeleport(amount * 10 ** tokenDecimals)}
             />
           </div>
 
@@ -282,10 +196,12 @@ const Teleport = () => {
             {toShortAddress(activeAccount?.address, 4)}
           </p>
         </div>
+
         <ModalTranasaction
-          isVisible={showTransactionPopup}
+          isVisible={isTeleporting}
           message="Transaction is being processed. Please wait..."
         />
+
         <ModalNotification
           type={notification.type}
           isVisible={notification.isVisible}
