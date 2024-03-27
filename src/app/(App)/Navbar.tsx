@@ -29,7 +29,7 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
             <div className="flex">
                 {/* Sidebar Section */}
                 <div
-                  className={`fixed top-0 left-0 h-screen z-10 transition-width duration-300 ${isCollapsed ? 'w-16' : 'w-56'}`}
+                  className={`fixed top-0 left-0 h-screen z-10 transition-width duration-300 ${isCollapsed ? 'w-16' : 'w-56 overflow-y-auto'}`}
                 >
                   <div className="flex-shrink-0 flex items-center justify-between space-x-5 border-b border-gray-9  pl-6 pr-2 py-6 mt-2">
                     {!isCollapsed && (
