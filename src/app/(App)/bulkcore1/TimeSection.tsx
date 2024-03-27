@@ -9,7 +9,6 @@ import {
   SaleInfoType,
   StatusType,
   blockTimeToUTC,
-  blocksToTimeFormat,
   getConstants,
   getCurrentBlockNumber,
   useBalance,
@@ -17,11 +16,10 @@ import {
 } from '@poppyseed/lastic-sdk'
 import { useEffect, useMemo, useState } from 'react'
 import AnalyticSection from './AnalyticSection'
+import { saleStatus } from '@/utils/broker'
 
 // Define a type for the queryParams
 type QueryParams = (string | number | Record<string, unknown>)[]
-
-const typeOfChain: 'PARA' | 'RELAY' | 'LOCAL' = 'PARA'
 
 // Custom hook for querying substrate state
 function useSubstrateQuery(
@@ -104,47 +102,6 @@ function useBrokerConstants(api: ApiPromise | undefined) {
   }, [api])
 
   return { brokerConstants, isLoading }
-}
-
-function saleStatus(
-  currentBlockNumber: number,
-  saleInfo: SaleInfoType,
-  config: ConfigurationType,
-  constant: BrokerConstantsType,
-) {
-  const divide_by_2_or_not: 1 | 2 = typeOfChain === 'PARA' ? 2 : 1
-  const saleEnds: number =
-    saleInfo.saleStart +
-    (config.regionLength * constant.timeslicePeriod) / divide_by_2_or_not -
-    config.interludeLength
-
-  let statusMessage = ''
-  let timeRemaining = ''
-  let statusTitle = ''
-
-  if (currentBlockNumber < saleInfo.saleStart) {
-    timeRemaining = blocksToTimeFormat(saleInfo.saleStart - currentBlockNumber, typeOfChain)
-    statusMessage = 'Time to renew your core!'
-    statusTitle = 'Interlude Period'
-  } else if (currentBlockNumber < saleInfo.saleStart + config.leadinLength) {
-    timeRemaining = blocksToTimeFormat(
-      saleInfo.saleStart + config.leadinLength - currentBlockNumber,
-      typeOfChain,
-    )
-    statusMessage =
-      'Sales have started we are now in the lead-in period. The price is linearly decreasing with each block.'
-    statusTitle = 'Lead-in Period'
-  } else if (currentBlockNumber <= saleEnds) {
-    timeRemaining = blocksToTimeFormat(saleEnds - currentBlockNumber, typeOfChain)
-    statusMessage = 'Sale is in the purchase period.'
-    statusTitle = 'Purchase Period'
-  } else {
-    timeRemaining = '-'
-    statusMessage = 'The sale has ended.'
-    statusTitle = 'Sale Ended'
-  }
-
-  return { statusTitle, statusMessage, timeRemaining }
 }
 
 function calculateCurrentPrice(
