@@ -1,12 +1,10 @@
 name: Test & Build Next.js App
-
 on:
   workflow_dispatch:
   push:
     branches: [main]
   pull_request:
     branches: [main, stable, development]
-
 jobs:
   lint:
     runs-on: ubuntu-latest
