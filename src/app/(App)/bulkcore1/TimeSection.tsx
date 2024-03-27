@@ -16,7 +16,7 @@ import {
 } from '@poppyseed/lastic-sdk'
 import { useEffect, useMemo, useState } from 'react'
 import AnalyticSection from './AnalyticSection'
-import { saleStatus } from '@/utils'
+import { saleStatus } from '@/utils/broker'
 
 // Define a type for the queryParams
 type QueryParams = (string | number | Record<string, unknown>)[]
