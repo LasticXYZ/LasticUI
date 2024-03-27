@@ -5,7 +5,7 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main, beta, production, next]
+    branches: [main, stable, development]
 
 jobs:
   lint:
@@ -26,6 +26,11 @@ jobs:
 
       - name: Install dependencies
         uses: ./.github/actions/pnpm-install
+
+      - name: Check Google Fonts Accessibility
+        run: |
+          curl -I https://fonts.googleapis.com/css?family=Montserrat
+          ping -c 4 fonts.googleapis.com
 
       - name: Build the project
         env:
