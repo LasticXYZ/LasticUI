@@ -132,6 +132,7 @@ const RenewalsData = () => {
                 colClass="grid-cols-5"
               />
             </div>
+            
             {/* Pagination buttons */}
             <div className="flex justify-center mt-3">
               <button
