@@ -5,17 +5,10 @@ import {
   blocksToTimeFormat,
 } from '@poppyseed/lastic-sdk'
 
-enum TypeOfChain {
-  PARA = 'PARA',
-  RELAY = 'RELAY',
-  LOCAL = 'LOCAL',
-}
-
 enum StatusCode {
   Interlude = 'interlude',
   LeadIn = 'leadIn',
   Purchase = 'purchase',
-  Ended = 'ended',
 }
 
 interface StatusInfo {
@@ -37,10 +30,6 @@ const statusInfoMap: Record<StatusCode, StatusInfo> = {
     statusTitle: 'Purchase Period',
     statusMessage: 'Sale is in the purchase period.',
   },
-  [StatusCode.Ended]: {
-    statusTitle: 'Sale Ended',
-    statusMessage: 'The sale has ended.',
-  },
 }
 
 // Non-exported util functions for saleStatus
@@ -49,12 +38,11 @@ function getSaleEnds(
   saleInfo: SaleInfoType,
   config: ConfigurationType,
   constant: BrokerConstantsType,
-  typeOfChain: TypeOfChain = TypeOfChain.PARA,
 ): number {
-  const divideBy2OrNot: 1 | 2 = typeOfChain === 'PARA' ? 2 : 1
+  // The logic assumes that the coretime chain runs 2 times slower then the relay chain
   return (
     saleInfo.saleStart +
-    (config.regionLength * constant.timeslicePeriod) / divideBy2OrNot -
+    (config.regionLength * constant.timeslicePeriod) / 2 -
     config.interludeLength
   )
 }
@@ -65,21 +53,16 @@ function calculateTimeRemaining(
   config: ConfigurationType,
   constant: BrokerConstantsType,
   statusCode: StatusCode,
-  typeOfChain: TypeOfChain = TypeOfChain.PARA,
 ): string {
-  const saleEnds = getSaleEnds(saleInfo, config, constant, typeOfChain)
+  // const saleEnds = getSaleEnds(saleInfo, config, constant)
 
   switch (statusCode) {
     case StatusCode.Interlude:
-      return blocksToTimeFormat(saleInfo.saleStart - currentBlockNumber, typeOfChain)
+      return blocksToTimeFormat(saleInfo.saleStart - currentBlockNumber)
     case StatusCode.LeadIn:
-      return blocksToTimeFormat(
-        saleInfo.saleStart + config.leadinLength - currentBlockNumber,
-        typeOfChain,
-      )
+      return blocksToTimeFormat(saleInfo.saleStart + config.leadinLength - currentBlockNumber)
     case StatusCode.Purchase:
-      return blocksToTimeFormat(saleEnds - currentBlockNumber, typeOfChain)
-    case StatusCode.Ended:
+      return '-'
     default:
       return '-'
   }
@@ -89,12 +72,10 @@ function determineStatusCode(
   currentBlockNumber: number,
   saleInfo: SaleInfoType,
   config: ConfigurationType,
-  saleEnds: number,
 ): StatusCode {
   if (currentBlockNumber < saleInfo.saleStart) return StatusCode.Interlude
   if (currentBlockNumber < saleInfo.saleStart + config.leadinLength) return StatusCode.LeadIn
-  if (currentBlockNumber <= saleEnds) return StatusCode.Purchase
-  return StatusCode.Ended
+  return StatusCode.Purchase
 }
 
 // Exported function
@@ -104,11 +85,11 @@ export function saleStatus(
   saleInfo: SaleInfoType,
   config: ConfigurationType,
   constant: BrokerConstantsType,
-  typeOfChain: TypeOfChain = TypeOfChain.PARA,
 ): { statusTitle: string; statusMessage: string; timeRemaining: string } {
-  const saleEnds = getSaleEnds(saleInfo, config, constant, typeOfChain)
+  // Check issue https://github.com/LasticXYZ/LasticUI/issues/94 to see why this is commented out
+  // const saleEnds = getSaleEnds(saleInfo, config, constant)
 
-  const statusCode = determineStatusCode(currentBlockNumber, saleInfo, config, saleEnds)
+  const statusCode = determineStatusCode(currentBlockNumber, saleInfo, config)
   const { statusTitle, statusMessage } = statusInfoMap[statusCode]
   const timeRemaining = calculateTimeRemaining(
     currentBlockNumber,
@@ -116,7 +97,6 @@ export function saleStatus(
     config,
     constant,
     statusCode,
-    typeOfChain,
   )
 
   return {
