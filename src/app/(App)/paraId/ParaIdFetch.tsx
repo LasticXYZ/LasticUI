@@ -65,6 +65,14 @@ const MyCores = () => {
   const [core, setCore] = useState<number | null>(null)
   const [begin, setBegin] = useState<number | null>(null)
 
+   // Pagination state
+   const [currentPage, setCurrentPage] = useState(1);
+   const itemsPerPage = 8;
+ 
+   // Calculating indexes for pagination
+   const indexOfLastItem = currentPage * itemsPerPage;
+   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
   // Data filtering based on user selection
   const filteredData = workplanData
     ?.filter((plan) => {
@@ -90,7 +98,12 @@ const MyCores = () => {
         <WalletStatus />
       </Border>
     )
-  }
+  };
+  const currentData = filteredData ? filteredData.slice(indexOfFirstItem, indexOfLastItem) : null;
+
+  // Pagination functions
+  const paginateNext = () => setCurrentPage(currentPage + 1);
+  const paginatePrev = () => setCurrentPage(currentPage - 1);
 
   return (
     <Border className="h-full flex flex-row justify-center items-center">
@@ -139,6 +152,7 @@ const MyCores = () => {
           />
         </div>
         {filteredData && filteredData.length > 0 ? (
+          <>
           <div className="w-full overflow-x-auto">
             <GeneralTable
               tableData={filteredData.map(({ coreInfo, assignmentInfo }) => ({
@@ -161,6 +175,24 @@ const MyCores = () => {
               colClass="grid-cols-4"
             />
           </div>
+              {/* Pagination buttons */}
+        <div className="flex justify-center mt-3">
+          <button
+            onClick={paginatePrev}
+            disabled={currentPage === 1}
+            className="mr-2 px-4 py-2 bg-gray-300 rounded text-gray-700 disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <button
+            onClick={paginateNext}
+            disabled={currentData.length < itemsPerPage}
+            className="px-4 py-2 bg-gray-300 rounded text-gray-700 disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+          </>
         ) : (
           <p>No data available.</p>
         )}
