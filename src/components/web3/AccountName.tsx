@@ -25,7 +25,7 @@ export const AccountName: FC<AccountNameProps> = ({ account, ...rest }) => {
   //console.log("ss58Prefix:", activeChain?.ss58Prefix);
 
   return (
-    <p className="flex font-unbounded uppercase font-bold text-sm uppercase">
+    <p className="flex font-unbounded font-bold text-sm uppercase">
       {primaryDomain || account.name}
     </p>
   )
