@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { FC } from 'react'
 
-interface PrimaryButtonProps {
+export interface PrimaryButtonProps {
   title?: string
   location?: string
   onClick?: () => void // Optional click handler
