@@ -30,13 +30,13 @@ const navigation_app = [
     current: false,
   },
   {
-    name: 'On Demand Cores',
+    name: 'On-Demand Cores',
     icon: <BoltIcon className="h-5 w-5" aria-hidden="true" />,
     href: '/instacore',
     current: false,
   },
   {
-    name: 'ParaId Execution',
+    name: 'ParaID Execution',
     icon: <Cog8ToothIcon className="h-5 w-5" aria-hidden="true" />,
     href: '/paraId',
     current: false,
