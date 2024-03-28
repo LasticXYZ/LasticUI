@@ -23,14 +23,14 @@ const PrimaryButtonWithAutoTeleport: FC<PrimaryButtonWithAutoTeleportProps> = ({
 }) => {
   const [autoTeleportEnabled, setAutoTeleportEnabled] = useState(true)
   const { autoTeleport, notification, setNotification, isTeleporting, teleportMessage } =
-    useTeleport()
+    useTeleport(onClick)
 
   const handleClick = async () => {
     if (!onClick) return
 
     if (autoTeleportEnabled) {
-      autoTeleport(amountNeeded, teleportTo).then(() => onClick())
-    } /*  else onClick() */
+      autoTeleport(amountNeeded, teleportTo)
+    } else onClick()
   }
 
   return (

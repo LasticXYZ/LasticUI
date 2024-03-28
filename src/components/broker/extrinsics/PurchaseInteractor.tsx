@@ -23,13 +23,15 @@ export default function PurchaseInteractor({ param }: { param: string }) {
 
   const { transaction, status, allParamsFilled } = useTxButton(txButtonProps)
 
+  const price = new BN(param)
+
   return (
     <>
       <PrimaryButtonWithAutoTeleport
         title="buy core"
         onClick={transaction}
         disabled={!allParamsFilled()}
-        amountNeeded={new BN(97 * 10 ** 12)}
+        amountNeeded={price}
         teleportTo="coretime"
       />
       <div className="mt-5" style={{ overflowWrap: 'break-word' }}>

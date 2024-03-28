@@ -10,7 +10,7 @@ import { useState } from 'react'
 /** Small buffer for teleporting to prevent potential errors. Adjust it as needed. */
 const BUFFER: BN = new BN(5 * 10 ** 9) // 0.005 ROC
 
-export const useTeleport = () => {
+export const useTeleport = (onTeleportSuccess?: () => void) => {
   // notifications could be extracted into own hook
   const [notification, setNotification] = useState<{
     type: keyof typeof notificationTypes
@@ -70,7 +70,10 @@ export const useTeleport = () => {
     // check if balance is already enough
     const hasSufficientBalance =
       teleportTo === 'relay' ? hasRelayBalance(amount) : hasCoretimeBalance(amount)
-    if (hasSufficientBalance) return
+    if (hasSufficientBalance) {
+      if (onTeleportSuccess) onTeleportSuccess()
+      return
+    }
 
     // check if teleport is possible and teleport
     if (canTeleport(amount)) {
@@ -78,6 +81,7 @@ export const useTeleport = () => {
         teleportTo === 'relay'
           ? amount.sub(balanceOnRelayChain).add(BUFFER)
           : amount.sub(balanceOnCoretimeChain).add(BUFFER)
+      console.log('teleportAmount:', teleportAmount.toString())
 
       teleportTo === 'relay'
         ? await teleportToRelay(BigInt(teleportAmount.toString(10)))
@@ -85,7 +89,11 @@ export const useTeleport = () => {
       return
     }
 
-    // notify user that balance is not sufficient or teleport not possible
+    setNotification({
+      type: 'warn',
+      message: 'Insufficient balance to teleport. Please top up your balance.',
+      isVisible: true,
+    })
   }
 
   const teleport = async (ext: Extrinsic) => {
@@ -189,6 +197,7 @@ export const useTeleport = () => {
         message: `Transaction finalized at blockHash ${blockHash}`,
         isVisible: true,
       })
+      if (onTeleportSuccess) onTeleportSuccess()
     },
     onError: (error) => {
       setIsTeleporting(false)
