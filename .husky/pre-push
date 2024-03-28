@@ -1,6 +1,8 @@
 #!/bin/sh
 # Run linter and fix issues
 pnpm run lint:fix
+# Test if it builds
+pnpm run build 
 
 # Automatically add changes made by lint:fix to the commit
 git add .
