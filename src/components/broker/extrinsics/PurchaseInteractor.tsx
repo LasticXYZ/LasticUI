@@ -1,4 +1,5 @@
 import PrimaryButtonWithAutoTeleport from '@/components/button/PrimaryButtonWithAutoTeleport'
+import { BN } from '@polkadot/util'
 import { TxButtonProps, useBalance, useInkathon, useTxButton } from '@poppyseed/lastic-sdk'
 
 export default function PurchaseInteractor({ param }: { param: string }) {
@@ -28,7 +29,7 @@ export default function PurchaseInteractor({ param }: { param: string }) {
         title="buy core"
         onClick={transaction}
         disabled={!allParamsFilled()}
-        amountNeeded={50}
+        amountNeeded={new BN(97 * 10 ** 12)}
         teleportTo="coretime"
       />
       <div className="mt-5" style={{ overflowWrap: 'break-word' }}>

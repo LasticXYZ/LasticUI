@@ -2,9 +2,13 @@ import { TxCbOnSuccessParams } from '@/app/(App)/teleport/page'
 import { notificationTypes } from '@/components/modal/ModalNotification'
 import { DispatchError } from '@polkadot/types/interfaces'
 import { ISubmittableResult } from '@polkadot/types/types'
+import { BN } from '@polkadot/util'
 import { useBalance, useInkathon, useRelayBalance } from '@poppyseed/lastic-sdk'
 import { Builder, Extrinsic } from '@poppyseed/xcm-sdk'
 import { useState } from 'react'
+
+/** Small buffer for teleporting to prevent potential errors. Adjust it as needed. */
+const BUFFER: BN = new BN(5 * 10 ** 9) // 0.005 ROC
 
 export const useTeleport = () => {
   // notifications could be extracted into own hook
@@ -24,7 +28,6 @@ export const useTeleport = () => {
   const { api, relayApi, activeAccount, activeChain, activeRelayChain, activeSigner } =
     useInkathon()
 
-  // used for auto teleport
   const {
     balanceFormatted: balanceFormattedOnCoretime,
     balance: balanceOnCoretimeChain,
@@ -32,13 +35,58 @@ export const useTeleport = () => {
     tokenDecimals: tokenDecimalsOnCoretimeChain,
   } = useBalance(activeAccount?.address, true)
 
-  // used for auto teleport
   const {
     balanceFormatted: balanceFormattedOnRelayChain,
     balance: balanceOnRelayChain,
     tokenSymbol: tokenSymbolOnRelayChain,
     tokenDecimals: tokenDecimalsOnRelayChain,
   } = useRelayBalance(activeAccount?.address, true)
+
+  const hasRelayBalance = (balanceNeeded: BN) => {
+    if (!balanceOnRelayChain) return false
+    return balanceNeeded.lte(balanceOnRelayChain)
+  }
+
+  const hasCoretimeBalance = (balanceNeeded: BN) => {
+    if (!balanceOnCoretimeChain) return false
+    return balanceNeeded.lte(balanceOnCoretimeChain)
+  }
+
+  const canTeleport = (amountNeeded: BN) => {
+    if (!balanceOnRelayChain || !balanceOnCoretimeChain) return false
+    return balanceOnRelayChain.add(balanceOnCoretimeChain).sub(BUFFER).gte(amountNeeded)
+  }
+
+  /**
+   * functionality for auto teleport.
+   *
+   * @remarks only tries teleporting if balance is not sufficient
+   * @param amount
+   * @param teleportTo
+   */
+  const autoTeleport = async (amount: BN, teleportTo: 'relay' | 'coretime') => {
+    if (!balanceOnRelayChain || !balanceOnCoretimeChain) return
+
+    // check if balance is already enough
+    const hasSufficientBalance =
+      teleportTo === 'relay' ? hasRelayBalance(amount) : hasCoretimeBalance(amount)
+    if (hasSufficientBalance) return
+
+    // check if teleport is possible and teleport
+    if (canTeleport(amount)) {
+      const teleportAmount =
+        teleportTo === 'relay'
+          ? amount.sub(balanceOnRelayChain).add(BUFFER)
+          : amount.sub(balanceOnCoretimeChain).add(BUFFER)
+
+      teleportTo === 'relay'
+        ? await teleportToRelay(BigInt(teleportAmount.toString(10)))
+        : await teleportToCoretimeChain(BigInt(teleportAmount.toString(10)))
+      return
+    }
+
+    // notify user that balance is not sufficient or teleport not possible
+  }
 
   const teleport = async (ext: Extrinsic) => {
     if (!activeAccount) return
@@ -164,9 +212,13 @@ export const useTeleport = () => {
   return {
     teleportToRelay,
     teleportToCoretimeChain,
+    autoTeleport,
     notification,
     setNotification,
     isTeleporting,
     teleportMessage,
+    canTeleport,
+    hasCoretimeBalance,
+    hasRelayBalance,
   }
 }
