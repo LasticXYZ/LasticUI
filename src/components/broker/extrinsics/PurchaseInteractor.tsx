@@ -1,4 +1,4 @@
-import SecondaryButton from '@/components/button/SecondaryButton'
+import PrimaryButtonWithAutoTeleport from '@/components/button/PrimaryButtonWithAutoTeleport'
 import { TxButtonProps, useBalance, useInkathon, useTxButton } from '@poppyseed/lastic-sdk'
 
 export default function PurchaseInteractor({ param }: { param: string }) {
@@ -24,7 +24,13 @@ export default function PurchaseInteractor({ param }: { param: string }) {
 
   return (
     <>
-      <SecondaryButton title="buy core" onClick={transaction} disabled={!allParamsFilled()} />
+      <PrimaryButtonWithAutoTeleport
+        title="buy core"
+        onClick={transaction}
+        disabled={!allParamsFilled()}
+        amountNeeded={50}
+        teleportTo="coretime"
+      />
       <div className="mt-5" style={{ overflowWrap: 'break-word' }}>
         {status}
       </div>
