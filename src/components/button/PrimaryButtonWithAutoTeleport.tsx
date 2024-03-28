@@ -36,6 +36,7 @@ const PrimaryButtonWithAutoTeleport: FC<PrimaryButtonWithAutoTeleportProps> = ({
   return (
     <div className="flex flex-col  items-center gap-3">
       <FormControlLabel
+        disabled={disabled}
         control={
           <Switch
             checked={autoTeleportEnabled}

@@ -10,6 +10,14 @@ import { useState } from 'react'
 /** Small buffer for teleporting to prevent potential errors. Adjust it as needed. */
 const BUFFER: BN = new BN(5 * 10 ** 9) // 0.005 ROC
 
+/**
+ * Provides functionality to manage teleportation between blockchain networks.
+ * It encapsulates logic for checking user balances on different chains, performing the teleportation action,
+ * and managing UI notifications related to the teleportation process. It also handles updating the UI
+ * state to reflect the ongoing status of a teleportation operation.
+ *
+ * @param onTeleportSuccess - An optional callback function that is called upon successful completion of the teleportation process. It is also called in auto teleport if funds are already sufficient.
+ */
 export const useTeleport = (onTeleportSuccess?: () => void) => {
   // notifications could be extracted into own hook
   const [notification, setNotification] = useState<{
@@ -22,7 +30,9 @@ export const useTeleport = (onTeleportSuccess?: () => void) => {
     isVisible: false,
   })
 
+  /** State to indicate if a teleportation process is currently happening. */
   const [isTeleporting, setIsTeleporting] = useState(false)
+  /** State for storing the current teleportation message. */
   const [teleportMessage, setTeleportMessage] = useState('Teleporting. Please wait...')
 
   const { api, relayApi, activeAccount, activeChain, activeRelayChain, activeSigner } =
@@ -42,27 +52,45 @@ export const useTeleport = (onTeleportSuccess?: () => void) => {
     tokenDecimals: tokenDecimalsOnRelayChain,
   } = useRelayBalance(activeAccount?.address, true)
 
+  /**
+   * Determines if there is already sufficient balance on the Relay chain.
+   *
+   * @param balanceNeeded - The amount of balance required as a BN object.
+   * @returns A boolean indicating whether the balance is sufficient.
+   */
   const hasRelayBalance = (balanceNeeded: BN) => {
     if (!balanceOnRelayChain) return false
     return balanceNeeded.lte(balanceOnRelayChain)
   }
 
+  /**
+   * Determines if there is sufficient balance on the Coretime chain.
+   *
+   * @param balanceNeeded - The amount of balance required as a BN object.
+   * @returns A boolean indicating whether the balance is sufficient.
+   */
   const hasCoretimeBalance = (balanceNeeded: BN) => {
     if (!balanceOnCoretimeChain) return false
     return balanceNeeded.lte(balanceOnCoretimeChain)
   }
 
+  /**
+   * Checks if the teleportation operation is feasible by comparing the required amount with the available balances.
+   *
+   * @param amountNeeded - The BN object representing the amount needed to successfully complete a teleportation.
+   * @returns A boolean indicating whether teleportation is possible.
+   */
   const canTeleport = (amountNeeded: BN) => {
     if (!balanceOnRelayChain || !balanceOnCoretimeChain) return false
     return balanceOnRelayChain.add(balanceOnCoretimeChain).sub(BUFFER).gte(amountNeeded)
   }
 
   /**
-   * functionality for auto teleport.
+   * Handles the automatic teleportation logic, deciding whether and where to teleport based on the provided amount and destination.
+   * It attempts the teleportation if the current balance is insufficient and the teleport operation is feasible.
    *
-   * @remarks only tries teleporting if balance is not sufficient
-   * @param amount
-   * @param teleportTo
+   * @param amount - The overall amount needed as a BN object.
+   * @param teleportTo - The target chain for teleportation, either 'relay' or 'coretime'.
    */
   const autoTeleport = async (amount: BN, teleportTo: 'relay' | 'coretime') => {
     if (!balanceOnRelayChain || !balanceOnCoretimeChain) return
@@ -96,6 +124,12 @@ export const useTeleport = (onTeleportSuccess?: () => void) => {
     })
   }
 
+  /**
+   * Executes the teleportation transaction using the provided extrinsic. This function is responsible for signing
+   * and sending the transaction, showing notifications and triggering the callback function.
+   *
+   * @param ext - The extrinsic to be signed and sent, representing the teleportation command.
+   */
   const teleport = async (ext: Extrinsic) => {
     if (!activeAccount) return
     try {
@@ -127,6 +161,11 @@ export const useTeleport = (onTeleportSuccess?: () => void) => {
     }
   }
 
+  /**
+   * Initiates the teleportation process to the Relay chain.
+   *
+   * @param amount - The amount to teleport.
+   */
   const teleportToRelay = async (amount: string | number | bigint) => {
     if (!activeAccount || !api) return
     setTeleportMessage(
@@ -141,6 +180,11 @@ export const useTeleport = (onTeleportSuccess?: () => void) => {
     teleport(ext)
   }
 
+  /**
+   * Initiates the teleportation process to the Coretime chain.
+   *
+   * @param amount - The amount to teleport.
+   */
   const teleportToCoretimeChain = async (amount: string | number | bigint) => {
     if (!activeAccount || !relayApi) return
     setTeleportMessage(
@@ -155,6 +199,7 @@ export const useTeleport = (onTeleportSuccess?: () => void) => {
     teleport(ext)
   }
 
+  /** A general error handler for teleportation process errors. */
   const errorHandler = () => {
     setNotification({
       type: 'warn',
@@ -164,6 +209,11 @@ export const useTeleport = (onTeleportSuccess?: () => void) => {
     setIsTeleporting(false)
   }
 
+  /**
+   * Handles the result of a teleportation transaction, triggering callbacks based on the transaction outcome.
+   *
+   * @param params - An object containing callbacks for success, error handling, and result processing.
+   */
   const handleTeleport =
     ({
       onSuccess,
@@ -189,6 +239,7 @@ export const useTeleport = (onTeleportSuccess?: () => void) => {
       }
     }
 
+  /** Callback for processing teleportation transactions, and update notifications based on the transaction status. */
   const transactionCallback = handleTeleport({
     onSuccess: ({ blockHash }) => {
       setIsTeleporting(false)

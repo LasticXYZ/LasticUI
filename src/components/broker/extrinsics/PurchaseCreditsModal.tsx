@@ -1,7 +1,8 @@
 'use client'
-import PrimaryButton from '@/components/button/PrimaryButton'
+import PrimaryButtonWithAutoTeleport from '@/components/button/PrimaryButtonWithAutoTeleport'
 import Modal from '@/components/modal/Modal'
 import { FormControl, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material'
+import { BN } from '@polkadot/util'
 import { TxButtonProps, useInkathon, useTxButton } from '@poppyseed/lastic-sdk'
 import { FC, useEffect, useState } from 'react'
 
@@ -85,10 +86,12 @@ const PurchaseCreditsModal: FC<PurchaseCreditsProps> = ({ isOpen, onClose }) => 
         />
 
         <div className="flex flex-col items-center justify-center pt-10 ">
-          <PrimaryButton
+          <PrimaryButtonWithAutoTeleport
             title="Purchase"
             onClick={transaction}
             disabled={!allParamsFilled() || !dotAmount || dotAmount <= 0 || !receiver}
+            amountNeeded={new BN(planck.toString())}
+            teleportTo="coretime"
           />
           <div className="mt-5 text-sm text-gray-16 ">{status}</div>
         </div>
