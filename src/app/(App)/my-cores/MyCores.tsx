@@ -65,6 +65,16 @@ export default function MyCores() {
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
   const regionData = useRegionQuery()
 
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 8
+
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage
+
+  const handleNextPage = () => setCurrentPage(currentPage + 1)
+  const handlePrevPage = () => setCurrentPage(currentPage - 1)
+
   if (!activeAccount || !activeChain) {
     return (
       <Border className="h-full flex flex-row justify-center items-center">
@@ -74,15 +84,36 @@ export default function MyCores() {
   }
 
   // Filter regions where activeAccount's address matches the region owner's address
-  const filteredRegionData = regionData?.filter(
-    (region) => region.owner.owner === activeAccount.address,
-  )
+  const filteredRegionData = regionData
+    ?.filter((region) => region.owner.owner === activeAccount.address)
+    .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
 
   return filteredRegionData && filteredRegionData.length > 0 ? (
     <Border className="h-full flex flex-row justify-center items-center">
       <div className="h-full w-full flex flex-col justify-left items-left">
         <div className="pt-10 pl-10">
           <h1 className="text-xl font-unbounded uppercase font-bold">cores owned</h1>
+          {/* Pagination buttons */}
+          <div className="flex justify-center mt-3">
+            <button
+              onClick={handlePrevPage}
+              disabled={currentPage === 1}
+              className="mr-2 px-4 py-2 bg-gray-300 rounded text-gray-700 disabled:opacity-50"
+            >
+              Previous
+            </button>
+            <button
+              onClick={handleNextPage}
+              disabled={
+                !regionData || indexOfLastItem >= regionData.length // Disable when there are no more items
+              }
+              // disabled={filteredRegionData.length < itemsPerPage}
+              // disabled={filteredRegionData.length <= indexOfLastItem}
+              className="px-4 py-2 bg-gray-300 rounded text-gray-700 disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
         </div>
         <div>
           {filteredRegionData.map((region, index) => (

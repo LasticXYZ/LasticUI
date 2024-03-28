@@ -65,6 +65,15 @@ const MyCores = () => {
   const [core, setCore] = useState<number | null>(null)
   const [begin, setBegin] = useState<number | null>(null)
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 8
+  // Pagination functions
+
+  //  // Calculating indexes for pagination
+  const indexOfLastItem = currentPage * itemsPerPage
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage
+
   // Data filtering based on user selection
   const filteredData = workplanData
     ?.filter((plan) => {
@@ -90,6 +99,20 @@ const MyCores = () => {
         <WalletStatus />
       </Border>
     )
+  }
+  const currentData = filteredData ? filteredData.slice(indexOfFirstItem, indexOfLastItem) : null
+
+  // Pagination functions
+  const paginateNext = () => {
+    if (filteredData && filteredData.length > currentPage * itemsPerPage) {
+      setCurrentPage(currentPage + 1)
+    }
+  }
+
+  const paginatePrev = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1)
+    }
   }
 
   return (
@@ -139,28 +162,49 @@ const MyCores = () => {
           />
         </div>
         {filteredData && filteredData.length > 0 ? (
-          <div className="w-full overflow-x-auto">
-            <GeneralTable
-              tableData={filteredData.map(({ coreInfo, assignmentInfo }) => ({
-                data: [
-                  assignmentInfo[0]?.assignment !== 'Pool' &&
-                  typeof assignmentInfo[0]?.assignment === 'object'
-                    ? assignmentInfo[0].assignment.Task.toString()
-                    : 'Pool',
-                  coreInfo.begin.toString(),
-                  coreInfo.core.toString(),
-                  assignmentInfo[0]?.mask || 'N/A',
-                ],
-              }))}
-              tableHeader={[
-                { title: 'Task' },
-                { title: 'Begin' },
-                { title: 'Core' },
-                { title: 'Mask' },
-              ]}
-              colClass="grid-cols-4"
-            />
-          </div>
+          <>
+            <div className="w-full overflow-x-auto">
+              <GeneralTable
+                tableData={filteredData.map(({ coreInfo, assignmentInfo }) => ({
+                  data: [
+                    assignmentInfo[0]?.assignment !== 'Pool' &&
+                    typeof assignmentInfo[0]?.assignment === 'object'
+                      ? assignmentInfo[0].assignment.Task.toString()
+                      : 'Pool',
+                    coreInfo.begin.toString(),
+                    coreInfo.core.toString(),
+                    assignmentInfo[0]?.mask || 'N/A',
+                  ],
+                }))}
+                tableHeader={[
+                  { title: 'Task' },
+                  { title: 'Begin' },
+                  { title: 'Core' },
+                  { title: 'Mask' },
+                ]}
+                colClass="grid-cols-4"
+              />
+            </div>
+            {/* Pagination buttons */}
+            <div className="flex justify-center mt-3">
+              <button
+                onClick={paginatePrev}
+                disabled={currentPage === 1}
+                className="mr-2 px-4 py-2 bg-gray-300 rounded text-gray-700 disabled:opacity-50"
+              >
+                Previous
+              </button>
+              <button
+                onClick={paginateNext}
+                disabled={
+                  currentPage * itemsPerPage >= filteredData.length || filteredData.length === 0
+                }
+                className="px-4 py-2 bg-gray-300 rounded text-gray-700 disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          </>
         ) : (
           <p>No data available.</p>
         )}
