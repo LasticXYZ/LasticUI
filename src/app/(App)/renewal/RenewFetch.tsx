@@ -144,7 +144,7 @@ const RenewalsData = () => {
               <p className="text-black font-semibold">{currentPage}</p>
               <button
                 onClick={handleNextPage}
-                disabled={filteredData.length < itemsPerPage}
+                disabled={filteredData.length < itemsPerPage || filteredData.length === 0}
                 className={`px-4 py-2   border border-gray-21 text-black font-semibold rounded-2xl ${filteredData.length < itemsPerPage ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : ' hover:bg-green-6'}`}
               >
                 Next
