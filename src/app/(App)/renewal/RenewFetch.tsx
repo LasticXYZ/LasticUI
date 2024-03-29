@@ -47,18 +47,24 @@ const RenewalsData = () => {
   const [task, setTask] = useState<number | null>(null)
   const [core, setCore] = useState<number | null>(null)
   const [begin, setBegin] = useState<number | null>(null)
-
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 8
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
 
+  const handleNextPage = () => setCurrentPage(currentPage + 1)
+  const handlePrevPage = () => setCurrentPage(currentPage - 1)
   // Data filtering based on user selection
-  const filteredData = allowedRenewals?.filter((plan) => {
-    return (
-      (!core || parseFormattedNumber(plan.coreInfo[0].core) === core) &&
-      (!begin || parseFormattedNumber(plan.coreInfo[0].when) === begin) &&
-      (!task ||
-        parseFormattedNumber(plan.assignmentInfo.completion?.Complete[0]?.assignment.Task) === task)
-    )
-  })
+  const filteredData = allowedRenewals
+    ?.filter((plan) => {
+      return (
+        (!core || parseFormattedNumber(plan.coreInfo[0].core) === core) &&
+        (!begin || parseFormattedNumber(plan.coreInfo[0].when) === begin) &&
+        (!task ||
+          parseFormattedNumber(plan.assignmentInfo.completion?.Complete[0]?.assignment.Task) ===
+            task)
+      )
+    })
+    .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
 
   if (!activeAccount || !activeChain) {
     return (
@@ -102,29 +108,49 @@ const RenewalsData = () => {
           />
         </div>
         {filteredData && filteredData.length > 0 ? (
-          <div className="w-full overflow-x-auto">
-            <GeneralTable
-              tableData={filteredData.map(({ coreInfo, assignmentInfo }) => ({
-                data: [
-                  coreInfo[0].when,
-                  coreInfo[0].core,
-                  assignmentInfo.completion?.Complete[0]?.assignment.Task || 'N/A',
-                  assignmentInfo.completion?.Complete[0]?.mask || 'N/A',
-                  `${parseNativeTokenToHuman({ paid: assignmentInfo.price?.toString(), decimals: 12, reduceDecimals: 6 })} ${tokenSymbol}`,
-                  //<PrimaryButton title='Renew' />,
-                ],
-              }))}
-              tableHeader={[
-                { title: 'Begin' },
-                { title: 'Core' },
-                { title: 'Task' },
-                { title: 'Mask' },
-                { title: 'Price' },
-                //{ title: 'Click to Renew' },
-              ]}
-              colClass="grid-cols-5"
-            />
-          </div>
+          <>
+            <div className="w-full overflow-x-auto">
+              <GeneralTable
+                tableData={filteredData.map(({ coreInfo, assignmentInfo }) => ({
+                  data: [
+                    coreInfo[0].when,
+                    coreInfo[0].core,
+                    assignmentInfo.completion?.Complete[0]?.assignment.Task || 'N/A',
+                    assignmentInfo.completion?.Complete[0]?.mask || 'N/A',
+                    `${parseNativeTokenToHuman({ paid: assignmentInfo.price?.toString(), decimals: 12, reduceDecimals: 6 })} ${tokenSymbol}`,
+                    //<PrimaryButton title='Renew' />,
+                  ],
+                }))}
+                tableHeader={[
+                  { title: 'Begin' },
+                  { title: 'Core' },
+                  { title: 'Task' },
+                  { title: 'Mask' },
+                  { title: 'Price' },
+                  //{ title: 'Click to Renew' },
+                ]}
+                colClass="grid-cols-5"
+              />
+            </div>
+
+            {/* Pagination buttons */}
+            <div className="flex justify-center mt-3">
+              <button
+                onClick={handlePrevPage}
+                disabled={currentPage === 1}
+                className="mr-2 px-4 py-2 bg-gray-300 rounded text-gray-700 disabled:opacity-50"
+              >
+                Previous
+              </button>
+              <button
+                onClick={handleNextPage}
+                disabled={filteredData.length < itemsPerPage}
+                className="px-4 py-2 bg-gray-300 rounded text-gray-700 disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          </>
         ) : (
           <p>No data available.</p>
         )}
