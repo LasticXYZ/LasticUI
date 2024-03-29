@@ -34,7 +34,7 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
               <div className="flex-shrink-0 flex items-center justify-between space-x-5 border-b border-gray-9  pl-6 pr-2 py-6 mt-2">
                 {!isCollapsed && (
                   <div className="flex gap-1 items-center">
-                    <Link href="/" className="font-bold flex items-center mb-4">
+                    <div className="font-bold flex items-center">
                       <Image
                         src="/assets/Images/Logos/lastic-logo.png"
                         width={130}
@@ -43,11 +43,11 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
                         quality={100}
                         alt="Lastic Logo"
                       />
-                    </Link>
+                    </div>
 
                     {/* Chevron Icon */}
                     <ChevronLeftIcon
-                      className="h-4 w-5 hover:text-gray-12 cursor-pointer"
+                      className="h-4 w-5 hover:text-gray-12 cursor-pointer mt-1"
                       aria-hidden="true"
                       onClick={toggleSidebar}
                     />
@@ -99,7 +99,7 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
               {!isCollapsed && (
                 <>
                   <SideBarAccountName />
-                  <div className="text-gray-8 border-t border-gray-9 mt-20 font-montserrat text-xs font-semibold px-4 pt-6">
+                  <div className="text-gray-8 border-t border-gray-9 mt-10 font-montserrat text-xs font-semibold px-4 pt-6">
                     CHAIN
                   </div>
                   <div className="mt-2 text-gray-18 flex flex-col px-2">
