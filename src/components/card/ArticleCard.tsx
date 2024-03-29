@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import React from 'react'
 import Border from '../border/Border'
 
@@ -21,13 +22,20 @@ function parseDateTime(dateTimeString: string): { date: string; time: string } {
 
 const ArticleCard: React.FC<ArticleCardProps> = ({ imageUrl, title, link, pubDate, author }) => {
   let { date, time } = parseDateTime(pubDate)
-  console.log(imageUrl)
 
   return (
     <Border>
       <a href={link} className="block text-current no-underline">
         <div className="">
-          <img className="h-64 w-full object-cover rounded-t-lg" src={imageUrl} alt={title}></img>
+          <Image
+            className="w-full h-60 object-cover rounded-t-lg"
+            src={imageUrl}
+            alt={title}
+            width={640}
+            height={360}
+            quality={75}
+            priority={true}
+          />
           <div className="p-5">
             <h4 className="font-semibold font-unbounded uppercase">{title}</h4>
             <div className="w-10 h-1 my-3 rounded-full bg-pink-3"></div>

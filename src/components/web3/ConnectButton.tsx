@@ -13,6 +13,7 @@ import {
   useBalance,
   useInkathon,
 } from '@poppyseed/lastic-sdk'
+import Image from 'next/image'
 import Link from 'next/link'
 import { FC, useState } from 'react'
 import { AiOutlineCheckCircle, AiOutlineDisconnect } from 'react-icons/ai'
@@ -67,11 +68,11 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
                       }}
                       className="p-3 flex flex-row cursor-pointer hover:bg-gray-1 transition duration-300"
                     >
-                      <img
+                      <Image
                         src={w.logoUrls[0]}
                         alt={w.name}
                         className="w-6 h-6 mr-2 inline-block"
-                      ></img>
+                      ></Image>
                       {w.name}
                     </li>
                   ) : (
