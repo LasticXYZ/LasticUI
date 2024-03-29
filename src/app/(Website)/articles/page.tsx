@@ -11,6 +11,27 @@ interface Article {
   link: string
 }
 
+const mappingTitletoImg = (index: number) => {
+  switch (index) {
+    case 6:
+      return '/assets/Images/Article/image1.png'
+    case 5:
+      return '/assets/Images/Article/image2.png'
+    case 4:
+      return '/assets/Images/Article/image3.png'
+    case 3:
+      return '/assets/Images/Article/image4.png'
+    case 2:
+      return '/assets/Images/Article/image5.png'
+    case 1:
+      return '/assets/Images/Article/image6.png'
+    case 0:
+      return '/assets/Images/Article/image7.png'
+    default:
+      return '/assets/Images/Article/image1.png'
+  }
+}
+
 export default function Home() {
   const [articles, setArticles] = useState<Article[]>([])
 
@@ -40,7 +61,7 @@ export default function Home() {
           {articles.map((article, index) => (
             <ArticleCard
               key={index}
-              imageUrl={article.thumbnail} // Adjust these properties based on the structure of the RSS feed data
+              imageUrl={mappingTitletoImg(index)} // Adjust these properties based on the structure of the RSS feed data
               title={article.title}
               pubDate={article.pubDate}
               author={article.author}

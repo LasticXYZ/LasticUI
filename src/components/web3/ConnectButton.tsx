@@ -13,6 +13,7 @@ import {
   useBalance,
   useInkathon,
 } from '@poppyseed/lastic-sdk'
+import Image from 'next/image'
 import Link from 'next/link'
 import { FC, useState } from 'react'
 import { AiOutlineCheckCircle, AiOutlineDisconnect } from 'react-icons/ai'
@@ -20,6 +21,21 @@ import { FiExternalLink } from 'react-icons/fi'
 import { AccountName } from './AccountName' // Assuming AccountName is in the same directory
 
 export const allWallets: SubstrateWallet[] = [talisman, polkadotjs, subwallet, nova]
+
+const mappingTitletoImg = (title: string) => {
+  switch (title) {
+    case 'nova':
+      return '/assets/wallet-logos/nova@128w.png'
+    case 'talisman':
+      return '/assets/wallet-logos/talisman@128w.png'
+    case 'polkadotjs':
+      return '/assets/wallet-logos/polkadot@128w.png'
+    case 'subwallet':
+      return '/assets/wallet-logos/subwallet@128w.png'
+    default:
+      return '/assets/wallet-logos/polkadot@128w.png'
+  }
+}
 
 export interface ConnectButtonProps {}
 export const ConnectButton: FC<ConnectButtonProps> = () => {
@@ -67,11 +83,13 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
                       }}
                       className="p-3 flex flex-row cursor-pointer hover:bg-gray-1 transition duration-300"
                     >
-                      <img
-                        src={w.logoUrls[0]}
+                      <Image
+                        src={mappingTitletoImg(w.name)}
                         alt={w.name}
+                        width={24}
+                        height={24}
                         className="w-6 h-6 mr-2 inline-block"
-                      ></img>
+                      />
                       {w.name}
                     </li>
                   ) : (

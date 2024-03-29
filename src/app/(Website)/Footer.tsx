@@ -10,10 +10,11 @@ const Footer = () => (
           <Link href="/" className="flex items-center">
             <Image
               src="/assets/Images/Logos/lastic-logo.png"
-              alt="lastic Logo"
-              width={150}
-              height={50}
+              width={130}
+              height="0"
+              style={{ width: '10em', height: 'auto' }}
               quality={100}
+              alt="Lastic Logo"
             />
           </Link>
           <p className="mt-2 text-sm text-gray-8">Lastic the First Blockspace Marketplace.</p>
