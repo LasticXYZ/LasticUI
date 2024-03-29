@@ -38,7 +38,7 @@ export const SideBarAccountName = () => {
 
   return (
     <div>
-      <div className="text-gray-8 border-t border-gray-9 mt-20 font-montserrat text-xs font-semibold px-4 pt-6">
+      <div className="text-gray-8 border-t border-gray-9 mt-10 font-montserrat text-xs font-semibold px-4 pt-6">
         ACCOUNT
       </div>
       <div className="mt-2 text-gray-18 flex flex-col px-2">
@@ -54,11 +54,12 @@ export const SideBarAccountName = () => {
           </span>
           {toShortAddress(activeAccount?.address, 6)}
         </div>
-
-        <div className="text-gray-8 border-t border-gray-9 mt-20 font-montserrat text-xs font-semibold px-4 pt-6">
+      </div>
+      <div>
+        <div className="text-gray-8 border-t border-gray-9 mt-10 font-montserrat text-xs font-semibold px-4 pt-6">
           BALANCES
         </div>
-        <div className="mt-2 text-gray-18 flex flex-col px-2">
+        <div className="mt-2 ml-2 text-gray-18 flex flex-col px-2">
           <table className="w-full text-md">
             <tbody>
               <tr>
