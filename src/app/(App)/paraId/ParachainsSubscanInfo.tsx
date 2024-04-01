@@ -5,7 +5,7 @@ import GeneralTable from '@/components/table/GeneralTable'
 import { toShortAddress } from '@/utils'
 import { useInkathon } from '@poppyseed/lastic-sdk'
 import React, { useMemo, useState } from 'react'
-import { PossibleNetworks, network_list } from './paraIdData'
+import { PossibleNetworks, network_list } from '../test/paraIdData'
 
 const ParachainInfo: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(0)
@@ -86,7 +86,9 @@ const ParachainInfo: React.FC = () => {
     <section className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8">
       <Border>
         <div className="pt-10 pl-10">
-          <h1 className="text-xl font-unbounded uppercase font-bold">Data Analysis</h1>
+          <h1 className="text-xl font-unbounded uppercase font-bold">
+            Subscan data from {network} relay chain
+          </h1>
         </div>
         {/* Input for paraId */}
         <div className="flex flex-col sm:flex-row items-center gap-4 mb-2 mt-5 ml-14">

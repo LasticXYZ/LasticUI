@@ -1,8 +1,10 @@
+import { PossibleNetworks, network_list } from '@/app/(App)/test/paraIdData'
 import Border from '@/components/border/Border'
+import GeneralTable from '@/components/table/GeneralTable'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
-import { toShortHead } from '@/utils'
+import { parseFormattedNumber, toShortHead } from '@/utils'
 import { useInkathon } from '@poppyseed/lastic-sdk'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 type ParasHeadType = {
   parachain: string[]
@@ -67,9 +69,17 @@ const useParasParachains = () => {
 }
 
 const ParaIdRelay = () => {
-  const { activeChain } = useInkathon()
+  const [currentPage, setCurrentPage] = useState(1)
+  const [searchTerm, setSearchTerm] = useState<number | null>(null)
+  const itemsPerPage = 10
+  const { activeRelayChain } = useInkathon()
+  const network = activeRelayChain?.network
+
   const parasHead = useParasHead()
   const parasParachains = useParasParachains()
+
+  const handleNextPage = () => setCurrentPage(currentPage + 1)
+  const handlePrevPage = () => setCurrentPage(currentPage - 1)
 
   // Merge and deduplicate parachain IDs from both parasParachains and parasHead
   const allParaIds = [
@@ -84,14 +94,21 @@ const ParaIdRelay = () => {
   const combinedData = uniqueParaIds.map((paraId) => {
     const headData = parasHead?.find((head) => head.parachain.includes(paraId))
     return {
-      parachain: paraId,
+      parachain: parseFormattedNumber(paraId),
       head: headData ? toShortHead(headData.head) : 'No head registered',
-      status: headData ? 'Registered' : 'Not registered',
-      para: parasParachains?.includes(paraId) ? 'Parachain' : 'Parathread',
+      para: parasParachains?.includes(paraId) ? 'Parachain' : 'Registered',
     }
   })
 
-  if (!activeChain) {
+  // Filter and order logic
+  const filteredAndOrderedData = useMemo(() => {
+    return combinedData
+      .filter((data) => !searchTerm || data.parachain === searchTerm)
+      .sort((a, b) => a.parachain - b.parachain)
+      .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+  }, [combinedData, searchTerm, currentPage, itemsPerPage])
+
+  if (!activeRelayChain) {
     return (
       <Border className="h-full flex flex-row justify-center items-center">
         <WalletStatus />
@@ -102,88 +119,45 @@ const ParaIdRelay = () => {
   return (
     <Border className="h-full flex flex-row justify-center items-center">
       <div className="h-full w-full flex flex-col justify-start items-start p-10">
-        <h1 className="text-xl font-bold uppercase mb-5">Executing on the Relay chain</h1>
-        <div>
-          <ul>
-            {combinedData?.map((data, index) => (
-              <li key={index}>
-                Idx: {index} | Parachain: {data.parachain} | Head: {data.head} | Status:{' '}
-                {data.status} | Type: {data.para}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <ul></ul>
-        </div>
-        {/*
-        <div className="flex flex-row items-center gap-3 mb-5">
-          <select
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="p-2 border rounded"
-          >
-            <option value="all">All</option>
-            <option value="tasks">Tasks</option>
-            <option value="pool">Pool</option>
-          </select>
-          {filter === 'tasks' && (
-            <>
-              <label htmlFor="task">Task:</label>
-              <input
-                id="task"
-                type="number"
-                placeholder="Task Number"
-                value={task || ''}
-                onChange={(e) => setTask(parseFloat(e.target.value) || null)}
-                className="ml-2 p-2 border rounded"
-              />
-            </>
-          )}
-          <label htmlFor="begin">Begin:</label>
-          <input
-            id="begin"
-            type="number"
-            placeholder="Begin Number"
-            value={begin || ''}
-            onChange={(e) => setBegin(parseFloat(e.target.value) || null)}
-            className="p-2 border rounded"
-          />
-          <label htmlFor="core">Core:</label>
-          <input
-            id="core"
-            type="number"
-            placeholder="Core Number"
-            value={core || ''}
-            onChange={(e) => setCore(parseFloat(e.target.value) || null)}
-            className="p-2 border rounded"
-          />
-        </div>
-        
-        {filteredData && filteredData.length > 0 ? (
+        <h1 className="text-xl font-bold font-unbounded uppercase mb-5">
+          Executing on the Relay chain
+        </h1>
+        {/* Search input */}
+        <input
+          id="task"
+          type="number"
+          placeholder="Search by ParaId..."
+          value={searchTerm || ''}
+          onChange={(e) => setSearchTerm(parseFloat(e.target.value) || null)}
+          className="ml-2 p-2 border rounded"
+        />
+
+        {filteredAndOrderedData && filteredAndOrderedData.length > 0 ? (
           <>
             <div className="w-full overflow-x-auto">
               <GeneralTable
-                tableData={filteredData.map(({ coreInfo, assignmentInfo }) => ({
+                tableData={filteredAndOrderedData.map((data, index) => ({
                   data: [
-                    assignmentInfo[0]?.assignment !== 'Pool' &&
-                    typeof assignmentInfo[0]?.assignment === 'object'
-                      ? assignmentInfo[0].assignment.Task.toString()
-                      : 'Pool',
-                    coreInfo.begin.toString(),
-                    coreInfo.core.toString(),
-                    assignmentInfo[0]?.mask || 'N/A',
+                    data.parachain.toString(),
+                    network_list[network as PossibleNetworks].paraId.hasOwnProperty(
+                      data.parachain.toString(),
+                    )
+                      ? network_list[network as PossibleNetworks].paraId[data.parachain.toString()]
+                      : null,
+                    data.head.toString(),
+                    data.para.toString(),
                   ],
                 }))}
                 tableHeader={[
-                  { title: 'Task' },
-                  { title: 'Begin' },
-                  { title: 'Core' },
-                  { title: 'Mask' },
+                  { title: 'Parachain' },
+                  { title: 'Chain Name' },
+                  { title: 'Head' },
+                  { title: 'Status' },
                 ]}
                 colClass="grid-cols-4"
               />
             </div>
+
             <div className="flex w-full items-center justify-between space-x-2 mt-4 px-5">
               <button
                 onClick={handlePrevPage}
@@ -195,8 +169,11 @@ const ParaIdRelay = () => {
               <p className="text-black font-semibold">{currentPage}</p>
               <button
                 onClick={handleNextPage}
-                disabled={filteredData.length < itemsPerPage || filteredData.length === 0}
-                className={`px-4 py-2   border border-gray-21 text-black font-semibold rounded-2xl ${filteredData.length < itemsPerPage ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : ' hover:bg-green-6'}`}
+                disabled={
+                  filteredAndOrderedData.length < itemsPerPage ||
+                  filteredAndOrderedData.length === 0
+                }
+                className={`px-4 py-2   border border-gray-21 text-black font-semibold rounded-2xl ${filteredAndOrderedData.length < itemsPerPage ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : ' hover:bg-green-6'}`}
               >
                 Next
               </button>
@@ -205,7 +182,6 @@ const ParaIdRelay = () => {
         ) : (
           <p>No data available.</p>
         )}
-      */}
       </div>
     </Border>
   )
