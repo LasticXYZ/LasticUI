@@ -92,7 +92,7 @@ const MyCores = () => {
     })
     .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
 
-  if (!activeAccount || !activeChain) {
+  if (!activeChain) {
     return (
       <Border className="h-full flex flex-row justify-center items-center">
         <WalletStatus />
