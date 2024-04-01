@@ -1,6 +1,17 @@
 export type PossibleNetworks = 'polkadot' | 'kusama' | 'westend' | 'rococo'
 
-export const network_list = {
+export type NetworkInfo = {
+  [key: string]: {
+    name: string
+    currency: string
+    apiUrl: string
+    paraId: {
+      [key: string]: string // This tells TypeScript any string key returns a string value
+    }
+  }
+}
+
+export const network_list: NetworkInfo = {
   polkadot: {
     name: 'Polkadot',
     currency: 'DOT',
