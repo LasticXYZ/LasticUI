@@ -22,15 +22,15 @@ import { AccountName } from './AccountName' // Assuming AccountName is in the sa
 
 export const allWallets: SubstrateWallet[] = [talisman, polkadotjs, subwallet, nova]
 
-const mappingTitletoImg = (title: string) => {
-  switch (title) {
+const mappingTitletoImg = (id: string) => {
+  switch (id) {
     case 'nova':
       return '/assets/wallet-logos/nova@128w.png'
     case 'talisman':
       return '/assets/wallet-logos/talisman@128w.png'
-    case 'polkadotjs':
+    case 'polkadot-js':
       return '/assets/wallet-logos/polkadot@128w.png'
-    case 'subwallet':
+    case 'subwallet-js':
       return '/assets/wallet-logos/subwallet@128w.png'
     default:
       return '/assets/wallet-logos/polkadot@128w.png'
@@ -84,7 +84,7 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
                       className="p-3 flex flex-row cursor-pointer hover:bg-gray-1 transition duration-300"
                     >
                       <Image
-                        src={mappingTitletoImg(w.name)}
+                        src={mappingTitletoImg(w.id)}
                         alt={w.name}
                         width={24}
                         height={24}
@@ -99,7 +99,7 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
                         className="flex items-center justify-between opacity-50 hover:opacity-70 hover:no-underline transition duration-300"
                       >
                         <div>
-                          <span>{w.name}</span>
+                          <span>{w.id}</span>
                           <p className="text-xs mt-1">Not installed</p>
                         </div>
                         <FiExternalLink size={16} />

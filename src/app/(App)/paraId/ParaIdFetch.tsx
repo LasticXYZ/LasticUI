@@ -69,10 +69,8 @@ const MyCores = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 8
   // Pagination functions
-
-  //  // Calculating indexes for pagination
-  const indexOfLastItem = currentPage * itemsPerPage
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage
+  const handleNextPage = () => setCurrentPage(currentPage + 1)
+  const handlePrevPage = () => setCurrentPage(currentPage - 1)
 
   // Data filtering based on user selection
   const filteredData = workplanData
@@ -92,27 +90,14 @@ const MyCores = () => {
         (!begin || plan.coreInfo.begin === begin)
       )
     })
+    .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
 
-  if (!activeAccount || !activeChain) {
+  if (!activeChain) {
     return (
       <Border className="h-full flex flex-row justify-center items-center">
         <WalletStatus />
       </Border>
     )
-  }
-  const currentData = filteredData ? filteredData.slice(indexOfFirstItem, indexOfLastItem) : null
-
-  // Pagination functions
-  const paginateNext = () => {
-    if (filteredData && filteredData.length > currentPage * itemsPerPage) {
-      setCurrentPage(currentPage + 1)
-    }
-  }
-
-  const paginatePrev = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1)
-    }
   }
 
   return (
@@ -186,20 +171,19 @@ const MyCores = () => {
               />
             </div>
             {/* Pagination buttons */}
-            <div className="flex justify-center mt-3">
+            <div className="flex w-full items-center justify-between space-x-2 mt-4 px-5">
               <button
-                onClick={paginatePrev}
+                onClick={handlePrevPage}
                 disabled={currentPage === 1}
-                className="mr-2 px-4 py-2 bg-gray-300 rounded text-gray-700 disabled:opacity-50"
+                className={`px-4 py-2 rounded-2xl text-black border border-gray-21 font-semibold ${currentPage === 1 ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : ' hover:bg-green-6'}`}
               >
                 Previous
               </button>
+              <p className="text-black font-semibold">{currentPage}</p>
               <button
-                onClick={paginateNext}
-                disabled={
-                  currentPage * itemsPerPage >= filteredData.length || filteredData.length === 0
-                }
-                className="px-4 py-2 bg-gray-300 rounded text-gray-700 disabled:opacity-50"
+                onClick={handleNextPage}
+                disabled={filteredData.length < itemsPerPage || filteredData.length === 0}
+                className={`px-4 py-2   border border-gray-21 text-black font-semibold rounded-2xl ${filteredData.length < itemsPerPage ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : ' hover:bg-green-6'}`}
               >
                 Next
               </button>

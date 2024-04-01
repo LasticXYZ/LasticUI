@@ -26,7 +26,6 @@ const useAllowedRenewalsQuery = () => {
             value.toHuman() as AllowedRenewalAssignmentInfo
           return { coreInfo, assignmentInfo }
         })
-        console.log(allowedRenewals)
         setData(allowedRenewals)
       } catch (error) {
         console.error('Failed to fetch data:', error)
@@ -48,7 +47,7 @@ const RenewalsData = () => {
   const [core, setCore] = useState<number | null>(null)
   const [begin, setBegin] = useState<number | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 8
+  const itemsPerPage = 7
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
 
   const handleNextPage = () => setCurrentPage(currentPage + 1)
@@ -66,7 +65,7 @@ const RenewalsData = () => {
     })
     .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
 
-  if (!activeAccount || !activeChain) {
+  if (!activeChain) {
     return (
       <Border className="h-full flex flex-row justify-center items-center">
         <WalletStatus />
@@ -113,18 +112,18 @@ const RenewalsData = () => {
               <GeneralTable
                 tableData={filteredData.map(({ coreInfo, assignmentInfo }) => ({
                   data: [
+                    assignmentInfo.completion?.Complete[0]?.assignment.Task || 'N/A',
                     coreInfo[0].when,
                     coreInfo[0].core,
-                    assignmentInfo.completion?.Complete[0]?.assignment.Task || 'N/A',
                     assignmentInfo.completion?.Complete[0]?.mask || 'N/A',
                     `${parseNativeTokenToHuman({ paid: assignmentInfo.price?.toString(), decimals: 12, reduceDecimals: 6 })} ${tokenSymbol}`,
                     //<PrimaryButton title='Renew' />,
                   ],
                 }))}
                 tableHeader={[
+                  { title: 'Task' },
                   { title: 'Begin' },
                   { title: 'Core' },
-                  { title: 'Task' },
                   { title: 'Mask' },
                   { title: 'Price' },
                   //{ title: 'Click to Renew' },
@@ -132,27 +131,28 @@ const RenewalsData = () => {
                 colClass="grid-cols-5"
               />
             </div>
-            
+
             {/* Pagination buttons */}
-            <div className="flex justify-center mt-3">
+            <div className="flex w-full items-center justify-between space-x-2 mt-4 px-5">
               <button
                 onClick={handlePrevPage}
                 disabled={currentPage === 1}
-                className="mr-2 px-4 py-2 bg-gray-300 rounded text-gray-700 disabled:opacity-50"
+                className={`px-4 py-2 rounded-2xl text-black border border-gray-21 font-semibold ${currentPage === 1 ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : ' hover:bg-green-6'}`}
               >
                 Previous
               </button>
+              <p className="text-black font-semibold">{currentPage}</p>
               <button
                 onClick={handleNextPage}
-                disabled={filteredData.length < itemsPerPage}
-                className="px-4 py-2 bg-gray-300 rounded text-gray-700 disabled:opacity-50"
+                disabled={filteredData.length < itemsPerPage || filteredData.length === 0}
+                className={`px-4 py-2   border border-gray-21 text-black font-semibold rounded-2xl ${filteredData.length < itemsPerPage ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : ' hover:bg-green-6'}`}
               >
                 Next
               </button>
             </div>
           </>
         ) : (
-          <p>No data available.</p>
+          <p className="p-10">No data available.</p>
         )}
       </div>
     </Border>
