@@ -67,42 +67,31 @@ const useParasParachains = () => {
 }
 
 const ParaIdRelay = () => {
-  const { activeAccount, activeChain } = useInkathon()
+  const { activeChain } = useInkathon()
   const parasHead = useParasHead()
   const parasParachains = useParasParachains()
-  // const [filter, setFilter] = useState('all')
-  // const [task, setTask] = useState<number | null>(null)
-  // const [core, setCore] = useState<number | null>(null)
-  // const [begin, setBegin] = useState<number | null>(null)
 
-  // Pagination state
-  //  const [currentPage, setCurrentPage] = useState(1)
-  // const itemsPerPage = 8
-  // // Pagination functions
-  // const handleNextPage = () => setCurrentPage(currentPage + 1)
-  // const handlePrevPage = () => setCurrentPage(currentPage - 1)
+  // Merge and deduplicate parachain IDs from both parasParachains and parasHead
+  const allParaIds = [
+    ...(parasParachains || []),
+    ...(parasHead || []).flatMap((head) => head.parachain),
+  ]
 
-  // Data filtering based on user selection
-  // const filteredData = workplanData
-  //   ?.filter((plan) => {
-  //     if (filter === 'pool') return plan.assignmentInfo.some((info) => info.assignment === 'Pool')
-  //     if (filter === 'tasks')
-  //       return plan.assignmentInfo.some((info) => typeof info.assignment !== 'string')
-  //     return true // 'all' or other cases
-  //   })
-  //   .filter((plan) => {
-  //     return (
-  //       (!task ||
-  //         plan.assignmentInfo.some(
-  //           (info) => typeof info.assignment === 'object' && info.assignment.Task === task,
-  //         )) &&
-  //       (!core || plan.coreInfo.core === core) &&
-  //       (!begin || plan.coreInfo.begin === begin)
-  //     )
-  //   })
-  //   .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+  // Deduplicate allParaIds
+  const uniqueParaIds = Array.from(new Set(allParaIds))
 
-  if (!activeAccount || !activeChain) {
+  // Combine the data, ensuring no duplicates and including all possible paraIds
+  const combinedData = uniqueParaIds.map((paraId) => {
+    const headData = parasHead?.find((head) => head.parachain.includes(paraId))
+    return {
+      parachain: paraId,
+      head: headData ? toShortHead(headData.head) : 'No head registered',
+      status: headData ? 'Registered' : 'Not registered',
+      para: parasParachains?.includes(paraId) ? 'Parachain' : 'Parathread',
+    }
+  })
+
+  if (!activeChain) {
     return (
       <Border className="h-full flex flex-row justify-center items-center">
         <WalletStatus />
@@ -116,21 +105,16 @@ const ParaIdRelay = () => {
         <h1 className="text-xl font-bold uppercase mb-5">Executing on the Relay chain</h1>
         <div>
           <ul>
-            {parasHead?.map((paras, index) => (
+            {combinedData?.map((data, index) => (
               <li key={index}>
-                Idx: {index} | Parachain: {paras.parachain[0]} | Head: {toShortHead(paras.head)}
+                Idx: {index} | Parachain: {data.parachain} | Head: {data.head} | Status:{' '}
+                {data.status} | Type: {data.para}
               </li>
             ))}
           </ul>
         </div>
         <div>
-          <ul>
-            {parasParachains?.map((para, index) => (
-              <li key={index}>
-                Idx: {index} | Parachain: {para}
-              </li>
-            ))}
-          </ul>
+          <ul></ul>
         </div>
         {/*
         <div className="flex flex-row items-center gap-3 mb-5">

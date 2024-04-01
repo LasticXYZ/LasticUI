@@ -11,3 +11,10 @@ export interface AuctionsRequest {
   status?: number
   [property: string]: any
 }
+
+export interface ParachainInfoRequest {
+  page?: number
+  row?: number
+  order: string
+  status?: string[]
+}
