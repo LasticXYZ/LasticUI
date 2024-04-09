@@ -1,6 +1,6 @@
 import About from '@/app/(Website)/About'
-import BlockspaceMarketplace from '@/app/(Website)/BlockspaceMarketplace'
 import DeeperDive from '@/app/(Website)/DeeperDive'
+import FirstInfo from '@/app/(Website)/FirstInfo'
 import Hero from '@/app/(Website)/Hero'
 import LogoSlider from '@/components/logoSlider/LogoSlider'
 
@@ -9,7 +9,7 @@ const Home = () => {
     <>
       <Hero />
       <LogoSlider />
-      <BlockspaceMarketplace />
+      <FirstInfo />
       <About />
       <DeeperDive />
     </>

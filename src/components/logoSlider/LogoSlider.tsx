@@ -1,3 +1,5 @@
+import Image from 'next/image'
+
 const arb = '/assets/asset-logos/Arbitrum.svg'
 const fuel = '/assets/asset-logos/Fuel.svg'
 const artela = '/assets/asset-logos/artela.svg'
@@ -44,11 +46,12 @@ function LogoSlider() {
       <div className="flex items-center whitespace-nowrap gap-12 justify-center logo-slider hover:logo-slider">
         {duplicatedLogos.map((logoSrc, index) => (
           <div key={index} className="inline-flex justify-center" style={{ minWidth: '150px' }}>
-            <img
+            <Image
               src={logoSrc}
               alt={`Logo ${index}`}
+              width={250}
+              height={50}
               className="mx-auto"
-              style={{ width: '250px' }}
             />
           </div>
         ))}

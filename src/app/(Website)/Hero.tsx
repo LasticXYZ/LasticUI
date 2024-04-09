@@ -30,8 +30,10 @@ const Hero = () => {
             />
           </h2>
           <div className="xl:max-w-xl ml-32 mt-10">
-            <p className="py-4 font-dm_sans  text-gray-7 text-md xl:text-lg">
-              One marketplace for All
+            <p className="py-14 font-dm_sans  text-gray-7 text-md xl:text-lg">
+              One marketplace for All Modular Solutions. A protocol-agnostic application that
+              leverages the best features of major networks in order to provide the best service to
+              builders and traders.
             </p>
             <div className="pt-8 xl:pt-10 flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-2">
               <Link
@@ -49,8 +51,9 @@ const Hero = () => {
           <Image
             src="/assets/Images/hero-img.png"
             alt="hero"
-            width={1002}
-            height={1092}
+            width={1000}
+            height="0"
+            style={{ width: '80%', height: 'auto' }}
             quality={100}
             className="object-center justify-center items-center mx-auto "
           />
