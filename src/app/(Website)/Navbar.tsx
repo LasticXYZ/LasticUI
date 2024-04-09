@@ -17,7 +17,7 @@ const Navbar: FC<NavbarProps> = ({ navigation }) => {
 
   return (
     <>
-      <div className="w-full fixed z-50 bg-[#F6FDFF] pb-4 border-b font-dm_sans border-gray-9 bg-opacity-70">
+      <div className="w-full fixed z-50 bg-[#020710] pb-4 border-b font-dm_sans border-gray-9 bg-opacity-70">
         <Disclosure as="nav" className="">
           {({ open }) => (
             <>
@@ -44,17 +44,17 @@ const Navbar: FC<NavbarProps> = ({ navigation }) => {
                           <Link
                             key={idx}
                             href={item.href}
-                            className={`${pathname === item.href ? 'text-pink-4' : 'text-black hover:text-pink-4'}`}
+                            className={`${pathname === item.href ? 'text-pink-4' : 'text-white hover:text-pink-4'}`}
                           >
                             {item.name}
                           </Link>
                         ))}
                       </div>
                     </div>
-                  </div>
-                  <div className="hidden md:block">
-                    <div className="ml-4 flex items-center md:ml-6">
-                      <PrimaryButton title="Launch" location="/bulkcore1" />
+                    <div className="hidden md:block">
+                      <div className="ml-4 flex items-center md:ml-6">
+                        <PrimaryButton title="Launch" location="/bulkcore1" />
+                      </div>
                     </div>
                   </div>
                   <div className="-mr-2 flex md:hidden">
@@ -77,7 +77,7 @@ const Navbar: FC<NavbarProps> = ({ navigation }) => {
                     <Link
                       key={item.name}
                       href={item.href}
-                      className={`${pathname === item.href ? 'text-pink-4' : 'text-black hover:text-pink-4'}`}
+                      className={`${pathname === item.href ? 'text-pink-4' : 'text-white hover:text-pink-4'}`}
                     >
                       {item.name}
                     </Link>

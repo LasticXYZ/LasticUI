@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { DM_Sans, Syne } from 'next/font/google'
-import Background from './Background'
 import Footer from './Footer'
 import Navbar from './Navbar'
 import './globals.css'
@@ -32,13 +31,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={`${dm_sans.variable} ${syne.variable}`}>
-        <Background>
-          <Navbar navigation={navigation_app} />
-          <div className="py-5 font-dm_sans">
-            <main>{children}</main>
-          </div>
-          <Footer />
-        </Background>
+        <Navbar navigation={navigation_app} />
+        <div className="py-5 font-dm_sans">
+          <main>{children}</main>
+        </div>
+        <Footer />
       </body>
     </html>
   )

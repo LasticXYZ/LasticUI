@@ -1,0 +1,172 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import 'animate.css';
+
+.fadeInLeft {
+  animation: fadeInLeft 2s;
+}
+
+.fadeInRight {
+  animation: fadeInRight 2s;
+}
+
+.fadeInUp {
+  animation: fadeInUp 2s;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes hover-vertical {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes hover-vertical-more {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.item-hover-more {
+  animation: hover-vertical-more 2s ease-in-out infinite alternate;
+}
+
+.item-hover {
+  animation: hover-vertical 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+:root {
+  --animate-duration: 800ms;
+  --animate-delay: 0.9s;
+}
+
+.animate__animated.animate__bounce {
+  --animate-duration: 2s;
+}
+
+section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.mobile_nav {
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  background-color: black;
+  color: white;
+  font-weight: bold;
+  font-size: 5xl;
+  z-index: 40;
+  transition-duration: 1000ms;
+}
+
+.show {
+  transform: translateX(0) to translateX(100%);
+  background-color: blueviolet;
+}
+
+.in-viewport {
+  animation: fadeInLeft 22s;
+}
+
+/* Animations.css */
+/* Animations.css */
+@keyframes scrollLogos {
+  0% {
+    transform: translateX(-10%);
+  }
+  100% {
+    transform: translateX(calc(-100% * 2)); /* Adjust this to match the duplication of logos */
+  }
+}
+
+.logo-slider {
+  display: flex; /* Use flex display for continuous scrolling */
+  animation: scrollLogos 50s linear infinite;
+}
+
+.logo-slider:hover {
+  animation-play-state: paused;
+}
+
+/* @keyframes scrollLogos {
+    from {
+      transform: translateX(10%);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+  }
+  
+  .logo-slider {
+    display: flex;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 2rem;
+    animation: scrollLogos 25s linear infinite;
+  }
+  
+  .logo-slider:hover {
+    animation-play-state: paused;
+  } */
+
+@media (max-width: 768px) {
+  .logo-slider {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+}
+
+/* Animations.css or in a <style> tag */
+@keyframes slide {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.testimonial-container {
+  display: flex; /* Arrange testimonials in a row */
+}
+
+.testimonial-container > div {
+  flex: 0 0 100%; /* Each testimonial takes up 100% of the container width */
+  will-change: transform; /* Optimize for animations */
+}
+
+.clip-image {
+  clip-path: polygon(90%, 100% 0, 100% 85%, 0 0);
+}
