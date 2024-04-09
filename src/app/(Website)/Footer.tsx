@@ -9,7 +9,7 @@ const Footer = () => (
         <div className="mb-6 md:mb-0">
           <Link href="/" className="flex items-center">
             <Image
-              src="/assets/Images/Logos/lastic-logo.png"
+              src="/assets/Images/Logos/lastic-logo-dark.png"
               width={130}
               height="0"
               style={{ width: '10em', height: 'auto' }}

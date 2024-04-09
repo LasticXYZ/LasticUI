@@ -1,19 +1,37 @@
+'use client'
+
 import { Link } from '@mui/material'
+import 'animate.css'
 import Image from 'next/image'
+import { TypeAnimation } from 'react-type-animation'
 
 const Hero = () => {
   return (
     <div id="home" className=" w-screen flex justify-center items-center bg-[#020710]">
       <div className="">
         {/* Text Section */}
-        <div className="flex flex-col lg:flex-row items-center justify-center p-20 ">
-          <h2 className="leading-normal lg:leading-snug lg:max-w-2xl pt-20 py-4 text-white text-5xl md:text-6xl lg:text-8xl font-syne font-bold">
-            The Modular Marketplace.
+        <div className="flex flex-col lg:flex-row items-center justify-center p-32 ">
+          <h2 className="h-[250px] w-[600px] leading-normal lg:leading-snug lg:max-w-3xl pt-10 py-4 text-white text-5xl md:text-6xl lg:text-7xl font-syne font-bold">
+            <TypeAnimation
+              // Same String at the start will only be typed once, initially
+              sequence={[
+                'The Modular Marketplace.',
+                1000,
+                'The Blockspace Marketplace.',
+                1000,
+                'Trade Resources Devs Need.',
+                1000,
+                'Purchase Resources You Need.',
+                1000,
+              ]}
+              speed={55} // Custom Speed from 1-99 - Default Speed: 40
+              wrapper="span" // Animation will be rendered as a <span>
+              repeat={Infinity} // Repeat this Animation Sequence infinitely
+            />
           </h2>
           <div className="xl:max-w-xl ml-32 mt-10">
             <p className="py-4 font-dm_sans  text-gray-7 text-md xl:text-lg">
-              Start harnessing the full potential of decentralized finance with the most advanced
-              platform in the world.
+              One marketplace for All
             </p>
             <div className="pt-8 xl:pt-10 flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-2">
               <Link

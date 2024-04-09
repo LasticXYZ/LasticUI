@@ -1,6 +1,7 @@
 'use client'
 
 import PrimaryButton from '@/components/button/PrimaryButton'
+import PrimaryButtonWeb from '@/components/button/PrimaryButtonWeb'
 import { Disclosure } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
@@ -17,7 +18,7 @@ const Navbar: FC<NavbarProps> = ({ navigation }) => {
 
   return (
     <>
-      <div className="w-full fixed z-50 bg-[#020710] pb-4 border-b font-dm_sans border-gray-9 bg-opacity-70">
+      <div className="w-full fixed z-50 bg-[#020710] pb-4 border-b font-dm_sans border-gray-16 bg-opacity-70">
         <Disclosure as="nav" className="">
           {({ open }) => (
             <>
@@ -27,7 +28,7 @@ const Navbar: FC<NavbarProps> = ({ navigation }) => {
                     <div className="flex-shrink-0 cursor-pointer">
                       <Link href="/" className="font-bold" legacyBehavior>
                         <Image
-                          src="/assets/Images/Logos/lastic-logo.png"
+                          src="/assets/Images/Logos/lastic-logo-dark.png"
                           width={130}
                           height="0"
                           style={{ width: '10em', height: 'auto' }}
@@ -53,7 +54,7 @@ const Navbar: FC<NavbarProps> = ({ navigation }) => {
                     </div>
                     <div className="hidden md:block">
                       <div className="ml-4 flex items-center md:ml-6">
-                        <PrimaryButton title="Launch" location="/bulkcore1" />
+                        <PrimaryButtonWeb title="Launch" location="/bulkcore1" />
                       </div>
                     </div>
                   </div>
