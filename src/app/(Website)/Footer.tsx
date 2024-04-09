@@ -21,9 +21,7 @@ const Footer = () => (
         </div>
         <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-4">
           <div>
-            <h2 className="mb-6 text-sm font-semibold font-unbounded text-pink-4 uppercase ">
-              HOME
-            </h2>
+            <h2 className="mb-6 text-sm font-semibold font-syne text-pink-4 uppercase ">HOME</h2>
             <ul className="text-montserrat  font-medium">
               <li className="mb-4">
                 <Link href="/bulkcore1" className="hover:underline">
@@ -43,7 +41,7 @@ const Footer = () => (
             </ul>
           </div>
           <div>
-            <h2 className="mb-6 text-sm font-semibold font-unbounded text-pink-4 uppercase ">
+            <h2 className="mb-6 text-sm font-semibold font-syne text-pink-4 uppercase ">
               LEARN MORE
             </h2>
             <ul className="text-montserrat font-medium">
@@ -63,7 +61,7 @@ const Footer = () => (
             </ul>
           </div>
           <div>
-            <h2 className="mb-6 text-sm font-semibold font-unbounded text-pink-4 uppercase ">
+            <h2 className="mb-6 text-sm font-semibold font-syne text-pink-4 uppercase ">
               RESOURCES
             </h2>
             <ul className="text-montserrat  font-medium">
@@ -80,9 +78,7 @@ const Footer = () => (
             </ul>
           </div>
           <div>
-            <h2 className="mb-6 text-sm font-semibold font-unbounded text-pink-4 uppercase ">
-              CONTACT
-            </h2>
+            <h2 className="mb-6 text-sm font-semibold font-syne text-pink-4 uppercase ">CONTACT</h2>
             <ul className="text-montserrat  font-medium">
               <li className=" text-montserrat mb-4">
                 <a href="https://twitter.com/lastic_xyz" className="hover:underline">

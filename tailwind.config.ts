@@ -27,6 +27,8 @@ const config: Config = {
       fontFamily: {
         montserrat: 'var(--font-montserrat)',
         unbounded: 'var(--font-unbounded)',
+        syne: 'var(--font-syne)',
+        dm_sans: 'var(--font-dm_sans)',
       },
     },
     colors: {

@@ -17,7 +17,7 @@ const Navbar: FC<NavbarProps> = ({ navigation }) => {
 
   return (
     <>
-      <div className="w-full fixed z-50 bg-[#F6FDFF] pb-4 border-b font-montserrat border-gray-9 bg-opacity-70">
+      <div className="w-full fixed z-50 bg-[#F6FDFF] pb-4 border-b font-dm_sans border-gray-9 bg-opacity-70">
         <Disclosure as="nav" className="">
           {({ open }) => (
             <>
