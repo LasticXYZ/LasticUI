@@ -1,12 +1,15 @@
-import AccordionTile from '@/components/accordion/AccordionTile'
 import Border from '@/components/border/Border'
 import { useSubScanCall } from '@/components/callSubscan/callSubScan'
 import { AuctionResponse, AuctionsRequest } from '@/components/callSubscan/types'
-import BarGraph from '@/components/graph/BarGraph'
+import MiniBarGraphData from '@/components/graph/MiniBarGraphData'
 import GeneralTable from '@/components/table/GeneralTable'
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
+
+type DataSetKey = 'auction' // Add more keys as needed
 
 const CoreOwners: React.FC = () => {
+  const [activeDataSet, setActiveDataSet] = useState<DataSetKey>('auction') // Change to string to accommodate multiple datasets
+
   const requestData = useMemo<AuctionsRequest>(
     () => ({
       auction_index: 0,
@@ -57,6 +60,25 @@ const CoreOwners: React.FC = () => {
 
   const network_currency = network_list[0].currency
 
+  const labels = auctionData?.data.auctions
+    .map((auction) => auction.auction_index.toString())
+    .reverse()
+
+  const dataPoints = auctionData?.data.auctions
+    .map((auction) =>
+      auction.winners
+        ? auction.winners.reduce((acc, winner) => acc + winner.amount / 1000000000, 0)
+        : 0,
+    )
+    .reverse()
+
+  const dataConfigs = {
+    auction: {
+      label: 'Auction Prices',
+      dataPoints: dataPoints ? dataPoints : [],
+    },
+  }
+
   const TableData = auctionData
     ? auctionData.data.auctions.map((auction) => ({
         href: '/', // or any other relevant link
@@ -79,16 +101,21 @@ const CoreOwners: React.FC = () => {
       }))
     : []
 
-  const auctionIndices = auctionData?.data.auctions
-    .map((auction) => auction.auction_index.toString())
-    .reverse()
-  const dotAmounts = auctionData?.data.auctions
-    .map((auction) =>
-      auction.winners
-        ? auction.winners.reduce((acc, winner) => acc + winner.amount / 1000000000, 0)
-        : 0,
-    )
-    .reverse()
+  // Toggle between data sets
+  const toggleActiveDataSet = (newDataSet: DataSetKey) => {
+    setActiveDataSet(newDataSet)
+  }
+
+  // Generate buttons or options for switching datasets
+  const dataSetOptions = Object.keys(dataConfigs).map((key) => (
+    <button
+      key={key}
+      onClick={() => toggleActiveDataSet(key as DataSetKey)}
+      className={`py-2 px-4 text-left hover:font-semibold border-b border-gray-18 ${activeDataSet === key ? 'text-pink-5 font-semibold' : 'text-gray-16'}`}
+    >
+      {dataConfigs[key as DataSetKey].label}
+    </button>
+  ))
 
   if (loading) return <div>Loading...</div>
   if (error) return <div>Error: {error}</div>
@@ -97,16 +124,22 @@ const CoreOwners: React.FC = () => {
     <section className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8">
       <Border>
         <div className="pt-10 pl-10">
-          <h1 className="text-xl font-unbounded uppercase font-bold">Data Analysis</h1>
+          <h1 className="text-2xl font-unbounded uppercase font-bold">Core Data</h1>
         </div>
         <div className="grid grid-cols-4 font-montserrat p-6 w-full">
           <div className="col-span-1 grid grid-cols-1 gap-4 mb-4">
-            <div className=" p-2">
-              <AccordionTile question="Money in auctions" answer="twr-aerawerae" />
+            <div className="col-span-1">
+              <div className="p-2 flex flex-col space-y-4">{dataSetOptions}</div>
             </div>
           </div>
           <div className=" col-span-3 p-4">
-            <BarGraph auctionIndices={auctionIndices || []} dotAmounts={dotAmounts || []} />
+            {labels && labels.length > 0 && (
+              <MiniBarGraphData
+                title={dataConfigs[activeDataSet].label}
+                labels={labels}
+                dataPoints={dataConfigs[activeDataSet].dataPoints}
+              />
+            )}
           </div>
         </div>
         <div className="mx-auto max-w-9xl px-4 mt-5 sm:px-6 lg:px-8">
