@@ -10,7 +10,7 @@ const Hero = () => {
     <div id="home" className=" w-screen flex justify-center items-center bg-[#020710]">
       <div className="">
         {/* Text Section */}
-        <div className="flex flex-col lg:flex-row items-center justify-center p-32 ">
+        <div className="flex flex-col lg:flex-row items-center justify-center p-8 md:p-16 lg:p-32 ">
           <h2 className="h-[250px] w-[600px] leading-normal lg:leading-snug lg:max-w-3xl pt-10 py-4 text-white text-5xl md:text-6xl lg:text-7xl font-syne font-bold">
             <TypeAnimation
               // Same String at the start will only be typed once, initially
@@ -47,12 +47,13 @@ const Hero = () => {
         </div>
 
         {/* Image Section */}
-        <div className=" w-full ">
+        <div className=" w-full px-4 md:px-0">
           <Image
             src="/assets/Images/hero-img.png"
             alt="hero"
-            width={1000}
-            height="0"
+            layout="responsive"
+            width={500}
+            height={375}
             style={{ width: '80%', height: 'auto' }}
             quality={100}
             className="object-center justify-center items-center mx-auto "

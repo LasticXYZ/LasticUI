@@ -39,7 +39,7 @@ export default function About() {
   return (
     <div className="overflow-hidden border-y border-gray-16">
       <div className="">
-        <div className="mx-auto max-w-9xl py-28 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-9xl py-14 md:py-28 px-4 sm:px-6 lg:px-8">
           <div className="flex flex-row justify-center items-center gap-5 p-20">
             <div className="max-w-2xl">
               <h6 className="uppercase text-md text-pink-4 font-bold font-inter">For Traders</h6>

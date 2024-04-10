@@ -4,7 +4,7 @@ import Image from 'next/image'
 
 const FirstInfo = () => {
   return (
-    <section className="flex h-screen bg-black px-10 text-white">
+    <section className="flex flex-wrap md:flex-nowrap h-auto md:h-screen bg-black px-4 md:px-10 text-white">
       <div className="m-auto w-2/5 max-w-xl">
         {/* Text section */}
         <div className="flex flex-col space-y-4">
@@ -21,13 +21,15 @@ const FirstInfo = () => {
         </div>
       </div>
 
+      </div>
       {/* Dashboard image or component goes here */}
-      <div className="m-auto w-2/5">
+      <div className="m-auto md:w-2/5 px-4 py-8">
         <Image
           src="/assets/Images/trade-view.png"
           alt="Deeper Dive Image"
-          width={640}
-          height={480}
+          layout="responsive"
+          width={320}
+          height={240}
         />
       </div>
     </section>
