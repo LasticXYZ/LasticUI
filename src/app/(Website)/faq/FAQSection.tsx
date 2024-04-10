@@ -35,9 +35,11 @@ const FAQ = [
 
 const FAQSection = () => {
   return (
-    <div className="text-gray-20 min-h-screen py-20 pt-32">
-      <div className="mx-auto max-w-5xl">
-        <h1 className="text-5xl text-center font-syne uppercase text-gray-20 font-semibold">Q&A</h1>
+    <div className="text-gray-4 min-h-screen px-10 py-20 pt-32">
+      <div className="mx-auto max-w-5xl ">
+        <h1 className="text-5xl mb-5 text-center font-syne uppercase text-gray-2 font-semibold">
+          Q&A
+        </h1>
 
         {FAQ.map((item, index) => {
           return <AccordionTile key={index} question={item.question} answer={item.answer} />
