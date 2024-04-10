@@ -1,7 +1,8 @@
 import About from '@/app/(Website)/About'
-import DeeperDive from '@/app/(Website)/DeeperDive'
 import FirstInfo from '@/app/(Website)/FirstInfo'
+import FuturePlatform from '@/app/(Website)/FuturePlatform'
 import Hero from '@/app/(Website)/Hero'
+import WorldMap from '@/app/(Website)/WorldMap'
 import LogoSlider from '@/components/logoSlider/LogoSlider'
 
 const Home = () => {
@@ -11,7 +12,8 @@ const Home = () => {
       <LogoSlider />
       <FirstInfo />
       <About />
-      <DeeperDive />
+      <FuturePlatform />
+      <WorldMap />
     </>
   )
 }
