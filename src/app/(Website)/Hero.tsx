@@ -29,16 +29,16 @@ const Hero = () => {
               repeat={Infinity} // Repeat this Animation Sequence infinitely
             />
           </h2>
-          <div className="xl:max-w-xl ml-32 mt-10">
-            <p className="py-14 font-dm_sans  text-gray-7 text-md xl:text-lg">
+          <div className="xl:max-w-xl ml-32 mt-20">
+            <p className="py-5 font-dm_sans  text-gray-7 text-md xl:text-lg">
               One marketplace for All Modular Solutions. A protocol-agnostic application that
               leverages the best features of major networks in order to provide the best service to
               builders and traders.
             </p>
-            <div className="pt-8 xl:pt-10 flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-2">
+            <div className="pt-4 xl:pt-5 flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-2">
               <Link
                 href="https://docs.lastic.xyz/"
-                className=" text-purple-6 hover:text-pink-4 no-underline text-lg border-b font-bold font-dm_sans"
+                className=" text-pink-5 hover:text-pink-4 no-underline text-lg border-b font-bold font-dm_sans"
               >
                 Learn More -&gt;
               </Link>

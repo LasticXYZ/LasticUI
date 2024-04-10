@@ -32,7 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={`${dm_sans.variable} ${syne.variable}`}>
         <Navbar navigation={navigation_app} />
-        <div className="py-5 font-dm_sans">
+        <div className="pt-5 font-dm_sans">
           <main>{children}</main>
         </div>
         <Footer />
