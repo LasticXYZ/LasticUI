@@ -39,19 +39,21 @@ export default function About() {
   return (
     <div className="overflow-hidden border-y border-gray-16">
       <div className="">
-        <div className="mx-auto max-w-7xl py-10 sm:py-20 md:py-28 px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-5 sm:p-10 md:p-20">
+        <div className="mx-auto max-w-9xl py-14 md:py-28 px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-5 sm:mr-5 p-10 md:p-20">
             <div className="max-w-2xl">
-              <h6 className="uppercase text-sm sm:text-md text-pink-4 font-bold font-inter">For Traders</h6>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight font-syne">
+              <h6 className="uppercase text-sm sm:text-md text-pink-4 font-bold font-inter py-3">
+                For Traders
+              </h6>
+              <h1 className="text-4xl md:text-5xl font-bold leading-tight font-syne">
                 Speculate on Resources Needed by Builders
               </h1>
             </div>
-            <p className="text-sm sm:text-md md:text-lg font-dm_sans text-gray-4">
+            <p className="text-md md:text-lg font-dm_sans text-gray-4">
               Looking for new opportunities and risks Seek platforms for predicting future demand
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-5 gap-8">
             {features.map((feature, index) => (
               <AboutCard key={index} title={feature.title} description={feature.description} />
             ))}
