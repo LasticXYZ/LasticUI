@@ -16,17 +16,26 @@ const StartPage = () => {
             <div className="flex flex-col  text-white font-bold py-6 px-12 rounded-lg shadow-lg items-center justify-center transition-all duration-300">
               <Image
                 src="/assets/Images/deeper_dive.png"
-                width={130}
+                width={500}
                 height={0}
                 className="rounded-2xl border border-gray-16 "
-                style={{ width: '10em', height: 'auto' }}
+                style={{ width: '20em', height: 'auto' }}
                 quality={100}
                 alt="Lastic Logo"
               />
-              <p className="text-xl">EVM Solution</p>
-              <p>If you have a Layer One</p>
-              <PrimaryButtonWeb title="Go to App" onClick={() => console.log("test")} disabled={true}/>
-              <SecondaryButtonWeb title="Check the Docs" location='https://docs.lastic.xyz/'  />
+              <div className='py-5 px-2 flex flex-col justify-start items-start w-full'>
+                <h4 className="font-syne text-3xl py-2">EVM solution</h4>
+                <p className='font-dm_sans text-md text-gray-6 py-2 mb-5'>If you have a Layer One click here s.dfadfiajsd fa dfia dsifj oadsjfa dsfaidfj asdf oasd fodsiofaj odf.</p>
+                <div className='flex flex-col justify-center items-center w-full'>
+                    <div className='p-2'>
+                        <PrimaryButtonWeb title="Coming Soon" onClick={() => console.log("test")} disabled={true}/>
+                    </div>
+                    <div className='p-2'>
+                        <SecondaryButtonWeb title="Check the Docs" location='https://docs.lastic.xyz/'  />
+                    </div>
+                </div>
+
+              </div>
             </div>
           </BorderBlack>
         </div>
@@ -35,19 +44,28 @@ const StartPage = () => {
         <div>
           <BorderBlack>
             <div className="flex flex-col  text-white font-bold py-6 px-12 rounded-lg shadow-lg cursor-pointer items-center justify-center transition-all duration-300">
-              <Image
+            <Image
                 src="/assets/Images/deeper_dive.png"
-                width={130}
+                width={500}
                 height={0}
                 className="rounded-2xl border border-gray-16 "
-                style={{ width: '10em', height: 'auto' }}
+                style={{ width: '20em', height: 'auto' }}
                 quality={100}
                 alt="Lastic Logo"
               />
-                <p className="text-xl">Polkadot Solution</p>
-                <p>If you have an Appchain</p>
-                <PrimaryButtonWeb title="Go to App" location="/bulkcore1" />
-                <SecondaryButtonWeb title="Check the Docs" location='https://docs.lastic.xyz/'  />
+                <div className='py-5 px-2 flex flex-col justify-start items-start w-full'>
+
+                    <h4 className="font-syne text-3xl py-2">Polkadot solution</h4>
+                    <p className='font-dm_sans text-md text-gray-6 py-2 mb-5'>If you have an Appchain s.dfadfiajsd fa dfia dsifj oadsjfa dsfaidfj asdf oasd fodsiofaj odf.</p>
+                    <div className='flex flex-col justify-center items-center w-full'>
+                        <div className='p-2'>
+                            <PrimaryButtonWeb title="Go to App" location="/bulkcore1" />
+                        </div>
+                        <div className='p-2'>
+                            <SecondaryButtonWeb title="Check the Docs" location='https://docs.lastic.xyz/'  />
+                        </div>
+                    </div>
+                    </div>
             </div>
           </BorderBlack>
         </div>
