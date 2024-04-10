@@ -2,7 +2,6 @@
 
 import { Link } from '@mui/material'
 import 'animate.css'
-import Image from 'next/image'
 import { TypeAnimation } from 'react-type-animation'
 
 const Hero = () => {
@@ -46,7 +45,7 @@ const Hero = () => {
           </div>
         </div>
 
-        {/* Image Section */}
+        {/* Image Section 
         <div className=" w-full px-10 lg:px-64">
           <Image
             src="/assets/Images/hero-img.png"
@@ -58,6 +57,18 @@ const Hero = () => {
             quality={100}
             className="object-center justify-center items-center mx-auto "
           />
+        </div>
+        */}
+        <div className="w-full px-10 lg:px-64">
+          <video
+            className="w-full h-auto mx-auto object-center justify-center items-center" // Adjust the Tailwind classes as needed
+            loop
+            muted
+            autoPlay
+          >
+            <source src="/assets/Images/video.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
         </div>
       </div>
     </div>
