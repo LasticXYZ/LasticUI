@@ -23,7 +23,7 @@ const StartPage = () => {
               />
               <p className="text-xl">EVM Solution</p>
               <p>If you have a Layer One</p>
-              <PrimaryButtonWeb title="Go to App" onClick={() => console.log("test")}/>
+              <PrimaryButtonWeb title="Go to App" onClick={() => console.log("test")} disabled={true}/>
               <SecondaryButtonWeb title="Check the Docs" location='https://docs.lastic.xyz/'  />
             </div>
           </BorderBlack>
