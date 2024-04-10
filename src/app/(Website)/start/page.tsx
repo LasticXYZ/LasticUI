@@ -7,19 +7,19 @@ import Image from 'next/image'
 
 const StartPage = () => {
     return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       {/* Container for the boxes */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto p-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl mx-auto px-4 py-8 sm:p-4">
         {/* EVM Solution Box */}
         <div>
           <BorderBlack>
             <div className="flex flex-col  text-white font-bold py-6 px-12 rounded-lg shadow-lg items-center justify-center transition-all duration-300">
               <Image
                 src="/assets/Images/deeper_dive.png"
-                width={500}
-                height={0}
+                width={250}
+                height={250}
                 className="rounded-2xl border border-gray-16 "
-                style={{ width: '20em', height: 'auto' }}
+                layout="responsive"
                 quality={100}
                 alt="Lastic Logo"
               />
@@ -46,10 +46,10 @@ const StartPage = () => {
             <div className="flex flex-col  text-white font-bold py-6 px-12 rounded-lg shadow-lg cursor-pointer items-center justify-center transition-all duration-300">
             <Image
                 src="/assets/Images/deeper_dive.png"
-                width={500}
-                height={0}
+                width={250}
+                height={250}
                 className="rounded-2xl border border-gray-16 "
-                style={{ width: '20em', height: 'auto' }}
+                layout="responsive"
                 quality={100}
                 alt="Lastic Logo"
               />
