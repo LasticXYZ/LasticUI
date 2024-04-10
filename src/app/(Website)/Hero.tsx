@@ -11,7 +11,7 @@ const Hero = () => {
       <div className="">
         {/* Text Section */}
         <div className="flex flex-col lg:flex-row items-center justify-center p-8 md:p-16 lg:p-32 ">
-          <h2 className="h-[250px] px-20 md:px-0 w-[600px] leading-normal ml-5 md:ml-0 lg:leading-snug lg:max-w-3xl pt-10 text-white text-5xl md:text-6xl mt-10 md:mt-0 lg:text-6xl xl:text-7xl font-syne font-bold">
+          <h2 className="h-[350px] md:h-[250px] md:px-0 w-[350px] md:w-[600px] leading-normal ml-5 md:ml-0 lg:leading-snug lg:max-w-3xl pt-10 text-white text-5xl md:text-6xl mt-10 md:mt-0 lg:text-6xl xl:text-7xl font-syne font-bold">
             <TypeAnimation
               // Same String at the start will only be typed once, initially
               sequence={[
