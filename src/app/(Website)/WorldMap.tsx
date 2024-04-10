@@ -3,7 +3,7 @@ import Image from 'next/image'
 
 const WorldMap = () => {
   return (
-    <section className="flex flex-col md:flex-row h-auto md:h-screen bg-black px-4 sm:px-6 md:px-10 text-white">
+    <section className="flex flex-col md:flex-row h-auto md:h-screen bg-black py-10 px-4 sm:px-6 md:px-10 text-white">
       {/* Dashboard image or component goes here */}
       <div className="m-auto w-full md:w-2/5 px-4 py-8">
         <Image
@@ -27,14 +27,15 @@ const WorldMap = () => {
             platform in the world.
           </p>
           <div className="pt-8 font-dm_sans flex flex-col sm:flex-row justify-normal items-center">
-          <div className="pt-8 font-dm_sans flex flex-row justify-normal items-center">
-            <div className="flex flex-col justify-center items-center">
-              <div className="text-pink-5 text-4xl sm:text-5xl md:text-6xl">38K</div>
-              <div className="text-lg sm:text-xl p-2">Users joined</div>
-            </div>
-            <div className="flex flex-col sm:ml-8 md:ml-16 justify-center items-center">
-              <div className="text-pink-5 text-4xl sm:text-5xl md:text-6xl">60+</div>
-              <div className="text-lg sm:text-xl p-2">Companies</div>
+            <div className="pt-8 font-dm_sans flex flex-row justify-normal items-center">
+              <div className="flex flex-col justify-center items-center">
+                <div className="text-pink-5 text-4xl sm:text-5xl md:text-6xl">38K</div>
+                <div className="text-lg sm:text-xl p-2">Users joined</div>
+              </div>
+              <div className="flex flex-col sm:ml-8 md:ml-16 justify-center items-center">
+                <div className="text-pink-5 text-4xl sm:text-5xl md:text-6xl">60+</div>
+                <div className="text-lg sm:text-xl p-2">Companies</div>
+              </div>
             </div>
           </div>
         </div>
