@@ -21,7 +21,6 @@ const FirstInfo = () => {
         </div>
       </div>
 
-      </div>
       {/* Dashboard image or component goes here */}
       <div className="m-auto md:w-2/5 px-4 py-8">
         <Image
