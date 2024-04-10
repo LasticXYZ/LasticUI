@@ -1,3 +1,5 @@
+'use client'
+
 import BorderBlack from '@/components/border/BorderBlack'
 import PrimaryButtonWeb from '@/components/button/PrimaryButtonWeb'
 import SecondaryButtonWeb from '@/components/button/SecondaryButtonWeb'
