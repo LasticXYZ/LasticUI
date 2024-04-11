@@ -27,7 +27,7 @@ const ChainDropdown: FC<ChainDropdownProps> = ({ chainOptions }) => {
               <span className="ml-3 block truncate">{selectedChain.name}</span>
             </span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-              <ChevronDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+              <ChevronDownIcon className="h-5 w-5 " aria-hidden="true" />
             </span>
           </Listbox.Button>
           <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md border bg-white border-gray-9 bg-opacity-80 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">

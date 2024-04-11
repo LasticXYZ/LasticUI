@@ -27,7 +27,7 @@ const BlockspaceMarketplace = () => {
           </div>
 
           <div className="text-sm px-4 md:text-base md:flex-1">
-            <p className="my-4 text-base py-4 sm:text-lg font-bold text-gray-600">
+            <p className="my-4 text-base py-4 sm:text-lg font-bold ">
               Lastic is a user-friendly marketplace for buying and selling blockspace tailored to
               your needs, built on Polkadot Coretime.
             </p>

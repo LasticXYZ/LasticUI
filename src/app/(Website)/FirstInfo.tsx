@@ -16,7 +16,7 @@ const FirstInfo = () => {
             Looking for new opportunities and risks Seek platforms for predicting future demand
           </p>
           <div className="pt-8">
-            <PrimaryButtonWeb title="Get Started" location="/bulkcore1" />
+            <PrimaryButtonWeb title="Get Started" location="/start" />
           </div>
         </div>
       </div>

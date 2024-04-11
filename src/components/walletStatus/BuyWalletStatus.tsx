@@ -68,19 +68,19 @@ const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({
             Core Nb:{' '}
             <span className="font-semibold">{saleInfo.firstCore + saleInfo.coresSold}</span>
           </div>
-          <div className="text-gray-600 mb-2">
+          <div className=" mb-2">
             Available Cores:{' '}
             <span className="font-semibold">
               {saleInfo.coresOffered - saleInfo.coresSold} / {saleInfo.coresOffered}{' '}
             </span>
           </div>
-          <div className="text-gray-600 mb-2">
+          <div className=" mb-2">
             Cores that need to be sold so that the price starts rising:{' '}
             <span className="font-semibold">
               {saleInfo.idealCoresSold} / {saleInfo.coresOffered}{' '}
             </span>
           </div>
-          <div className="text-gray-600 mb-4">
+          <div className=" mb-4">
             Buy core for: <span className="text-green-500 font-semibold">{formatPrice}</span>
           </div>
           <div>

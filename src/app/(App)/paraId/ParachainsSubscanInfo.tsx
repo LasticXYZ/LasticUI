@@ -94,7 +94,7 @@ const ParachainInfo: React.FC = () => {
         <div className="flex flex-col sm:flex-row items-center gap-4 mb-2 mt-5 ml-14">
           <input
             type="number"
-            className="form-input mt-1 block w-full sm:w-64 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            className="form-input mt-1 block w-full sm:w-64 px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             value={paraId || ''}
             onChange={(e) => setParaId(e.target.value ? parseInt(e.target.value, 10) : null)}
             placeholder="Enter ParaId"

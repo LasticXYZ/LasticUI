@@ -21,7 +21,7 @@ const Modal: FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
 
         <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full p-6">
           <div className="absolute top-0 right-0 pt-4 pr-4">
-            <button type="button" className="text-gray-400 hover:text-gray-500" onClick={onClose}>
+            <button type="button" className="" onClick={onClose}>
               <span className="sr-only">Close</span>X
             </button>
           </div>

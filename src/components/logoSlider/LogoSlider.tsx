@@ -1,44 +1,24 @@
 import Image from 'next/image'
 
-const arb = '/assets/asset-logos/Arbitrum.svg'
-const fuel = '/assets/asset-logos/Fuel.svg'
-const artela = '/assets/asset-logos/artela.svg'
-const base = '/assets/asset-logos/base.svg'
-const fhenix = '/assets/asset-logos/fhenix.svg'
-const linea = '/assets/asset-logos/linea.svg'
+const polkadot = '/assets/asset-logos/polkadot.svg'
 const moonbeam = '/assets/asset-logos/moonbeam.svg'
-const threshold = '/assets/asset-logos/threshold.svg'
+const tanssi = '/assets/asset-logos/tanssi.svg'
 
 import './styles/Animations.css'
 
 function LogoSlider() {
-  const logos = [
-    arb,
-    base,
-    threshold,
-    linea,
-    moonbeam,
-    fhenix,
-    artela,
-    fuel,
-    arb,
-    base,
-    threshold,
-    linea,
-    moonbeam,
-    fhenix,
-    artela,
-    fuel,
-    arb,
-    base,
-    threshold,
-    linea,
-    moonbeam,
-    fhenix,
-    artela,
-  ]
+  const logos = [moonbeam, polkadot, tanssi]
 
-  const duplicatedLogos = [...logos, ...logos]
+  const duplicatedLogos = [
+    ...logos,
+    ...logos,
+    ...logos,
+    ...logos,
+    ...logos,
+    ...logos,
+    ...logos,
+    ...logos,
+  ]
 
   return (
     <div className=" w-screen overflow-hidden py-14 border-t border-gray-16 ">
