@@ -9,6 +9,7 @@ const config: Config = {
     // Or if using `src` directory:
     './src/**/*.{js,ts,jsx,tsx}',
   ],
+  darkMode: 'media', // or 'class'
   theme: {
     extend: {
       backgroundImage: {
