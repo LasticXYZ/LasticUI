@@ -25,10 +25,7 @@ const GeneralTable: FC<GeneralTableProps> = ({
               )}
             >
               {tableHeader.map((item, index) => (
-                <div
-                  key={index}
-                  className="bg-gray-100 flex justify-start items-center font-bold p-4"
-                >
+                <div key={index} className="flex justify-start items-center font-bold p-4">
                   {item.title}
                 </div>
               ))}

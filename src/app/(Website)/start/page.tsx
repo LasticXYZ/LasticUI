@@ -7,7 +7,7 @@ import Image from 'next/image'
 
 const StartPage = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 my-2">
+    <div className="flex flex-col items-center justify-center min-h-screen my-2">
       {/* Container for the boxes */}
       <div className="grid grid-cols-1 mt-5 sm:grid-cols-2 gap-8 max-w-6xl mx-auto px-4 py-4 sm:p-4">
         {/* EVM Solution Box */}
