@@ -121,7 +121,7 @@ const Teleport = () => {
           <div className="flex flex-row items-center justify-between w-full gap-6 mb-6">
             <div className="w-full">
               <p className="mb-2">Source chain</p>
-              <div className="relative w-full rounded-2xl bg-opacity-20 py-2 pl-3 pr-10 text-left border border-gray-9 focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+              <div className="relative w-full rounded-2xl bg-opacity-20 py-2 pl-3 pr-10 text-left border border-gray-9 focus:outline-none  focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                 <span className="flex items-center">
                   <Image
                     src={
@@ -149,7 +149,7 @@ const Teleport = () => {
             </div>
             <div className="w-full">
               <p className="mb-2">Destination</p>
-              <div className="relative w-full rounded-2xl bg-opacity-20 py-2 pl-3 pr-10 text-left border border-gray-9 focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+              <div className="relative w-full rounded-2xl bg-opacity-20 py-2 pl-3 pr-10 text-left border border-gray-9 focus:outline-none  focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                 <span className="flex items-center">
                   <Image
                     src={

@@ -3,11 +3,15 @@ import Image from 'next/image'
 const polkadot = '/assets/asset-logos/polkadot.svg'
 const moonbeam = '/assets/asset-logos/moonbeam.svg'
 const tanssi = '/assets/asset-logos/tanssi.svg'
+const celestia = '/assets/asset-logos/celestia.svg'
+const eigenlayer = '/assets/asset-logos/eigenlayer.svg'
+const near = '/assets/asset-logos/near.svg'
+const polygonAvail = '/assets/asset-logos/polygon.svg'
 
 import './styles/Animations.css'
 
 function LogoSlider() {
-  const logos = [moonbeam, polkadot, tanssi]
+  const logos = [moonbeam, near, polkadot, celestia, eigenlayer, tanssi, polygonAvail]
 
   const duplicatedLogos = [
     ...logos,

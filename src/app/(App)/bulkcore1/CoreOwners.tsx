@@ -79,7 +79,7 @@ const PastTransactions = () => {
                 </button>
                 <button
                   onClick={handleNextPage}
-                  className="px-4 py-2 bg-green-500 hover:bg-green-6 border border-gray-21 text-black font-semibold rounded-2xl"
+                  className="px-4 py-2 hover:bg-green-6 border border-gray-21 text-black font-semibold rounded-2xl"
                 >
                   Next
                 </button>
