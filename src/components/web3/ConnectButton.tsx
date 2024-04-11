@@ -67,7 +67,7 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
           </button>
 
           <WalletModal isOpen={openConnect} onClose={() => setOpenConnect(false)}>
-            <ul className="rounded-2xl border border-gray-9 bg-white divide-y divide-gray-2">
+            <ul className="rounded-2xl border border-gray-9 bg-white dark:bg-gray-21 divide-y divide-gray-2">
               {/* Installed Wallets */}
               {!isSSR &&
                 !activeAccount &&
@@ -81,7 +81,7 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
                         connect?.(undefined, undefined, w)
                         setChosenWallet(w)
                       }}
-                      className="p-3 flex flex-row cursor-pointer hover:bg-gray-1 transition duration-300"
+                      className="p-3 flex flex-row cursor-pointer hover:bg-gray-1 dark:hover:bg-gray-18 transition duration-300"
                     >
                       <Image
                         src={mappingTitletoImg(w.id)}
@@ -150,7 +150,7 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
                           setActiveAccount?.(acc)
                         }
                       }}
-                      className={`p-3 flex justify-between items-center cursor-pointer ${acc.address === activeAccount.address ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-2'}`}
+                      className={`p-3 flex justify-between items-center cursor-pointer ${acc.address === activeAccount.address ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-2 dark:hover:bg-gray-18 transition duration-300'}`}
                     >
                       <div>
                         <AccountName account={acc} />
@@ -165,12 +165,12 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
 
               {/* Account Balance */}
               {balanceFormatted !== undefined && (
-                <div className="rounded-2x px-4 py-2 font-bold text-gray-19 hover:bg-gray-9">
+                <div className="rounded-2x px-4 py-2 font-bold text-gray-19 ">
                   {balanceFormatted}
                 </div>
               )}
               <div
-                className="p-2 flex justify-between items-center cursor-pointer hover:bg-red-1"
+                className="p-2 flex justify-between items-center cursor-pointer hover:bg-red-1 dark:hover:bg-red-900 transition duration-300"
                 onClick={() => disconnect?.()}
               >
                 <span className="text-red-5">Disconnect</span>
