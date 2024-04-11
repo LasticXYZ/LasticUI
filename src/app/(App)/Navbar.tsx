@@ -1,5 +1,6 @@
 'use client'
 
+import ThemeToggle from '@/components/themeToggle/themeToggle'
 import { ConnectButton } from '@/components/web3/ConnectButton'
 import { SideBarAccountName } from '@/components/web3/SideBarAccountName'
 import SupportedChains from '@/components/web3/SupportedChains'
@@ -95,6 +96,9 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
                     </Link>
                   )
                 })}
+              </div>
+              <div>
+                <ThemeToggle />
               </div>
               {!isCollapsed && (
                 <>

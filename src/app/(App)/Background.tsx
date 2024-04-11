@@ -1,6 +1,6 @@
 const Background = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="bg-[#F9f9fc] overflow-hidden min-h-screen">
+    <div className="bg-[#F9f9fc] dark:bg-[#000] overflow-hidden min-h-screen">
       {/* Radial Gradient Background */}
       <div className="fixed z-0 inset-0 h-screen w-full overflow-hidden">
         {/* Ellipse4 */}
@@ -17,7 +17,7 @@ const Background = ({ children }: { children: React.ReactNode }) => {
       </div>
 
       {/* Gray Background */}
-      <div className="fixed z-0 inset-0 h-screen w-full bg-[#F3F3F3] bg-opacity-80 backdrop-blur-3xl"></div>
+      <div className="fixed z-0 inset-0 h-screen w-full bg-[#F3F3F3] dark:bg-[#000] bg-opacity-80 backdrop-blur-3xl"></div>
 
       {/* Content */}
       <div className="relative z-10 min-h-screen">{children}</div>

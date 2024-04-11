@@ -9,7 +9,7 @@ const config: Config = {
     // Or if using `src` directory:
     './src/**/*.{js,ts,jsx,tsx}',
   ],
-  darkMode: 'class', // or 'media'
+  darkMode: 'class',
   theme: {
     extend: {
       backgroundImage: {
@@ -133,6 +133,6 @@ const config: Config = {
     },
   },
   plugins: [],
-}
+} satisfies Config
 
 export default config
