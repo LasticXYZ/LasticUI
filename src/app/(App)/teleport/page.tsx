@@ -174,7 +174,7 @@ const Teleport = () => {
 
           <button
             onClick={toggleDirection}
-            className="mb-4 py-2 px-4 bg-blue-500 text-black rounded hover:bg-blue-600 transition"
+            className="mb-4 py-2 px-4 text-black dark:text-gray-1 rounded hover:bg-blue-600 transition"
           >
             Move assets from {isRelayToPara ? 'Relay to Parachain' : 'Parachain to Relay'}
           </button>

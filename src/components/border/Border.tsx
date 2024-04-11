@@ -6,7 +6,9 @@ const Border = ({
   className?: string // `className` prop is optional
 }) => {
   return (
-    <div className={`border border-gray-9 bg-[#F6FDFF] rounded-2xl bg-opacity-60 ${className}`}>
+    <div
+      className={`border border-gray-9 dark:border-gray-19 bg-[#F6FDFF] dark:bg-[#1C1C1C] rounded-2xl bg-opacity-60 dark:bg-opacity-60 ${className}`}
+    >
       {children}
     </div>
   )

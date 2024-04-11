@@ -36,7 +36,7 @@ const ChainDropdown: FC<ChainDropdownProps> = ({ chainOptions }) => {
                 key={chain.name}
                 className={({ active }) =>
                   `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                    active ? ' text-black' : 'text-black'
+                    active ? ' text-black dark:text-gray-1' : 'text-black dark:text-gray-1'
                   }`
                 }
                 value={chain}

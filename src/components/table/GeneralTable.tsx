@@ -20,7 +20,7 @@ const GeneralTable: FC<GeneralTableProps> = ({
           <div className="shadow overflow-hidden sm:rounded-2xl">
             <div
               className={joinClassNames(
-                'grid gap-2 bg-[#AFE4DD] px-2 text-sm text-black rounded-full',
+                'grid gap-2 bg-[#AFE4DD] px-2 text-sm text-black dark:text-gray-1 rounded-full',
                 colClass,
               )}
             >
@@ -36,7 +36,7 @@ const GeneralTable: FC<GeneralTableProps> = ({
                 {item.href && (
                   <Link
                     key={index}
-                    className="text-black cursor-pointer hover:text-gray-7"
+                    className="text-black dark:text-gray-1 cursor-pointer hover:text-gray-7"
                     href={item.href}
                   >
                     <div

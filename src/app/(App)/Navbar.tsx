@@ -32,12 +32,22 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
             <div
               className={`fixed top-0 left-0 h-screen z-10 transition-width duration-300 ${isCollapsed ? 'w-16' : 'w-56 overflow-y-auto'}`}
             >
-              <div className="flex-shrink-0 flex items-center justify-between space-x-5 border-b border-gray-9  pl-6 pr-2 py-6 mt-2">
+              <div className="flex-shrink-0 flex items-center justify-between space-x-5 border-b border-gray-9 dark:border-gray-18  pl-6 pr-2 py-6 mt-2">
                 {!isCollapsed && (
                   <div className="flex gap-1 items-center">
-                    <div className="font-bold flex items-center">
+                    <div className="font-bold dark:hidden flex items-center">
                       <Image
                         src="/assets/Images/Logos/lastic-logo.png"
+                        width={130}
+                        height="0"
+                        style={{ width: '10em', height: 'auto' }}
+                        quality={100}
+                        alt="Lastic Logo"
+                      />
+                    </div>
+                    <div className="font-bold hidden dark:visible dark:flex items-center">
+                      <Image
+                        src="/assets/Images/Logos/lastic-logo-dark.png"
                         width={130}
                         height="0"
                         style={{ width: '10em', height: 'auto' }}
@@ -74,11 +84,11 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
                 )}
               </div>
               {!isCollapsed && (
-                <div className="text-gray-8 font-montserrat text-xs font-semibold px-4 pt-6">
+                <div className="text-gray-8 dark:text-gray-8 font-montserrat text-xs font-semibold px-4 pt-6">
                   OVERVIEW
                 </div>
               )}
-              <div className="mt-2 text-gray-18 flex flex-col px-2">
+              <div className="mt-2 text-gray-18 dark:text-gray-4 flex flex-col px-2">
                 {navigation.map((item) => {
                   const Icon = item.icon
                   return (
@@ -86,7 +96,9 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
                       key={item.name}
                       href={item.href}
                       className={` py-3 px-2 text-l flex flex-row items-center font-semibold transition duration-150 ease-in-out hover:text-teal-5 hover:bg-teal-1 hover:bg-opacity-60 hover:rounded-2xl ${
-                        item.current ? 'text-gray- bg-gray-2' : 'text-gray-19 hover:bg-gray-1'
+                        item.current
+                          ? 'text-gray- bg-gray-2'
+                          : 'text-gray-19 dark:text-gray-6 hover:bg-gray-1'
                       }`}
                       aria-current={item.current ? 'page' : undefined}
                     >
@@ -103,11 +115,11 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
               {!isCollapsed && (
                 <>
                   <SideBarAccountName />
-                  <div className="text-gray-8 border-t border-gray-9 mt-10 font-montserrat text-xs font-semibold px-4 pt-6">
+                  <div className="text-gray-8 dark:text-gray-8 border-t border-gray-9 dark:border-gray-18 mt-10 font-montserrat text-xs font-semibold px-4 pt-6">
                     CHAIN
                   </div>
-                  <div className="mt-2 text-gray-18 flex flex-col px-2">
-                    <div className="py-3 px-2 text-l italic text-gray-19 flex flex-row items-center font-semibold transition duration-150 ease-in-out">
+                  <div className="mt-2 text-gray-18 dark:text-gray-4 flex flex-col px-2">
+                    <div className="py-3 px-2 text-l italic text-gray-19 dark:text-gray-6 flex flex-row items-center font-semibold transition duration-150 ease-in-out">
                       <span className="px-2">
                         <LinkIcon className="h-5 w-5 stroke-3" aria-hidden="true" />
                       </span>

@@ -75,7 +75,9 @@ const MiniBarGraphData: React.FC<MiniBarGraphDataProps> = ({ title, dataPoints, 
     <>
       <div className="flex flex-col justify-betwee">
         <div className="flex justify-start  py-2 px-3">
-          <h5 className="text-black text-l font-unbounded uppercase px-3 font-light">{title}</h5>
+          <h5 className="text-black dark:text-gray-1 text-l font-unbounded uppercase px-3 font-light">
+            {title}
+          </h5>
 
           {/* <SwitchDisplays displayOptions={displayOptions} active={curentlyDisplayed} setActive={setCurrentDisplay} /> */}
         </div>
