@@ -1,17 +1,19 @@
 import About from '@/app/(Website)/About'
-import BlockspaceMarketplace from '@/app/(Website)/BlockspaceMarketplace'
-import DeeperDive from '@/app/(Website)/DeeperDive'
+import Ending from '@/app/(Website)/Ending'
+import FirstInfo from '@/app/(Website)/FirstInfo'
+import FuturePlatform from '@/app/(Website)/FuturePlatform'
 import Hero from '@/app/(Website)/Hero'
-import HowItWorks from '@/app/(Website)/HowItWorks'
+import LogoSlider from '@/components/logoSlider/LogoSlider'
 
 const Home = () => {
   return (
     <>
       <Hero />
-      <BlockspaceMarketplace />
-      <HowItWorks />
+      <LogoSlider />
+      <FirstInfo />
       <About />
-      <DeeperDive />
+      <FuturePlatform />
+      <Ending />
     </>
   )
 }

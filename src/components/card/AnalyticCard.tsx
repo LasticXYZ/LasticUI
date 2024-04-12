@@ -30,9 +30,9 @@ const AnalyticCard: FC<AnalyticCardProps> = ({
 }) => (
   <Border className="w-full flex-grow flex flex-col ">
     <div className={`${className} px-8 flex flex-col flex-grow items-start justify-center`}>
-      <dt className="text-gray-15 text-sm mb-2"> {subtitle}</dt>
-      <dd className="text-black font-bold text-3xl mb-1">{title}</dd>
-      <span className={`${getColorForChange(change)} text-md`}>
+      <dt className="text-gray-15 dark:text-gray-6 text-sm mb-2"> {subtitle}</dt>
+      <dd className="text-black dark:text-gray-1 font-bold text-3xl mb-1">{title}</dd>
+      <span className={`${getColorForChange(change)} text-md text-gray-15 dark:text-gray-8`}>
         {getArrowForChange(change)} {change}
       </span>
     </div>

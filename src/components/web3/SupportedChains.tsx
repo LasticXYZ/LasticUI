@@ -49,7 +49,7 @@ const SupportedChains: FC = () => {
                 <div
                   key={index}
                   onClick={() => handleChainSwitch(coretime, relay)}
-                  className="p-2 flex justify-between items-center hover:bg-gray-100 cursor-pointer"
+                  className="p-2 flex justify-between items-center cursor-pointer"
                 >
                   <p>{coretime.name}</p>
                 </div>

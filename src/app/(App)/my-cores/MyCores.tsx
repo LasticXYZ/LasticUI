@@ -119,15 +119,15 @@ export default function MyCores() {
               <button
                 onClick={handlePrevPage}
                 disabled={currentPage === 1}
-                className={`px-4 py-2 rounded-2xl text-black border border-gray-21 font-semibold ${currentPage === 1 ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : ' hover:bg-green-6'}`}
+                className={`px-4 py-2 rounded-2xl text-black dark:text-gray-1 border border-gray-21 font-semibold ${currentPage === 1 ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : ' hover:bg-green-6'}`}
               >
                 Previous
               </button>
-              <p className="text-black font-semibold">{currentPage}</p>
+              <p className="text-black dark:text-gray-1 font-semibold">{currentPage}</p>
               <button
                 onClick={handleNextPage}
                 disabled={filteredForDisplay.length < itemsPerPage}
-                className={`px-4 py-2   border border-gray-21 text-black font-semibold rounded-2xl ${filteredForDisplay.length < itemsPerPage ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : ' hover:bg-green-6'}`}
+                className={`px-4 py-2   border border-gray-21 text-black dark:text-gray-1 font-semibold rounded-2xl ${filteredForDisplay.length < itemsPerPage ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : ' hover:bg-green-6'}`}
               >
                 Next
               </button>

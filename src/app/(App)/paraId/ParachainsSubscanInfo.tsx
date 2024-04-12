@@ -94,7 +94,7 @@ const ParachainInfo: React.FC = () => {
         <div className="flex flex-col sm:flex-row items-center gap-4 mb-2 mt-5 ml-14">
           <input
             type="number"
-            className="form-input mt-1 block w-full sm:w-64 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            className="form-input mt-1 block w-full sm:w-64 px-3 py-2 border rounded-md shadow-sm focus:outline-none "
             value={paraId || ''}
             onChange={(e) => setParaId(e.target.value ? parseInt(e.target.value, 10) : null)}
             placeholder="Enter ParaId"
@@ -128,15 +128,15 @@ const ParachainInfo: React.FC = () => {
               <button
                 onClick={handlePrevPage}
                 disabled={currentPage === 0}
-                className={`px-4 py-2 rounded-2xl text-black border border-gray-21 font-semibold ${currentPage === 0 ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : ' hover:bg-green-6'}`}
+                className={`px-4 py-2 rounded-2xl text-black dark:text-gray-1 border border-gray-21 font-semibold ${currentPage === 0 ? 'bg-gray-2 dark:bg-gray-20 dark:text-gray-14 text-gray-14 cursor-not-allowed' : ' hover:bg-green-6'}`}
               >
                 Previous
               </button>
-              <p className="text-black font-semibold">{currentPage}</p>
+              <p className="text-black dark:text-gray-1 font-semibold">{currentPage}</p>
               <button
                 onClick={handleNextPage}
                 disabled={auctionData.data.chains.length < itemsPerPage}
-                className={`px-4 py-2   border border-gray-21 text-black font-semibold rounded-2xl ${auctionData.data.chains.length < itemsPerPage ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : ' hover:bg-green-6'}`}
+                className={`px-4 py-2   border border-gray-21 text-black dark:text-gray-1 font-semibold rounded-2xl ${auctionData.data.chains.length < itemsPerPage ? 'bg-gray-2 dark:bg-gray-20 dark:text-gray-14 text-gray-14 cursor-not-allowed' : ' hover:bg-green-6'}`}
               >
                 Next
               </button>

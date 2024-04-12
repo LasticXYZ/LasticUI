@@ -26,7 +26,7 @@ export const ContractTxSuccessToast: FC<ContractTxResult> = ({ extrinsicHash, bl
     <div tw="flex flex-col gap-0.5">
       <div>Transaction successful</div>
       {(subscanDetailUrl || polkadotjsDetailUrl) && (
-        <div tw="text-xs text-gray-400">
+        <div tw="text-xs ">
           View on{' '}
           {subscanDetailUrl && (
             <Link href={subscanDetailUrl} target="_blank" tw="transition-all hover:text-white">
@@ -71,7 +71,7 @@ export const ContractTxErrorToast: FC<ContractTxResult> = ({ errorMessage }) => 
     <div tw="flex flex-col gap-0.5">
       <div>{message}</div>
       {errorMessage === 'TokenBelowMinimum' && faucetUrl && (
-        <div tw="text-xs text-gray-400">
+        <div tw="text-xs">
           <Link href={faucetUrl} target="_blank" tw="transition-all hover:text-white">
             Get tokens from a faucet ↗
           </Link>

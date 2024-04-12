@@ -31,7 +31,11 @@ const WalletStatus: React.FC<WalletStatusProps> = ({
     return (
       <div className="flex justify-center items-center py-1 px-4">
         <div className="flex flex-col items-center justify-center px-2 py-4">
-          <CuteInfo emoji={inactiveWalletEmoji} message={inactiveWalletMessage} color="bg-teal-4" />
+          <CuteInfo
+            emoji={inactiveWalletEmoji}
+            message={inactiveWalletMessage}
+            color="bg-pink-400 dark:bg-teal-7"
+          />
           <ConnectButton />
         </div>
       </div>

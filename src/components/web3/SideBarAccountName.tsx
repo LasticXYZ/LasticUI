@@ -38,17 +38,17 @@ export const SideBarAccountName = () => {
 
   return (
     <div>
-      <div className="text-gray-8 border-t border-gray-9 mt-10 font-montserrat text-xs font-semibold px-4 pt-6">
+      <div className="text-gray-8 border-t border-gray-9 dark:border-gray-18 mt-10 font-montserrat text-xs font-semibold px-4 pt-6">
         ACCOUNT
       </div>
       <div className="mt-2 text-gray-18 flex flex-col px-2">
-        <div className="py-3 px-2 text-l text-gray-19 flex flex-row items-center font-semibold transition duration-150 ease-in-out">
+        <div className="py-3 px-2 text-l text-gray-19 dark:text-gray-6 flex flex-row items-center font-semibold transition duration-150 ease-in-out">
           <span className="px-2">
             <UserIcon className="h-5 w-5" aria-hidden="true" />
           </span>
           {primaryDomain || activeAccount?.name}
         </div>
-        <div className="py-3 px-2 text-l text-gray-19 flex flex-row items-center font-semibold transition duration-150 ease-in-out">
+        <div className="py-3 px-2 text-l text-gray-19 dark:text-gray-6 flex flex-row items-center font-semibold transition duration-150 ease-in-out">
           <span className="px-2">
             <WalletIcon className="h-5 w-5" aria-hidden="true" />
           </span>
@@ -56,10 +56,10 @@ export const SideBarAccountName = () => {
         </div>
       </div>
       <div>
-        <div className="text-gray-8 border-t border-gray-9 mt-10 font-montserrat text-xs font-semibold px-4 pt-6">
+        <div className="text-gray-8 border-t border-gray-9 dark:border-gray-18 mt-10 font-montserrat text-xs font-semibold px-4 pt-6">
           BALANCES
         </div>
-        <div className="mt-2 ml-2 text-gray-18 flex flex-col px-2">
+        <div className="mt-2 ml-2 text-gray-19 dark:text-gray-6 flex flex-col px-2">
           <table className="w-full text-md">
             <tbody>
               <tr>

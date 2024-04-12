@@ -2,6 +2,7 @@
 
 import './globals.css'
 //import type { Metadata } from 'next'
+import ThemeProvider from '@/components/themeToggle/themeProvider'
 import { env } from '@/config/environment'
 import {
   ArrowPathIcon,
@@ -74,22 +75,24 @@ const montserrat = Montserrat({
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${montserrat.variable} ${unbounded.variable}`}>
-        <Background>
-          <UseInkathonProvider
-            appName="lastic" // TODO
-            connectOnInit={true}
-            defaultChain={env.defaultChain}
-            relayChain={env.relayChain}
-          >
-            <Navbar navigation={navigation_app}>
-              <div className="py-10 font-montserrat">
-                <main>{children}</main>
-              </div>
-            </Navbar>
-          </UseInkathonProvider>
-        </Background>
+        <ThemeProvider>
+          <Background>
+            <UseInkathonProvider
+              appName="lastic" // TODO
+              connectOnInit={true}
+              defaultChain={env.defaultChain}
+              relayChain={env.relayChain}
+            >
+              <Navbar navigation={navigation_app}>
+                <div className="py-10 font-montserrat">
+                  <main>{children}</main>
+                </div>
+              </Navbar>
+            </UseInkathonProvider>
+          </Background>
+        </ThemeProvider>
       </body>
     </html>
   )

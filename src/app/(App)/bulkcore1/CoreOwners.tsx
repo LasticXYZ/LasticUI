@@ -73,13 +73,13 @@ const PastTransactions = () => {
                 <button
                   onClick={handlePreviousPage}
                   disabled={currentPage === 1}
-                  className={`px-4 py-2 rounded-2xl text-black border border-gray-21 font-semibold ${currentPage === 1 ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : 'bg-blue-5 hover:bg-blue-6'}`}
+                  className={`px-4 py-2 rounded-2xl text-black dark:text-gray-1 border border-gray-21 font-semibold ${currentPage === 1 ? 'bg-gray-2 dark:bg-gray-20 dark:text-gray-14 text-gray-14 cursor-not-allowed' : ' dark:border-gray-4 hover:bg-pink-400'}`}
                 >
                   Previous
                 </button>
                 <button
                   onClick={handleNextPage}
-                  className="px-4 py-2 bg-green-500 hover:bg-green-6 border border-gray-21 text-black font-semibold rounded-2xl"
+                  className="px-4 py-2 hover:bg-pink-400 border border-gray-21 dark:border-gray-4 text-black dark:text-gray-1 font-semibold rounded-2xl"
                 >
                   Next
                 </button>

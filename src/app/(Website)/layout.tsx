@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
-import { Montserrat, Unbounded } from 'next/font/google'
-import Background from './Background'
+import { DM_Sans, Syne } from 'next/font/google'
 import Footer from './Footer'
 import Navbar from './Navbar'
 import './globals.css'
@@ -11,22 +10,16 @@ const navigation_app = [
   { name: 'FAQ', href: '/faq', current: false },
 ]
 
-// const syncopate = Syncopate({
-//   subsets: ['latin'],
-//   weight: ['400', '700'],
-//   variable: '--font-unbounded',
-// })
-
-const unbounded = Unbounded({
+const syne = Syne({
   subsets: ['latin'],
   weight: ['400', '700'],
-  variable: '--font-unbounded',
+  variable: '--font-syne',
 })
 
-const montserrat = Montserrat({
+const dm_sans = DM_Sans({
   subsets: ['latin'],
   weight: ['300', '400', '700'],
-  variable: '--font-montserrat',
+  variable: '--font-dm_sans',
 })
 
 export const metadata: Metadata = {
@@ -37,14 +30,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${montserrat.variable} ${unbounded.variable}`}>
-        <Background>
-          <Navbar navigation={navigation_app} />
-          <div className="py-5 font-montserrat">
-            <main>{children}</main>
-          </div>
-          <Footer />
-        </Background>
+      <body className={`${dm_sans.variable} ${syne.variable}`}>
+        <Navbar navigation={navigation_app} />
+        <div className="pt-5 font-dm_sans">
+          <main>{children}</main>
+        </div>
+        <Footer />
       </body>
     </html>
   )
