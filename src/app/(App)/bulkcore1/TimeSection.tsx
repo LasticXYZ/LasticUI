@@ -223,11 +223,11 @@ export default function BrokerSaleInfo() {
         <Border>
           <div className=" p-10">
             <div>
-              <div className="flex justify-between rounded-full mx-10 bg-pink-4 dark:bg-teal-4 dark:bg-opacity-80  px-16 py-10 bg-opacity-30 items-center my-6">
-                <div className="text-xl xl:text-2xl font-bold font-unbounded uppercase text-gray-21 ">
+              <div className="flex justify-between rounded-full mx-10 bg-pink-4 dark:bg-pink-400 dark:bg-opacity-95  px-16 py-10 bg-opacity-30 items-center my-6">
+                <div className="text-xl xl:text-2xl font-bold font-unbounded uppercase text-gray-21 dark:text-white ">
                   {saleTitle}
                 </div>
-                <div className="text-xl xl:text-2xl font-bold font-unbounded uppercase text-gray-18 ">
+                <div className="text-xl xl:text-2xl font-bold font-unbounded uppercase text-gray-18 dark:text-white ">
                   {timeRemaining}
                 </div>
               </div>

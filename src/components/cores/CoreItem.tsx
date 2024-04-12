@@ -41,12 +41,12 @@ const Card: React.FC<CardProps> = ({
               {' '}
               {/* Container to hold both buttons next to each other */}
               {coreSize < bulkSize && (
-                <div className="bg-pink-3 border border-gray-8 px-2 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
+                <div className="bg-pink-3  dark:bg-pink-400 dark:bg-opacity-80 border border-gray-8 px-4 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
                   Partitioned
                 </div>
               )}
               {mask !== '0xffffffffffffffffffff' && (
-                <div className="bg-pink-3 border border-gray-8 px-2 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
+                <div className="bg-pink-3 dark:bg-pink-400  dark:bg-opacity-80 border border-gray-8 px-4 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
                   Interlaced
                 </div>
               )}

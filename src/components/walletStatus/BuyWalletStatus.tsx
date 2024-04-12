@@ -31,7 +31,7 @@ const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({
           <CuteInfo
             emoji="👀"
             message="Connect wallet in order to buy instantaneous coretime."
-            color="bg-teal-4 dark:bg-teal-7"
+            color="bg-pink-400 dark:bg-teal-7"
           />
           <ConnectButton />
         </div>

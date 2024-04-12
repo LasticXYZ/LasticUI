@@ -48,7 +48,7 @@ const CoreUtilisation: React.FC = () => {
     <button
       key={key}
       onClick={() => toggleActiveDataSet(key as DataSetKey)}
-      className={`py-2 px-4 text-left hover:font-semibold border-b border-gray-18 ${activeDataSet === key ? 'text-pink-5 font-semibold' : 'text-gray-16'}`}
+      className={`py-2 px-4 text-left hover:font-semibold border-b border-gray-18 ${activeDataSet === key ? 'text-pink-5 dark:text-pink-400 font-semibold' : 'text-gray-16'}`}
     >
       {dataConfigs[key as DataSetKey].label}
     </button>

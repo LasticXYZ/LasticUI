@@ -25,15 +25,15 @@ const Slider: FC<SliderPropeTypes> = ({ currentBlockNumber, saleInfo, config, co
 
   return (
     <div className="mx-10 my-16 relative">
-      <div className="w-full bg-pink-4 dark:bg-teal-4 dark:bg-opacity-20 bg-opacity-20 h-3 rounded-full overflow-hidden">
+      <div className="w-full bg-pink-4 dark:bg-pink-400 dark:bg-opacity-20 bg-opacity-20 h-3 rounded-full overflow-hidden">
         <div
-          className="bg-pink-4 dark:bg-teal-4 dark:bg-opacity-40 bg-opacity-50 h-full"
+          className="bg-pink-4 dark:bg-pink-400 dark:bg-opacity-40 bg-opacity-50 h-full"
           style={{ width: `${safePurchasePercentage}%` }}
         ></div>
       </div>
       {/* Marker for Interlude Period */}
       <div className="absolute top-0 -mt-1" style={{ left: `${0}%` }}>
-        <div className="w-5 h-5 bg-red-4 dark:bg-teal-4 rounded-full"></div>
+        <div className="w-5 h-5 bg-red-4 dark:bg-pink-400 rounded-full"></div>
         <p className="text-sm text-left -mt-12 -ml-8">Core Start</p>
       </div>
       <div className="absolute top-0 -mt-1" style={{ left: `${safeStartSalePercentage / 2}%` }}>
@@ -41,7 +41,7 @@ const Slider: FC<SliderPropeTypes> = ({ currentBlockNumber, saleInfo, config, co
       </div>
       {/* Marker for LeadIn Period */}
       <div className="absolute top-0 -mt-1" style={{ left: `${safeStartSalePercentage}%` }}>
-        <div className="w-5 h-5 bg-red-4 dark:bg-teal-4 rounded-full"></div>
+        <div className="w-5 h-5 bg-red-4 dark:bg-pink-400 rounded-full"></div>
         <p className="text-sm text-left -mt-12 -ml-5">Sale Start</p>
       </div>
       <div
@@ -52,7 +52,7 @@ const Slider: FC<SliderPropeTypes> = ({ currentBlockNumber, saleInfo, config, co
       </div>
       {/* Marker for Lead-in Period */}
       <div className="absolute top-0 -mt-1" style={{ left: `${safeLeadinPercentage}%` }}>
-        <div className="w-5 h-5 bg-red-4 dark:bg-teal-4 rounded-full"></div>
+        <div className="w-5 h-5 bg-red-4 dark:bg-pink-400 rounded-full"></div>
         <p className="text-sm text-left -mt-12 -ml-10">Prices Stabilize</p>
       </div>
       <div
@@ -63,7 +63,7 @@ const Slider: FC<SliderPropeTypes> = ({ currentBlockNumber, saleInfo, config, co
       </div>
       {/* Marker for Purchase Period */}
       <div className="absolute top-0 -mt-1" style={{ left: '100%' }}>
-        <div className="w-5 h-5 bg-red-4 dark:bg-teal-4 rounded-full"></div>
+        <div className="w-5 h-5 bg-red-4 dark:bg-pink-400 rounded-full"></div>
         <p className="text-sm text-left -mt-12 -ml-10">Sale End</p>
       </div>
     </div>

@@ -9,7 +9,7 @@ type ConstInfoProps = {
 const CuteInfo: React.FC<ConstInfoProps> = ({
   message,
   emoji,
-  color = 'bg-teal-4 dark:bg-teal-7',
+  color = 'bg-pink-400 dark:bg-teal-7',
 }) => {
   return (
     <>
