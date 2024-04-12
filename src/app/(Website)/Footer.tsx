@@ -17,14 +17,14 @@ const Footer = () => (
               alt="Lastic Logo"
             />
           </Link>
-          <p className="mt-2 text-sm text-gray-8">Lastic the First Modular Marketplace.</p>
+          <p className="mt-2 text-sm text-gray-8">The Modular Marketplace.</p>
         </div>
         <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-4">
           <div>
-            <h2 className="mb-6 text-sm font-semibold font-syne text-pink-4 uppercase ">HOME</h2>
+            <h2 className="mb-6 text-sm font-semibold font-syne text-pink-400 uppercase ">HOME</h2>
             <ul className="text-montserrat  font-medium">
               <li className="mb-4">
-                <Link href="/bulkcore1" className="hover:underline">
+                <Link href="/start" className="hover:underline">
                   Launch App
                 </Link>
               </li>
@@ -41,7 +41,7 @@ const Footer = () => (
             </ul>
           </div>
           <div>
-            <h2 className="mb-6 text-sm font-semibold font-syne text-pink-4 uppercase ">
+            <h2 className="mb-6 text-sm font-semibold font-syne text-pink-400 uppercase ">
               LEARN MORE
             </h2>
             <ul className="text-montserrat font-medium">
@@ -61,7 +61,7 @@ const Footer = () => (
             </ul>
           </div>
           <div>
-            <h2 className="mb-6 text-sm font-semibold font-syne text-pink-4 uppercase ">
+            <h2 className="mb-6 text-sm font-semibold font-syne text-pink-400 uppercase ">
               RESOURCES
             </h2>
             <ul className="text-montserrat  font-medium">
@@ -78,7 +78,9 @@ const Footer = () => (
             </ul>
           </div>
           <div>
-            <h2 className="mb-6 text-sm font-semibold font-syne text-pink-4 uppercase ">CONTACT</h2>
+            <h2 className="mb-6 text-sm font-semibold font-syne text-pink-400 uppercase ">
+              CONTACT
+            </h2>
             <ul className="text-montserrat  font-medium">
               <li className=" text-montserrat mb-4">
                 <a href="https://twitter.com/lastic_xyz" className="hover:underline">
@@ -101,7 +103,7 @@ const Footer = () => (
             <Link href="/" className="px-2 hover:underline">
               Lastic
             </Link>
-            | © 2023 Lastic. All rights reserved.
+            | © 2024 Lastic. All rights reserved.
           </span>
         </div>
         <div className="flex mt-4 space-x-6 sm:justify-center sm:mt-0">

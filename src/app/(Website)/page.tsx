@@ -3,7 +3,6 @@ import Ending from '@/app/(Website)/Ending'
 import FirstInfo from '@/app/(Website)/FirstInfo'
 import FuturePlatform from '@/app/(Website)/FuturePlatform'
 import Hero from '@/app/(Website)/Hero'
-import WorldMap from '@/app/(Website)/WorldMap'
 import LogoSlider from '@/components/logoSlider/LogoSlider'
 
 const Home = () => {
@@ -14,7 +13,6 @@ const Home = () => {
       <FirstInfo />
       <About />
       <FuturePlatform />
-      <WorldMap />
       <Ending />
     </>
   )
