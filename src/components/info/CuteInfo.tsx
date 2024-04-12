@@ -6,7 +6,11 @@ type ConstInfoProps = {
   color?: string
 }
 
-const CuteInfo: React.FC<ConstInfoProps> = ({ message, emoji, color = 'bg-teal-4' }) => {
+const CuteInfo: React.FC<ConstInfoProps> = ({
+  message,
+  emoji,
+  color = 'bg-teal-4 dark:bg-teal-7',
+}) => {
   return (
     <>
       <div className="relative w-24 h-24 rounded-full flex items-center justify-center">
