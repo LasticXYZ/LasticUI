@@ -109,9 +109,6 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
                   )
                 })}
               </div>
-              <div>
-                <ThemeToggle />
-              </div>
               {!isCollapsed && (
                 <>
                   <SideBarAccountName />
@@ -133,7 +130,10 @@ const Navbar: FC<NavbarProps> = ({ navigation, children }) => {
             {/* Main Content Section */}
             <div className={`flex-1 ${isCollapsed ? 'ml-16' : 'ml-56'}`}>
               <div className="flex items-center justify-end px-4 py-4">
-                <div className="px-7">
+                <div>
+                  <ThemeToggle />
+                </div>
+                <div className="px-5">
                   <SupportedChains />
                 </div>
                 <ConnectButton />
