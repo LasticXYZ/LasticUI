@@ -108,7 +108,7 @@ const SquareBoxesContainer: React.FC<SquareBoxesContainerProps> = ({
         </button>
 
         <button
-          className="rounded-ful font-black rounded-2xl bg-pink-2 hover:bg-pink-4 border border-gray-8 text-xs inline-flex items-center justify-center p-2 text-center text-black dark:text-gray-1 dark:text-gray-1 hover:bg-primary-800 focus:ring-2 focus:ring-primary-3"
+          className="rounded-ful font-black rounded-2xl bg-pink-2 hover:bg-pink-4 border border-gray-8 text-xs inline-flex items-center justify-center p-2 text-center text-black dark:text-gray-1 hover:bg-primary-800 focus:ring-2 focus:ring-primary-3"
           onClick={handleSetAlternateToTrue}
         >
           Alternating

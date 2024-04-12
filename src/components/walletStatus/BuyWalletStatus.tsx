@@ -81,7 +81,7 @@ const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({
             </span>
           </div>
           <div className=" mb-4">
-            Buy core for: <span className="text-green-500 font-semibold">{formatPrice}</span>
+            Buy core for: <span className="text-pink-400 font-semibold">{formatPrice}</span>
           </div>
           <div>
             Using account:{' '}
