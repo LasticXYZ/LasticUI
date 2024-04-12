@@ -16,11 +16,13 @@ const Hero = () => {
               sequence={[
                 'The Modular Marketplace.',
                 1000,
+                'Trade resources builders need.',
+                1000,
                 'The Blockspace Marketplace.',
                 1000,
-                'Trade Resources Devs Need.',
+                'Choose the right rewards.',
                 1000,
-                'Purchase Resources You Need.',
+                'Incentivize builders to adopt.',
                 1000,
               ]}
               speed={55} // Custom Speed from 1-99 - Default Speed: 40
@@ -30,14 +32,14 @@ const Hero = () => {
           </h2>
           <div className="px-10 md:max-w-sm xl:max-w-xl ml-14  sm:ml-32 lg:mt-20">
             <p className="py-5 font-dm_sans  text-gray-7 text-md xl:text-lg">
-              One marketplace for All Modular Solutions. A protocol-agnostic application that
+              One marketplace for all Modular solutions. A protocol-agnostic application that
               leverages the best features of major networks in order to provide the best service to
               builders and traders.
             </p>
             <div className="pt-4 xl:pt-5 flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-2">
               <Link
                 href="https://docs.lastic.xyz/"
-                className=" text-pink-5 hover:text-pink-4 no-underline text-lg border-b font-bold font-dm_sans"
+                className=" text-pink-400 hover:text-pink-500 no-underline text-lg border-b border-pink-400 hover:border-pink-500 font-bold font-dm_sans"
               >
                 Learn More -&gt;
               </Link>
