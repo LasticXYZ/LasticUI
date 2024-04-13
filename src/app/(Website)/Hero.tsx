@@ -10,7 +10,7 @@ const Hero = () => {
       <div className="">
         {/* Text Section */}
         <div className="flex flex-col lg:flex-row items-center justify-center p-8 md:p-16 lg:py-32 lg:px-10">
-          <h2 className="h-[350px] md:h-[250px] md:px-0 w-[350px] md:w-[600px] leading-normal ml-5 md:ml-0 lg:leading-snug lg:max-w-3xl pt-10 text-white text-5xl md:text-6xl mt-10 md:mt-0 lg:text-6xl xl:text-7xl font-syne font-bold">
+          <h2 className="h-[350px] md:h-[250px] md:px-0 w-[90vw] md:w-[70vw] leading-normal ml-5 md:ml-0 lg:leading-snug lg:max-w-3xl pt-10 text-white text-5xl md:text-6xl mt-10 md:mt-0 lg:text-6xl xl:text-7xl font-syne font-bold">
             <TypeAnimation
               // Same String at the start will only be typed once, initially
               sequence={[
@@ -30,8 +30,8 @@ const Hero = () => {
               repeat={Infinity} // Repeat this Animation Sequence infinitely
             />
           </h2>
-          <div className="px-10 md:max-w-sm xl:max-w-xl ml-14  sm:ml-32 lg:mt-20">
-            <p className="py-5 font-dm_sans  text-gray-7 text-md xl:text-lg">
+          <div className="px-10 md:px-5 md:max-w-sm xl:max-w-xl ml-14  sm:ml-32 lg:mt-20">
+            <p className="py-5 font-dm_sans text-gray-7 text-md xl:text-lg">
               One marketplace for all Modular solutions. A protocol-agnostic application that
               leverages the best features of major networks in order to provide the best service to
               builders and traders.
