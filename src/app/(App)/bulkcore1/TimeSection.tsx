@@ -1,7 +1,7 @@
 import Border from '@/components/border/Border'
 import TimelineComponent from '@/components/timelineComp/TimelineComp'
-import TimelineUtilize from '@/components/timelineComp/TimelineUtilize'
 import BuyWalletStatus from '@/components/walletStatus/BuyWalletStatus'
+import { saleStatus } from '@/utils/broker'
 import { ApiPromise } from '@polkadot/api'
 import {
   BrokerConstantsType,
@@ -9,7 +9,6 @@ import {
   SaleInfoType,
   StatusType,
   blockTimeToUTC,
-  blocksToTimeFormat,
   getConstants,
   getCurrentBlockNumber,
   useBalance,
@@ -20,8 +19,6 @@ import AnalyticSection from './AnalyticSection'
 
 // Define a type for the queryParams
 type QueryParams = (string | number | Record<string, unknown>)[]
-
-const typeOfChain: 'PARA' | 'RELAY' | 'LOCAL' = 'PARA'
 
 // Custom hook for querying substrate state
 function useSubstrateQuery(
@@ -104,43 +101,6 @@ function useBrokerConstants(api: ApiPromise | undefined) {
   }, [api])
 
   return { brokerConstants, isLoading }
-}
-
-function saleStatus(
-  currentBlockNumber: number,
-  saleInfo: SaleInfoType,
-  config: ConfigurationType,
-  constant: BrokerConstantsType,
-) {
-  const saleEnds: number = saleInfo.saleStart + (config.regionLength * constant.timeslicePeriod) - config.interludeLength
-
-  let statusMessage = ''
-  let timeRemaining = ''
-  let statusTitle = ''
-
-  if (currentBlockNumber < saleInfo.saleStart) {
-    timeRemaining = blocksToTimeFormat(saleInfo.saleStart - currentBlockNumber, typeOfChain)
-    statusMessage = 'Time to renew your core!'
-    statusTitle = 'Interlude Period'
-  } else if (currentBlockNumber < saleInfo.saleStart + config.leadinLength) {
-    timeRemaining = blocksToTimeFormat(
-      saleInfo.saleStart + config.leadinLength - currentBlockNumber,
-      typeOfChain,
-    )
-    statusMessage =
-      'Sales have started we are now in the lead-in period. The price is linearly decreasing with each block.'
-    statusTitle = 'Lead-in Period'
-  } else if (currentBlockNumber <= saleEnds) {
-    timeRemaining = blocksToTimeFormat(saleEnds - currentBlockNumber, typeOfChain)
-    statusMessage = 'Sale is in the purchase period.'
-    statusTitle = 'Purchase Period'
-  } else {
-    timeRemaining = '-'
-    statusMessage = 'The sale has ended.'
-    statusTitle = 'Sale Ended'
-  }
-
-  return { statusTitle, statusMessage, timeRemaining }
 }
 
 function calculateCurrentPrice(
@@ -263,23 +223,17 @@ export default function BrokerSaleInfo() {
         <Border>
           <div className=" p-10">
             <div>
-              <div className="flex justify-between rounded-full mx-10 bg-pink-4 px-16 py-10 bg-opacity-30 items-center my-6">
-                <div className="text-xl xl:text-2xl font-bold font-unbounded uppercase text-gray-21">
+              <div className="flex justify-between rounded-full mx-10 bg-pink-4 dark:bg-pink-400 dark:bg-opacity-95  px-16 py-10 bg-opacity-30 items-center my-6">
+                <div className="text-xl xl:text-2xl font-bold font-unbounded uppercase text-gray-21 dark:text-white ">
                   {saleTitle}
                 </div>
-                <div className="text-xl xl:text-2xl font-bold font-unbounded uppercase text-gray-18">
+                <div className="text-xl xl:text-2xl font-bold font-unbounded uppercase text-gray-18 dark:text-white ">
                   {timeRemaining}
                 </div>
               </div>
             </div>
             <TimelineComponent
               currentBlockNumber={currentBlockNumber}
-              saleInfo={saleInfo}
-              config={configuration}
-              constants={brokerConstants}
-            />
-            <TimelineUtilize
-              currentRelayBlock={currentRelayBlock}
               saleInfo={saleInfo}
               config={configuration}
               constants={brokerConstants}

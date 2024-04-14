@@ -55,7 +55,7 @@ const AssignModal: FC<AssignModalProps> = ({ isOpen, onClose, regionId }) => {
           </label>
           <input
             id="task"
-            className="text-lg border border-gray-300 rounded-md p-2 mb-4 focus:ring-blue-500 focus:border-blue-500"
+            className="text-lg border rounded-md p-2 mb-4 focus:ring-blue-500 focus:border-blue-500"
             type="number"
             value={task}
             onChange={(e) => setTask(parseInt(e.target.value, 10))}
@@ -65,7 +65,7 @@ const AssignModal: FC<AssignModalProps> = ({ isOpen, onClose, regionId }) => {
           </label>
           <select
             id="finality"
-            className="text-lg border border-gray-300 rounded-md p-2 mb-4 focus:ring-blue-500 focus:border-blue-500"
+            className="text-lg border rounded-md p-2 mb-4 focus:ring-blue-500 focus:border-blue-500"
             value={finality}
             onChange={(e) => setFinality(e.target.value)}
           >

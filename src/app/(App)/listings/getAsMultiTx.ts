@@ -25,7 +25,7 @@ export const getAsMultiTx = ({ api, threshold, otherSignatories, tx, weight, whe
         tx,
         weight || {
           refTime: 0,
-          proofSize: 0
-        }
+          proofSize: 0,
+        },
       )
 }

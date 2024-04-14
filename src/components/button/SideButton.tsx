@@ -20,7 +20,7 @@ const SideButton: FC<SideButtonProps> = ({
       <button
         onClick={onClick}
         disabled={disabled}
-        className={`${disabled ? 'bg-gray-2 text-gray-14 cursor-not-allowed' : ' hover:bg-pink-2 text-black cursor-pointer'} font-unbounded uppercase font-black rounded-2xl border border-gray-8 text-xs inline-flex items-center justify-center px-6 py-3  text-center text-black hover:bg-primary-800 focus:ring-4 focus:ring-primary-3`}
+        className={`${disabled ? 'bg-gray-2 dark:bg-gray-20 dark:text-gray-14 text-gray-14  cursor-not-allowed' : ' hover:bg-pink-2 text-black dark:text-gray-1 cursor-pointer'} font-unbounded uppercase font-black rounded-2xl border border-gray-8 text-xs inline-flex items-center justify-center px-6 py-3  text-center text-black dark:text-gray-1 hover:bg-primary-800 focus:ring-4 focus:ring-primary-3`}
       >
         {title}
       </button>
@@ -29,7 +29,7 @@ const SideButton: FC<SideButtonProps> = ({
     return (
       <Link
         href={location}
-        className="rounded-ful font-unbounded uppercase font-black rounded-2xl bg-pink-3 hover:bg-pink-4 border border-gray-8 text-xs inline-flex items-center justify-center px-12 py-3 text-center text-black hover:bg-primary-800 focus:ring-4 focus:ring-primary-3"
+        className="rounded-ful font-unbounded uppercase font-black rounded-2xl bg-pink-3 hover:bg-pink-4 border border-gray-8 text-xs inline-flex items-center justify-center px-12 py-3 text-center text-black dark:text-gray-1 hover:bg-primary-800 focus:ring-4 focus:ring-primary-3"
       >
         {title}
       </Link>

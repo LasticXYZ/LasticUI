@@ -65,6 +65,12 @@ export default function MyCores() {
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
   const regionData = useRegionQuery()
 
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 6
+
+  const handleNextPage = () => setCurrentPage(currentPage + 1)
+  const handlePrevPage = () => setCurrentPage(currentPage - 1)
+
   if (!activeAccount || !activeChain) {
     return (
       <Border className="h-full flex flex-row justify-center items-center">
@@ -77,23 +83,27 @@ export default function MyCores() {
   const filteredRegionData = regionData?.filter(
     (region) => region.owner.owner === activeAccount.address,
   )
+  const filteredForDisplay = filteredRegionData?.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  )
 
-  return filteredRegionData && filteredRegionData.length > 0 ? (
+  return filteredForDisplay && filteredForDisplay.length > 0 ? (
     <Border className="h-full flex flex-row justify-center items-center">
-      <div className="h-full w-full flex flex-col justify-left items-left">
+      <div className="h-full w-full flex flex-col justify-left items-left px-5 pb-10">
         <div className="pt-10 pl-10">
           <h1 className="text-xl font-unbounded uppercase font-bold">cores owned</h1>
         </div>
-        <div>
-          {filteredRegionData.map((region, index) => (
-            <div key={index} className="p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4 mt-4">
+          {filteredForDisplay.map((region, index) => (
+            <div key={index} className="">
               <CoreItem
                 coreNumber={region.detail[0].core}
-                size="1"
+                size={region.detail[0].mask === '0xffffffffffffffffffff' ? '1' : 'Interlaced'}
                 cost={parseNativeTokenToHuman({ paid: region.owner.paid, decimals: 12 })}
                 reward="0"
                 currencyCost={tokenSymbol}
-                currencyReward="LASTIC"
+                currencyReward="LST"
                 mask={region.detail[0].mask}
                 begin={region.detail[0].begin}
                 end={region.owner.end}
@@ -101,6 +111,28 @@ export default function MyCores() {
             </div>
           ))}
         </div>
+        {/* Pagination buttons */}
+        {!filteredForDisplay ||
+          !regionData ||
+          (filteredForDisplay.length !== 0 && (
+            <div className="flex w-full items-center justify-between space-x-2 mt-4 px-5">
+              <button
+                onClick={handlePrevPage}
+                disabled={currentPage === 1}
+                className={`px-4 py-2 rounded-2xl text-black dark:text-gray-1 border border-gray-21 font-semibold ${currentPage === 1 ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : ' hover:bg-green-6'}`}
+              >
+                Previous
+              </button>
+              <p className="text-black dark:text-gray-1 font-semibold">{currentPage}</p>
+              <button
+                onClick={handleNextPage}
+                disabled={filteredForDisplay.length < itemsPerPage}
+                className={`px-4 py-2   border border-gray-21 text-black dark:text-gray-1 font-semibold rounded-2xl ${filteredForDisplay.length < itemsPerPage ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : ' hover:bg-green-6'}`}
+              >
+                Next
+              </button>
+            </div>
+          ))}
       </div>
     </Border>
   ) : (

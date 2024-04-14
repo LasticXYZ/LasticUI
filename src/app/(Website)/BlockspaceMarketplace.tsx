@@ -2,18 +2,16 @@ import Image from 'next/image'
 
 const BlockspaceMarketplace = () => {
   return (
-    <div className=" bg-gradient-to-b from-pink-1 pt-10 border-y bg-opacity-70 border-gray-9">
-      <section className="mx-auto max-w-9xl py-12 px-4 sm:px-6 lg:px-8">
+    <div className=" pt-10 ">
+      <section className="mx-auto max-w-9xl flex flex-col py-12 px-4 sm:px-6 lg:px-8">
         <div className="py-5">
           {/* Title */}
-          <h1 className="text-2xl sm:text-3xl font-unbounded uppercase font-bold text-center mb-4">
+          <h1 className="text-2xl sm:text-6xl font-syne font-bold text-center mb-4">
             A Blockspace Marketplace?
           </h1>
 
           {/* Subtitle */}
-          <h2 className="text-lg sm:text-xl font-unbounded uppercase text-center mb-5">
-            What you can do
-          </h2>
+          <h2 className="text-lg sm:text-xl font-syne  text-center mb-5">What you can do</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 items-center justify-between gap-4 md:py-12">
@@ -29,7 +27,7 @@ const BlockspaceMarketplace = () => {
           </div>
 
           <div className="text-sm px-4 md:text-base md:flex-1">
-            <p className="my-4 text-base py-4 sm:text-lg font-bold text-gray-600">
+            <p className="my-4 text-base py-4 sm:text-lg font-bold ">
               Lastic is a user-friendly marketplace for buying and selling blockspace tailored to
               your needs, built on Polkadot Coretime.
             </p>

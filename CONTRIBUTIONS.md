@@ -1,6 +1,30 @@
+> [!NOTE]
+> Rather than reading this, check out the following exhaustive guide on contributions:
+> [https://docs.lastic.xyz/contributors/](https://docs.lastic.xyz/contributors/)
+
 # Contributing Guidelines
 
 Welcome to the Lastic project! We're excited that you're interested in contributing. Before you get started, please take a moment to read the following guidelines to ensure a smooth and collaborative experience.
+
+---
+
+---
+
+---
+
+!!! **These guidelines are very general, if you want to contribute rather check out this guide** !!!
+
+👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇
+
+[https://docs.lastic.xyz/contributors/](https://docs.lastic.xyz/contributors/)
+
+☝️☝️☝️☝️☝️☝️☝️☝️☝️☝️☝️☝️☝️☝️☝️☝️☝️☝️
+
+---
+
+---
+
+---
 
 ## Table of Contents
 

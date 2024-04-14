@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { FC } from 'react'
 
-interface PrimaryButtonProps {
+export interface PrimaryButtonProps {
   title?: string
   location?: string
   onClick?: () => void // Optional click handler
@@ -20,7 +20,7 @@ const PrimaryButton: FC<PrimaryButtonProps> = ({
       <button
         onClick={onClick}
         disabled={disabled}
-        className={`${disabled ? 'bg-gray-2 text-gray-14 cursor-not-allowed' : 'bg-pink-3 hover:bg-pink-4 text-black cursor-pointer'} rounded-ful font-unbounded uppercase font-black rounded-2xl   border border-gray-8 text-xs inline-flex items-center justify-center px-12 py-3 mr-3 text-center text-black hover:bg-primary-800 focus:ring-4 focus:ring-primary-3`}
+        className={`${disabled ? 'bg-gray-2 dark:bg-gray-20 dark:text-gray-14 text-gray-14 cursor-not-allowed' : 'bg-pink-4 dark:bg-pink-400 hover:bg-pink-5 dark:hover:bg-pink-500 text-black dark:text-gray-1 cursor-pointer'} rounded-ful font-unbounded uppercase font-black rounded-2xl   border border-gray-8  dark:border-gray-18 text-xs inline-flex items-center justify-center px-12 py-3 mr-3 text-center text-black dark:text-gray-1 hover:bg-primary-800 focus:ring-4 focus:ring-primary-3`}
       >
         {title}
       </button>
@@ -29,7 +29,7 @@ const PrimaryButton: FC<PrimaryButtonProps> = ({
     return (
       <Link
         href={location}
-        className="rounded-ful font-unbounded uppercase font-black rounded-2xl bg-pink-3 hover:bg-pink-4 border border-gray-8 text-xs inline-flex items-center justify-center px-12 py-3 mr-3 text-center text-black hover:bg-primary-800 focus:ring-4 focus:ring-primary-3"
+        className="rounded-ful font-unbounded uppercase font-black rounded-2xl bg-pink-4 dark:bg-pink-400 hover:bg-pink-5 dark:hover:bg-pink-500 border border-gray-8 dark:border-gray-18 text-xs inline-flex items-center justify-center px-12 py-3 mr-3 text-center text-black dark:text-gray-1 hover:bg-primary-800 focus:ring-4 focus:ring-primary-3"
       >
         {title}
       </Link>

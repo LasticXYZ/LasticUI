@@ -19,3 +19,10 @@ export function toShortAddress(address?: string | null, howMany: number = 6) {
   }
   return `${address.slice(0, howMany)}...${address.slice(-howMany)}`
 }
+
+export function toShortHead(head?: string | null, howMany: number = 6) {
+  if (!head) {
+    return ''
+  }
+  return `${head.slice(0, howMany)}...${head.slice(-howMany)}`
+}

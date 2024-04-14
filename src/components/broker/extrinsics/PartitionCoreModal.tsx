@@ -106,7 +106,14 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
     }
 
     fetchTimes()
-  }, [regionData, relayApi, activeAccount?.address, brokerConstants?.timeslicePeriod, regionId.begin, regionId.core])
+  }, [
+    regionData,
+    relayApi,
+    activeAccount?.address,
+    brokerConstants?.timeslicePeriod,
+    regionId.begin,
+    regionId.core,
+  ])
 
   useEffect(() => {
     setPivotOptions([])
@@ -228,7 +235,7 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
                     key={index}
                     className={`transition-transform duration-500 ease-out cursor-pointer ${
                       selectedPivotOffset === pivot.timeslice - regionTimeSpan.start.region
-                        ? 'ring-2 ring-pink-500 shadow-lg transform scale-105 rounded-2xl'
+                        ? 'ring-2 shadow-lg transform scale-105 rounded-2xl'
                         : 'ring-2 ring-transparent rounded-2xl'
                     } transition-all duration-300`}
                     onClick={() =>
@@ -247,7 +254,7 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
                         </div>
 
                         <div className="flex w-full text-lg flex-col px-5items-start justify-center">
-                          <div className="uppercase font-unbounded tracking-wide text-md text-indigo-500 font-semibold">
+                          <div className="uppercase font-unbounded tracking-wide text-md  font-semibold">
                             Pivot at region {pivot.timeslice}
                           </div>
 

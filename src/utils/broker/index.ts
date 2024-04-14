@@ -1,21 +1,14 @@
-import {
-  QueryParams,
-  Region,
-  RegionDetail,
-  RegionOwner,
-  RegionsType,
-  typeOfChain,
-} from '@/types/broker'
+import { QueryParams, Region, RegionDetail, RegionOwner, RegionsType } from '@/types/broker'
 import { ApiPromise } from '@polkadot/api'
 import {
   BrokerConstantsType,
   ConfigurationType,
   SaleInfoType,
-  blocksToTimeFormat,
   getConstants,
   getCurrentBlockNumber,
 } from '@poppyseed/lastic-sdk'
 import { useEffect, useState } from 'react'
+export { saleStatus } from './saleStatus'
 
 export function useQuerySpecificRegion({
   api,
@@ -161,43 +154,6 @@ export function useBrokerConstants(api: ApiPromise | undefined) {
   }, [api])
 
   return { brokerConstants, isLoading }
-}
-
-export function saleStatus(
-  currentBlockNumber: number,
-  saleInfo: SaleInfoType,
-  config: ConfigurationType,
-  constant: BrokerConstantsType,
-) {
-  const saleEnds: number = saleInfo.saleStart + (config.regionLength * constant.timeslicePeriod) - config.interludeLength
-
-  let statusMessage = ''
-  let timeRemaining = ''
-  let statusTitle = ''
-
-  if (currentBlockNumber < saleInfo.saleStart) {
-    timeRemaining = blocksToTimeFormat(saleInfo.saleStart - currentBlockNumber, typeOfChain)
-    statusMessage = 'Time to renew your core!'
-    statusTitle = 'Interlude Period'
-  } else if (currentBlockNumber < saleInfo.saleStart + config.leadinLength) {
-    timeRemaining = blocksToTimeFormat(
-      saleInfo.saleStart + config.leadinLength - currentBlockNumber,
-      typeOfChain,
-    )
-    statusMessage =
-      'Sales have started we are now in the lead-in period. The price is linearly decreasing with each block.'
-    statusTitle = 'Lead-in Period'
-  } else if (currentBlockNumber <= saleEnds) {
-    timeRemaining = blocksToTimeFormat(saleEnds - currentBlockNumber, typeOfChain)
-    statusMessage = 'Sale is in the purchase period.'
-    statusTitle = 'Purchase Period'
-  } else {
-    timeRemaining = '-'
-    statusMessage = 'The sale has ended.'
-    statusTitle = 'Sale Ended'
-  }
-
-  return { statusTitle, statusMessage, timeRemaining }
 }
 
 export function calculateCurrentPrice(

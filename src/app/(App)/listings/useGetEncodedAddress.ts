@@ -19,7 +19,6 @@ export const encodesubstrateAddress = (address: string | Uint8Array, ss58Format?
 export const useGetEncodedAddress = () => {
   const { activeChain } = useInkathon()
 
-
   const getEncodedAddress = useCallback(
     (address: string | Uint8Array | undefined) => {
       if (!activeChain || !address || address === 'undefined') {
@@ -27,7 +26,7 @@ export const useGetEncodedAddress = () => {
       }
       return encodesubstrateAddress(address, activeChain?.ss58Prefix)
     },
-    [activeChain]
+    [activeChain],
   )
 
   return getEncodedAddress

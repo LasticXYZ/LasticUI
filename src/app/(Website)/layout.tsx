@@ -1,35 +1,8 @@
 import type { Metadata } from 'next'
-import { Syncopate } from 'next/font/google'
-import localFont from 'next/font/local'
-import Background from './Background'
+import { DM_Sans, Syne } from 'next/font/google'
 import Footer from './Footer'
 import Navbar from './Navbar'
 import './globals.css'
-
-const montserrat = localFont({
-  src: [
-    {
-      path: '../../../public/assets/Fonts/Montserrat-VariableFont_wght.ttf',
-      weight: '400',
-      style: 'normal',
-    },
-    {
-      path: '../../../public/assets/Fonts/Montserrat-Italic-VariableFont_wght.ttf',
-      weight: '400',
-      style: 'italic',
-    },
-    {
-      path: '../../../public/assets/Fonts/Montserrat-VariableFont_wght.ttf',
-      weight: '700',
-      style: 'normal',
-    },
-    {
-      path: '../../../public/assets/Fonts/Montserrat-Italic-VariableFont_wght.ttf',
-      weight: '700',
-      style: 'italic',
-    },
-  ],
-})
 
 const navigation_app = [
   { name: 'Docs', href: 'https://docs.lastic.xyz/', current: false },
@@ -37,10 +10,16 @@ const navigation_app = [
   { name: 'FAQ', href: '/faq', current: false },
 ]
 
-const syncopate = Syncopate({
+const syne = Syne({
   subsets: ['latin'],
   weight: ['400', '700'],
-  variable: '--font-unbounded',
+  variable: '--font-syne',
+})
+
+const dm_sans = DM_Sans({
+  subsets: ['latin'],
+  weight: ['300', '400', '700'],
+  variable: '--font-dm_sans',
 })
 
 export const metadata: Metadata = {
@@ -51,14 +30,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${syncopate.variable} ${montserrat.className}`}>
-        <Background>
-          <Navbar navigation={navigation_app} />
-          <div className="py-5 font-montserrat">
-            <main>{children}</main>
-          </div>
-          <Footer />
-        </Background>
+      <body className={`${dm_sans.variable} ${syne.variable}`}>
+        <Navbar navigation={navigation_app} />
+        <div className="pt-5 font-dm_sans">
+          <main>{children}</main>
+        </div>
+        <Footer />
       </body>
     </html>
   )

@@ -35,18 +35,18 @@ const Card: React.FC<CardProps> = ({
     <Border className="px-10 py-6 hover:bg-pink-1 hover:cursor-pointer">
       <Link href={`/core/${coreNumber}/${beginStr}/${mask}`}>
         <div>
-          <div className="uppercase font-unbounded uppercase tracking-wide text-md text-indigo-500 font-semibold flex justify-between items-center">
+          <div className="font-unbounded uppercase tracking-wide text-md font-semibold flex justify-between items-center">
             <span>Core Nb. {coreNumber}</span>
             <div className="flex space-x-2">
               {' '}
               {/* Container to hold both buttons next to each other */}
               {coreSize < bulkSize && (
-                <div className="bg-pink-3 border border-gray-8 px-2 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
+                <div className="bg-pink-3  dark:bg-pink-400 dark:bg-opacity-80 border border-gray-8 px-4 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
                   Partitioned
                 </div>
               )}
               {mask !== '0xffffffffffffffffffff' && (
-                <div className="bg-pink-3 border border-gray-8 px-2 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
+                <div className="bg-pink-3 dark:bg-pink-400  dark:bg-opacity-80 border border-gray-8 px-4 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
                   Interlaced
                 </div>
               )}

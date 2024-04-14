@@ -31,7 +31,7 @@ const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({
           <CuteInfo
             emoji="👀"
             message="Connect wallet in order to buy instantaneous coretime."
-            color="bg-teal-4"
+            color="bg-pink-400 dark:bg-teal-7"
           />
           <ConnectButton />
         </div>
@@ -63,25 +63,25 @@ const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({
             className="mb-4"
           />
         </div>
-        <div>
-          <div className="text-gray-18 text-xl font-unbounded uppercase mb-5">
+        <div className="dark:text-gray-6">
+          <div className="text-gray-18 dark:text-gray-3 text-xl font-unbounded uppercase mb-5">
             Core Nb:{' '}
             <span className="font-semibold">{saleInfo.firstCore + saleInfo.coresSold}</span>
           </div>
-          <div className="text-gray-600 mb-2">
+          <div className=" mb-2 ">
             Available Cores:{' '}
             <span className="font-semibold">
               {saleInfo.coresOffered - saleInfo.coresSold} / {saleInfo.coresOffered}{' '}
             </span>
           </div>
-          <div className="text-gray-600 mb-2">
+          <div className=" mb-2">
             Cores that need to be sold so that the price starts rising:{' '}
             <span className="font-semibold">
               {saleInfo.idealCoresSold} / {saleInfo.coresOffered}{' '}
             </span>
           </div>
-          <div className="text-gray-600 mb-4">
-            Buy core for: <span className="text-green-500 font-semibold">{formatPrice}</span>
+          <div className=" mb-4">
+            Buy core for: <span className="text-pink-400 font-semibold">{formatPrice}</span>
           </div>
           <div>
             Using account:{' '}

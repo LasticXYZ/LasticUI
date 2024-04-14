@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Define custom properties for light and dark themes */
+:root {
+  --color-text: #000; /* Dark text for light background */
+  --background-color: #fff; /* Light background */
+}
+
+/* Adjust for dark theme based on user preference */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-text: #fff; /* Light text for dark background */
+    --background-color: #000; /* Dark background */
+  }
+}
+
+/* Apply custom properties */
 * {
   box-sizing: border-box;
   padding: 0;
@@ -15,8 +30,8 @@ body {
 }
 
 body {
-  color: #000;
-  background: #fff;
+  color: var(--color-text); /* Use custom property */
+  background: var(--background-color); /* Use custom property */
   font-family: 'Montserrat', sans-serif;
 }
 

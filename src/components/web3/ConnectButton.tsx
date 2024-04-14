@@ -13,6 +13,7 @@ import {
   useBalance,
   useInkathon,
 } from '@poppyseed/lastic-sdk'
+import Image from 'next/image'
 import Link from 'next/link'
 import { FC, useState } from 'react'
 import { AiOutlineCheckCircle, AiOutlineDisconnect } from 'react-icons/ai'
@@ -20,6 +21,21 @@ import { FiExternalLink } from 'react-icons/fi'
 import { AccountName } from './AccountName' // Assuming AccountName is in the same directory
 
 export const allWallets: SubstrateWallet[] = [talisman, polkadotjs, subwallet, nova]
+
+const mappingTitletoImg = (id: string) => {
+  switch (id) {
+    case 'nova':
+      return '/assets/wallet-logos/nova@128w.png'
+    case 'talisman':
+      return '/assets/wallet-logos/talisman@128w.png'
+    case 'polkadot-js':
+      return '/assets/wallet-logos/polkadot@128w.png'
+    case 'subwallet-js':
+      return '/assets/wallet-logos/subwallet@128w.png'
+    default:
+      return '/assets/wallet-logos/polkadot@128w.png'
+  }
+}
 
 export interface ConnectButtonProps {}
 export const ConnectButton: FC<ConnectButtonProps> = () => {
@@ -44,14 +60,14 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
         // Connect Button + Modal
         <div className="relative">
           <button
-            className=" font-unbounded uppercase font-black rounded-2xl hover:bg-pink-3 border border-gray-8 text-xs inline-flex items-center justify-center px-12 py-3 mr-3 text-center text-black hover:bg-primary-800 focus:ring-4 focus:ring-primary-300"
+            className=" font-unbounded uppercase font-black rounded-2xl hover:bg-pink-3 border border-gray-8 text-xs inline-flex items-center justify-center px-12 py-3 mr-3 text-center text-black dark:text-gray-1 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300"
             onClick={() => setOpenConnect(!openConnect)}
           >
             <span>Connect Wallet</span>
           </button>
 
           <WalletModal isOpen={openConnect} onClose={() => setOpenConnect(false)}>
-            <ul className="rounded-2xl border border-gray-9 bg-white divide-y divide-gray-2">
+            <ul className="rounded-2xl border border-gray-9 bg-white dark:bg-gray-21 divide-y divide-gray-2">
               {/* Installed Wallets */}
               {!isSSR &&
                 !activeAccount &&
@@ -65,13 +81,15 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
                         connect?.(undefined, undefined, w)
                         setChosenWallet(w)
                       }}
-                      className="p-3 flex flex-row cursor-pointer hover:bg-gray-1 transition duration-300"
+                      className="p-3 flex flex-row cursor-pointer hover:bg-gray-1 dark:hover:bg-gray-18 transition duration-300"
                     >
-                      <img
-                        src={w.logoUrls[0]}
+                      <Image
+                        src={mappingTitletoImg(w.id)}
                         alt={w.name}
+                        width={24}
+                        height={24}
                         className="w-6 h-6 mr-2 inline-block"
-                      ></img>
+                      />
                       {w.name}
                     </li>
                   ) : (
@@ -81,7 +99,7 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
                         className="flex items-center justify-between opacity-50 hover:opacity-70 hover:no-underline transition duration-300"
                       >
                         <div>
-                          <span>{w.name}</span>
+                          <span>{w.id}</span>
                           <p className="text-xs mt-1">Not installed</p>
                         </div>
                         <FiExternalLink size={16} />
@@ -99,7 +117,7 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
           <div className="flex items-center space-x-4">
             {/* Account Name, Address, and AZNS-Domain (if assigned) */}
             <button
-              className=" font-unbounded uppercase font-black rounded-2xl hover:bg-pink-3 border border-gray-9 text-xs inline-flex items-center justify-center px-7 py-2 mr-3 text-center text-black focus:ring-4"
+              className=" font-unbounded uppercase font-black rounded-2xl hover:bg-pink-3 border border-gray-9 text-xs inline-flex items-center justify-center px-7 py-2 mr-3 text-center text-black dark:text-gray-1 focus:ring-4"
               onClick={() => setOpenChooseAccount(true)}
             >
               <div className=" px-6">
@@ -132,7 +150,7 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
                           setActiveAccount?.(acc)
                         }
                       }}
-                      className={`p-3 flex justify-between items-center cursor-pointer ${acc.address === activeAccount.address ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-2'}`}
+                      className={`p-3 flex justify-between items-center cursor-pointer ${acc.address === activeAccount.address ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-2 dark:hover:bg-gray-18 transition duration-300'}`}
                     >
                       <div>
                         <AccountName account={acc} />
@@ -147,12 +165,12 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
 
               {/* Account Balance */}
               {balanceFormatted !== undefined && (
-                <div className="rounded-2x px-4 py-2 font-bold text-gray-19 hover:bg-gray-9">
+                <div className="rounded-2x px-4 py-2 font-bold text-gray-19 ">
                   {balanceFormatted}
                 </div>
               )}
               <div
-                className="p-2 flex justify-between items-center cursor-pointer hover:bg-red-1"
+                className="p-2 flex justify-between items-center cursor-pointer hover:bg-red-1 dark:hover:bg-red-900 transition duration-300"
                 onClick={() => disconnect?.()}
               >
                 <span className="text-red-5">Disconnect</span>

@@ -1,0 +1,20 @@
+name: Test & Build Next.js App
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main, stable, development]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies
+        uses: ./.github/actions/pnpm-install
+
+      - name: Run Lint
+        run: pnpm run lint

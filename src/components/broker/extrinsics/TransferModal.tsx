@@ -62,7 +62,7 @@ const TransferModal: FC<TransferModalProps> = ({ isOpen, onClose, regionId }) =>
           </label>
           <input
             id="newOwner"
-            className="text-lg border border-gray-300 rounded-md p-2 mb-4 focus:ring-blue-500 focus:border-blue-500"
+            className="text-lg border rounded-md p-2 mb-4 focus:ring-blue-500 focus:border-blue-500"
             type="text"
             value={newOwner}
             onChange={(e) => setNewOwner(e.target.value)}

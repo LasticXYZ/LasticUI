@@ -11,8 +11,8 @@ export const useGetMultisigAddress = (signatories: string[], threshold?: number 
   }, [signatories, threshold])
   const newMultisigAddress = useMemo(
     () => getEncodedAddress(newMultisigPubKey),
-    [getEncodedAddress, newMultisigPubKey]
+    [getEncodedAddress, newMultisigPubKey],
   )
-  
+
   return newMultisigAddress
 }

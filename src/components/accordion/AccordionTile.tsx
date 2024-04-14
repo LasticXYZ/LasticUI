@@ -1,6 +1,6 @@
 'use client'
 
-import React, { FC, useState, useRef, RefObject } from 'react'
+import { FC, RefObject, useRef, useState } from 'react'
 import ArrowIcon from '../icon/ArrowIcon'
 
 type AccordionProps = {
@@ -22,7 +22,7 @@ const AccordionTile: FC<AccordionProps> = ({ question, answer }) => {
   }
 
   return (
-    <div className="border-b">
+    <div className="border-b font-dm_sans">
       <div
         className="flex items-center justify-between w-full py-5 font-medium text-left cursor-pointer "
         onClick={() => showAccordion()}

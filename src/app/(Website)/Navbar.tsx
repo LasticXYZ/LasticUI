@@ -1,6 +1,7 @@
 'use client'
 
 import PrimaryButton from '@/components/button/PrimaryButton'
+import PrimaryButtonWeb from '@/components/button/PrimaryButtonWeb'
 import { Disclosure } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
@@ -17,7 +18,7 @@ const Navbar: FC<NavbarProps> = ({ navigation }) => {
 
   return (
     <>
-      <div className="w-full fixed z-50 bg-[#F6FDFF] pb-4 border-b font-montserrat border-gray-9 bg-opacity-70">
+      <div className="w-full fixed z-50 bg-[#020710] pb-4 border-b font-dm_sans border-gray-16 bg-opacity-70">
         <Disclosure as="nav" className="">
           {({ open }) => (
             <>
@@ -27,11 +28,12 @@ const Navbar: FC<NavbarProps> = ({ navigation }) => {
                     <div className="flex-shrink-0 cursor-pointer">
                       <Link href="/" className="font-bold" legacyBehavior>
                         <Image
-                          src="/assets/Images/Logos/lastic-logo.png"
+                          src="/assets/Images/Logos/lastic-logo-dark.png"
                           width={130}
-                          height={50}
+                          height="0"
+                          style={{ width: '10em', height: 'auto' }}
                           quality={100}
-                          alt="lastic Logo"
+                          alt="Lastic Logo"
                         />
                       </Link>
                     </div>
@@ -43,22 +45,22 @@ const Navbar: FC<NavbarProps> = ({ navigation }) => {
                           <Link
                             key={idx}
                             href={item.href}
-                            className={`${pathname === item.href ? 'text-pink-4' : 'text-black hover:text-pink-4'}`}
+                            className={`${pathname === item.href ? 'text-pink-4' : 'text-white hover:text-pink-4'}`}
                           >
                             {item.name}
                           </Link>
                         ))}
                       </div>
                     </div>
-                  </div>
-                  <div className="hidden md:block">
-                    <div className="ml-4 flex items-center md:ml-6">
-                      <PrimaryButton title="Launch" location="/bulkcore1" />
+                    <div className="hidden md:block">
+                      <div className="ml-4 flex items-center md:ml-6">
+                        <PrimaryButtonWeb title="Launch" location="/start" />
+                      </div>
                     </div>
                   </div>
                   <div className="-mr-2 flex md:hidden">
                     {/* Mobile menu button */}
-                    <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring- focus:ring-offset-2 focus:ring-offset-gray-800">
+                    <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 hover:text-white focus:outline-none focus:ring- focus:ring-offset-2 focus:ring-offset-gray-800">
                       <span className="sr-only">Open main menu</span>
                       {open ? (
                         <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
@@ -76,14 +78,14 @@ const Navbar: FC<NavbarProps> = ({ navigation }) => {
                     <Link
                       key={item.name}
                       href={item.href}
-                      className={`${pathname === item.href ? 'text-pink-4' : 'text-black hover:text-pink-4'}`}
+                      className={`${pathname === item.href ? 'text-pink-4' : 'text-white hover:text-pink-4'}`}
                     >
                       {item.name}
                     </Link>
                   ))}
                 </div>
                 <div className="flex justify-center space-y-1 px-2 md:hidden">
-                  <PrimaryButton title="Launch" location="/bulkcore1" />
+                  <PrimaryButton title="Launch" location="/start" />
                 </div>
               </Disclosure.Panel>
             </>
