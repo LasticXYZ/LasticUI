@@ -38,6 +38,9 @@ dependencies:
   '@polkadot/api-base':
     specifier: ^10.12.6
     version: 10.12.6
+  '@polkadot/ui-keyring':
+    specifier: ^3.6.5
+    version: 3.6.5(@polkadot/keyring@12.6.2)(@polkadot/ui-settings@3.6.5)(@polkadot/util@12.6.2)
   '@poppyseed/squid-sdk':
     specifier: ^0.1.0
     version: 0.1.0(@subsquid/substrate-runtime@1.0.3)(typeorm@0.3.20)

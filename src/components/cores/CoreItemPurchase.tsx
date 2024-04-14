@@ -1,5 +1,6 @@
 // components/Card.tsx
 import Border from '@/components/border/Border'
+import PrimaryButton from '@/components/button/PrimaryButton'
 import Image from 'next/image'
 import React from 'react'
 
@@ -13,6 +14,7 @@ interface CardProps {
   mask: string
   begin: string
   end: string
+  buttonAction?: () => void
 }
 
 const Card: React.FC<CardProps> = ({
@@ -25,26 +27,27 @@ const Card: React.FC<CardProps> = ({
   mask,
   begin,
   end,
+  buttonAction,
 }) => {
   const beginStr = begin.replace(/,/g, '')
   const coreSize = parseInt(end.replace(/,/g, '')) - parseInt(begin.replace(/,/g, ''))
   const bulkSize = 1260 // TODO replace this by config value
 
   return (
-    <Border className="px-10 py-6 hover:bg-pink-1 hover:cursor-pointer">
+    <Border className="px-10 py-6 hover:bg-pink-1">
       <div>
-        <div className="uppercase font-unbounded tracking-wide text-md text-indigo-500 font-semibold flex justify-between items-center">
+        <div className="uppercase font-unbounded tracking-wide text-md font-semibold flex justify-between items-center">
           <span>Core Nb. {coreNumber}</span>
           <div className="flex space-x-2">
             {' '}
             {/* Container to hold both buttons next to each other */}
             {coreSize < bulkSize && (
-              <div className="bg-pink-3 border border-gray-8 px-2 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
+              <div className="bg-pink-400 border border-gray-8 px-2 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
                 Partitioned
               </div>
             )}
             {mask !== '0xffffffffffffffffffff' && (
-              <div className="bg-pink-3 border border-gray-8 px-2 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
+              <div className="bg-pink-400 border border-gray-8 px-2 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
                 Interlaced
               </div>
             )}
@@ -70,9 +73,9 @@ const Card: React.FC<CardProps> = ({
             <p className="px-2">Begin: {begin}</p>
             <p className="px-2">End: {end}</p>
           </div>
-          <button className="bg-pink-3 border border-gray-8 px-2 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
-            Purchase
-          </button>
+          <div className="flex flex-col p-5 items-start justify-center">
+            <PrimaryButton title="Purchase" onClick={buttonAction} />
+          </div>
         </div>
       </div>
     </Border>
