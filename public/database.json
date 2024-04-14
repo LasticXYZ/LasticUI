@@ -51,6 +51,19 @@
       "mask": "0xaaaaaaaaaaaaaaaaaaa0",
       "begin": "117870",
       "end": ""
+    },
+    {
+      "id": 1713092966094,
+      "coreNumber": "62",
+      "size": 1,
+      "cost": 1000,
+      "reward": 0,
+      "owner": "5HNJjkjo3KGA3R1DanS82R47tV7G3avEZ8GzLDW9CQtkNjVW",
+      "currencyCost": "ROC",
+      "currencyReward": "",
+      "mask": "0xffffffffffffffffffff",
+      "begin": "122910",
+      "end": ""
     }
   ]
 }

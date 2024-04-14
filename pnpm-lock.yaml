@@ -38,6 +38,9 @@ dependencies:
   '@polkadot/api-base':
     specifier: ^10.12.6
     version: 10.12.6
+  '@polkadot/ui-keyring':
+    specifier: ^3.6.5
+    version: 3.6.5(@polkadot/keyring@12.6.2)(@polkadot/ui-settings@3.6.5)(@polkadot/util@12.6.2)
   '@poppyseed/squid-sdk':
     specifier: ^0.0.5
     version: 0.0.5(@subsquid/substrate-runtime@1.0.3)(typeorm@0.3.20)
@@ -3482,6 +3485,24 @@ packages:
       '@polkadot/util': 10.4.2
       '@polkadot/util-crypto': 10.4.2(@polkadot/util@10.4.2)
       rxjs: 7.8.1
+    dev: false
+
+  /@polkadot/ui-keyring@3.6.5(@polkadot/keyring@12.6.2)(@polkadot/ui-settings@3.6.5)(@polkadot/util@12.6.2):
+    resolution: {integrity: sha512-6kPui1rtBIG2pJpTKu/XQBfoB0XIYR+UIgxoQ1C4wIuT000V2lUH3a0RZ9h0Oj31ylP8H3vjJi1QHtFxF+glGg==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@polkadot/keyring': '*'
+      '@polkadot/ui-settings': '*'
+      '@polkadot/util': '*'
+    dependencies:
+      '@polkadot/keyring': 12.6.2(@polkadot/util-crypto@12.6.2)(@polkadot/util@12.6.2)
+      '@polkadot/ui-settings': 3.6.5(@polkadot/networks@12.6.2)(@polkadot/util@12.6.2)
+      '@polkadot/util': 12.6.2
+      '@polkadot/util-crypto': 12.6.2(@polkadot/util@12.6.2)
+      mkdirp: 3.0.1
+      rxjs: 7.8.1
+      store: 2.0.12
+      tslib: 2.6.2
     dev: false
 
   /@polkadot/ui-settings@3.6.5(@polkadot/networks@12.6.2)(@polkadot/util@12.6.2):
@@ -8767,6 +8788,12 @@ packages:
 
   /mkdirp@2.1.6:
     resolution: {integrity: sha512-+hEnITedc8LAtIP9u3HJDFIdcLV2vXP33sqLLIzkv1Db1zO/1OxbvYf0Y1OC/S/Qo5dxHXepofhmxL02PsKe+A==}
+    engines: {node: '>=10'}
+    hasBin: true
+    dev: false
+
+  /mkdirp@3.0.1:
+    resolution: {integrity: sha512-+NsyUUAZDmo6YVHzL/stxSu3t9YS1iljliy3BSDrXJ/dkn1KYdmtZODGGjLcc9XLgVVpH4KshHB8XmZgMhaBXg==}
     engines: {node: '>=10'}
     hasBin: true
     dev: false

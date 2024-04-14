@@ -7,53 +7,16 @@ import { FC, useCallback, useMemo } from 'react'
 
 import SecondaryButton from '@/components/button/SecondaryButton'
 import Modal from '@/components/modal/Modal'
-import { keyring } from '@polkadot/ui-keyring'
 import { BN } from '@polkadot/util'
 import { useInkathon } from '@poppyseed/lastic-sdk'
 import AddressMini from './AddressMini'
 import ModalColumns from './Modal-Col'
-import { MultisigActionStatus, MultisigProps } from './types'
+import { MultisigProps } from './types'
 //import useKnownAddresses from '../Accounts/useKnownAddresses.js';
+import { keyring } from '@polkadot/ui-keyring'
+import { MultisigActionStatus } from './types'
 
-function createMultisig(
-  signatories: string[],
-  threshold: BN | number,
-  { genesisHash, name, tags = [] }: CreateOptions,
-  success: string,
-): MultisigActionStatus {
-  // we will fill in all the details below
-  const status: MultisigActionStatus = { action: 'create', status: 'pending' }
-
-  try {
-    const result = keyring.addMultisig(signatories, threshold, { genesisHash, name, tags })
-    remarkCall
-      .signAndSend(selectedAccount.address, { signer: selectedSigner }, signCallBack)
-      .catch((error: Error) => {
-        setIsSubmitted(false)
-
-        addToast({
-          title: error.message,
-          type: 'error',
-          link: getSubscanExtrinsicLink(remarkCall.hash.toHex()),
-        })
-      })
-
-    const { address } = result.pair
-
-    status.account = address
-    status.status = 'success'
-    status.message = success
-  } catch (error) {
-    status.status = 'error'
-    status.message = (error as Error).message
-
-    console.error(error)
-  }
-
-  return status
-}
-
-const Multisig: FC<MultisigProps> = ({ isOpen, onClose, onStatusChange }) => {
+const CreateMultisig: FC<MultisigProps> = ({ isOpen, onClose, onStatusChange }) => {
   const { api } = useInkathon()
   const isDevelopment = false
 
@@ -69,24 +32,54 @@ const Multisig: FC<MultisigProps> = ({ isOpen, onClose, onStatusChange }) => {
   const name = 'lastic-multisig-1'
 
   const _createMultisig = useCallback((): void => {
-    const options = {
-      genesisHash: isDevelopment ? undefined : api.genesisHash.toHex(),
-      name: name.trim(),
+    const genesisHash = isDevelopment ? undefined : api?.genesisHash.toHex()
+
+    const status: MultisigActionStatus = { action: 'create', status: 'pending' }
+
+    try {
+      const result = keyring.addMultisig(signatories, threshold, {
+        genesisHash,
+        name: name.trim(),
+        tags: [],
+      })
+      // remarkCall
+      //   .signAndSend(selectedAccount.address, { signer: selectedSigner }, signCallBack)
+      //   .catch((error: Error) => {
+      //     setIsSubmitted(false)
+
+      //     addToast({
+      //       title: error.message,
+      //       type: 'error',
+      //       link: getSubscanExtrinsicLink(remarkCall.hash.toHex()),
+      //     })
+      //   })
+
+      const { address } = result.pair
+
+      status.account = address
+      status.status = 'success'
+      status.message = 'Multisig created successfully'
+    } catch (error) {
+      status.status = 'error'
+      status.message = (error as Error).message
+
+      console.error(error)
     }
-    const status = createMultisig(signatories, threshold, options, 'created multisig')
 
     onStatusChange(status)
     onClose()
-  }, [api.genesisHash, isDevelopment, name, onClose, onStatusChange, signatories, threshold])
+  }, [api?.genesisHash, isDevelopment, name, onClose, onStatusChange, signatories, threshold])
 
   if (!api) {
     return <div>API not available</div>
   }
 
-  if (!isOpen) return null
+  if (!isOpen) {
+    return null
+  }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={`Create Multisig`}>
+    <Modal isOpen={isOpen} onClose={onClose} title={`Purchase Listed Region`}>
       <div>
         <ModalColumns
           hint={
@@ -124,4 +117,4 @@ const Multisig: FC<MultisigProps> = ({ isOpen, onClose, onStatusChange }) => {
   )
 }
 
-export default Multisig
+export default CreateMultisig

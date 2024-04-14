@@ -1,9 +1,9 @@
 'use client'
 
-import Multisig from '@/app/(App)/listings/CreateMultisig'
 import CoreItemPurchase from '@/components/cores/CoreItemPurchase'
 import { useEffect, useState } from 'react'
 import SubTitle from '../samesections/SubTitle'
+import CreateMultisig from './CreateMultisig'
 
 interface Core {
   id: number
@@ -50,27 +50,31 @@ const ParaIdPage = () => {
     <>
       <SubTitle subtitle="Cores for Sale" />
 
-      <Multisig isOpen={isMultisigVisible} onClose={closeMultisig} onStatusChange={() => {}} />
+      <div></div>
 
-      <section className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8 flex flex-col items-stretch">
-        <div>
+      <CreateMultisig
+        isOpen={isMultisigVisible}
+        onClose={closeMultisig}
+        onStatusChange={() => {}}
+      />
+
+      <section className="mx-auto max-w-9xl px-5">
+        <div className=" grid grid-cols-2 gap-6">
           {cores.map((core) => (
-            <div key={core.id} className="p-6">
-              <div onClick={openMultisig}>
-                {' '}
-                {/* Assign the openMultisig function to the onClick event */}
-                <CoreItemPurchase
-                  coreNumber={core.coreNumber.toString()}
-                  size={core.size.toString()}
-                  cost={core.cost.toString()}
-                  reward={core.reward.toString()}
-                  currencyCost={core.currencyCost}
-                  currencyReward={core.currencyReward}
-                  mask={core.mask}
-                  begin={core.begin}
-                  end={core.end}
-                />
-              </div>
+            <div key={core.id} className="">
+              {/* Assign the openMultisig function to the onClick event */}
+              <CoreItemPurchase
+                coreNumber={core.coreNumber.toString()}
+                size={core.size.toString()}
+                cost={core.cost.toString()}
+                reward={core.reward.toString()}
+                currencyCost={core.currencyCost}
+                currencyReward={core.currencyReward}
+                mask={core.mask}
+                begin={core.begin}
+                end={core.end}
+                buttonAction={openMultisig}
+              />
             </div>
           ))}
         </div>
