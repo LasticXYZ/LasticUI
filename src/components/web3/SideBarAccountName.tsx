@@ -1,7 +1,9 @@
-import { parseNativeTokenToHuman, toShortAddress } from '@/utils/account/token'
+import { parseNativeTokenToHuman } from '@/utils/account/token'
+import { truncateHash } from '@/utils/truncateHash'
 import { SupportedChainId } from '@azns/resolver-core'
 import { useResolveAddressToDomain } from '@azns/resolver-react'
 import { UserIcon, WalletIcon } from '@heroicons/react/24/solid'
+import { encodeAddress } from '@polkadot/util-crypto'
 import { useBalance, useInkathon, useRelayBalance } from '@poppyseed/lastic-sdk'
 import { useMemo } from 'react'
 
@@ -52,7 +54,7 @@ export const SideBarAccountName = () => {
           <span className="px-2">
             <WalletIcon className="h-5 w-5" aria-hidden="true" />
           </span>
-          {toShortAddress(activeAccount?.address, 6)}
+          {truncateHash(encodeAddress(activeAccount.address, activeChain?.ss58Prefix || 42), 6)}
         </div>
       </div>
       <div>
