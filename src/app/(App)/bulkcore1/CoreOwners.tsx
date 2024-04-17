@@ -25,7 +25,7 @@ const PastTransactions = () => {
     }
 
     fetchData()
-  }, [client, offset]) // Add offset to the dependency array
+  }, [network, client, offset]) // Add offset to the dependency array
 
   const TableHeader = [
     { title: 'Time' },

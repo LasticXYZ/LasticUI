@@ -8,7 +8,7 @@ import CoreOwners from './CoreOwners'
 type DataSetKey = 'price' | 'cores' // Add more keys as needed
 
 const CoreUtilisation: React.FC = () => {
-  const { activeAccount, activeRelayChain } = useInkathon()
+  const { activeRelayChain } = useInkathon()
   const network = activeRelayChain?.network
 
   const [result, setResult] = useState<GraphLike<SaleInitializedEvent[]> | null>(null)
@@ -23,7 +23,7 @@ const CoreUtilisation: React.FC = () => {
     }
 
     fetchData()
-  }, [client])
+  }, [client, network])
 
   // Configurations for different data sets
   const dataConfigs = {
