@@ -22,7 +22,7 @@ const PastTransactions = () => {
         // Only proceed if `network` is not undefined
         let query = client.eventAllPurchased(7, offset)
         const fetchedResult: GraphLike<PurchasedEvent[]> = await client.fetch(
-          activeRelayChain?.network,
+          activeRelayChain.network,
           query,
         )
 
