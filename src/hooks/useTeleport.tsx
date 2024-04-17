@@ -1,4 +1,4 @@
-import { TxCbOnSuccessParams } from '@/app/(App)/teleport/page'
+import { TxCbOnSuccessParams } from '@/app/[network]/(App)/teleport/page'
 import { notificationTypes } from '@/components/modal/ModalNotification'
 import { DispatchError } from '@polkadot/types/interfaces'
 import { ISubmittableResult } from '@polkadot/types/types'
