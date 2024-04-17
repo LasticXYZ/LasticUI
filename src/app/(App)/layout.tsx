@@ -3,7 +3,7 @@
 import './globals.css'
 //import type { Metadata } from 'next'
 import ThemeProvider from '@/components/themeToggle/themeProvider'
-import { env } from '@/config/environment'
+import { getCurrentChain } from '@/utils/common/getCurrentChain'
 import {
   ArrowPathIcon,
   BoltIcon,
@@ -74,6 +74,8 @@ const montserrat = Montserrat({
 // }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const { defaultChain, relayChain } = getCurrentChain()
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${montserrat.variable} ${unbounded.variable}`}>
@@ -82,8 +84,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <UseInkathonProvider
               appName="lastic" // TODO
               connectOnInit={true}
-              defaultChain={env.defaultChain}
-              relayChain={env.relayChain}
+              defaultChain={defaultChain}
+              relayChain={relayChain}
             >
               <Navbar navigation={navigation_app}>
                 <div className="py-10 font-montserrat">

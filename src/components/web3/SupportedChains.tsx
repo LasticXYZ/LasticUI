@@ -1,12 +1,16 @@
+'use client'
+
 import { env } from '@/config/environment'
+import { getCurrentChain } from '@/utils/common/getCurrentChain'
 import { SubstrateChain, getSubstrateChain, useInkathon } from '@poppyseed/lastic-sdk'
 import Cookies from 'js-cookie'
-import { FC, useEffect, useState } from 'react'
+import { FC, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { FiChevronDown } from 'react-icons/fi'
 
 const SupportedChains: FC = () => {
   const { activeChain, switchActiveChain } = useInkathon()
+  const { defaultChain } = getCurrentChain()
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
@@ -17,32 +21,12 @@ const SupportedChains: FC = () => {
     })),
   )
 
-  useEffect(() => {
-    const storedNetwork = Cookies.get('activeNetwork')
-    if (storedNetwork && activeChain?.network !== storedNetwork) {
-      const chainToSwitch = supportedChains.find(
-        (chain) =>
-          chain.coretime.network === storedNetwork || chain.relay.network === storedNetwork,
-      )
-      if (chainToSwitch) {
-        switchActiveChain?.(chainToSwitch.coretime, chainToSwitch.relay)
-      }
-    }
-  }, [activeChain, supportedChains, switchActiveChain])
-
-  // const handleChainSwitch = async (chain: SubstrateChain, relayChain: SubstrateChain) => {
-  //   if (chain.network !== activeChain?.network) {
-  //     await switchActiveChain?.(chain, relayChain)
-  //     toast.success(`Switched to ${chain.name}`)
-  //     setIsDropdownOpen(false) // Close dropdown after switching
-  //   }
-  // }
-
   const handleChainSwitch = async (chain: SubstrateChain, relayChain: SubstrateChain) => {
     if (chain.network !== activeChain?.network) {
+      Cookies.set('activeChain', chain.network, { expires: 7 }) // Store the active chain in cookies for 7 days
+      Cookies.set('activeRelayChain', relayChain.network, { expires: 7 }) // Store the active relay chian in cookies for 7 days
       await switchActiveChain?.(chain, relayChain)
       toast.success(`Switched to ${chain.name}`)
-      Cookies.set('activeNetwork', chain.network, { expires: 7 }) // Store the active network in cookies for 7 days
       setIsDropdownOpen(false) // Close dropdown after switching
     }
   }
@@ -53,7 +37,7 @@ const SupportedChains: FC = () => {
         className="flex flex-row justify-between space-x-3 items-center p-2 cursor-pointer"
         onClick={() => setIsDropdownOpen((prev) => !prev)}
       >
-        <p>Network: {activeChain?.name}</p>
+        <p>Network: {defaultChain}</p>
         <FiChevronDown size={16} className={`${isDropdownOpen ? 'transform rotate-180' : ''}`} />
       </div>
 
