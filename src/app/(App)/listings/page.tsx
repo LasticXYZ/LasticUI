@@ -1,31 +1,18 @@
 'use client'
 
 import CoreItemPurchase from '@/components/cores/CoreItemPurchase'
+import { CoreListing } from '@/hooks/useListings'
 import { useEffect, useState } from 'react'
 import SubTitle from '../samesections/SubTitle'
-import CreateMultisig from './CreateMultisig'
-
-interface Core {
-  id: number
-  coreNumber: number
-  size: number
-  cost: number
-  reward: number
-  owner: string
-  currencyCost: string
-  currencyReward: string
-  mask: string
-  begin: string
-  end: string
-}
+import CreateMultisigModal from './CreateMultisigModal'
 
 // If you have a larger data structure such as:
 interface Database {
-  listings: Core[]
+  listings: CoreListing[]
 }
 
 const ParaIdPage = () => {
-  const [cores, setCores] = useState<Core[]>([])
+  const [cores, setCores] = useState<CoreListing[]>([])
   const [isMultisigVisible, setIsMultisigVisible] = useState(false) // State to control the visibility of the Multisig modal
 
   useEffect(() => {
@@ -52,7 +39,7 @@ const ParaIdPage = () => {
 
       <div></div>
 
-      <CreateMultisig
+      <CreateMultisigModal
         isOpen={isMultisigVisible}
         onClose={closeMultisig}
         onStatusChange={() => {}}
