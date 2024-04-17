@@ -1,10 +1,12 @@
 // components/Card.tsx
 import Border from '@/components/border/Border'
+import { ConfigurationType } from '@poppyseed/lastic-sdk'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
 interface CardProps {
+  config: ConfigurationType | null
   coreNumber: string
   size: string
   cost: string
@@ -16,7 +18,8 @@ interface CardProps {
   end: string
 }
 
-const Card: React.FC<CardProps> = ({
+const CoreItem: React.FC<CardProps> = ({
+  config,
   coreNumber,
   size,
   cost,
@@ -29,7 +32,8 @@ const Card: React.FC<CardProps> = ({
 }) => {
   const beginStr = begin.replace(/,/g, '')
   const coreSize = parseInt(end.replace(/,/g, '')) - parseInt(begin.replace(/,/g, ''))
-  const bulkSize = 1260 // TODO replace this by config value
+
+  if (!config) return null
 
   return (
     <Border className="px-10 py-6 hover:bg-pink-1 hover:cursor-pointer">
@@ -40,7 +44,7 @@ const Card: React.FC<CardProps> = ({
             <div className="flex space-x-2">
               {' '}
               {/* Container to hold both buttons next to each other */}
-              {coreSize < bulkSize && (
+              {coreSize < config.regionLength && (
                 <div className="bg-pink-3  dark:bg-pink-400 dark:bg-opacity-80 border border-gray-8 px-4 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
                   Partitioned
                 </div>
@@ -81,4 +85,4 @@ const Card: React.FC<CardProps> = ({
   )
 }
 
-export default Card
+export default CoreItem

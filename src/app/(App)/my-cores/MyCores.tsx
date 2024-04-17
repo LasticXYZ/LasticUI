@@ -1,9 +1,10 @@
 import Border from '@/components/border/Border'
 import CoreItem from '@/components/cores/CoreItem'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
+import { useSubstrateQuery } from '@/hooks/useSubstrateQuery'
 import { parseNativeTokenToHuman } from '@/utils/account/token'
-import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
-import { useEffect, useState } from 'react'
+import { ConfigurationType, useBalance, useInkathon } from '@poppyseed/lastic-sdk'
+import { useEffect, useMemo, useState } from 'react'
 
 // Define a type for the queryParams
 type QueryParams = (string | number | Record<string, unknown>)[]
@@ -61,15 +62,22 @@ const useRegionQuery = () => {
 }
 
 export default function MyCores() {
-  const { activeAccount, activeChain } = useInkathon()
+  const { activeAccount, activeChain, api } = useInkathon()
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
   const regionData = useRegionQuery()
+
+  const configurationString = useSubstrateQuery(api, 'configuration')
 
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 6
 
   const handleNextPage = () => setCurrentPage(currentPage + 1)
   const handlePrevPage = () => setCurrentPage(currentPage - 1)
+
+  const configuration = useMemo(
+    () => (configurationString ? (JSON.parse(configurationString) as ConfigurationType) : null),
+    [configurationString],
+  )
 
   if (!activeAccount || !activeChain) {
     return (
@@ -98,6 +106,7 @@ export default function MyCores() {
           {filteredForDisplay.map((region, index) => (
             <div key={index} className="">
               <CoreItem
+                config={configuration}
                 coreNumber={region.detail[0].core}
                 size={region.detail[0].mask === '0xffffffffffffffffffff' ? '1' : 'Interlaced'}
                 cost={parseNativeTokenToHuman({ paid: region.owner.paid, decimals: 12 })}
