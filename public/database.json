@@ -64,6 +64,45 @@
       "mask": "0xffffffffffffffffffff",
       "begin": "122910",
       "end": ""
+    },
+    {
+      "id": 1713280743141,
+      "coreNumber": "69",
+      "size": 1,
+      "cost": 8,
+      "reward": 0,
+      "owner": "5Gza9nxUQiiErg5NotZ6FPePcjBEHhawoNL3sGqpmjrVhgeo",
+      "currencyCost": "ROC",
+      "currencyReward": "",
+      "mask": "0xffffffffffffffffffff",
+      "begin": "117870",
+      "end": ""
+    },
+    {
+      "id": 1713280895964,
+      "coreNumber": "67",
+      "size": 1,
+      "cost": 12,
+      "reward": 0,
+      "owner": "5Gza9nxUQiiErg5NotZ6FPePcjBEHhawoNL3sGqpmjrVhgeo",
+      "currencyCost": "ROC",
+      "currencyReward": "",
+      "mask": "0xffffffffffffffffffff",
+      "begin": "117870",
+      "end": ""
+    },
+    {
+      "id": 1713280916457,
+      "coreNumber": "64",
+      "size": 1,
+      "cost": 44,
+      "reward": 0,
+      "owner": "5Gza9nxUQiiErg5NotZ6FPePcjBEHhawoNL3sGqpmjrVhgeo",
+      "currencyCost": "ROC",
+      "currencyReward": "",
+      "mask": "0xaaaaaaaaaaaaaaaaaaaa",
+      "begin": "117870",
+      "end": ""
     }
   ]
 }

@@ -9,12 +9,12 @@ import SecondaryButton from '@/components/button/SecondaryButton'
 import Modal from '@/components/modal/Modal'
 import { BN } from '@polkadot/util'
 import { useInkathon } from '@poppyseed/lastic-sdk'
+import { MultisigProps } from '../../../types/ListingsTypes'
 import AddressMini from './AddressMini'
 import ModalColumns from './Modal-Col'
-import { MultisigProps } from './types'
 //import useKnownAddresses from '../Accounts/useKnownAddresses.js';
 import { keyring } from '@polkadot/ui-keyring'
-import { MultisigActionStatus } from './types'
+import { MultisigActionStatus } from '../../../types/ListingsTypes'
 
 const CreateMultisig: FC<MultisigProps> = ({ isOpen, onClose, onStatusChange }) => {
   const { api } = useInkathon()
