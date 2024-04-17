@@ -3,23 +3,22 @@
 import CoreItemPurchase from '@/components/cores/CoreItemPurchase'
 import { CoreListing } from '@/hooks/useListings'
 import { useEffect, useState } from 'react'
+import CreateMultisigModal from '../../../components/multisig/CreateMultisigModal'
 import SubTitle from '../samesections/SubTitle'
-import CreateMultisigModal from './CreateMultisigModal'
 
-// If you have a larger data structure such as:
 interface Database {
   listings: CoreListing[]
 }
 
 const ParaIdPage = () => {
   const [cores, setCores] = useState<CoreListing[]>([])
-  const [isMultisigVisible, setIsMultisigVisible] = useState(false) // State to control the visibility of the Multisig modal
+  const [isMultisigVisible, setIsMultisigVisible] = useState(false)
 
   useEffect(() => {
     async function fetchCores() {
-      const response = await fetch('/database.json') // Adjust the path if your public directory is structured differently
+      const response = await fetch('/database.json')
       const data: Database = await response.json()
-      setCores(data.listings) // Assuming your JSON structure based on your initial input
+      setCores(data.listings)
     }
 
     fetchCores().catch(console.error)

@@ -5,7 +5,7 @@ import PartitionCoreModal from '@/components/broker/extrinsics/PartitionCoreModa
 import TransferModal from '@/components/broker/extrinsics/TransferModal'
 import SecondaryButton from '@/components/button/SecondaryButton'
 import CoreItemExtensive from '@/components/cores/CoreItemExtensive'
-import ListingsModal from '@/components/database/ListingsModal'
+import ListingsModal from '@/components/listings/ListingsModal'
 import TimelineComponent from '@/components/timelineComp/TimelineComp'
 import TimelineUtilizeCore from '@/components/timelineComp/TimelineUtilizeCore'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
