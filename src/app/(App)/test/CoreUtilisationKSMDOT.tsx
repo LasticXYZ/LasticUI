@@ -4,6 +4,7 @@ import { useSubScanCall } from '@/components/callSubscan/callSubScan'
 import { AuctionResponse, AuctionsRequest } from '@/components/callSubscan/types'
 import BarGraph from '@/components/graph/BarGraph'
 import GeneralTable from '@/components/table/GeneralTable'
+import { network_list } from '@/config/network'
 import React, { useMemo } from 'react'
 
 const CoreOwners: React.FC = () => {
@@ -35,24 +36,6 @@ const CoreOwners: React.FC = () => {
     { title: 'Lease Period' },
     { title: 'Amount' },
     { title: 'Winner Address' },
-  ]
-
-  const network_list = [
-    {
-      name: 'Polkadot',
-      currency: 'DOT',
-      apiUrl: 'https://polkadot.api.subscan.io/api/scan/parachain/auctions',
-    },
-    {
-      name: 'Kusama',
-      currency: 'KSM',
-      apiUrl: 'https://kusama.api.subscan.io/api/scan/parachain/auctions',
-    },
-    {
-      name: 'Rococo',
-      currency: 'ROC',
-      apiUrl: 'https://rococo.api.subscan.io/api/scan/parachain/auctions',
-    },
   ]
 
   const network_currency = network_list[0].currency

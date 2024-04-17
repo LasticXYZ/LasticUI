@@ -6,7 +6,9 @@ import { format } from 'date-fns'
 import { useEffect, useState } from 'react'
 
 const PastTransactions = () => {
-  const { activeAccount } = useInkathon()
+  const { activeAccount, activeRelayChain } = useInkathon()
+  const network = activeRelayChain?.network
+
   const [result, setResult] = useState<GraphLike<PurchasedEvent[]> | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [offset, setOffset] = useState(0)
@@ -18,7 +20,7 @@ const PastTransactions = () => {
   useEffect(() => {
     const fetchData = async () => {
       let query = client.eventAllPurchased(7, offset)
-      const fetchedResult: GraphLike<PurchasedEvent[]> = await client.fetch(query)
+      const fetchedResult: GraphLike<PurchasedEvent[]> = await client.fetch(network, query)
       setResult(fetchedResult)
     }
 

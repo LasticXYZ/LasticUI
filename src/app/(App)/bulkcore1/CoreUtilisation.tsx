@@ -1,5 +1,6 @@
 import Border from '@/components/border/Border'
 import MiniBarGraphData from '@/components/graph/MiniBarGraphData'
+import { useInkathon } from '@poppyseed/lastic-sdk'
 import { GraphLike, SaleInitializedEvent, getClient } from '@poppyseed/squid-sdk'
 import React, { useEffect, useState } from 'react'
 import CoreOwners from './CoreOwners'
@@ -7,6 +8,9 @@ import CoreOwners from './CoreOwners'
 type DataSetKey = 'price' | 'cores' // Add more keys as needed
 
 const CoreUtilisation: React.FC = () => {
+  const { activeAccount, activeRelayChain } = useInkathon()
+  const network = activeRelayChain?.network
+
   const [result, setResult] = useState<GraphLike<SaleInitializedEvent[]> | null>(null)
   const [activeDataSet, setActiveDataSet] = useState<DataSetKey>('price') // Change to string to accommodate multiple datasets
   const client = getClient()
@@ -14,7 +18,7 @@ const CoreUtilisation: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const query = client.eventAllSaleInitialized()
-      const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(query)
+      const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(network, query)
       setResult(fetchedResult)
     }
 
