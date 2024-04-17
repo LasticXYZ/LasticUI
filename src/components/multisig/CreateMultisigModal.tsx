@@ -1,58 +1,50 @@
-// Copyright 2017-2024 @polkadot/app-accounts authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-
-//import type { ActionStatus } from '@polkadot/react-components/Status/types';
-
-import { FC } from 'react'
-
 import SecondaryButton from '@/components/button/SecondaryButton'
 import Modal from '@/components/modal/Modal'
+import { useMultisig } from '@/hooks/useMultisig'
 import { BN } from '@polkadot/util'
 import { useInkathon } from '@poppyseed/lastic-sdk'
-import { MultisigModalProps } from '../../types/ListingsTypes'
+import { FC } from 'react'
+import { MultisigActionStatus, MultisigModalProps } from '../../types/ListingsTypes'
 import AddressMini from '../web3/AddressMini'
-//import useKnownAddresses from '../Accounts/useKnownAddresses.js';
-import { keyring } from '@polkadot/ui-keyring'
-import { MultisigActionStatus } from '../../types/ListingsTypes'
 
 const CreateMultisigModal: FC<MultisigModalProps> = ({ isOpen, onClose, onStatusChange }) => {
   const { api } = useInkathon()
-  const isDevelopment = false
+  const { initiateMultisigCall, getMultisigAddress } = useMultisig()
 
   const signatories = [
-    '5FLRCTbjEwumqTcMYsQ7t6E3DDCoQxCgNJeE4A9LYzUJ4RvB',
-    '5D7wsEFq9rXS4cTAfZ8Uo1Dt8aTD3JTKjnHAEn3Ku4mNL1bJ',
-    '5HNJjkjo3KGA3R1DanS82R47tV7G3avEZ8GzLDW9CQtkNjVW',
+    '5GByzRyonPJC4kLg8dRenszsZD25dFjdJRCVCyfLkQ52HDev', //test 3
+    '5Hp7jnPx2bBZDTvAWZ3udtxar1nhhbmGvnU7eg37P4kmKUev', //test 2
+    '5Gza9nxUQiiErg5NotZ6FPePcjBEHhawoNL3sGqpmjrVhgeo', //test 1
   ]
   const threshold = new BN(2)
   const name = 'lastic-multisig-1'
 
-  const _createMultisig = () => {
-    const genesisHash = isDevelopment ? undefined : api?.genesisHash.toHex()
+  if (api) {
+    console.log('calculated address: ')
+    console.log(getMultisigAddress(signatories, threshold.toNumber()))
+  }
 
+  /* useEffect(() => {
+    const func = async () => {
+      const info = await api?.query.multisig.multisigs(
+        '5Dq7JZwfd3Jv8PnuKe4B73ZDCUY4kQiE2UrD9kJybbqtRxp5',
+        '0x9a1512b127fe5a81a34adc34dcbccc4e34f0b17b344bffab4db75146d8c71176',
+      )
+      console.log('multisig info: ')
+      console.log(info)
+    }
+
+    func()
+  }, [api]) */
+
+  const _createMultisig = () => {
     const status: MultisigActionStatus = { action: 'create', status: 'pending' }
 
     try {
-      const result = keyring.addMultisig(signatories, threshold, {
-        genesisHash,
-        name: name.trim(),
-        tags: [],
+      initiateMultisigCall(signatories, threshold.toNumber()).then(() => {
+        console.log('Multisig created successfully')
       })
-      // remarkCall
-      //   .signAndSend(selectedAccount.address, { signer: selectedSigner }, signCallBack)
-      //   .catch((error: Error) => {
-      //     setIsSubmitted(false)
 
-      //     addToast({
-      //       title: error.message,
-      //       type: 'error',
-      //       link: getSubscanExtrinsicLink(remarkCall.hash.toHex()),
-      //     })
-      //   })
-
-      const { address } = result.pair
-
-      status.account = address
       status.status = 'success'
       status.message = 'Multisig created successfully'
     } catch (error) {
@@ -99,11 +91,9 @@ const CreateMultisigModal: FC<MultisigModalProps> = ({ isOpen, onClose, onStatus
         <div>
           <p className="text-left font-bold">Note</p>
           <p className="text-sm text-justify border-2 rounded-xl p-2">
-            The signatories has the ability to create transactions using the multisig and approve
-            transactions sent by others.Once the threshold is reached with approvals, the multisig
-            transaction is enacted on-chain. Since the multisig function like any other account,
-            once created it is available for selection anywhere accounts are used and needs to be
-            funded before use.
+            To buy this core, first you are going to create a multi-signature account including you,
+            the seller and Lastic. This way you can exchange the core for the price you have agreed
+            on, while having Lastic as a trusted party to enforce the agreement.
           </p>
         </div>
         <div className="self-center">
@@ -111,10 +101,6 @@ const CreateMultisigModal: FC<MultisigModalProps> = ({ isOpen, onClose, onStatus
             <AddressMini key={address} value={address} withSidebar={false} />
           ))}
         </div>
-        The threshold for approval should be less or equal to the number of signatories for this
-        multisig.
-        <p>Threshold: {threshold.toString()}</p>
-        <p>Name: {name}</p>
       </div>
       <SecondaryButton disabled={false} title="Create" onClick={_createMultisig} />
     </Modal>

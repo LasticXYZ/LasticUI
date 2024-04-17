@@ -20,7 +20,7 @@ const LEGACY_ASMULTI_PARAM_LENGTH = 6
 export const useMultisig = () => {
   const { api, activeSigner, activeAccount, activeChain } = useInkathon()
 
-  const createMultisig = async (signatories: string[], threshold: number): Promise<void> => {
+  const initiateMultisigCall = async (signatories: string[], threshold: number): Promise<void> => {
     // checks
     if (!api || !activeSigner || !activeAccount || !activeChain)
       throw new Error('Error in initializing the API')
@@ -35,7 +35,7 @@ export const useMultisig = () => {
     const otherSignatories = sortAddresses(
       signatories.filter((sig) => sig !== activeAccount.address),
     )
-    const remarkTx = api.tx.system.remark(`Multisig Lastic creation`)
+    const remarkTx = api.tx.system.remark(`Lastic multisig creation`)
     const asMultiTx = getAsMultiTx({ api, threshold, otherSignatories, tx: remarkTx })
 
     try {
@@ -89,10 +89,14 @@ export const useMultisig = () => {
 
   const getMultisigAddress = (signatories: string[], threshold: number) => {
     if (threshold < 2 || signatories.length < 2) return
+    // Address as a byte array.
     const multisigPubKey = createKeyMulti(signatories, threshold)
 
+    // Convert byte array to SS58 encoding.
     return getEncodedAddress(multisigPubKey)
   }
 
-  return { createMultisig, getMultisigAddress }
+  const getChainEvents = async () => {}
+
+  return { initiateMultisigCall, getMultisigAddress }
 }
