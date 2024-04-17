@@ -18,12 +18,14 @@ const PastTransactions = ({ coreNb }: { coreNb: number }) => {
   tokenSymbol = tokenSymbol || 'UNIT'
 
   useEffect(() => {
-    const fetchData = async () => {
-      const fetchedResult: GraphLike<PurchasedEvent[]> = await client.fetch(network, query)
-      setResult(fetchedResult)
-    }
+    if (network) {
+      const fetchData = async () => {
+        const fetchedResult: GraphLike<PurchasedEvent[]> = await client.fetch(network, query)
+        setResult(fetchedResult)
+      }
 
-    fetchData()
+      fetchData()
+    }
   }, [client, query, network])
 
   const TableHeader = [

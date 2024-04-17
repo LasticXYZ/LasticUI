@@ -2,7 +2,7 @@ import Border from '@/components/border/Border'
 import GeneralTable from '@/components/table/GeneralTable'
 import { parseNativeTokenToHuman } from '@/utils/account/token'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
-import { GraphLike, PurchasedEvent, getClient } from '@poppyseed/squid-sdk'
+import { GraphLike, GraphQuery, PurchasedEvent, getClient } from '@poppyseed/squid-sdk'
 import { format } from 'date-fns'
 import { useEffect, useMemo, useState } from 'react'
 
@@ -16,19 +16,22 @@ const PastTransactions = () => {
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
   tokenSymbol = tokenSymbol || 'UNIT'
 
+  let query: GraphQuery
   //const newAddress = encodeAddress(publicKeyBytes, targetNetworkPrefix)
-  const query = client.eventWhoPurchased(activeAccount?.address)
+  if (activeAccount) {
+    query = client.eventWhoPurchased(activeAccount?.address)
+  }
 
   useEffect(() => {
-    const fetchData = async () => {
-      const fetchedResult: GraphLike<PurchasedEvent[]> = await client.fetch(network, query)
-      setResult(fetchedResult)
-    }
+    if (network && query) {
+      const fetchData = async () => {
+        const fetchedResult: GraphLike<PurchasedEvent[]> = await client.fetch(network, query)
+        setResult(fetchedResult)
+      }
 
-    if (activeAccount?.address) {
       fetchData()
     }
-  }, [client, query, activeAccount?.address, network])
+  }, [client, network])
 
   const reversedData = useMemo(() => {
     // Make a copy of the event array (if it exists) and reverse the copy
