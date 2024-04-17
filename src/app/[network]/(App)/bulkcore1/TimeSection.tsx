@@ -1,6 +1,7 @@
 import Border from '@/components/border/Border'
 import TimelineComponent from '@/components/timelineComp/TimelineComp'
 import BuyWalletStatus from '@/components/walletStatus/BuyWalletStatus'
+import WalletStatus from '@/components/walletStatus/WalletStatus'
 import {
   useBrokerConstants,
   useCurrentBlockNumber,
@@ -115,7 +116,7 @@ export default function BrokerSaleInfo() {
     !brokerConstants ||
     isConstantsLoading
   ) {
-    return <div>Loading...</div>
+    return <WalletStatus />
   }
 
   let currentPrice = calculateCurrentPrice(currentBlockNumber, saleInfo, configuration)

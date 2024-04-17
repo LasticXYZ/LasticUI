@@ -82,7 +82,7 @@ export default function MyCores() {
   if (!activeAccount || !activeChain) {
     return (
       <Border className="h-full flex flex-row justify-center items-center">
-        <WalletStatus />
+        <WalletStatus inactiveWalletMessage="Connect wallet in order to see your Coretime." />
       </Border>
     )
   }
