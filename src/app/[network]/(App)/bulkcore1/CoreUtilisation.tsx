@@ -17,9 +17,11 @@ const CoreUtilisation: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const query = client.eventAllSaleInitialized()
-      const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(network, query)
-      setResult(fetchedResult)
+      if (network) {
+        const query = client.eventAllSaleInitialized()
+        const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(network, query)
+        setResult(fetchedResult)
+      }
     }
 
     fetchData()
