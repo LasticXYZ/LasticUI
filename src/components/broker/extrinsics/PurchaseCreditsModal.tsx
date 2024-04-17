@@ -93,7 +93,7 @@ const PurchaseCreditsModal: FC<PurchaseCreditsProps> = ({ isOpen, onClose }) => 
             amountNeeded={new BN(planck.toString())}
             teleportTo="coretime"
           />
-          <div className="mt-5 text-sm text-gray-16 ">{status}</div>
+          <div className="mt-5 text-sm text-gray-16 dark:text-gray-2 ">{status}</div>
         </div>
       </div>
     </Modal>

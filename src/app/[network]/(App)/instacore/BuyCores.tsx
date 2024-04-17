@@ -20,17 +20,17 @@ const BuyCores: React.FC = () => {
   }
 
   return (
-    <Border className="h-full flex justify-center items-center">
-      <div className="flex flex-col columns-1 items-center">
+    <>
+      <Border className="h-full flex justify-center items-center py-20 px-5">
         <SecondaryButton
           title="Purchase Credits"
           onClick={() => setCreditsModalOpen(true)}
-          className="px-14 mb-8 "
+          className=""
         />
-      </div>
+      </Border>
 
       <PurchaseCreditsModal isOpen={creditsModalOpen} onClose={() => setCreditsModalOpen(false)} />
-    </Border>
+    </>
   )
 }
 
