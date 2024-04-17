@@ -18,12 +18,16 @@ const PastTransactions = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      let query = client.eventAllPurchased(7, offset)
-      const fetchedResult: GraphLike<PurchasedEvent[]> = await client.fetch(
-        activeRelayChain?.network,
-        query,
-      )
-      setResult(fetchedResult)
+      if (activeRelayChain?.network) {
+        // Only proceed if `network` is not undefined
+        let query = client.eventAllPurchased(7, offset)
+        const fetchedResult: GraphLike<PurchasedEvent[]> = await client.fetch(
+          activeRelayChain?.network,
+          query,
+        )
+
+        setResult(fetchedResult)
+      }
     }
 
     fetchData()
