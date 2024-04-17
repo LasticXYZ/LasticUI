@@ -1,8 +1,10 @@
 // components/Card.tsx
 import Border from '@/components/border/Border'
+import { goToChainRoute } from '@/utils/common/chainPath'
 import { ConfigurationType } from '@poppyseed/lastic-sdk'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import React from 'react'
 
 interface CardProps {
@@ -32,12 +34,13 @@ const CoreItem: React.FC<CardProps> = ({
 }) => {
   const beginStr = begin.replace(/,/g, '')
   const coreSize = parseInt(end.replace(/,/g, '')) - parseInt(begin.replace(/,/g, ''))
+  const pathname = usePathname()
 
   if (!config) return null
 
   return (
     <Border className="px-10 py-6 hover:bg-pink-1 hover:cursor-pointer">
-      <Link href={`/core/${coreNumber}/${beginStr}/${mask}`}>
+      <Link href={goToChainRoute(pathname, `/core/${coreNumber}/${beginStr}/${mask}`)}>
         <div>
           <div className="font-unbounded uppercase tracking-wide text-md font-semibold flex justify-between items-center">
             <span>Core Nb. {coreNumber}</span>

@@ -1,7 +1,9 @@
 import SecondaryButton from '@/components/button/SecondaryButton'
 import CuteInfo from '@/components/info/CuteInfo'
 import { ConnectButton } from '@/components/web3/ConnectButton'
+import { goToChainRoute } from '@/utils/common/chainPath'
 import { useInkathon } from '@poppyseed/lastic-sdk'
+import { usePathname } from 'next/navigation'
 import React from 'react'
 
 interface WalletStatusProps {
@@ -19,13 +21,18 @@ const WalletStatus: React.FC<WalletStatusProps> = ({
   checkForWallet = true,
   inactiveWalletEmoji = '👀',
   customEmoji = '😔',
-  inactiveWalletMessage = 'Connect wallet in order to buy instantaneous coretime.',
+  inactiveWalletMessage = 'Connect wallet in order to buy coretime.',
   customColor = 'bg-lastic-spectrum-via',
   customMessage = 'You currently have 0 active cores.',
   redirectLocationMessage = 'Go to marketplace',
-  redirectLocation = '/bulkcore1',
+  redirectLocation = '',
 }) => {
   const { activeAccount } = useInkathon()
+  const pathname = usePathname()
+
+  if (redirectLocation === '') {
+    redirectLocation = goToChainRoute(pathname, '/bulkcore1')
+  }
 
   if (!activeAccount && checkForWallet) {
     return (
