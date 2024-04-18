@@ -44,8 +44,10 @@ const handleTransaction =
   }
 
 const chainOptions: { [key: string]: string } = {
-  'Rococo Relay Chain': '/assets/Images/NetworkIcons/rococo-img.svg',
-  'Rococo Coretime Testnet': '/assets/Images/NetworkIcons/coretime-img.svg',
+  rococo: '/assets/Images/NetworkIcons/rococo-img.svg',
+  'rococo-coretime': '/assets/Images/NetworkIcons/coretime-img.svg',
+  kusama: '/assets/Images/NetworkIcons/kusama-img.svg',
+  'kusama-coretime': '/assets/Images/NetworkIcons/coretime-img.svg',
 }
 
 const Teleport = () => {
@@ -126,7 +128,7 @@ const Teleport = () => {
                   <Image
                     src={
                       chainOptions[
-                        (isRelayToPara ? activeRelayChain?.name : activeChain?.name) ||
+                        (isRelayToPara ? activeRelayChain?.network : activeChain?.network) ||
                           'Rococo Relay Chain'
                       ]
                     }
@@ -154,8 +156,8 @@ const Teleport = () => {
                   <Image
                     src={
                       chainOptions[
-                        (isRelayToPara ? activeChain?.name : activeRelayChain?.name) ||
-                          'Rococo Relay Chain'
+                        (isRelayToPara ? activeChain?.network : activeRelayChain?.network) ||
+                          'rococo'
                       ]
                     }
                     alt=""
