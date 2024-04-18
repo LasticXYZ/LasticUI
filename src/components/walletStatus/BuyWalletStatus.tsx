@@ -15,7 +15,7 @@ type BuyWalletStatusType = {
   saleInfo: SaleInfoType
   formatPrice: string
   currentPrice: number
-  statusCode: StatusCode
+  statusCode: StatusCode | null
 }
 
 const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({
@@ -30,7 +30,7 @@ const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({
 
   let inputPurchasePrice = Math.floor(currentPrice * 1.02)
 
-  if (!activeAccount) {
+  if (!activeAccount || !statusCode) {
     return (
       <div className="flex justify-center items-center py-20 px-4">
         <div className="flex flex-col items-center justify-center px-2 py-8">
