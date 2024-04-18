@@ -5,6 +5,7 @@ import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
 import { useCurrentBlockNumber, useSubstrateQuery } from '@/hooks/useSubstrateQuery'
 import { saleStatus } from '@/utils/broker'
+import { getChainFromPath } from '@/utils/common/chainPath'
 import {
   ConfigurationType,
   SaleInfoType,
@@ -12,6 +13,7 @@ import {
   useBalance,
   useInkathon,
 } from '@poppyseed/lastic-sdk'
+import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import AnalyticSection from './AnalyticSection'
 
@@ -33,6 +35,7 @@ function calculateCurrentPrice(
 export default function BrokerSaleInfo() {
   const { api, relayApi, activeAccount } = useInkathon()
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
+  const pathname = usePathname()
 
   const currentBlockNumber = useCurrentBlockNumber(api)
 
@@ -40,8 +43,9 @@ export default function BrokerSaleInfo() {
   // const configurationString = useSubstrateQuery(api, 'configuration')
 
   // const { brokerConstants, isLoading: isConstantsLoading } = useBrokerConstants(api)
-  const configuration = network_list['rococo'].configuration
-  const brokerConstants = network_list['rococo'].constants
+
+  const configuration = network_list[getChainFromPath(pathname)].configuration
+  const brokerConstants = network_list[getChainFromPath(pathname)].constants
 
   const saleInfo = useMemo(
     () => (saleInfoString ? (JSON.parse(saleInfoString) as SaleInfoType) : null),
