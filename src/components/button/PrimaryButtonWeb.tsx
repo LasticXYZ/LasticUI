@@ -20,7 +20,7 @@ const PrimaryButtonWeb: FC<PrimaryButtonProps> = ({
       <button
         onClick={onClick}
         disabled={disabled}
-        className={`${disabled ? 'bg-gray-2 text-gray-14 cursor-not-allowed' : ' bg-gradient-to-r from-purple-4 to-primary-5  hover:bg-pink-4 text-white cursor-pointer'} rounded-ful font-syne font-black rounded-2xl   border border-gray-8 text-md inline-flex items-center justify-center px-12 py-3 mr-3 text-center text-black hover:bg-primary-800 focus:ring-4 focus:ring-primary-3`}
+        className={`${disabled ? 'bg-gray-2 text-gray-14 cursor-not-allowed' : ' bg-gradient-to-r from-purple-4 to-primary-5  hover:bg-pink-300 text-white cursor-pointer'} rounded-ful font-syne font-black rounded-2xl   border border-gray-8 text-md inline-flex items-center justify-center px-12 py-3 mr-3 text-center text-black hover:bg-primary-800 focus:ring-4 focus:ring-primary-3`}
       >
         {title}
       </button>
@@ -29,7 +29,7 @@ const PrimaryButtonWeb: FC<PrimaryButtonProps> = ({
     return (
       <Link
         href={location}
-        className="rounded-ful font-syne font-black rounded-2xl bg-gradient-to-r from-pink-4 to-purple-5 hover:from-pink-5 hover:to-purple-6 border border-gray-16 text-md inline-flex items-center justify-center px-12 py-3 mr-3 text-center text-white hover:bg-primary-800 focus:ring-4 focus:ring-primary-3"
+        className="rounded-ful font-syne font-black rounded-2xl bg-gradient-to-r from-pink-300 to-purple-5 hover:from-pink-5 hover:to-purple-6 border border-gray-16 text-md inline-flex items-center justify-center px-12 py-3 mr-3 text-center text-white hover:bg-primary-800 focus:ring-4 focus:ring-primary-3"
       >
         {title}
       </Link>

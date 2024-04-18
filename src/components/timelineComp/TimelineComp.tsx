@@ -25,9 +25,9 @@ const Slider: FC<SliderPropeTypes> = ({ currentBlockNumber, saleInfo, config, co
 
   return (
     <div className="mx-10 my-16 relative">
-      <div className="w-full bg-pink-4 dark:bg-pink-400 dark:bg-opacity-20 bg-opacity-20 h-3 rounded-full overflow-hidden">
+      <div className="w-full bg-pink-300 dark:bg-pink-400 dark:bg-opacity-20 bg-opacity-20 h-3 rounded-full overflow-hidden">
         <div
-          className="bg-pink-4 dark:bg-pink-400 dark:bg-opacity-40 bg-opacity-50 h-full"
+          className="bg-pink-300 dark:bg-pink-400 dark:bg-opacity-40 bg-opacity-50 h-full"
           style={{ width: `${safePurchasePercentage}%` }}
         ></div>
       </div>
