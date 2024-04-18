@@ -3,7 +3,7 @@ import { parseNativeTokenToHuman, toShortAddress } from '@/utils/account/token'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
 import { GraphLike, PurchasedEvent, getClient } from '@poppyseed/squid-sdk'
 import { format } from 'date-fns'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 const PastTransactions = () => {
   const { activeAccount, activeRelayChain } = useInkathon()
@@ -11,7 +11,7 @@ const PastTransactions = () => {
   const [result, setResult] = useState<GraphLike<PurchasedEvent[]> | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [offset, setOffset] = useState(0)
-  const client = getClient()
+  const client = useMemo(() => getClient(), [])
 
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
   tokenSymbol = tokenSymbol || 'UNIT'
@@ -31,7 +31,7 @@ const PastTransactions = () => {
     }
 
     fetchData()
-  }, [activeRelayChain, client, offset]) // Add offset to the dependency array
+  }, []) // Add offset to the dependency array
 
   const TableHeader = [
     { title: 'Time' },

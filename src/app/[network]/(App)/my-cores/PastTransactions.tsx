@@ -11,7 +11,7 @@ const PastTransactions = () => {
   const network = activeRelayChain?.network
 
   const [result, setResult] = useState<GraphLike<PurchasedEvent[]> | null>(null)
-  const client = getClient()
+  const client = useMemo(() => getClient(), [])
 
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
   tokenSymbol = tokenSymbol || 'UNIT'
@@ -31,7 +31,7 @@ const PastTransactions = () => {
 
       fetchData()
     }
-  }, [client, network])
+  }, [])
 
   const reversedData = useMemo(() => {
     // Make a copy of the event array (if it exists) and reverse the copy
