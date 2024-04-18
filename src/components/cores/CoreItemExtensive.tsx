@@ -9,7 +9,6 @@ interface CardProps {
   amITheOwner: boolean
   paid: string
   coreNumber: string
-  size: string
   phase: string
   cost: string
   currencyCost: string
@@ -24,7 +23,6 @@ const CoreItemExtensive: React.FC<CardProps> = ({
   amITheOwner,
   paid,
   coreNumber,
-  size,
   phase,
   cost,
   currencyCost,
@@ -41,7 +39,7 @@ const CoreItemExtensive: React.FC<CardProps> = ({
         <div className="px-10">
           <Image src="/assets/Images/core2.png" alt="Lastic Logo" width={400} height={400} />
         </div>
-        <div className="flex w-full flex-col px-5 items-start justify-start space-y-3">
+        <div className="flex w-full flex-col pl-10 items-start justify-start space-y-3">
           <div>
             <div className="block mt-1 text-md leading-tight font-medium text-black dark:text-gray-1">
               Owner: {toShortAddress(owner)} {amITheOwner ? '(You)' : '(Not you)'}
@@ -59,21 +57,14 @@ const CoreItemExtensive: React.FC<CardProps> = ({
           </div>
         </div>
         <div className="flex w-full flex-col px-5 items-start justify-start space-y-3">
-          <div>
-            <p className="text-gray-12">Size: {size} core</p>
-            <p className="text-gray-12">Phase: {phase}</p>
+          <div className="text-md  text-black dark:text-gray-1 ">
+            <p>Mask: {mask}</p>
           </div>
-          <div>
-            <p className="text-gray-12">
-              Cost: {cost} {currencyCost}
-            </p>
+          <div className="text-md  text-black dark:text-gray-1 ">
+            <p>Begin: {begin}</p>
           </div>
-          <div className="">
-            <div className="text-sm text-gray-10">
-              <p>Mask: {mask}</p>
-              <p>Begin: {begin}</p>
-              <p>End: {end}</p>
-            </div>
+          <div className="text-md  text-black dark:text-gray-1 ">
+            <p>End: {end}</p>
           </div>
         </div>
       </div>

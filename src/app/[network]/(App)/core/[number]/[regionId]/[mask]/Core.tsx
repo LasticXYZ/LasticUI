@@ -149,12 +149,11 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
           <div>
             <div className="">
               <CoreItemExtensive
-                timeBought="Jan 2024"
+                timeBought="- 2024"
                 owner={region.owner.owner}
                 amITheOwner={region.owner.owner === activeAccount.address}
                 paid={region.owner.paid}
                 coreNumber={region.detail[0].core}
-                size="1"
                 phase="- Period"
                 cost={parseNativeTokenToHuman({ paid: region.owner.paid, decimals: tokenDecimals })}
                 currencyCost={tokenSymbol}
