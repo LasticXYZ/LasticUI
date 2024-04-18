@@ -2,25 +2,31 @@ import PurchaseInteractor from '@/components/broker/extrinsics/PurchaseInteracto
 import SecondaryButton from '@/components/button/SecondaryButton'
 import CuteInfo from '@/components/info/CuteInfo'
 import { ConnectButton } from '@/components/web3/ConnectButton'
+import { StatusCode } from '@/utils/broker/saleStatus'
+import { goToChainRoute } from '@/utils/common/chainPath'
 import { truncateHash } from '@/utils/truncateHash'
 import { encodeAddress } from '@polkadot/util-crypto'
 import { SaleInfoType, useBalance, useInkathon } from '@poppyseed/lastic-sdk'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 import React from 'react'
 
 type BuyWalletStatusType = {
   saleInfo: SaleInfoType
   formatPrice: string
   currentPrice: number
+  statusCode: StatusCode
 }
 
 const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({
   saleInfo,
   formatPrice,
   currentPrice,
+  statusCode,
 }) => {
   const { activeAccount, activeChain } = useInkathon()
   const { balanceFormatted, balance } = useBalance(activeAccount?.address, true)
+  const pathname = usePathname()
 
   let inputPurchasePrice = Math.floor(currentPrice * 1.02)
 
@@ -39,12 +45,29 @@ const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({
     )
   }
 
+  if (statusCode === StatusCode.Interlude) {
+    return (
+      <div className="flex justify-center items-center py-20 px-4">
+        <div className="flex flex-col items-center justify-center px-2 py-8">
+          <CuteInfo
+            emoji="🔥"
+            message="Renewal period is active. Time to renew your core!"
+            color="bg-lastic-spectrum-via"
+          />
+          <SecondaryButton
+            title="Time To Renew your Core"
+            location={goToChainRoute(pathname, `/renewal`)}
+          />
+        </div>
+      </div>
+    )
+  }
+
   if (saleInfo.coresSold >= saleInfo.coresOffered) {
     return (
       <div className="flex justify-center items-center py-20 px-4">
         <div className="flex flex-col items-center justify-center px-2 py-8 ">
           <CuteInfo emoji="😔" message="All cores are sold out." color="bg-lastic-spectrum-via" />
-          <SecondaryButton title="Purchase Instantianous Coretime" location="/instacore" />
         </div>
       </div>
     )
