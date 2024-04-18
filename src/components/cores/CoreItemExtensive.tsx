@@ -12,9 +12,7 @@ interface CardProps {
   size: string
   phase: string
   cost: string
-  reward: string
   currencyCost: string
-  currencyReward: string
   mask: string
   begin: string
   end: string
@@ -29,9 +27,7 @@ const CoreItemExtensive: React.FC<CardProps> = ({
   size,
   phase,
   cost,
-  reward,
   currencyCost,
-  currencyReward,
   mask,
   begin,
   end,
@@ -70,9 +66,6 @@ const CoreItemExtensive: React.FC<CardProps> = ({
           <div>
             <p className="text-gray-12">
               Cost: {cost} {currencyCost}
-            </p>
-            <p className="text-gray-12">
-              Reward: {reward} {currencyReward}
             </p>
           </div>
           <div className="">

@@ -5,7 +5,6 @@ import './globals.css'
 import ThemeProvider from '@/components/themeToggle/themeProvider'
 import {
   ArrowPathIcon,
-  BoltIcon,
   Cog8ToothIcon,
   HomeIcon,
   ShoppingCartIcon,
@@ -30,12 +29,12 @@ function getNavigation(network: string) {
       href: `/${network}/bulkcore1`,
       current: false,
     },
-    {
-      name: 'On-Demand Cores',
-      icon: <BoltIcon className="h-5 w-5" aria-hidden="true" />,
-      href: `/${network}/instacore`,
-      current: false,
-    },
+    // {
+    //   name: 'On-Demand Cores',
+    //   icon: <BoltIcon className="h-5 w-5" aria-hidden="true" />,
+    //   href: `/${network}/instacore`,
+    //   current: false,
+    // },
     {
       name: 'ParaID Execution',
       icon: <Cog8ToothIcon className="h-5 w-5" aria-hidden="true" />,
