@@ -149,12 +149,11 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
           <div>
             <div className="">
               <CoreItemExtensive
-                timeBought="Jan 2024"
+                timeBought="- 2024"
                 owner={region.owner.owner}
                 amITheOwner={region.owner.owner === activeAccount.address}
                 paid={region.owner.paid}
                 coreNumber={region.detail[0].core}
-                size="1"
                 phase="- Period"
                 cost={parseNativeTokenToHuman({ paid: region.owner.paid, decimals: tokenDecimals })}
                 currencyCost={tokenSymbol}
@@ -172,7 +171,7 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
         <Border>
           <div className="p-10">
             <div>
-              <div className="flex justify-between rounded-full mx-10 bg-pink-4 dark:bg-pink-400  px-16 py-10 bg-opacity-30 dark:bg-opacity-80 items-center my-6">
+              <div className="flex justify-between rounded-full mx-10 bg-pink-300 dark:bg-pink-400  px-16 py-10 bg-opacity-30 dark:bg-opacity-80 items-center my-6">
                 <div className="text-xl font-bold font-unbounded uppercase text-gray-21">
                   {saleTitle}
                 </div>

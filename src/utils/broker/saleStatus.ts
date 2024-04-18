@@ -5,7 +5,7 @@ import {
   blocksToTimeFormat,
 } from '@poppyseed/lastic-sdk'
 
-enum StatusCode {
+export enum StatusCode {
   Interlude = 'interlude',
   LeadIn = 'leadIn',
   Purchase = 'purchase',
@@ -18,7 +18,7 @@ interface StatusInfo {
 
 const statusInfoMap: Record<StatusCode, StatusInfo> = {
   [StatusCode.Interlude]: {
-    statusTitle: 'Interlude Period',
+    statusTitle: 'Renewal Period',
     statusMessage: 'Time to renew your core!',
   },
   [StatusCode.LeadIn]: {
@@ -85,7 +85,12 @@ export function saleStatus(
   saleInfo: SaleInfoType,
   config: ConfigurationType,
   constant: BrokerConstantsType,
-): { statusTitle: string; statusMessage: string; timeRemaining: string } {
+): {
+  statusTitle: string
+  statusMessage: string
+  timeRemaining: string
+  statusCode: StatusCode
+} {
   // Check issue https://github.com/LasticXYZ/LasticUI/issues/94 to see why this is commented out
   // const saleEnds = getSaleEnds(saleInfo, config, constant)
 
@@ -103,5 +108,6 @@ export function saleStatus(
     statusTitle,
     statusMessage,
     timeRemaining,
+    statusCode,
   }
 }

@@ -164,7 +164,7 @@ export const network_list: NetworkInfo = {
       leadinLength: 50400,
       regionLength: 5040,
       idealBulkProportion: 100,
-      limitCoresOffered: 3,
+      limitCoresOffered: null,
       renewalBump: 3,
       contributionTimeout: 5040,
     },

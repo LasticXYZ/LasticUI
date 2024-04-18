@@ -18,7 +18,9 @@ const WorldMap = () => {
       <div className="m-auto w-full md:w-2/5 max-w-xl px-4">
         {/* Text section */}
         <div className="flex flex-col space-y-4">
-          <h6 className="uppercase text-sm sm:text-md text-pink-4 font-bold font-inter">Join us</h6>
+          <h6 className="uppercase text-sm sm:text-md text-pink-300 font-bold font-inter">
+            Join us
+          </h6>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight font-syne">
             Join traders and builders around the world
           </h1>
