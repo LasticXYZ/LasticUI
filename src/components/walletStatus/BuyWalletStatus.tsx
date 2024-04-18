@@ -2,11 +2,12 @@ import PurchaseInteractor from '@/components/broker/extrinsics/PurchaseInteracto
 import SecondaryButton from '@/components/button/SecondaryButton'
 import CuteInfo from '@/components/info/CuteInfo'
 import { ConnectButton } from '@/components/web3/ConnectButton'
+import { parseNativeTokenToHuman } from '@/utils/account/token'
 import { StatusCode } from '@/utils/broker/saleStatus'
 import { goToChainRoute } from '@/utils/common/chainPath'
 import { truncateHash } from '@/utils/truncateHash'
 import { encodeAddress } from '@polkadot/util-crypto'
-import { SaleInfoType, useBalance, useInkathon } from '@poppyseed/lastic-sdk'
+import { SaleInfoType, useBalance, useInkathon, useRelayBalance } from '@poppyseed/lastic-sdk'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import React from 'react'
@@ -25,10 +26,27 @@ const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({
   statusCode,
 }) => {
   const { activeAccount, activeChain } = useInkathon()
-  const { balanceFormatted, balance } = useBalance(activeAccount?.address, true)
+  const {
+    freeBalance: balance,
+    tokenSymbol,
+    tokenDecimals,
+  } = useBalance(activeAccount?.address, true)
+  const { freeBalance: relayBalance } = useRelayBalance(activeAccount?.address, true)
+
+  const formattedCoreBalance = parseNativeTokenToHuman({
+    paid: balance?.toString(),
+    decimals: tokenDecimals,
+    reduceDecimals: 2,
+  })
+  const formattedrelayBalance = parseNativeTokenToHuman({
+    paid: relayBalance?.toString(),
+    decimals: tokenDecimals,
+    reduceDecimals: 2,
+  })
+
   const pathname = usePathname()
 
-  let inputPurchasePrice = Math.floor(currentPrice * 1.02)
+  let inputPurchasePrice = Math.ceil(currentPrice)
 
   if (!activeAccount || !statusCode) {
     return (
@@ -110,16 +128,49 @@ const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({
             Using account:{' '}
             {truncateHash(encodeAddress(activeAccount.address, activeChain?.ss58Prefix || 42), 8)}
           </div>
-          <div>
-            {balance
-              ? balance.toNumber() > 0
-                ? `Balance: ${balanceFormatted}`
-                : 'You have 0 balance on this account'
-              : 'Loading Balance'}
+          <div className="mt-5">
+            {balance ? (
+              <div>
+                {' '}
+                Balance on Coretime: {formattedCoreBalance} {tokenSymbol}
+              </div>
+            ) : (
+              'Loading Balance'
+            )}
+            {relayBalance ? (
+              <div>
+                {' '}
+                Balance on Relay: {formattedrelayBalance} {tokenSymbol}
+              </div>
+            ) : (
+              'Loading Relay Balance'
+            )}
           </div>
-          <div className="flex flex-col px-10 mt-10 items-center ">
-            <PurchaseInteractor param={inputPurchasePrice.toString()} />
+          <div className="">
+            {balance &&
+            relayBalance &&
+            balance.toNumber() < inputPurchasePrice &&
+            relayBalance.toNumber() < inputPurchasePrice ? (
+              <div className="text-red-500 py-2">Insufficient balance for purchase.</div>
+            ) : null}
           </div>
+          <div className="">
+            {balance &&
+            relayBalance &&
+            balance.toNumber() < inputPurchasePrice &&
+            relayBalance.toNumber() >= inputPurchasePrice ? (
+              <div className="text-red-500 py-2">Your assets will be autoteleported.</div>
+            ) : null}
+          </div>
+          {balance &&
+          relayBalance &&
+          balance.toNumber() > 0 &&
+          (balance.toNumber() > inputPurchasePrice ||
+            relayBalance.toNumber() > inputPurchasePrice) ? (
+            <div className="flex flex-col px-10 mt-10 items-center ">
+              <PurchaseInteractor param={inputPurchasePrice.toString()} />
+            </div>
+          ) : null}
         </div>
       </div>
     </div>
