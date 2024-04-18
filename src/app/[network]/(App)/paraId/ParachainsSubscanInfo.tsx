@@ -2,10 +2,10 @@ import Border from '@/components/border/Border'
 import { useSubScanCall } from '@/components/callSubscan/callSubScan'
 import { ParachainInfoRequest, ParachainInfoResponse } from '@/components/callSubscan/types'
 import GeneralTable from '@/components/table/GeneralTable'
+import { PossibleNetworks, network_list } from '@/config/network'
 import { toShortAddress } from '@/utils'
 import { useInkathon } from '@poppyseed/lastic-sdk'
 import React, { useMemo, useState } from 'react'
-import { PossibleNetworks, network_list } from '../test/paraIdData'
 
 const ParachainInfo: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(0)

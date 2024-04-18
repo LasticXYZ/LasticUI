@@ -1,5 +1,7 @@
 export type PossibleNetworks = 'polkadot' | 'kusama' | 'westend' | 'rococo'
 
+import { BrokerConstantsType, ConfigurationType } from '@poppyseed/lastic-sdk'
+
 export type NetworkInfo = {
   [key: string]: {
     name: string
@@ -8,6 +10,8 @@ export type NetworkInfo = {
     paraId: {
       [key: string]: string // This tells TypeScript any string key returns a string value
     }
+    constants: BrokerConstantsType | null // This values changes so little, that we can just store it here rather than having to read it from the state
+    configuration: ConfigurationType | null
   }
 }
 
@@ -78,6 +82,8 @@ export const network_list: NetworkInfo = {
       '3359': 'Integritee Network',
       '3363': 'Polkadex',
     },
+    constants: null,
+    configuration: null,
   },
   kusama: {
     name: 'Kusama',
@@ -146,6 +152,22 @@ export const network_list: NetworkInfo = {
       '2240': 'Robonomics 2',
       '3344': 'Xode',
     },
+    constants: {
+      maxLeasedCores: 50,
+      maxReservedCores: 10,
+      palletId: '0x70792f62726f6b65',
+      timeslicePeriod: 80,
+    },
+    configuration: {
+      advanceNotice: 10,
+      interludeLength: 50400,
+      leadinLength: 50400,
+      regionLength: 5040,
+      idealBulkProportion: 100,
+      limitCoresOffered: 3,
+      renewalBump: 3,
+      contributionTimeout: 5040,
+    },
   },
   westend: {
     name: 'Westend',
@@ -164,6 +186,22 @@ export const network_list: NetworkInfo = {
       '2086': 'Charcoal',
       '2094': 'Interlay',
       '2112': 'Pichiu',
+    },
+    constants: {
+      maxLeasedCores: 10,
+      maxReservedCores: 10,
+      palletId: '0x70792f62726f6b65',
+      timeslicePeriod: 80,
+    },
+    configuration: {
+      advanceNotice: 10,
+      interludeLength: 7200,
+      leadinLength: 21600,
+      regionLength: 1260,
+      idealBulkProportion: 40,
+      limitCoresOffered: null,
+      renewalBump: 0.35,
+      contributionTimeout: 1260,
     },
   },
   rococo: {
@@ -234,6 +272,22 @@ export const network_list: NetworkInfo = {
       '4253': 'Societal',
       '4354': 'OpenZeppelin Runtime Template',
       '20048': 'Bitgreen',
+    },
+    constants: {
+      maxLeasedCores: 50,
+      maxReservedCores: 10,
+      palletId: '0x70792f62726f6b65',
+      timeslicePeriod: 80,
+    },
+    configuration: {
+      advanceNotice: 10,
+      interludeLength: 7200,
+      leadinLength: 21600,
+      regionLength: 1260,
+      idealBulkProportion: 40,
+      limitCoresOffered: null,
+      renewalBump: 0.35,
+      contributionTimeout: 1260,
     },
   },
 }

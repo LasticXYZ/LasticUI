@@ -1,35 +1,48 @@
 import Border from '@/components/border/Border'
 import GeneralTable from '@/components/table/GeneralTable'
-import { parseNativeTokenToHuman, toShortAddress } from '@/utils/account/token'
+import { parseNativeTokenToHuman } from '@/utils/account/token'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
-import { GraphLike, PurchasedEvent, getClient } from '@poppyseed/squid-sdk'
+import { GraphLike, GraphQuery, PurchasedEvent, getClient } from '@poppyseed/squid-sdk'
 import { format } from 'date-fns'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
-const PastTransactions = ({ coreNb }: { coreNb: number }) => {
-  const { activeAccount } = useInkathon()
+const PastTransactions = () => {
+  const { activeAccount, activeRelayChain } = useInkathon()
+  const network = activeRelayChain?.network
 
   const [result, setResult] = useState<GraphLike<PurchasedEvent[]> | null>(null)
-  const client = getClient()
-  const query = client.eventCorePurchased(coreNb)
+  const client = useMemo(() => getClient(), [])
 
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
   tokenSymbol = tokenSymbol || 'UNIT'
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const fetchedResult: GraphLike<PurchasedEvent[]> = await client.fetch(query)
-      setResult(fetchedResult)
-    }
+  let query: GraphQuery
+  //const newAddress = encodeAddress(publicKeyBytes, targetNetworkPrefix)
+  if (activeAccount) {
+    query = client.eventWhoPurchased(activeAccount?.address)
+  }
 
-    fetchData()
-  }, [client, query])
+  useEffect(() => {
+    if (network && query) {
+      const fetchData = async () => {
+        const fetchedResult: GraphLike<PurchasedEvent[]> = await client.fetch(network, query)
+        setResult(fetchedResult)
+      }
+
+      fetchData()
+    }
+  }, [])
+
+  const reversedData = useMemo(() => {
+    // Make a copy of the event array (if it exists) and reverse the copy
+    return [...(result?.data.event || [])].reverse()
+  }, [result])
 
   const TableHeader = [
     { title: 'Time' },
     { title: 'Block Number' },
     { title: 'Transaction Type' },
-    { title: 'Who' },
+    { title: 'Core' },
     { title: 'RegionID Begin' },
     { title: 'Mask' },
     { title: 'Price' },
@@ -37,12 +50,12 @@ const PastTransactions = ({ coreNb }: { coreNb: number }) => {
 
   // Transform result into table data
   const TableData =
-    result?.data.event?.map((event, index) => ({
+    reversedData.map((event, index) => ({
       data: [
         event.timestamp ? format(new Date(event.timestamp), 'MMMM dd, yyyy HH:mm:ss OOOO') : '',
         event.blockNumber?.toString(),
         'Purchase',
-        toShortAddress(event.who, 4),
+        event.regionId.core?.toString(),
         event.regionId.begin?.toString(),
         event.regionId.mask,
         `${parseNativeTokenToHuman({ paid: event.price?.toString(), decimals: 12 })} ${tokenSymbol}`,
@@ -54,9 +67,7 @@ const PastTransactions = ({ coreNb }: { coreNb: number }) => {
       <Border>
         <div className="mx-auto max-w-9xl px-4 mt-5 sm:px-6 lg:px-8">
           <div className="pt-10 pl-10">
-            <h1 className="text-xl font-unbounded uppercase font-bold">
-              Past transactions with core Nb. {coreNb}
-            </h1>
+            <h1 className="text-xl font-unbounded uppercase font-bold">My transactions</h1>
           </div>
           <div>
             {result ? (

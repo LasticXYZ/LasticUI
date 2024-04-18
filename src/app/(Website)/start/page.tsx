@@ -66,7 +66,7 @@ const StartPage = () => {
               </p>
               <div className="flex flex-col  py-5 justify-center items-center w-full">
                 <div className="p-2">
-                  <PrimaryButtonWeb title="Launch App" location="/bulkcore1" />
+                  <PrimaryButtonWeb title="Launch App" location="/kusama/bulkcore1" />
                 </div>
                 <div className="p-2">
                   <SecondaryButtonWeb title="Read the Docs" location="https://docs.lastic.xyz/" />

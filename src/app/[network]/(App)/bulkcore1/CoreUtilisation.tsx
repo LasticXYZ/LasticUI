@@ -1,25 +1,38 @@
 import Border from '@/components/border/Border'
 import MiniBarGraphData from '@/components/graph/MiniBarGraphData'
+import { useInkathon } from '@poppyseed/lastic-sdk'
 import { GraphLike, SaleInitializedEvent, getClient } from '@poppyseed/squid-sdk'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import CoreOwners from './CoreOwners'
 
 type DataSetKey = 'price' | 'cores' // Add more keys as needed
 
 const CoreUtilisation: React.FC = () => {
+  const { activeRelayChain } = useInkathon()
+  const network = activeRelayChain?.network
+
   const [result, setResult] = useState<GraphLike<SaleInitializedEvent[]> | null>(null)
   const [activeDataSet, setActiveDataSet] = useState<DataSetKey>('price') // Change to string to accommodate multiple datasets
-  const client = getClient()
+  const client = useMemo(() => getClient(), [])
 
   useEffect(() => {
     const fetchData = async () => {
-      const query = client.eventAllSaleInitialized()
-      const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(query)
-      setResult(fetchedResult)
+      if (network) {
+        const query = client.eventAllSaleInitialized()
+        try {
+          const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(
+            network,
+            query,
+          )
+          setResult(fetchedResult)
+        } catch (error) {
+          console.error('Failed to fetch data:', error)
+        }
+      }
     }
 
     fetchData()
-  }, [client])
+  }, [])
 
   // Configurations for different data sets
   const dataConfigs = {

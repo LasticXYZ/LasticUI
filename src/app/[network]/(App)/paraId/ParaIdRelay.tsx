@@ -1,7 +1,7 @@
-import { PossibleNetworks, network_list } from '@/app/(App)/test/paraIdData'
 import Border from '@/components/border/Border'
 import GeneralTable from '@/components/table/GeneralTable'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
+import { PossibleNetworks, network_list } from '@/config/network'
 import { parseFormattedNumber, toShortHead } from '@/utils'
 import { useInkathon } from '@poppyseed/lastic-sdk'
 import { useEffect, useMemo, useState } from 'react'

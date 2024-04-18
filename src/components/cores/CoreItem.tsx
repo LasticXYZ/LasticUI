@@ -1,10 +1,14 @@
 // components/Card.tsx
 import Border from '@/components/border/Border'
+import { goToChainRoute } from '@/utils/common/chainPath'
+import { ConfigurationType } from '@poppyseed/lastic-sdk'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import React from 'react'
 
 interface CardProps {
+  config: ConfigurationType | null
   coreNumber: string
   size: string
   cost: string
@@ -16,7 +20,8 @@ interface CardProps {
   end: string
 }
 
-const Card: React.FC<CardProps> = ({
+const CoreItem: React.FC<CardProps> = ({
+  config,
   coreNumber,
   size,
   cost,
@@ -29,18 +34,20 @@ const Card: React.FC<CardProps> = ({
 }) => {
   const beginStr = begin.replace(/,/g, '')
   const coreSize = parseInt(end.replace(/,/g, '')) - parseInt(begin.replace(/,/g, ''))
-  const bulkSize = 1260 // TODO replace this by config value
+  const pathname = usePathname()
+
+  if (!config) return null
 
   return (
     <Border className="px-10 py-6 hover:bg-pink-1 hover:cursor-pointer">
-      <Link href={`/core/${coreNumber}/${beginStr}/${mask}`}>
+      <Link href={goToChainRoute(pathname, `/core/${coreNumber}/${beginStr}/${mask}`)}>
         <div>
           <div className="font-unbounded uppercase tracking-wide text-md font-semibold flex justify-between items-center">
             <span>Core Nb. {coreNumber}</span>
             <div className="flex space-x-2">
               {' '}
               {/* Container to hold both buttons next to each other */}
-              {coreSize < bulkSize && (
+              {coreSize < config.regionLength && (
                 <div className="bg-pink-3  dark:bg-pink-400 dark:bg-opacity-80 border border-gray-8 px-4 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
                   Partitioned
                 </div>
@@ -81,4 +88,4 @@ const Card: React.FC<CardProps> = ({
   )
 }
 
-export default Card
+export default CoreItem

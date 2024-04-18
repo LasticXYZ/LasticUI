@@ -1,107 +1,21 @@
 import Border from '@/components/border/Border'
 import TimelineComponent from '@/components/timelineComp/TimelineComp'
 import BuyWalletStatus from '@/components/walletStatus/BuyWalletStatus'
+import WalletStatus from '@/components/walletStatus/WalletStatus'
+import { network_list } from '@/config/network'
+import { useCurrentBlockNumber, useSubstrateQuery } from '@/hooks/useSubstrateQuery'
 import { saleStatus } from '@/utils/broker'
-import { ApiPromise } from '@polkadot/api'
+import { getChainFromPath } from '@/utils/common/chainPath'
 import {
-  BrokerConstantsType,
   ConfigurationType,
   SaleInfoType,
-  StatusType,
-  blockTimeToUTC,
-  getConstants,
   getCurrentBlockNumber,
   useBalance,
   useInkathon,
 } from '@poppyseed/lastic-sdk'
+import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import AnalyticSection from './AnalyticSection'
-
-// Define a type for the queryParams
-type QueryParams = (string | number | Record<string, unknown>)[]
-
-// Custom hook for querying substrate state
-function useSubstrateQuery(
-  api: ApiPromise | undefined,
-  queryKey: string,
-  queryParams: QueryParams = [],
-) {
-  const [data, setData] = useState<string | null>(null)
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (api?.query?.broker?.[queryKey]) {
-        try {
-          const result = await api.query.broker[queryKey](...queryParams)
-          // Check if the Option type is Some and unwrap the value
-          if (result) {
-            setData(result.toString())
-          } else {
-            setData(null)
-          }
-        } catch (error) {
-          console.error(`Failed to fetch ${queryKey}:`, error)
-        }
-      }
-    }
-
-    fetchData()
-    const intervalId = setInterval(fetchData, 5000)
-
-    return () => clearInterval(intervalId)
-  }, [api, queryKey, queryParams])
-
-  return data
-}
-
-function useCurrentBlockNumber(api: ApiPromise | undefined) {
-  const [currentBlockNumber, setCurrentBlockNumber] = useState(0)
-
-  useEffect(() => {
-    if (!api) return
-
-    const fetchCurrentBlockNumber = async () => {
-      const currentBlock = await getCurrentBlockNumber(api)
-      setCurrentBlockNumber(currentBlock)
-    }
-
-    const intervalId = setInterval(fetchCurrentBlockNumber, 1000) // Update every second
-
-    return () => clearInterval(intervalId)
-  }, [api])
-
-  return currentBlockNumber
-}
-
-function useBrokerConstants(api: ApiPromise | undefined) {
-  const [brokerConstants, setBrokerConstants] = useState<BrokerConstantsType | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    let isMounted = true
-
-    const fetchConstants = async () => {
-      try {
-        const constants = await getConstants(api)
-        if (isMounted) {
-          setBrokerConstants(constants)
-          setIsLoading(false)
-        }
-      } catch (err) {
-        console.error(err)
-        setIsLoading(false)
-      }
-    }
-
-    fetchConstants()
-
-    return () => {
-      isMounted = false
-    }
-  }, [api])
-
-  return { brokerConstants, isLoading }
-}
 
 function calculateCurrentPrice(
   currentBlockNumber: number,
@@ -121,27 +35,26 @@ function calculateCurrentPrice(
 export default function BrokerSaleInfo() {
   const { api, relayApi, activeAccount } = useInkathon()
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
+  const pathname = usePathname()
 
   const currentBlockNumber = useCurrentBlockNumber(api)
 
   const saleInfoString = useSubstrateQuery(api, 'saleInfo')
-  const configurationString = useSubstrateQuery(api, 'configuration')
-  const statusString = useSubstrateQuery(api, 'status')
+  // const configurationString = useSubstrateQuery(api, 'configuration')
 
-  const { brokerConstants, isLoading: isConstantsLoading } = useBrokerConstants(api)
+  // const { brokerConstants, isLoading: isConstantsLoading } = useBrokerConstants(api)
+
+  const configuration = network_list[getChainFromPath(pathname)].configuration
+  const brokerConstants = network_list[getChainFromPath(pathname)].constants
 
   const saleInfo = useMemo(
     () => (saleInfoString ? (JSON.parse(saleInfoString) as SaleInfoType) : null),
     [saleInfoString],
   )
-  const configuration = useMemo(
-    () => (configurationString ? (JSON.parse(configurationString) as ConfigurationType) : null),
-    [configurationString],
-  )
-  const status = useMemo(
-    () => (statusString ? (JSON.parse(statusString) as StatusType) : null),
-    [statusString],
-  )
+  // const configuration = useMemo(
+  //   () => (configurationString ? (JSON.parse(configurationString) as ConfigurationType) : null),
+  //   [configurationString],
+  // )
 
   // Update saleStage every second based on the currentBlockNumber
   const [saleStage, setSaleStage] = useState('')
@@ -161,24 +74,14 @@ export default function BrokerSaleInfo() {
     }
   }, [currentBlockNumber, saleInfo, configuration, brokerConstants])
 
-  const [regionBeginTimestamp, setRegionBeginTimestamp] = useState<string | null>(null)
-  const [regionEndTimestamp, setRegionEndTimestamp] = useState<string | null>(null)
   const [currentRelayBlock, setCurrentRelayBlock] = useState<number | null>(null)
 
   useEffect(() => {
     const fetchRegionTimestamps = async () => {
       try {
         if (saleInfo && brokerConstants) {
-          const beginTimestamp = relayApi
-            ? await blockTimeToUTC(relayApi, saleInfo.regionBegin * brokerConstants.timeslicePeriod)
-            : null
-          const endTimestamp = relayApi
-            ? await blockTimeToUTC(relayApi, saleInfo.regionEnd * brokerConstants.timeslicePeriod)
-            : null
           const getCurrentRelayBlock = relayApi ? await getCurrentBlockNumber(relayApi) : null
 
-          setRegionBeginTimestamp(beginTimestamp)
-          setRegionEndTimestamp(endTimestamp)
           setCurrentRelayBlock(getCurrentRelayBlock)
         }
       } catch (error) {
@@ -189,17 +92,39 @@ export default function BrokerSaleInfo() {
     fetchRegionTimestamps()
   }, [relayApi, saleInfo, brokerConstants])
 
-  if (!api || !relayApi) return <div>API not available</div>
+  if (!api || !relayApi)
+    return (
+      <>
+        <section className="mx-auto mb-5 max-w-9xl px-4 mt-5 sm:px-6 lg:px-8">
+          <Border>
+            <div className=" p-10">
+              <WalletStatus
+                redirectLocationMessage="Try on Rococo"
+                redirectLocation="/rococo/bulkcore1"
+                inactiveWalletMessage="Wait a moment... Connecting API."
+              />
+            </div>
+          </Border>
+        </section>
+      </>
+    )
 
-  if (
-    !saleInfo ||
-    !configuration ||
-    !status ||
-    !currentRelayBlock ||
-    !brokerConstants ||
-    isConstantsLoading
-  ) {
-    return <div>Loading...</div>
+  if (!saleInfo || !configuration || !currentRelayBlock || !brokerConstants) {
+    return (
+      <>
+        <section className="mx-auto mb-5 max-w-9xl px-4 mt-5 sm:px-6 lg:px-8">
+          <Border>
+            <div className=" p-10">
+              <WalletStatus
+                redirectLocationMessage="Try on Rococo"
+                redirectLocation="/rococo/bulkcore1"
+                customMessage="Loading ... or Chain not configured."
+              />
+            </div>
+          </Border>
+        </section>
+      </>
+    )
   }
 
   let currentPrice = calculateCurrentPrice(currentBlockNumber, saleInfo, configuration)
