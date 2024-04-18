@@ -135,33 +135,35 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
           {/* Available Accounts/Wallets */}
           <WalletModal isOpen={openChooseAccount} onClose={() => setOpenChooseAccount(false)}>
             <>
-              {chosenWallet &&
-                (accounts || []).map((acc) => {
-                  const encodedAddress = encodeAddress(acc.address, activeChain?.ss58Prefix || 42)
-                  const truncatedEncodedAddress = truncateHash(encodedAddress, 10)
-                  return (
-                    <div
-                      key={encodedAddress}
-                      // When an account is clicked, set it as active and then connect to the chosen wallet.
-                      onClick={() => {
-                        setActiveAccount?.(acc)
-                        connect?.(undefined, undefined, chosenWallet)
-                        if (acc.address !== activeAccount.address) {
+              <div className="overflow-scroll max-h-52 md:max-h-80">
+                {chosenWallet &&
+                  (accounts || []).map((acc) => {
+                    const encodedAddress = encodeAddress(acc.address, activeChain?.ss58Prefix || 42)
+                    const truncatedEncodedAddress = truncateHash(encodedAddress, 10)
+                    return (
+                      <div
+                        key={encodedAddress}
+                        // When an account is clicked, set it as active and then connect to the chosen wallet.
+                        onClick={() => {
                           setActiveAccount?.(acc)
-                        }
-                      }}
-                      className={`p-3 flex justify-between items-center cursor-pointer ${acc.address === activeAccount.address ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-2 dark:hover:bg-gray-18 transition duration-300'}`}
-                    >
-                      <div>
-                        <AccountName account={acc} />
-                        <p className="text-xs">{truncatedEncodedAddress}</p>
+                          connect?.(undefined, undefined, chosenWallet)
+                          if (acc.address !== activeAccount.address) {
+                            setActiveAccount?.(acc)
+                          }
+                        }}
+                        className={`p-3 flex justify-between items-center cursor-pointer ${acc.address === activeAccount.address ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-2 dark:hover:bg-gray-18 transition duration-300'}`}
+                      >
+                        <div>
+                          <AccountName account={acc} />
+                          <p className="text-xs">{truncatedEncodedAddress}</p>
+                        </div>
+                        {acc.address === activeAccount.address && (
+                          <AiOutlineCheckCircle size={16} className="text-green-500" />
+                        )}
                       </div>
-                      {acc.address === activeAccount.address && (
-                        <AiOutlineCheckCircle size={16} className="text-green-500" />
-                      )}
-                    </div>
-                  )
-                })}
+                    )
+                  })}
+              </div>
 
               {/* Account Balance */}
               {balanceFormatted !== undefined && (
