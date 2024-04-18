@@ -1,9 +1,6 @@
-import {
-  BrokerConstantsType,
-  ConfigurationType,
-  SaleInfoType,
-  blocksToTimeFormat,
-} from '@poppyseed/lastic-sdk'
+import { BrokerConstantsType, ConfigurationType, SaleInfoType } from '@poppyseed/lastic-sdk'
+
+import { blocksToTimeFormat } from './blockTime'
 
 export enum StatusCode {
   Interlude = 'interlude',
@@ -58,11 +55,19 @@ function calculateTimeRemaining(
 
   switch (statusCode) {
     case StatusCode.Interlude:
-      return blocksToTimeFormat(saleInfo.saleStart - currentBlockNumber)
+      return blocksToTimeFormat(saleInfo.saleStart - currentBlockNumber, 'PARA')
     case StatusCode.LeadIn:
-      return blocksToTimeFormat(saleInfo.saleStart + config.leadinLength - currentBlockNumber)
+      return blocksToTimeFormat(
+        saleInfo.saleStart + config.leadinLength - currentBlockNumber,
+        'PARA',
+      )
     case StatusCode.Purchase:
-      return '-'
+      return blocksToTimeFormat(
+        saleInfo.saleStart +
+          (config.regionLength * constant.timeslicePeriod) / 2 -
+          currentBlockNumber,
+        'PARA',
+      )
     default:
       return '-'
   }
