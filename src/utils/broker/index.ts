@@ -5,9 +5,10 @@ import {
   ConfigurationType,
   SaleInfoType,
   getConstants,
-  getCurrentBlockNumber,
 } from '@poppyseed/lastic-sdk'
 import { useEffect, useState } from 'react'
+import { getCurrentBlockNumber } from './blockTime'
+
 export { saleStatus } from './saleStatus'
 
 export function useQuerySpecificRegion({
