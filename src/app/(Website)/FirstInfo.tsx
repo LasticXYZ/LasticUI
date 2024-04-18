@@ -4,7 +4,7 @@ import Image from 'next/image'
 
 const FirstInfo = () => {
   return (
-    <section className="flex flex-wrap my-10 md:my-32 md:flex-nowrap h-auto bg-black md:px-10 text-white">
+    <section className="flex flex-wrap my-10 md:my-32 md:flex-nowrap h-auto md:px-10 text-white">
       <div className="m-auto mt-10 px-10 sm:px-20 md:px-0 md:w-2/5 md:max-w-xl">
         {/* Text section */}
         <div className="flex flex-col space-y-4">
