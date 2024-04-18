@@ -5,6 +5,7 @@ import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
 import { useCurrentBlockNumber, useSubstrateQuery } from '@/hooks/useSubstrateQuery'
 import { saleStatus } from '@/utils/broker'
+import { StatusCode } from '@/utils/broker/saleStatus'
 import { getChainFromPath } from '@/utils/common/chainPath'
 import {
   ConfigurationType,
@@ -59,10 +60,11 @@ export default function BrokerSaleInfo() {
   // Update saleStage every second based on the currentBlockNumber
   const [saleStage, setSaleStage] = useState('')
   const [saleTitle, setSaleTitle] = useState('')
+  const [statusCode, setStatusCode] = useState<StatusCode | null>(null)
   const [timeRemaining, setTimeRemaining] = useState('')
   useEffect(() => {
     if (saleInfo && configuration && brokerConstants) {
-      const { statusMessage, timeRemaining, statusTitle } = saleStatus(
+      const { statusMessage, timeRemaining, statusTitle, statusCode } = saleStatus(
         currentBlockNumber,
         saleInfo,
         configuration,
@@ -71,6 +73,7 @@ export default function BrokerSaleInfo() {
       setTimeRemaining(timeRemaining)
       setSaleTitle(statusTitle)
       setSaleStage(statusMessage)
+      setStatusCode(statusCode)
     }
   }, [currentBlockNumber, saleInfo, configuration, brokerConstants])
 
@@ -148,7 +151,7 @@ export default function BrokerSaleInfo() {
         <Border>
           <div className=" p-10">
             <div>
-              <div className="flex justify-between rounded-full mx-10 bg-pink-4 dark:bg-pink-400 dark:bg-opacity-95  px-16 py-10 bg-opacity-30 items-center my-6">
+              <div className="flex justify-between rounded-full mx-10 bg-pink-300 dark:bg-pink-400 dark:bg-opacity-95  px-16 py-10 bg-opacity-30 items-center my-6">
                 <div className="text-xl xl:text-2xl font-bold font-unbounded uppercase text-gray-21 dark:text-white ">
                   {saleTitle}
                 </div>
@@ -181,6 +184,7 @@ export default function BrokerSaleInfo() {
                 saleInfo={saleInfo}
                 formatPrice={`${(currentPrice / 10 ** 12).toFixed(8)} ${tokenSymbol}`}
                 currentPrice={currentPrice}
+                statusCode={statusCode}
               />
             </Border>
           </div>

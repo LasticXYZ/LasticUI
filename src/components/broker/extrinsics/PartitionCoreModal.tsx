@@ -160,9 +160,9 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
       <div className="flex flex-col p-4 ">
         <div className="pb-8">
           <div className="mx-10 mt-4 mb-24 relative">
-            <div className="w-full bg-pink-4 bg-opacity-20 h-3 rounded-full overflow-hidden">
+            <div className="w-full bg-pink-300 bg-opacity-20 h-3 rounded-full overflow-hidden">
               <div
-                className="bg-pink-4 bg-opacity-50 h-full"
+                className="bg-pink-300 bg-opacity-50 h-full"
                 style={{ width: `${pivotPercentage}%` }}
               ></div>
             </div>

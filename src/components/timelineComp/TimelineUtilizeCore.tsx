@@ -48,9 +48,9 @@ const Slider: FC<SliderPropeTypes> = ({ currentRelayBlock, beginRegion, config, 
             {regionBeginTimestamp !== null ? regionBeginTimestamp : 'Loading...'}
             Region End Timestamp: {regionEndTimestamp !== null ? regionEndTimestamp : 'Loading...'} */}
       </div>
-      <div className="w-full bg-pink-4 dark:bg-pink-400 bg-opacity-20 dark:bg-opacity-20 h-3 rounded-full overflow-hidden">
+      <div className="w-full bg-pink-300 dark:bg-pink-400 bg-opacity-20 dark:bg-opacity-20 h-3 rounded-full overflow-hidden">
         <div
-          className="bg-pink-4 dark:bg-pink-400 bg-opacity-50  dark:bg-opacity-50 h-full"
+          className="bg-pink-300 dark:bg-pink-400 bg-opacity-50  dark:bg-opacity-50 h-full"
           style={{ width: `${safeutilizationPercentage}%` }}
         ></div>
       </div>

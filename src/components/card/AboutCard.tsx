@@ -11,7 +11,7 @@ const AboutCard: React.FC<FeatureCardProps> = ({ title, description }) => {
     <BorderBlack>
       <div className="px-8 py-12">
         <h4 className="font-semibold font-syne text-2xl">{title}</h4>
-        <div className="w-10 h-1 my-3 rounded-full bg-pink-300"></div>
+        <div className="w-10 h-1 my-3 rounded-full bg-pink-300 "></div>
         <p className="text-sm">{description}</p>
         <div className="py-2"></div>
       </div>
