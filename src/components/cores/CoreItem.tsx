@@ -14,7 +14,6 @@ interface CardProps {
   cost: string
   reward: string
   currencyCost: string
-  currencyReward: string
   mask: string
   begin: string
   end: string
@@ -27,7 +26,6 @@ const CoreItem: React.FC<CardProps> = ({
   cost,
   reward,
   currencyCost,
-  currencyReward,
   mask,
   begin,
   end,
@@ -72,9 +70,6 @@ const CoreItem: React.FC<CardProps> = ({
               <p className="text-gray-12 px-2">
                 {' '}
                 Cost: {cost} {currencyCost}
-              </p>
-              <p className="text-gray-12 px-2">
-                Reward: {reward} {currencyReward}
               </p>
             </div>
             <div className="flex flex-row text-gray-12 p-1 ">

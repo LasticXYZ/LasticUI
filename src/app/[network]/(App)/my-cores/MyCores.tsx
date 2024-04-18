@@ -112,7 +112,6 @@ export default function MyCores() {
                 cost={parseNativeTokenToHuman({ paid: region.owner.paid, decimals: 12 })}
                 reward="0"
                 currencyCost={tokenSymbol}
-                currencyReward="LST"
                 mask={region.detail[0].mask}
                 begin={region.detail[0].begin}
                 end={region.owner.end}
