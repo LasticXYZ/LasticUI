@@ -2,9 +2,18 @@
 
 import { Link } from '@mui/material'
 import 'animate.css'
+import Image from 'next/image'
+import { useState } from 'react'
 import { TypeAnimation } from 'react-type-animation'
 
 const Hero = () => {
+  const [showVideo, setShowVideo] = useState(true)
+
+  const handleVideoError = () => {
+    // Hide the video and show the image instead
+    setShowVideo(false)
+  }
+
   return (
     <div id="home" className=" w-screen flex justify-center items-center bg-[#020710]">
       <div className="">
@@ -47,6 +56,32 @@ const Hero = () => {
           </div>
         </div>
 
+        {/* Video/Image Section */}
+        <div className="w-full px-10 lg:px-64">
+          {showVideo ? (
+            <video
+              className="w-full h-auto mx-auto object-center justify-center items-center"
+              loop
+              muted
+              autoPlay
+              onError={handleVideoError}
+            >
+              <source src="/assets/Images/video.mp4" type="video/mp4" />
+            </video>
+          ) : (
+            <>
+              <Image
+                src="/assets/Images/hero-img.png"
+                alt="hero"
+                width={500}
+                height={375}
+                style={{ width: '100%', height: 'auto' }}
+                quality={100}
+                className="object-center justify-center items-center mx-auto "
+              />
+            </>
+          )}
+        </div>
         {/* Image Section 
         <div className=" w-full px-10 lg:px-64">
           <Image
@@ -60,10 +95,10 @@ const Hero = () => {
             className="object-center justify-center items-center mx-auto "
           />
         </div>
-        */}
+       
         <div className="w-full px-10 lg:px-64">
           <video
-            className="w-full h-auto mx-auto object-center justify-center items-center" // Adjust the Tailwind classes as needed
+            className="w-full h-auto mx-auto object-center justify-center items-center"
             loop
             muted
             autoPlay
@@ -72,6 +107,7 @@ const Hero = () => {
             Your browser does not support the video tag.
           </video>
         </div>
+         */}
       </div>
     </div>
   )
