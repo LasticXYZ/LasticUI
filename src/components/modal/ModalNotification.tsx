@@ -9,7 +9,7 @@ interface ModalNotificationProps {
 
 export const notificationTypes = {
   success: 'bg-green-6',
-  info: 'bg-teal-3',
+  info: 'bg-teal-3 dark:bg-teal-7',
   danger: 'bg-red-6',
   warn: 'bg-yellow-2',
 }

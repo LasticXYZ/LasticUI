@@ -1,87 +1,76 @@
-import PrimaryButton from '@/components/button/PrimaryButton'
-import SecondaryButton from '@/components/button/SecondaryButton'
-import Image from 'next/image'
-import Link from 'next/link'
-import { FaGithub, FaMedium, FaTelegram, FaTwitter } from 'react-icons/fa'
+'use client'
+
+import { Link } from '@mui/material'
+import 'animate.css'
+import { TypeAnimation } from 'react-type-animation'
 
 const Hero = () => {
   return (
-    <div id="home" className=" w-screen flex justify-center items-center">
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:justify-between items-center w-full px-4 md:px-0">
+    <div id="home" className=" w-screen flex justify-center items-center bg-[#020710]">
+      <div className="">
         {/* Text Section */}
-        <div className="lg:pl-20 2xl:pl-48 w-full text-center lg:text-left md:px-5 max-w-4xl pt-15 pb-4 md:py-20 mx-auto p-2 relative z-10">
-          <div>
-            <h2 className="leading-normal lg:leading-snug pt-20 py-4 text-gray-17 text-3xl md:text-4xl lg:text-5xl font-unbounded uppercase font-bold">
-              the world&apos;s first
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-lastic-spectrum-from via-lastic-spectrum-via to-lastic-spectrum-to">
-                {' '}
-                blockspace{' '}
-              </span>
-              marketplace.
-            </h2>
-            <p className="py-4 text-montserrat xl:max-w-md text-gray-8 text-lg xl:text-xl">
-              Do anything you want with your blockspace
+        <div className="flex flex-col lg:flex-row items-center justify-center p-8 md:p-16 lg:py-32 lg:px-10">
+          <h2 className="h-[350px] md:h-[250px] md:px-0 w-[90vw] md:w-[70vw] leading-normal ml-5 md:ml-0 lg:leading-snug lg:max-w-3xl pt-10 text-white text-5xl md:text-6xl mt-10 md:mt-0 lg:text-6xl xl:text-7xl font-syne font-bold">
+            <TypeAnimation
+              // Same String at the start will only be typed once, initially
+              sequence={[
+                'The Modular Marketplace.',
+                1000,
+                'Trade resources builders need.',
+                1000,
+                'The Blockspace Marketplace.',
+                1000,
+                'Choose the right rewards.',
+                1000,
+                'Incentivize builders to adopt.',
+                1000,
+              ]}
+              speed={55} // Custom Speed from 1-99 - Default Speed: 40
+              wrapper="span" // Animation will be rendered as a <span>
+              repeat={Infinity} // Repeat this Animation Sequence infinitely
+            />
+          </h2>
+          <div className="px-10 md:px-5 md:max-w-sm xl:max-w-xl ml-14  sm:ml-32 lg:mt-20">
+            <p className="py-5 font-dm_sans text-gray-7 text-md xl:text-lg">
+              One marketplace for all Modular solutions. A protocol-agnostic application that
+              leverages the best features of major networks in order to provide the best service to
+              builders and traders.
             </p>
-            <div className="pt-8 xl:pt-10 flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-2">
-              <PrimaryButton title="Launch" location="/bulkcore1" />
-              <SecondaryButton title="Check Docs" location="https://docs.lastic.xyz/" />
+            <div className="pt-4 xl:pt-5 flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-2">
+              <Link
+                href="https://docs.lastic.xyz/"
+                className=" text-pink-400 hover:text-pink-500 no-underline text-lg border-b border-pink-400 hover:border-pink-500 font-bold font-dm_sans"
+              >
+                Learn More -&gt;
+              </Link>
             </div>
-          </div>
-          {/* Social Icons */}
-          <div className="flex items-center justify-center lg:justify-start pt-8 xl:pt-10 space-x-4">
-            <Link
-              href="https://github.com/LasticXYZ/Lastic"
-              target="_blank"
-              rel="noreferrer"
-              legacyBehavior
-            >
-              <div className="rounded-full border border-gray-9 shadow-gray-900 p-4 cursor-pointer hover:scale-110 ease-in duration-300">
-                <FaGithub />
-              </div>
-            </Link>
-            <Link
-              href="https://twitter.com/lastic_xyz"
-              target="_blank"
-              rel="noreferrer"
-              legacyBehavior
-            >
-              <div className="rounded-full border border-gray-9 shadow-gray-900 p-4 cursor-pointer hover:scale-110 ease-in duration-300">
-                <FaTwitter />
-              </div>
-            </Link>
-            <Link
-              href="https://medium.com/lastic-marketplace"
-              target="_blank"
-              rel="noreferrer"
-              legacyBehavior
-            >
-              <div className="rounded-full border border-gray-9 shadow-gray-900 p-4 cursor-pointer hover:scale-110 ease-in duration-300 ">
-                <FaMedium />
-              </div>
-            </Link>
-            <Link
-              href="https://t.me/+khw2i6GGYFw3NDNi"
-              target="_blank"
-              rel="noreferrer"
-              legacyBehavior
-            >
-              <div className="rounded-full border border-gray-9 shadow-gray-900 p-4 cursor-pointer hover:scale-110 ease-in duration-300 ">
-                <FaTelegram />
-              </div>
-            </Link>
           </div>
         </div>
 
-        {/* Image Section */}
-        <div className="relative h-full w-full flex items-center justify-center py-10 mx-auto z-10 xl:min-h-[60vh]">
+        {/* Image Section 
+        <div className=" w-full px-10 lg:px-64">
           <Image
-            src="/assets/Images/hero-page.png"
+            src="/assets/Images/hero-img.png"
             alt="hero"
-            width={602}
-            height={692}
+            layout="responsive"
+            width={500}
+            height={375}
+            style={{ width: '80%', height: 'auto' }}
             quality={100}
-            className="object-center justify-center items-center mx-auto lg:py-20 xl:object-scale-down"
+            className="object-center justify-center items-center mx-auto "
           />
+        </div>
+        */}
+        <div className="w-full px-10 lg:px-64">
+          <video
+            className="w-full h-auto mx-auto object-center justify-center items-center" // Adjust the Tailwind classes as needed
+            loop
+            muted
+            autoPlay
+          >
+            <source src="/assets/Images/video.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
         </div>
       </div>
     </div>
@@ -89,3 +78,48 @@ const Hero = () => {
 }
 
 export default Hero
+
+/* Social Icons 
+  <div className="flex items-center justify-center lg:justify-start pt-8 xl:pt-10 space-x-4">
+    <Link
+      href="https://github.com/LasticXYZ/Lastic"
+      target="_blank"
+      rel="noreferrer"
+      legacyBehavior
+    >
+      <div className="rounded-full border border-gray-9 shadow-gray-900 p-4 cursor-pointer hover:scale-110 ease-in duration-300">
+        <FaGithub />
+      </div>
+    </Link>
+    <Link
+      href="https://twitter.com/lastic_xyz"
+      target="_blank"
+      rel="noreferrer"
+      legacyBehavior
+    >
+      <div className="rounded-full border border-gray-9 shadow-gray-900 p-4 cursor-pointer hover:scale-110 ease-in duration-300">
+        <FaTwitter />
+      </div>
+    </Link>
+    <Link
+      href="https://medium.com/lastic-marketplace"
+      target="_blank"
+      rel="noreferrer"
+      legacyBehavior
+    >
+      <div className="rounded-full border border-gray-9 shadow-gray-900 p-4 cursor-pointer hover:scale-110 ease-in duration-300 ">
+        <FaMedium />
+      </div>
+    </Link>
+    <Link
+      href="https://t.me/+khw2i6GGYFw3NDNi"
+      target="_blank"
+      rel="noreferrer"
+      legacyBehavior
+    >
+      <div className="rounded-full border border-gray-9 shadow-gray-900 p-4 cursor-pointer hover:scale-110 ease-in duration-300 ">
+        <FaTelegram />
+      </div>
+    </Link>
+  </div>
+    */

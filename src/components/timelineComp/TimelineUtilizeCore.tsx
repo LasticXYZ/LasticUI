@@ -48,20 +48,20 @@ const Slider: FC<SliderPropeTypes> = ({ currentRelayBlock, beginRegion, config, 
             {regionBeginTimestamp !== null ? regionBeginTimestamp : 'Loading...'}
             Region End Timestamp: {regionEndTimestamp !== null ? regionEndTimestamp : 'Loading...'} */}
       </div>
-      <div className="w-full bg-pink-4 bg-opacity-20 h-3 rounded-full overflow-hidden">
+      <div className="w-full bg-pink-4 dark:bg-pink-400 bg-opacity-20 dark:bg-opacity-20 h-3 rounded-full overflow-hidden">
         <div
-          className="bg-pink-4 bg-opacity-50 h-full"
+          className="bg-pink-4 dark:bg-pink-400 bg-opacity-50  dark:bg-opacity-50 h-full"
           style={{ width: `${safeutilizationPercentage}%` }}
         ></div>
       </div>
       {/* Marker for Interlude Period */}
       <div className="absolute top-0 -mt-1" style={{ left: `${0}%` }}>
-        <div className="w-5 h-5 bg-red-4 rounded-full"></div>
+        <div className="w-5 h-5 bg-red-4 dark:bg-pink-400 rounded-full"></div>
         <p className="text-sm text-left -mt-12 -ml-8">Start Utilization</p>
       </div>
       {/* Marker for Purchase Period */}
       <div className="absolute top-0 -mt-1" style={{ left: '100%' }}>
-        <div className="w-5 h-5 bg-red-4 rounded-full"></div>
+        <div className="w-5 h-5 bg-red-4 dark:bg-pink-400 rounded-full"></div>
         <p className="text-sm text-left -mt-12 -ml-20">End Utilization</p>
       </div>
     </div>

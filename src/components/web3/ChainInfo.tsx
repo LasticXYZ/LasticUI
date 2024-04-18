@@ -34,7 +34,7 @@ export const ChainInfo: FC = () => {
   // Connection Loading Indicator
   if (!api)
     return (
-      <div className="mt-8 mb-4 flex flex-col items-center justify-center space-y-3 text-center font-mono text-sm text-gray-400 sm:(flex-row space-x-3 space-y-0)">
+      <div className="mt-8 mb-4 flex flex-col items-center justify-center space-y-3 text-center font-mono text-sm sm:(flex-row space-x-3 space-y-0)">
         <div>
           Connecting to {activeChain?.name} ({activeChain?.rpcUrls?.[0]})
         </div>
@@ -44,7 +44,7 @@ export const ChainInfo: FC = () => {
   return (
     <>
       <div className="flex grow flex-col space-y-4 max-w-[20rem]">
-        <h2 className="text-center font-mono text-gray-400">Chain Info</h2>
+        <h2 className="text-center font-mono ">Chain Info</h2>
 
         <div className="p-4 bg-white">
           {/* Metadata */}
@@ -63,7 +63,7 @@ export const ChainInfo: FC = () => {
               <Link
                 href={Object.values(activeChain.explorerUrls)[0]}
                 target="_blank"
-                className="flex items-center justify-center gap-1 text-center text-sm text-gray-400 hover:text-white"
+                className="flex items-center justify-center gap-1 text-center text-sm  hover:text-white"
               >
                 Explorer <HiOutlineExternalLink />
               </Link>
@@ -73,7 +73,7 @@ export const ChainInfo: FC = () => {
               <Link
                 href={activeChain.faucetUrls[0]}
                 target="_blank"
-                className="flex items-center justify-center gap-1 text-center text-sm text-gray-400 hover:text-white"
+                className="flex items-center justify-center gap-1 text-center text-sm  hover:text-white"
               >
                 Faucet <HiOutlineExternalLink />
               </Link>
@@ -83,7 +83,7 @@ export const ChainInfo: FC = () => {
               <Link
                 href={`https://contracts-ui.substrate.io/?rpc=${activeChain.rpcUrls[0]}`}
                 target="_blank"
-                className="flex items-center justify-center gap-1 text-center text-sm text-gray-400 hover:text-white"
+                className="flex items-center justify-center gap-1 text-center text-sm hover:text-white"
               >
                 Contracts UI <HiOutlineExternalLink />
               </Link>
@@ -96,7 +96,7 @@ export const ChainInfo: FC = () => {
           <>
             <h2 className="text-center font-mono text-red-400">Security Disclaimer</h2>
 
-            <div className="bg-red-500 bg-red-300 text-sm">
+            <div className="text-sm">
               You are interacting with un-audited mainnet contracts and risk all your funds. Never
               transfer tokens to this contract.
             </div>

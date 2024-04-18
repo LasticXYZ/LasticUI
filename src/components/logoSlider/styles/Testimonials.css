@@ -1,0 +1,37 @@
+.testimonials-section .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.testimonials-wrapper {
+  width: 100%;
+  overflow: hidden;
+}
+
+.testimonials-container {
+  display: flex;
+  flex-wrap: nowrap;
+  transition: transform 0.5s ease-in-out;
+}
+
+.testimonial-item {
+  flex: 0 0 33.333%; /* Adjust the percentage to control the width */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* This will align the content vertically */
+  text-align: center;
+  min-height: 250px; /* Adjust min-height as needed */
+  padding: 1rem;
+  margin: 0.5rem;
+  box-sizing: border-box;
+}
+
+.testimonials-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+/* Add media queries as needed to adjust for different screen sizes */

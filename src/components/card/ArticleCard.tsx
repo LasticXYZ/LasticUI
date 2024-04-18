@@ -1,6 +1,6 @@
+import BorderBlack from '@/components/border/BorderBlack'
 import Image from 'next/image'
 import React from 'react'
-import Border from '../border/Border'
 
 interface ArticleCardProps {
   imageUrl: string
@@ -24,7 +24,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ imageUrl, title, link, pubDat
   let { date, time } = parseDateTime(pubDate)
 
   return (
-    <Border>
+    <BorderBlack>
       <a href={link} className="block text-current no-underline">
         <div className="">
           <Image
@@ -45,7 +45,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ imageUrl, title, link, pubDat
           </div>
         </div>
       </a>
-    </Border>
+    </BorderBlack>
   )
 }
 

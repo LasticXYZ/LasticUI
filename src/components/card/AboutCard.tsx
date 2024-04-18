@@ -1,5 +1,5 @@
+import BorderBlack from '@/components/border/BorderBlack'
 import React from 'react'
-import Border from '../border/Border'
 
 type FeatureCardProps = {
   title: string
@@ -8,14 +8,14 @@ type FeatureCardProps = {
 
 const AboutCard: React.FC<FeatureCardProps> = ({ title, description }) => {
   return (
-    <Border>
+    <BorderBlack>
       <div className="px-8 py-12">
-        <h4 className="font-semibold text-lg">{title}</h4>
-        <div className="w-10 h-1 my-3 rounded-full bg-pink-3"></div>
+        <h4 className="font-semibold font-syne text-2xl">{title}</h4>
+        <div className="w-10 h-1 my-3 rounded-full bg-pink-300"></div>
         <p className="text-sm">{description}</p>
         <div className="py-2"></div>
       </div>
-    </Border>
+    </BorderBlack>
   )
 }
 

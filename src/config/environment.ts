@@ -1,15 +1,5 @@
-import { getSupportedChains } from './getSupportedChains'
-import { getURL } from './getUrl'
-
-/**
- * Environment Variables defined in `.env.local`.
- * See `env.local.example` for documentation.
- */
-export const env = {
-  url: getURL(),
-  isProduction: process.env.NEXT_PUBLIC_PRODUCTION_MODE === 'true',
-
-  defaultChain: process.env.NEXT_PUBLIC_DEFAULT_CHAIN!,
-  relayChain: process.env.NEXT_PUBLIC_RELAY_CHAIN!,
-  supportedChains: getSupportedChains(),
-}
+export const SUPPORTED_CHAINS = [
+  { coretime: 'kusama-coretime', relay: 'kusama', displayName: 'Kusama Coretime' },
+  { coretime: 'rococo-coretime', relay: 'rococo', displayName: 'Rococo Coretime Testnet' },
+  { coretime: 'westend-coretime', relay: 'westend', displayName: 'Westend Coretime Testnet' },
+]

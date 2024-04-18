@@ -12,9 +12,7 @@ interface CardProps {
   size: string
   phase: string
   cost: string
-  reward: string
   currencyCost: string
-  currencyReward: string
   mask: string
   begin: string
   end: string
@@ -29,9 +27,7 @@ const CoreItemExtensive: React.FC<CardProps> = ({
   size,
   phase,
   cost,
-  reward,
   currencyCost,
-  currencyReward,
   mask,
   begin,
   end,
@@ -47,17 +43,17 @@ const CoreItemExtensive: React.FC<CardProps> = ({
         </div>
         <div className="flex w-full flex-col px-5 items-start justify-start space-y-3">
           <div>
-            <div className="block mt-1 text-md leading-tight font-medium text-black">
+            <div className="block mt-1 text-md leading-tight font-medium text-black dark:text-gray-1">
               Owner: {toShortAddress(owner)} {amITheOwner ? '(You)' : '(Not you)'}
             </div>
           </div>
           <div>
-            <div className="block mt-1 text-md leading-tight font-medium text-black">
+            <div className="block mt-1 text-md leading-tight font-medium text-black dark:text-gray-1">
               Paid: {parseNativeTokenToHuman({ paid: paid, decimals: 12 })} {currencyCost}
             </div>
           </div>
           <div>
-            <div className="block mt-1 text-md leading-tight font-medium text-black">
+            <div className="block mt-1 text-md leading-tight font-medium text-black dark:text-gray-1">
               Time bought: {timeBought}
             </div>
           </div>
@@ -70,9 +66,6 @@ const CoreItemExtensive: React.FC<CardProps> = ({
           <div>
             <p className="text-gray-12">
               Cost: {cost} {currencyCost}
-            </p>
-            <p className="text-gray-12">
-              Reward: {reward} {currencyReward}
             </p>
           </div>
           <div className="">

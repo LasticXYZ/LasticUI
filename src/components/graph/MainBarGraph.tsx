@@ -227,7 +227,7 @@ const MainBarGraph = () => {
     <>
       <div className="flex flex-col justify-between p-6">
         <div className="flex justify-between py-2 px-3">
-          <h5 className="text-black text-xl font-unbounded uppercase px-3 font-light">
+          <h5 className="text-black dark:text-gray-1 text-xl font-unbounded uppercase px-3 font-light">
             Insta coretime Price over time
           </h5>
           {/* <SwitchDisplays displayOptions={displayOptions} active={curentlyDisplayed} setActive={setCurrentDisplay} /> */}
