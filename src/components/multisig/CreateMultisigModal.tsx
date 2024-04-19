@@ -18,6 +18,7 @@ const CreateMultisigModal: FC<MultisigModalProps> = ({ isOpen, onClose, onStatus
   ]
   const threshold = new BN(2)
   const name = 'lastic-multisig-1'
+  const multisigAddress = '5Dq7JZwfd3Jv8PnuKe4B73ZDCUY4kQiE2UrD9kJybbqtRxp5'
 
   if (api) {
     console.log('calculated address: ')
