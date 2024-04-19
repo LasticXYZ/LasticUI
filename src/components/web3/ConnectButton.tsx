@@ -16,7 +16,7 @@ import {
 import Image from 'next/image'
 import Link from 'next/link'
 import { FC, useState } from 'react'
-import { AiOutlineCheckCircle, AiOutlineDisconnect } from 'react-icons/ai'
+import { AiOutlineCheckCircle, AiOutlineDisconnect, AiOutlineMeh } from 'react-icons/ai'
 import { FiExternalLink } from 'react-icons/fi'
 import { AccountName } from './AccountName' // Assuming AccountName is in the same directory
 
@@ -138,6 +138,21 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
               <div className="overflow-scroll max-h-52 md:max-h-80">
                 {chosenWallet &&
                   (accounts || []).map((acc) => {
+                    if (acc.address.startsWith('0x')) {
+                      const truncatedEVMAddress = truncateHash(acc.address, 10)
+                      return (
+                        <div
+                          key={acc.address}
+                          className={`p-3 flex justify-between items-center cursor-pointer hover:bg-red-2 dark:hover:bg-red-18 transition duration-300}`}
+                        >
+                          <div>
+                            <AccountName account={acc} />
+                            <p className="text-xs">{truncatedEVMAddress}</p>
+                          </div>
+                          <AiOutlineMeh size={16} className="text-red-500" />
+                        </div>
+                      )
+                    }
                     const encodedAddress = encodeAddress(acc.address, activeChain?.ss58Prefix || 42)
                     const truncatedEncodedAddress = truncateHash(encodedAddress, 10)
                     return (
