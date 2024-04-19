@@ -3,6 +3,7 @@ import { ApiPromise } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
 import { Weight } from '@polkadot/types/interfaces'
 import { ISubmittableResult } from '@polkadot/types/types'
+import { BN } from '@polkadot/util'
 import {
   blake2AsHex,
   createKeyMulti,
@@ -22,6 +23,32 @@ interface NewMultisigEvent {
   timestamp: string
 }
 
+interface ExecutedMultisigEvent {
+  id: string
+  approving: string
+  blockNumber: number
+  callHash: string
+  multisig: string
+  timepoint: {
+    height: number
+    index: number
+  }
+  timestamp: string
+}
+
+interface CancelledMultisigEvent {
+  id: string
+  cancelling: string
+  blockNumber: number
+  callHash: string
+  multisig: string
+  timepoint: {
+    height: number
+    index: number
+  }
+  timestamp: string
+}
+
 interface Params {
   api: ApiPromise
   threshold: number
@@ -33,10 +60,10 @@ interface Params {
 
 const LEGACY_ASMULTI_PARAM_LENGTH = 6
 
-export const useMultisig = () => {
+export const useMultisigTrading = (signatories: string[], threshold: number) => {
   const { api, activeSigner, activeAccount, activeChain } = useInkathon()
 
-  const initiateMultisigCall = async (signatories: string[], threshold: number): Promise<void> => {
+  const initiateMultisigTradeCall = async (): Promise<void> => {
     // checks
     if (!api || !activeSigner || !activeAccount || !activeChain)
       throw new Error('Error in initializing the API')
@@ -51,12 +78,14 @@ export const useMultisig = () => {
     const otherSignatories = sortAddresses(
       signatories.filter((sig) => sig !== activeAccount.address),
     )
+
+    // TODO replace with batch call
     const remarkTx = api.tx.system.remark(`Lastic multisig creation`)
     console.log('Remark tx: ', remarkTx.hash.toHex())
 
     const asMultiTx = getAsMultiTx({ api, threshold, otherSignatories, tx: remarkTx })
 
-    getMultisigs(signatories, threshold)
+    // getMultisigs(signatories, threshold)
 
     /*  try {
       const unsub = await asMultiTx.signAndSend(
@@ -91,10 +120,11 @@ export const useMultisig = () => {
         )
   }
 
-  const getMultisigs = async (signatories: string[], threshold: number) => {
+  // temp function to test things
+  const getMultisigs = async () => {
     if (!api) return
 
-    const multisigAddress = getMultisigAddress(signatories, threshold)
+    const multisigAddress = getMultisigAddress()
 
     console.log('Multisig address: ', multisigAddress)
 
@@ -126,32 +156,68 @@ export const useMultisig = () => {
     const multisigType2 = api?.createType('Option<PalletMultisigMultisig>', multisigStorage)
     console.log('Multisig type: ', multisigType2.toHuman())
 
-    getMultisigTimepointByStorageRead(signatories, threshold)
+    getMultisigTimepointByStorageRead()
 
     return multisigInfo
   }
 
-  const getLatestMultisigEvent = async (
-    initiator: string,
-    multisigAddress: string,
-  ): Promise<NewMultisigEvent | null> => {
-    // get all multisig events with multisig address
-    // filter by approver.length == 1 & approver includes initiator
-    // return the latest event by blocknumber
+  /** Get the open multisig events for the current multisig address. Usually it should be max 1 event. If not, use executed & cancelled events to find the open one. */
+  const getOpenMultisigEvents = async (): Promise<NewMultisigEvent[] | null> => {
+    const multisigAddress = getMultisigAddress()
+    // query via 'newMultisigs' all multisig events with current multisig address
+    // filter by approver.length == 1 & approver includes
     return null
   }
 
-  const getTimepoint = async (event: NewMultisigEvent) => {}
+  /** Get the executed multisig events for the current multisig address. */
+  const getExecutedMultisigEvents = async (): Promise<ExecutedMultisigEvent[] | null> => {
+    const multisigAddress = getMultisigAddress()
+    // query via 'multisigExecuteds' all multisig events with current multisig address
+    // if openMultisigEvents.length > 1, you can use this to check which is still open and which already completed. Use timepoint of the executed event and compare it with the timepoint of the open event
+    return null
+  }
+
+  /** Get the cancelled multisig events for the current multisig address. */
+  const getCancelledMultisigEvents = async (): Promise<CancelledMultisigEvent[] | null> => {
+    const multisigAddress = getMultisigAddress()
+    // query via 'multisigCancelleds' all multisig events with current multisig address
+    // if openMultisigEvents.length > 1, you can use this to check which is still open and which already completed. Use timepoint of the cancelled event and compare it with the timepoint of the open event
+    return null
+  }
+
+  const hasBuyerSentFunds = (amount: BN) => {
+    const multisigAddress = getMultisigAddress()
+    // check balance of multisig address and ensure it is greater than or equal to amount
+  }
+
+  const hasSellerSentCore = () => {
+    const multisigAddress = getMultisigAddress()
+    // check if multisig address has the listed core
+    // see my-cores/MyCores.tsx for an example of how to query the regions. Filter by multisig address
+  }
+
+  const sendCoreToMultisig = async () => {
+    // copy transfer core logic
+  }
+
+  const sendFundsToMultisig = async () => {
+    // simple transfer logic
+  }
+
+  const getTimepoint = async () => {
+    // get new multisig events
+    // if 0 open events, return
+    // if >1 open events, get executed and cancelled events and reduce to 1 event via timepoint
+    // if 1 open event, use PJS to fetch all multisig entries and find the correct one by comparing properties: blockNumber, multisig, callHash, approving...
+  }
 
   /**
-   * The following function is used to get the block number and index of a multisig call. It is not functional at the moment but what be a more precise way of getting the information.
-   *
+   * The following function is used to get the block number and index of a multisig call.
    * @remarks
-   * It tries to read the rpc storage directly to get the multisig call information. The same is done by the PJS team here: https://github.com/paritytech/txwrapper-core/blob/768bb445beb2907582b2d5e13ade3be5d995af3e/packages/txwrapper-examples/multisig/src/multisig.ts#L171
-   * But it is currently not working.
-   *
+   * It reads the rpc storage directly to get the multisig call information. The same is done by the PJS team here: https://github.com/paritytech/txwrapper-core/blob/768bb445beb2907582b2d5e13ade3be5d995af3e/packages/txwrapper-examples/multisig/src/multisig.ts#L171
+   * This function works but the Subsquid query provides a wrong call hash so the created storageKey is wrong. So use the getTimepoint() function for now instead.
    */
-  const getMultisigTimepointByStorageRead = async (signatories: string[], threshold: number) => {
+  const getMultisigTimepointByStorageRead = async () => {
     const multisigAddressBytes = createKeyMulti(signatories, threshold)
     const multisigAddress = getEncodedAddress(multisigAddressBytes)
 
@@ -159,7 +225,7 @@ export const useMultisig = () => {
     // Twox128("Multisig") + Twox128("Multisigs") + Twox64(multisigAddress) + multisigAddress + Blake128(multisigCallHash) + multisigCallHash
     const multisigModuleHash = xxhashAsHex('Multisig', 128)
     const multisigStorageHash = xxhashAsHex('Multisigs', 128)
-    const multisigCall = '0xc444aa35ff6443f8c3a7c256c32656e934db465e4cd1220d476f592603733394'
+    const multisigCall = '0xc444aa35ff6443f8c3a7c256c32656e934db465e4cd1220d476f592603733394' // TODO find a way to fetch it somewhere
 
     const multisigAddressHash = xxhashAsHex(decodeAddress(multisigAddress), 64)
     const multisigCallHash = blake2AsHex(multisigCall, 128)
@@ -173,11 +239,13 @@ export const useMultisig = () => {
       multisigCallHash.substring(2) +
       multisigCall.substring(2)
 
-    console.log(
+    // correct storage key
+    /* console.log(
       '0x7474449cca95dc5d0c00e71735a6d17d3cd15a3fd6e04e47bee3922dbfa92c8dbdbba0c80974cc914e19f599aa928e59b47b76460bc3537a8fbbaa2cff932addbefe18876fb32c7e46d861b81bed59335506089328585a33c444aa35ff6443f8c3a7c256c32656e934db465e4cd1220d476f592603733394',
-    )
+    ) */
+    // generated storage key
+    // console.log(multisigStorageKey)
 
-    console.log(multisigStorageKey)
     // 2. Making an RPC request with the `state_getStorage` endpoint to retrieve the SCALE-encoded Multisig storage data from the chain under the key `multisigStorageKey`.
     const multisigStorage = await api?.rpc.state.getStorage(multisigStorageKey)
     console.log('Multisig storage: ', multisigStorage)
@@ -209,7 +277,7 @@ export const useMultisig = () => {
     }
   }
 
-  const getMultisigAddress = (signatories: string[], threshold: number) => {
+  const getMultisigAddress = () => {
     if (threshold < 2 || signatories.length < 2) return
     // Address as a byte array.
     const multisigPubKey = createKeyMulti(signatories, threshold)
@@ -218,7 +286,10 @@ export const useMultisig = () => {
     return getEncodedAddress(multisigPubKey)
   }
 
-  const getChainEvents = async () => {}
-
-  return { initiateMultisigCall, getMultisigAddress }
+  return {
+    initiateMultisigCall: initiateMultisigTradeCall,
+    getMultisigAddress,
+    hasBuyerSentFunds,
+    hasSellerSentCore,
+  }
 }

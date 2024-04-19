@@ -1,7 +1,6 @@
 import SecondaryButton from '@/components/button/SecondaryButton'
 import Modal from '@/components/modal/Modal'
-import { useMultisig } from '@/hooks/useMultisig'
-import { BN } from '@polkadot/util'
+import { useMultisigTrading } from '@/hooks/useMultisigTrading'
 import { useInkathon } from '@poppyseed/lastic-sdk'
 import { FC } from 'react'
 import { MultisigActionStatus, MultisigModalProps } from '../../types/ListingsTypes'
@@ -9,20 +8,20 @@ import AddressMini from '../web3/AddressMini'
 
 const CreateMultisigModal: FC<MultisigModalProps> = ({ isOpen, onClose, onStatusChange }) => {
   const { api } = useInkathon()
-  const { initiateMultisigCall, getMultisigAddress } = useMultisig()
 
   const signatories = [
-    '5GByzRyonPJC4kLg8dRenszsZD25dFjdJRCVCyfLkQ52HDev', //test 3
+    '5D88QJLCvrZXiHdCptSW5dP7rzE9nQGCgRSvDfEdti6erqGV', //test 4
     '5Hp7jnPx2bBZDTvAWZ3udtxar1nhhbmGvnU7eg37P4kmKUev', //test 2
     '5Gza9nxUQiiErg5NotZ6FPePcjBEHhawoNL3sGqpmjrVhgeo', //test 1
   ]
-  const threshold = new BN(2)
+  const { initiateMultisigCall, getMultisigAddress } = useMultisigTrading(signatories, 2)
+
   const name = 'lastic-multisig-1'
   const multisigAddress = '5Dq7JZwfd3Jv8PnuKe4B73ZDCUY4kQiE2UrD9kJybbqtRxp5'
 
   if (api) {
     console.log('calculated address: ')
-    console.log(getMultisigAddress(signatories, threshold.toNumber()))
+    console.log(getMultisigAddress())
   }
 
   /* useEffect(() => {
@@ -42,7 +41,7 @@ const CreateMultisigModal: FC<MultisigModalProps> = ({ isOpen, onClose, onStatus
     const status: MultisigActionStatus = { action: 'create', status: 'pending' }
 
     try {
-      initiateMultisigCall(signatories, threshold.toNumber()).then(() => {
+      initiateMultisigCall().then(() => {
         console.log('Multisig created successfully')
       })
 
