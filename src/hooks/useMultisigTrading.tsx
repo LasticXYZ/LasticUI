@@ -29,6 +29,21 @@ const MAX_WEIGHT = {
 export const useMultisigTrading = (signatories: string[], threshold: number) => {
   const { api, activeSigner, activeAccount, activeChain } = useInkathon()
 
+  const _getEncodedAddress = (address: string | Uint8Array, ss58Format?: number) => {
+    // check if the address is an ethereum address
+    if (typeof address === 'string' && address.startsWith('0x') && address.length === 42) {
+      console.log('Ethereum address detected, not encoding', address)
+      return address.toLowerCase()
+    }
+
+    try {
+      if (ss58Format) return encodeAddress(address, ss58Format)
+      if (!activeChain) return
+      return encodeAddress(address, activeChain.ss58Prefix)
+    } catch (e) {
+      console.error(`Error encoding the address ${address}, skipping`, e)
+    }
+  }
   const getMultisigAddress = () => {
     if (threshold < 2 || signatories.length < 2) return
     // Address as a byte array.
@@ -38,7 +53,6 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
     return _getEncodedAddress(multisigPubKey)
   }
   const multisigAddress = getMultisigAddress()
-
   const { balance } = useBalance(multisigAddress, true)
 
   const initiateOrExecuteMultisigTradeCall = async (): Promise<void> => {
@@ -265,22 +279,6 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
       console.log(`Funds sent to multisig address with hash: ${hash}`)
       // TODO if tx successful track in db. Add multisig signers and that trade is in progress
     })
-  }
-
-  const _getEncodedAddress = (address: string | Uint8Array, ss58Format?: number) => {
-    // check if the address is an ethereum address
-    if (typeof address === 'string' && address.startsWith('0x') && address.length === 42) {
-      console.log('Ethereum address detected, not encoding', address)
-      return address.toLowerCase()
-    }
-
-    try {
-      if (ss58Format) return encodeAddress(address, ss58Format)
-      if (!activeChain) return
-      return encodeAddress(address, activeChain.ss58Prefix)
-    } catch (e) {
-      console.error(`Error encoding the address ${address}, skipping`, e)
-    }
   }
 
   const _basicChecks = () => {
