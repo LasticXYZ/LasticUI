@@ -14,6 +14,25 @@ export interface MultisigStorageInfo {
   when: { height: number; index: number }
 }
 
+export type MultisigStorageInfoResponse = MultisigStorageInfo & {
+  deposit: string // e.g. "671,733,276"
+  when: { height: string; index: string } // e.g. height: '1,222,551', index: '2'
+}
+
+export function parseMultisigStorageInfo(
+  response: MultisigStorageInfoResponse,
+): MultisigStorageInfo {
+  return {
+    approvals: response.approvals,
+    deposit: parseInt((response.deposit as string).replace(/,/g, ''), 10),
+    depositor: response.depositor,
+    when: {
+      height: parseInt((response.when.height as string).replace(/,/g, ''), 10),
+      index: parseInt(response.when.index, 10), // Assuming 'index' is a string and doesn't contain commas
+    },
+  }
+}
+
 export type IconSizeVariant = 'small' | 'medium' | 'large'
 
 export enum AccountBadge {

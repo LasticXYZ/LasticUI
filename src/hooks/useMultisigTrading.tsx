@@ -1,7 +1,9 @@
-import { MultisigStorageInfo } from '@/types/ListingsTypes'
-import { ApiPromise } from '@polkadot/api'
+import {
+  MultisigStorageInfo,
+  MultisigStorageInfoResponse,
+  parseMultisigStorageInfo,
+} from '@/types/ListingsTypes'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
-import { Weight } from '@polkadot/types/interfaces'
 import { ISubmittableResult } from '@polkadot/types/types'
 import { BN } from '@polkadot/util'
 import {
@@ -49,116 +51,128 @@ interface CancelledMultisigEvent {
   timestamp: string
 }
 
-interface Params {
-  api: ApiPromise
-  threshold: number
-  otherSignatories: string[]
+interface AsMultiParams {
   tx?: SubmittableExtrinsic<'promise', ISubmittableResult>
-  weight?: Weight
   when?: MultisigStorageInfo['when']
 }
 
 const LEGACY_ASMULTI_PARAM_LENGTH = 6
+const MAX_WEIGHT = {
+  refTime: 12000000, // 6096943 was reftime in test scenario for remark tx
+  proofSize: 0,
+}
 
 export const useMultisigTrading = (signatories: string[], threshold: number) => {
   const { api, activeSigner, activeAccount, activeChain } = useInkathon()
 
-  const initiateMultisigTradeCall = async (): Promise<void> => {
-    // checks
-    if (!api || !activeSigner || !activeAccount || !activeChain)
-      throw new Error('Error in initializing the API')
-    if (!signatories.includes(activeAccount.address)) {
-      throw new Error('Selected account not part of signatories')
-    }
-    if (threshold < 2) {
-      throw new Error('Threshold is invalid')
-    }
+  const initiateOrExecuteMultisigTradeCall = async (): Promise<void> => {
+    if (!_basicChecks()) return
 
-    // prepare the multisig creation
-    const otherSignatories = sortAddresses(
-      signatories.filter((sig) => sig !== activeAccount.address),
-    )
+    // get latest open multisig
+    // if there is an open multisig -> check if already cancelled or executed. Otherwise, execute the trade (add 'when')
+    // if there is no open multisig -> create a new one (no 'when')
+    const latestOpenMultisig = await getLatestOpenMultisig()
+    let when = undefined
+
+    // check if already cancelled or executed
+    if (latestOpenMultisig) {
+      when = latestOpenMultisig.when
+    }
 
     // TODO replace with batch call
-    const remarkTx = api.tx.system.remark(`Lastic multisig creation`)
-    console.log('Remark tx: ', remarkTx.hash.toHex())
+    const remarkTx = api!.tx.system.remark(`Lastic multisig creation5`)
 
-    const asMultiTx = getAsMultiTx({ api, threshold, otherSignatories, tx: remarkTx })
+    // create the multisig call
+    const asMultiTx = getAsMultiTx({
+      tx: remarkTx,
+      when,
+    })
 
-    // getMultisigs(signatories, threshold)
-
-    /*  try {
+    if (!asMultiTx) {
+      console.error('Error in creating the multisig call')
+      return
+    }
+    try {
       const unsub = await asMultiTx.signAndSend(
-        activeAccount.address,
+        activeAccount!.address,
         { signer: activeSigner },
         (result) => {
           if (result.status.isInBlock) {
             console.log(`Transaction included at blockHash ${result.status.asInBlock}`)
+            console.log('Tx hash: ' + result.txHash)
           } else if (result.status.isFinalized) {
-            console.log(`Transaction finalized at blockHash ${result.status.asFinalized}`)
             unsub()
           }
         },
       )
     } catch (error) {
       throw error
-    } */
+    }
   }
 
-  const getAsMultiTx = ({ api, threshold, otherSignatories, tx, weight, when }: Params) => {
+  const _basicChecks = () => {
+    if (!api || !activeSigner || !activeAccount || !activeChain) {
+      console.error('Error in initializing the API')
+      return false
+    }
+    if (!signatories.includes(activeAccount.address)) {
+      console.error('Selected account not part of signatories')
+      return false
+    }
+    if (threshold < 2) {
+      console.error('Threshold must be at least 2')
+      return false
+    }
+    return true
+  }
+
+  const getAsMultiTx = ({ tx, when }: AsMultiParams) => {
+    if (!api || !activeAccount) return
+    const otherSignatories = sortAddresses(
+      signatories.filter((sig) => sig !== activeAccount!.address),
+    )
     return api.tx.multisig.asMulti.meta.args.length === LEGACY_ASMULTI_PARAM_LENGTH
-      ? api.tx.multisig.asMulti(threshold, otherSignatories, when || null, tx, false, weight || 0)
-      : api.tx.multisig.asMulti(
-          threshold,
-          otherSignatories,
-          when || null,
-          tx,
-          weight || {
-            refTime: 0,
-            proofSize: 0,
-          },
-        )
+      ? api.tx.multisig.asMulti(threshold, otherSignatories, when || null, tx, false, MAX_WEIGHT)
+      : api.tx.multisig.asMulti(threshold, otherSignatories, when || null, tx, MAX_WEIGHT)
   }
 
   // temp function to test things
-  const getMultisigs = async () => {
+  const getLatestOpenMultisig = async (): Promise<MultisigStorageInfo | undefined> => {
     if (!api) return
-
     const multisigAddress = getMultisigAddress()
-
-    console.log('Multisig address: ', multisigAddress)
 
     // get all open multisig calls
     const allEntries = await api.query.multisig.multisigs.entries()
-    allEntries.forEach(([key, exposure]) => {
-      console.log(
-        'key arguments:',
-        key.args.map((k) => k.toHuman()),
+
+    // filter by multisig address
+    let filtered = allEntries.filter(([key, _data]) => key.args[0].toHuman() === multisigAddress)
+
+    // TODO: filter via cancellations and executions events
+
+    // sort descending by block number
+    filtered.sort(([_key1, data1], [_key2, data2]) => {
+      // convert string to number, e.g. "1,213,918" -> 1213918
+      const blocknumber1 = parseInt(
+        ((data1.toHuman() as any).when.height as string).replace(/,/g, ''),
       )
-      console.log('     exposure:', exposure.toHuman())
+      const blocknumber2 = parseInt(
+        ((data2.toHuman() as any).when.height as string).replace(/,/g, ''),
+      )
+
+      return blocknumber2 - blocknumber1
     })
 
-    const multisigInfo = await api.query.multisig.multisigs(
-      '5Dq7JZwfd3Jv8PnuKe4B73ZDCUY4kQiE2UrD9kJybbqtRxp5',
-      0,
-    )
+    /* filtered.forEach(([key, exposure], index) => {
+      console.log(
+        `keys index ${index}`,
+        key.args.map((k) => k.toHuman()),
+      )
+      console.log(`data index ${index}`, exposure.toHuman())
+    }) */
 
-    console.log('Multisig info123: ', multisigInfo)
-
-    /* const multisigType = api?.createType('PalletMultisigMultisig', multisigInfo)
-    const multisigCallIndex = multisigType.toHuman()
-    console.log('Multisig call index: ', multisigCallIndex) */
-
-    const multisigStorage = await api?.rpc.state.getStorage(
-      '0x7474449cca95dc5d0c00e71735a6d17d3cd15a3fd6e04e47bee3922dbfa92c8dbdbba0c80974cc914e19f599aa928e59b47b76460bc3537a8fbbaa2cff932addbefe18876fb32c7e46d861b81bed59335506089328585a33c444aa35ff6443f8c3a7c256c32656e934db465e4cd1220d476f592603733394',
-    )
-
-    const multisigType2 = api?.createType('Option<PalletMultisigMultisig>', multisigStorage)
-    console.log('Multisig type: ', multisigType2.toHuman())
-
-    getMultisigTimepointByStorageRead()
-
-    return multisigInfo
+    return filtered[0]
+      ? parseMultisigStorageInfo(filtered[0][1].toHuman() as unknown as MultisigStorageInfoResponse)
+      : undefined
   }
 
   /** Get the open multisig events for the current multisig address. Usually it should be max 1 event. If not, use executed & cancelled events to find the open one. */
@@ -184,6 +198,50 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
     // if openMultisigEvents.length > 1, you can use this to check which is still open and which already completed. Use timepoint of the cancelled event and compare it with the timepoint of the open event
     return null
   }
+
+  /**
+   * Check if the multisig call was already executed.
+   * @param multisigCallToCheck - The opened multisig call to check. Make sure to prefilter them by the multisig address.
+   * @param events - The executed multisig events. Make sure to prefilter them by the multisig address.
+   */
+  const isMultisigCallExecuted = (
+    multisigCallToCheck: MultisigStorageInfo,
+    events: ExecutedMultisigEvent[],
+  ): boolean => {
+    // Check if any event matches the timepoint of the multisig call to check
+    const alreadyExecuted = events.some((executedEvent) => {
+      return (
+        executedEvent.timepoint.height === multisigCallToCheck.when.height &&
+        executedEvent.timepoint.index === multisigCallToCheck.when.index
+      )
+    })
+
+    return !alreadyExecuted
+  }
+
+  /**
+   * Check if the multisig call was already cancelled. At the moment, 1 cancellation is sufficent, doesnt matter if the threshold could still be reached.
+   * @param multisigCallToCheck - The opened multisig call to check. Make sure to prefilter them by the multisig address.
+   * @param events - The cancelled multisig events. Make sure to prefilter them by the multisig address.
+   */
+
+  const isMultisigCallCancelled = (
+    multisigCallToCheck: MultisigStorageInfo,
+    events: CancelledMultisigEvent[],
+  ): boolean => {
+    // Check if any event matches the timepoint of the multisig call to check
+    const alreadyCancelled = events.some((executedEvent) => {
+      return (
+        executedEvent.timepoint.height === multisigCallToCheck.when.height &&
+        executedEvent.timepoint.index === multisigCallToCheck.when.index
+      )
+    })
+
+    return !alreadyCancelled
+  }
+
+  /** Check if the multisig call is not executed or cancelled. */
+  const isMultisigCallOpen = async () => {}
 
   const hasBuyerSentFunds = (amount: BN) => {
     const multisigAddress = getMultisigAddress()
@@ -287,7 +345,7 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
   }
 
   return {
-    initiateMultisigCall: initiateMultisigTradeCall,
+    initiateMultisigCall: initiateOrExecuteMultisigTradeCall,
     getMultisigAddress,
     hasBuyerSentFunds,
     hasSellerSentCore,

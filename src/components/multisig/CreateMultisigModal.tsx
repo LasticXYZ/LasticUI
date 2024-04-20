@@ -19,24 +19,6 @@ const CreateMultisigModal: FC<MultisigModalProps> = ({ isOpen, onClose, onStatus
   const name = 'lastic-multisig-1'
   const multisigAddress = '5Dq7JZwfd3Jv8PnuKe4B73ZDCUY4kQiE2UrD9kJybbqtRxp5'
 
-  if (api) {
-    console.log('calculated address: ')
-    console.log(getMultisigAddress())
-  }
-
-  /* useEffect(() => {
-    const func = async () => {
-      const info = await api?.query.multisig.multisigs(
-        '5Dq7JZwfd3Jv8PnuKe4B73ZDCUY4kQiE2UrD9kJybbqtRxp5',
-        '0x9a1512b127fe5a81a34adc34dcbccc4e34f0b17b344bffab4db75146d8c71176',
-      )
-      console.log('multisig info: ')
-      console.log(info)
-    }
-
-    func()
-  }, [api]) */
-
   const _createMultisig = () => {
     const status: MultisigActionStatus = { action: 'create', status: 'pending' }
 
