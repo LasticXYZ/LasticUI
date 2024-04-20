@@ -1,9 +1,11 @@
 // Copyright 2017-2024 @polkadot/app-accounts authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import { SubmittableExtrinsic } from '@polkadot/api-base/types'
 import { GenericCall } from '@polkadot/types'
 import type { Balance, Conviction } from '@polkadot/types/interfaces'
 import { Weight } from '@polkadot/types/interfaces'
+import { ISubmittableResult } from '@polkadot/types/types'
 import type { KeyringAddress } from '@polkadot/ui-keyring/types'
 import type { BN } from '@polkadot/util'
 
@@ -31,6 +33,46 @@ export function parseMultisigStorageInfo(
       index: parseInt(response.when.index, 10), // Assuming 'index' is a string and doesn't contain commas
     },
   }
+}
+
+export interface NewMultisigEvent {
+  blocknumber: number
+  approving: string
+  callHash: string
+  id: string
+  multisig: string
+  timestamp: string
+}
+
+export interface ExecutedMultisigEvent {
+  id: string
+  approving: string
+  blockNumber: number
+  callHash: string
+  multisig: string
+  timepoint: {
+    height: number
+    index: number
+  }
+  timestamp: string
+}
+
+export interface CancelledMultisigEvent {
+  id: string
+  cancelling: string
+  blockNumber: number
+  callHash: string
+  multisig: string
+  timepoint: {
+    height: number
+    index: number
+  }
+  timestamp: string
+}
+
+export interface AsMultiParams {
+  tx?: SubmittableExtrinsic<'promise', ISubmittableResult>
+  when?: MultisigStorageInfo['when']
 }
 
 export type IconSizeVariant = 'small' | 'medium' | 'large'

@@ -14,7 +14,10 @@ const CreateMultisigModal: FC<MultisigModalProps> = ({ isOpen, onClose, onStatus
     '5Hp7jnPx2bBZDTvAWZ3udtxar1nhhbmGvnU7eg37P4kmKUev', //test 2
     '5Gza9nxUQiiErg5NotZ6FPePcjBEHhawoNL3sGqpmjrVhgeo', //test 1
   ]
-  const { initiateMultisigCall, getMultisigAddress } = useMultisigTrading(signatories, 2)
+  const { initiateOrExecuteMultisigTradeCall, getMultisigAddress } = useMultisigTrading(
+    signatories,
+    2,
+  )
 
   const name = 'lastic-multisig-1'
   const multisigAddress = '5Dq7JZwfd3Jv8PnuKe4B73ZDCUY4kQiE2UrD9kJybbqtRxp5'
@@ -23,7 +26,7 @@ const CreateMultisigModal: FC<MultisigModalProps> = ({ isOpen, onClose, onStatus
     const status: MultisigActionStatus = { action: 'create', status: 'pending' }
 
     try {
-      initiateMultisigCall().then(() => {
+      initiateOrExecuteMultisigTradeCall().then(() => {
         console.log('Multisig created successfully')
       })
 

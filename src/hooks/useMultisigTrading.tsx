@@ -1,10 +1,12 @@
 import {
+  AsMultiParams,
+  CancelledMultisigEvent,
+  ExecutedMultisigEvent,
   MultisigStorageInfo,
   MultisigStorageInfoResponse,
+  NewMultisigEvent,
   parseMultisigStorageInfo,
 } from '@/types/ListingsTypes'
-import { SubmittableExtrinsic } from '@polkadot/api/types'
-import { ISubmittableResult } from '@polkadot/types/types'
 import { BN } from '@polkadot/util'
 import {
   blake2AsHex,
@@ -15,46 +17,6 @@ import {
   xxhashAsHex,
 } from '@polkadot/util-crypto'
 import { useInkathon } from '@poppyseed/lastic-sdk'
-
-interface NewMultisigEvent {
-  blocknumber: number
-  approving: string
-  callHash: string
-  id: string
-  multisig: string
-  timestamp: string
-}
-
-interface ExecutedMultisigEvent {
-  id: string
-  approving: string
-  blockNumber: number
-  callHash: string
-  multisig: string
-  timepoint: {
-    height: number
-    index: number
-  }
-  timestamp: string
-}
-
-interface CancelledMultisigEvent {
-  id: string
-  cancelling: string
-  blockNumber: number
-  callHash: string
-  multisig: string
-  timepoint: {
-    height: number
-    index: number
-  }
-  timestamp: string
-}
-
-interface AsMultiParams {
-  tx?: SubmittableExtrinsic<'promise', ISubmittableResult>
-  when?: MultisigStorageInfo['when']
-}
 
 const LEGACY_ASMULTI_PARAM_LENGTH = 6
 const MAX_WEIGHT = {
@@ -68,16 +30,13 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
   const initiateOrExecuteMultisigTradeCall = async (): Promise<void> => {
     if (!_basicChecks()) return
 
-    // get latest open multisig
-    // if there is an open multisig -> check if already cancelled or executed. Otherwise, execute the trade (add 'when')
-    // if there is no open multisig -> create a new one (no 'when')
+    // get latest open multisig call
     const latestOpenMultisig = await getLatestOpenMultisig()
     let when = undefined
 
-    // check if already cancelled or executed
-    if (latestOpenMultisig) {
-      when = latestOpenMultisig.when
-    }
+    // if there is an open multisig call -> execute the trade (add 'when')
+    // if there is no open multisig call -> create a new one (no 'when')
+    if (latestOpenMultisig) when = latestOpenMultisig.when
 
     // TODO replace with batch call
     const remarkTx = api!.tx.system.remark(`Lastic multisig creation5`)
@@ -110,22 +69,6 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
     }
   }
 
-  const _basicChecks = () => {
-    if (!api || !activeSigner || !activeAccount || !activeChain) {
-      console.error('Error in initializing the API')
-      return false
-    }
-    if (!signatories.includes(activeAccount.address)) {
-      console.error('Selected account not part of signatories')
-      return false
-    }
-    if (threshold < 2) {
-      console.error('Threshold must be at least 2')
-      return false
-    }
-    return true
-  }
-
   const getAsMultiTx = ({ tx, when }: AsMultiParams) => {
     if (!api || !activeAccount) return
     const otherSignatories = sortAddresses(
@@ -147,7 +90,8 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
     // filter by multisig address
     let filtered = allEntries.filter(([key, _data]) => key.args[0].toHuman() === multisigAddress)
 
-    // TODO: filter via cancellations and executions events
+    // Usually it should be max 1 event. If not, use isMultisigCallExecuted & isMultisigCallCancelled functions to find the open one.
+    // TODO: filter via cancellations and executions
 
     // sort descending by block number
     filtered.sort(([_key1, data1], [_key2, data2]) => {
@@ -175,7 +119,7 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
       : undefined
   }
 
-  /** Get the open multisig events for the current multisig address. Usually it should be max 1 event. If not, use executed & cancelled events to find the open one. */
+  /** Get the open multisig events for the current multisig address. Not implemented yet */
   const getOpenMultisigEvents = async (): Promise<NewMultisigEvent[] | null> => {
     const multisigAddress = getMultisigAddress()
     // query via 'newMultisigs' all multisig events with current multisig address
@@ -183,15 +127,16 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
     return null
   }
 
-  /** Get the executed multisig events for the current multisig address. */
+  /** Get the executed multisig events for the current multisig address. Not implemented yet */
   const getExecutedMultisigEvents = async (): Promise<ExecutedMultisigEvent[] | null> => {
     const multisigAddress = getMultisigAddress()
     // query via 'multisigExecuteds' all multisig events with current multisig address
     // if openMultisigEvents.length > 1, you can use this to check which is still open and which already completed. Use timepoint of the executed event and compare it with the timepoint of the open event
+
     return null
   }
 
-  /** Get the cancelled multisig events for the current multisig address. */
+  /** Get the cancelled multisig events for the current multisig address. Not implemented yet */
   const getCancelledMultisigEvents = async (): Promise<CancelledMultisigEvent[] | null> => {
     const multisigAddress = getMultisigAddress()
     // query via 'multisigCancelleds' all multisig events with current multisig address
@@ -224,24 +169,32 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
    * @param multisigCallToCheck - The opened multisig call to check. Make sure to prefilter them by the multisig address.
    * @param events - The cancelled multisig events. Make sure to prefilter them by the multisig address.
    */
-
   const isMultisigCallCancelled = (
     multisigCallToCheck: MultisigStorageInfo,
     events: CancelledMultisigEvent[],
   ): boolean => {
     // Check if any event matches the timepoint of the multisig call to check
-    const alreadyCancelled = events.some((executedEvent) => {
+    const alreadyCancelled = events.some((cancelledEvent) => {
       return (
-        executedEvent.timepoint.height === multisigCallToCheck.when.height &&
-        executedEvent.timepoint.index === multisigCallToCheck.when.index
+        cancelledEvent.timepoint.height === multisigCallToCheck.when.height &&
+        cancelledEvent.timepoint.index === multisigCallToCheck.when.index
       )
     })
 
     return !alreadyCancelled
   }
 
-  /** Check if the multisig call is not executed or cancelled. */
-  const isMultisigCallOpen = async () => {}
+  /** Helper function to check if the multisig call is not executed or cancelled. */
+  const isMultisigCallOpen = (
+    multisigCallToCheck: MultisigStorageInfo,
+    cancelEvents: CancelledMultisigEvent[],
+    executeEvents: ExecutedMultisigEvent[],
+  ) => {
+    return (
+      !isMultisigCallExecuted(multisigCallToCheck, executeEvents) &&
+      !isMultisigCallCancelled(multisigCallToCheck, cancelEvents)
+    )
+  }
 
   const hasBuyerSentFunds = (amount: BN) => {
     const multisigAddress = getMultisigAddress()
@@ -262,11 +215,45 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
     // simple transfer logic
   }
 
-  const getTimepoint = async () => {
-    // get new multisig events
-    // if 0 open events, return
-    // if >1 open events, get executed and cancelled events and reduce to 1 event via timepoint
-    // if 1 open event, use PJS to fetch all multisig entries and find the correct one by comparing properties: blockNumber, multisig, callHash, approving...
+  const getMultisigAddress = () => {
+    if (threshold < 2 || signatories.length < 2) return
+    // Address as a byte array.
+    const multisigPubKey = createKeyMulti(signatories, threshold)
+
+    // Convert byte array to SS58 encoding.
+    return _getEncodedAddress(multisigPubKey)
+  }
+
+  const _getEncodedAddress = (address: string | Uint8Array, ss58Format?: number) => {
+    // check if the address is an ethereum address
+    if (typeof address === 'string' && address.startsWith('0x') && address.length === 42) {
+      console.log('Ethereum address detected, not encoding', address)
+      return address.toLowerCase()
+    }
+
+    try {
+      if (ss58Format) return encodeAddress(address, ss58Format)
+      if (!activeChain) return
+      return encodeAddress(address, activeChain.ss58Prefix)
+    } catch (e) {
+      console.error(`Error encoding the address ${address}, skipping`, e)
+    }
+  }
+
+  const _basicChecks = () => {
+    if (!api || !activeSigner || !activeAccount || !activeChain) {
+      console.error('Error in initializing the API')
+      return false
+    }
+    if (!signatories.includes(activeAccount.address)) {
+      console.error('Selected account not part of signatories')
+      return false
+    }
+    if (threshold < 2) {
+      console.error('Threshold must be at least 2')
+      return false
+    }
+    return true
   }
 
   /**
@@ -275,9 +262,9 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
    * It reads the rpc storage directly to get the multisig call information. The same is done by the PJS team here: https://github.com/paritytech/txwrapper-core/blob/768bb445beb2907582b2d5e13ade3be5d995af3e/packages/txwrapper-examples/multisig/src/multisig.ts#L171
    * This function works but the Subsquid query provides a wrong call hash so the created storageKey is wrong. So use the getTimepoint() function for now instead.
    */
-  const getMultisigTimepointByStorageRead = async () => {
+  const _getMultisigTimepointByStorageRead = async () => {
     const multisigAddressBytes = createKeyMulti(signatories, threshold)
-    const multisigAddress = getEncodedAddress(multisigAddressBytes)
+    const multisigAddress = _getEncodedAddress(multisigAddressBytes)
 
     // 1. Creating the Storage key of our Multisig Storage item following the schema below :
     // Twox128("Multisig") + Twox128("Multisigs") + Twox64(multisigAddress) + multisigAddress + Blake128(multisigCallHash) + multisigCallHash
@@ -319,35 +306,12 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
     console.log('Multisig call height: ', multisigCallHeight) */
   }
 
-  const getEncodedAddress = (address: string | Uint8Array, ss58Format?: number) => {
-    // check if the address is an ethereum address
-    if (typeof address === 'string' && address.startsWith('0x') && address.length === 42) {
-      console.log('Ethereum address detected, not encoding', address)
-      return address.toLowerCase()
-    }
-
-    try {
-      if (ss58Format) return encodeAddress(address, ss58Format)
-      if (!activeChain) return
-      return encodeAddress(address, activeChain.ss58Prefix)
-    } catch (e) {
-      console.error(`Error encoding the address ${address}, skipping`, e)
-    }
-  }
-
-  const getMultisigAddress = () => {
-    if (threshold < 2 || signatories.length < 2) return
-    // Address as a byte array.
-    const multisigPubKey = createKeyMulti(signatories, threshold)
-
-    // Convert byte array to SS58 encoding.
-    return getEncodedAddress(multisigPubKey)
-  }
-
   return {
-    initiateMultisigCall: initiateOrExecuteMultisigTradeCall,
+    initiateOrExecuteMultisigTradeCall,
     getMultisigAddress,
     hasBuyerSentFunds,
     hasSellerSentCore,
+    sendCoreToMultisig,
+    sendFundsToMultisig,
   }
 }
