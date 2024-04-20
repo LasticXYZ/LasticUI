@@ -1,3 +1,5 @@
+import { CoreListing } from '@/hooks/useListings'
+import { RegionDetail, RegionOwner, RegionsType } from '@/types'
 import {
   AsMultiParams,
   CancelledMultisigEvent,
@@ -16,7 +18,7 @@ import {
   sortAddresses,
   xxhashAsHex,
 } from '@polkadot/util-crypto'
-import { useInkathon } from '@poppyseed/lastic-sdk'
+import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
 
 const LEGACY_ASMULTI_PARAM_LENGTH = 6
 const MAX_WEIGHT = {
@@ -26,6 +28,18 @@ const MAX_WEIGHT = {
 
 export const useMultisigTrading = (signatories: string[], threshold: number) => {
   const { api, activeSigner, activeAccount, activeChain } = useInkathon()
+
+  const getMultisigAddress = () => {
+    if (threshold < 2 || signatories.length < 2) return
+    // Address as a byte array.
+    const multisigPubKey = createKeyMulti(signatories, threshold)
+
+    // Convert byte array to SS58 encoding.
+    return _getEncodedAddress(multisigPubKey)
+  }
+  const multisigAddress = getMultisigAddress()
+
+  const { balance } = useBalance(multisigAddress, true)
 
   const initiateOrExecuteMultisigTradeCall = async (): Promise<void> => {
     if (!_basicChecks()) return
@@ -82,7 +96,6 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
   // temp function to test things
   const getLatestOpenMultisig = async (): Promise<MultisigStorageInfo | undefined> => {
     if (!api) return
-    const multisigAddress = getMultisigAddress()
 
     // get all open multisig calls
     const allEntries = await api.query.multisig.multisigs.entries()
@@ -121,7 +134,6 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
 
   /** Get the open multisig events for the current multisig address. Not implemented yet */
   const getOpenMultisigEvents = async (): Promise<NewMultisigEvent[] | null> => {
-    const multisigAddress = getMultisigAddress()
     // query via 'newMultisigs' all multisig events with current multisig address
     // filter by approver.length == 1 & approver includes
     return null
@@ -129,7 +141,6 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
 
   /** Get the executed multisig events for the current multisig address. Not implemented yet */
   const getExecutedMultisigEvents = async (): Promise<ExecutedMultisigEvent[] | null> => {
-    const multisigAddress = getMultisigAddress()
     // query via 'multisigExecuteds' all multisig events with current multisig address
     // if openMultisigEvents.length > 1, you can use this to check which is still open and which already completed. Use timepoint of the executed event and compare it with the timepoint of the open event
 
@@ -138,7 +149,6 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
 
   /** Get the cancelled multisig events for the current multisig address. Not implemented yet */
   const getCancelledMultisigEvents = async (): Promise<CancelledMultisigEvent[] | null> => {
-    const multisigAddress = getMultisigAddress()
     // query via 'multisigCancelleds' all multisig events with current multisig address
     // if openMultisigEvents.length > 1, you can use this to check which is still open and which already completed. Use timepoint of the cancelled event and compare it with the timepoint of the open event
     return null
@@ -196,32 +206,65 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
     )
   }
 
+  /**
+   * Check if the buyer has sent the funds to the multisig address.
+   * @param amount - The balance amount the multisig address currently holds
+   * @returns - True if the multisig address holds the amount
+   */
   const hasBuyerSentFunds = (amount: BN) => {
-    const multisigAddress = getMultisigAddress()
-    // check balance of multisig address and ensure it is greater than or equal to amount
+    if (balance?.gte(amount)) return true
+    return false
   }
 
-  const hasSellerSentCore = () => {
-    const multisigAddress = getMultisigAddress()
-    // check if multisig address has the listed core
-    // see my-cores/MyCores.tsx for an example of how to query the regions. Filter by multisig address
+  /**
+   * Check if the seller has sent the core to the multisig address.
+   * @param core - The core listing to check
+   * @returns - True if the multisig address holds the core
+   */
+  const hasSellerSentCore = async (core: CoreListing) => {
+    // fetch multisig regions
+    const entries = await api?.query.broker.regions.entries()
+    const regions: RegionsType | undefined = entries?.map(([key, value]) => {
+      const detail = key.toHuman() as RegionDetail
+      const owner = value.toHuman() as RegionOwner
+      return { detail, owner }
+    })
+    const filteredRegions = regions?.filter((region) => region.owner.owner === multisigAddress)
+
+    // check if the multisig address has the core
+    return filteredRegions?.some((region) => {
+      const regionDetail = region.detail[0]
+      regionDetail.core === core.coreNumber.toString() &&
+        regionDetail.begin === core.begin &&
+        regionDetail.mask === core.mask
+    })
   }
 
-  const sendCoreToMultisig = async () => {
-    // copy transfer core logic
+  /** Sends the core to the multisig address
+   * @param core - The core listed to trade
+   */
+  const sendCoreToMultisig = async (core: CoreListing) => {
+    if (!_basicChecks()) return
+    const tx = api?.tx.broker.transfer(
+      { begin: core.begin, core: core.coreNumber, mask: core.mask },
+      multisigAddress,
+    )
+    tx?.signAndSend(activeAccount!.address, { signer: activeSigner }).then((hash) => {
+      console.log(`Core sent to multisig address with hash: ${hash}`)
+    })
   }
 
-  const sendFundsToMultisig = async () => {
+  /** Sends the funds to the multisig address
+   * @param corePrice - The price of the listed core
+   */
+  const sendFundsToMultisig = async (corePrice: BN) => {
+    if (!_basicChecks()) return
     // simple transfer logic
-  }
-
-  const getMultisigAddress = () => {
-    if (threshold < 2 || signatories.length < 2) return
-    // Address as a byte array.
-    const multisigPubKey = createKeyMulti(signatories, threshold)
-
-    // Convert byte array to SS58 encoding.
-    return _getEncodedAddress(multisigPubKey)
+    const transfer = api?.tx.balances.transfer(multisigAddress, corePrice.toString())
+    transfer?.signAndSend(activeAccount!.address, { signer: activeSigner }).then((hash) => {
+      console.log(`Funds sent to multisig address with hash: ${hash}`)
+      // TODO if tx successful track in db. Add multisig signers and that trade is in progress
+    })
   }
 
   const _getEncodedAddress = (address: string | Uint8Array, ss58Format?: number) => {
