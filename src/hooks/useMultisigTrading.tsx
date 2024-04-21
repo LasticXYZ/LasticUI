@@ -19,6 +19,7 @@ import {
   xxhashAsHex,
 } from '@polkadot/util-crypto'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
+import { useState } from 'react'
 
 const LEGACY_ASMULTI_PARAM_LENGTH = 6
 const MAX_WEIGHT = {
@@ -28,6 +29,8 @@ const MAX_WEIGHT = {
 
 export const useMultisigTrading = (signatories: string[], threshold: number) => {
   const { api, activeSigner, activeAccount, activeChain } = useInkathon()
+  const [isLoading, setIsLoading] = useState(false)
+  const [txStatusMessage, setTxStatusMessage] = useState<string>('')
 
   const _getEncodedAddress = (address: string | Uint8Array, ss58Format?: number) => {
     // check if the address is an ethereum address
@@ -69,6 +72,20 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
     // TODO replace with batch call
     const remarkTx = api!.tx.system.remark(`Lastic multisig creation5`)
 
+    // Batch example
+    /* const txs = [
+      api.tx.balances.transfer(addrBob, 12345),
+      api.tx.balances.transfer(addrEve, 12345),
+      api.tx.staking.unbond(12345),
+    ]
+
+    // construct the batch and send the transactions
+    api.tx.utility.batch(txs).signAndSend(sender, ({ status }) => {
+      if (status.isInBlock) {
+        console.log(`included in ${status.asInBlock}`)
+      }
+    }) */
+
     // create the multisig call
     const asMultiTx = getAsMultiTx({
       tx: remarkTx,
@@ -80,20 +97,27 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
       return
     }
     try {
+      setIsLoading(true)
       const unsub = await asMultiTx.signAndSend(
         activeAccount!.address,
         { signer: activeSigner },
         (result) => {
+          setTxStatusMessage(result.status.type)
           if (result.status.isInBlock) {
             console.log(`Transaction included at blockHash ${result.status.asInBlock}`)
             console.log('Tx hash: ' + result.txHash)
+            setTxStatusMessage('Multisig call included in block')
           } else if (result.status.isFinalized) {
+            setTxStatusMessage('Multisig call finalized')
             unsub()
           }
         },
       )
-    } catch (error) {
-      throw error
+    } catch (error: unknown) {
+      if (error instanceof Error)
+        setTxStatusMessage('Error in executing the multisig call: ' + error.message)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -221,21 +245,21 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
   }
 
   /**
-   * Check if the buyer has sent the funds to the multisig address.
-   * @param amount - The balance amount the multisig address currently holds
+   * Check if the multisig address currently holds the core price as balance.
+   * @param amount - The balance amount the multisig address should hold
    * @returns - True if the multisig address holds the amount
    */
-  const hasBuyerSentFunds = (amount: BN) => {
+  const hasMultisigAddressTheCoreFunds = (amount: BN) => {
     if (balance?.gte(amount)) return true
     return false
   }
 
   /**
-   * Check if the seller has sent the core to the multisig address.
+   * Check if the multisig address currently holds the listed core.
    * @param core - The core listing to check
    * @returns - True if the multisig address holds the core
    */
-  const hasSellerSentCore = async (core: CoreListing) => {
+  const hasMultisigAddressTheListedCore = async (core: CoreListing) => {
     // fetch multisig regions
     const entries = await api?.query.broker.regions.entries()
     const regions: RegionsType | undefined = entries?.map(([key, value]) => {
@@ -263,9 +287,20 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
       { begin: core.begin, core: core.coreNumber, mask: core.mask },
       multisigAddress,
     )
-    tx?.signAndSend(activeAccount!.address, { signer: activeSigner }).then((hash) => {
-      console.log(`Core sent to multisig address with hash: ${hash}`)
-    })
+    try {
+      tx?.signAndSend(activeAccount!.address, { signer: activeSigner }, (result) => {
+        setTxStatusMessage(result.status.type)
+        if (result.status.isInBlock) {
+          console.log(`Transaction included at blockHash ${result.status.asInBlock}`)
+          console.log('Tx hash: ' + result.txHash)
+          setTxStatusMessage('Core sent and tx included in block')
+        } else if (result.status.isFinalized) {
+          setTxStatusMessage('Core sent and tx finalized')
+        }
+      })
+    } catch (error: unknown) {
+      if (error instanceof Error) setTxStatusMessage('Error sending the core: ' + error.message)
+    }
   }
 
   /** Sends the funds to the multisig address
@@ -275,9 +310,17 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
     if (!_basicChecks()) return
     // simple transfer logic
     const transfer = api?.tx.balances.transfer(multisigAddress, corePrice.toString())
-    transfer?.signAndSend(activeAccount!.address, { signer: activeSigner }).then((hash) => {
-      console.log(`Funds sent to multisig address with hash: ${hash}`)
-      // TODO if tx successful track in db. Add multisig signers and that trade is in progress
+
+    transfer?.signAndSend(activeAccount!.address, { signer: activeSigner }, (result) => {
+      setTxStatusMessage(result.status.type)
+      if (result.status.isInBlock) {
+        console.log(`Transaction included at blockHash ${result.status.asInBlock}`)
+        console.log('Tx hash: ' + result.txHash)
+        setTxStatusMessage('Funds sent and tx included in block')
+      } else if (result.status.isFinalized) {
+        setTxStatusMessage('Funds sent and tx finalized')
+        // TODO if tx successful, track in db. Add multisig signers and that trade is in progress
+      }
     })
   }
 
@@ -350,9 +393,11 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
   return {
     initiateOrExecuteMultisigTradeCall,
     getMultisigAddress,
-    hasBuyerSentFunds,
-    hasSellerSentCore,
+    hasMultisigAddressTheCoreFunds,
+    hasMultisigAddressTheListedCore,
     sendCoreToMultisig,
     sendFundsToMultisig,
+    txStatusMessage,
+    isLoading,
   }
 }

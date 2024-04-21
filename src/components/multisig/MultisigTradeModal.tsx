@@ -3,9 +3,9 @@ import Modal from '@/components/modal/Modal'
 import { useMultisigTrading } from '@/hooks/useMultisigTrading'
 import { useInkathon } from '@poppyseed/lastic-sdk'
 import { FC } from 'react'
-import { MultisigActionStatus, MultisigModalProps } from '../../types/ListingsTypes'
+import { MultisigTradeModalProps } from '../../types/ListingsTypes'
 
-const CreateMultisigModal: FC<MultisigModalProps> = ({ isOpen, onClose, onStatusChange }) => {
+const MultisigTradeModal: FC<MultisigTradeModalProps> = ({ isOpen, onClose, onStatusChange }) => {
   const { api, activeAccount } = useInkathon()
 
   const test1 = '5Gza9nxUQiiErg5NotZ6FPePcjBEHhawoNL3sGqpmjrVhgeo'
@@ -28,59 +28,20 @@ const CreateMultisigModal: FC<MultisigModalProps> = ({ isOpen, onClose, onStatus
       label: 'Lastic',
     },
   ]
-  const { initiateOrExecuteMultisigTradeCall, getMultisigAddress } = useMultisigTrading(
-    signatories,
-    2,
-  )
+  const { initiateOrExecuteMultisigTradeCall, getMultisigAddress, isLoading, txStatusMessage } =
+    useMultisigTrading(signatories, 2)
 
-  const name = 'lastic-multisig-1'
   const multisigAddress = getMultisigAddress()
 
-  const _createMultisig = () => {
-    const status: MultisigActionStatus = { action: 'create', status: 'pending' }
+  const _multisigCall = () => {
+    initiateOrExecuteMultisigTradeCall().then(() => {
+      console.log('Multisig call successful')
+    })
 
-    try {
-      initiateOrExecuteMultisigTradeCall().then(() => {
-        console.log('Multisig created successfully')
-      })
-
-      status.status = 'success'
-      status.message = 'Multisig created successfully'
-    } catch (error) {
-      status.status = 'error'
-      status.message = (error as Error).message
-
-      console.error(error)
-    }
-
-    onStatusChange(status)
     onClose()
   }
 
-  if (!api) {
-    return <div>API not available</div>
-  }
-
-  const signatories = [
-    '5FLRCTbjEwumqTcMYsQ7t6E3DDCoQxCgNJeE4A9LYzUJ4RvB',
-    '5D7wsEFq9rXS4cTAfZ8Uo1Dt8aTD3JTKjnHAEn3Ku4mNL1bJ',
-    '5HNJjkjo3KGA3R1DanS82R47tV7G3avEZ8GzLDW9CQtkNjVW',
-  ]
-  const threshold = new BN(2)
-  const name = 'lastic-multisig-1'
-
-  const _createMultisig = useCallback((): void => {
-    const options = {
-      genesisHash: isDevelopment ? undefined : api.genesisHash.toHex(),
-      name: name.trim(),
-    }
-    const status = createMultisig(signatories, threshold, options, 'created multisig')
-
-    onStatusChange(status)
-    onClose()
-  }, [api.genesisHash, isDevelopment, name, onClose, onStatusChange, signatories, threshold])
-
-  if (!isOpen) {
+  if (!isOpen || !api) {
     return null
   }
 
@@ -126,12 +87,12 @@ const CreateMultisigModal: FC<MultisigModalProps> = ({ isOpen, onClose, onStatus
         <SecondaryButton
           className="w-40 self-center"
           disabled={false}
-          title="Create"
-          onClick={_createMultisig}
+          title="Process Trade"
+          onClick={_multisigCall}
         />
       </div>
     </Modal>
   )
 }
 
-export default CreateMultisigModal
+export default MultisigTradeModal

@@ -3,7 +3,7 @@
 import CoreItemPurchase from '@/components/cores/CoreItemPurchase'
 import { CoreListing } from '@/hooks/useListings'
 import { useEffect, useState } from 'react'
-import CreateMultisigModal from '../../../components/multisig/CreateMultisigModal'
+import MultisigTradeModal from '../../../components/multisig/MultisigTradeModal'
 import SubTitle from '../samesections/SubTitle'
 
 interface Database {
@@ -38,7 +38,7 @@ const ParaIdPage = () => {
 
       <div></div>
 
-      <CreateMultisigModal
+      <MultisigTradeModal
         isOpen={isMultisigVisible}
         onClose={closeMultisig}
         onStatusChange={() => {}}
