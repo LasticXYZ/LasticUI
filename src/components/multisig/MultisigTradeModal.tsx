@@ -1,11 +1,22 @@
 import SecondaryButton from '@/components/button/SecondaryButton'
 import Modal from '@/components/modal/Modal'
+import { CoreListing } from '@/hooks/useListings'
 import { useMultisigTrading } from '@/hooks/useMultisigTrading'
 import { useInkathon } from '@poppyseed/lastic-sdk'
 import { FC } from 'react'
-import { MultisigTradeModalProps } from '../../types/ListingsTypes'
+import { ModalProps } from '../../types/ListingsTypes'
 
-const MultisigTradeModal: FC<MultisigTradeModalProps> = ({ isOpen, onClose, onStatusChange }) => {
+export interface MultisigTradeModalProps extends ModalProps {
+  isOpen: boolean
+  core: CoreListing
+}
+
+const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
+  isOpen,
+  onClose,
+  core,
+  onStatusChange,
+}) => {
   const { api, activeAccount } = useInkathon()
 
   const test1 = '5Gza9nxUQiiErg5NotZ6FPePcjBEHhawoNL3sGqpmjrVhgeo'
@@ -28,17 +39,13 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({ isOpen, onClose, onSt
       label: 'Lastic',
     },
   ]
-  const { initiateOrExecuteMultisigTradeCall, getMultisigAddress, isLoading, txStatusMessage } =
-    useMultisigTrading(signatories, 2)
-
-  const multisigAddress = getMultisigAddress()
+  const { initiateOrExecuteMultisigTradeCall, multisigAddress, isLoading, txStatusMessage } =
+    useMultisigTrading(test2, test4, core)
 
   const _multisigCall = () => {
     initiateOrExecuteMultisigTradeCall().then(() => {
       console.log('Multisig call successful')
     })
-
-    onClose()
   }
 
   if (!isOpen || !api) {
@@ -46,7 +53,7 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({ isOpen, onClose, onSt
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={`Purchase Listed Region`}>
+    <Modal isOpen={isOpen} onClose={onClose} title={`Purchase Listed Core Nb ${core.coreNumber}`}>
       <div className="flex flex-col gap-5 ">
         <p className="text-left font-bold">How it works</p>
         <div className="text-xs border-2 rounded-xl p-2">
@@ -86,10 +93,11 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({ isOpen, onClose, onSt
         </div>
         <SecondaryButton
           className="w-40 self-center"
-          disabled={false}
+          disabled={isLoading}
           title="Process Trade"
           onClick={_multisigCall}
         />
+        {txStatusMessage && <p className="flex flex-wrap self-center text-xs">{txStatusMessage}</p>}
       </div>
     </Modal>
   )

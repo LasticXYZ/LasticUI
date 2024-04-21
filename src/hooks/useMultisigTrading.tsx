@@ -19,7 +19,7 @@ import {
   xxhashAsHex,
 } from '@polkadot/util-crypto'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const LEGACY_ASMULTI_PARAM_LENGTH = 6
 const MAX_WEIGHT = {
@@ -27,10 +27,23 @@ const MAX_WEIGHT = {
   proofSize: 0,
 }
 
-export const useMultisigTrading = (signatories: string[], threshold: number) => {
+const THRESHOLD = 2 // always 2 out of 3 signatories
+const LASTIC_ADDRESS = '5GByzRyonPJC4kLg8dRenszsZD25dFjdJRCVCyfLkQ52HDev' //test 3; TODO: add to env
+
+export const useMultisigTrading = (
+  sellerAddress: string,
+  buyerAddress: string,
+  core: CoreListing,
+) => {
   const { api, activeSigner, activeAccount, activeChain } = useInkathon()
   const [isLoading, setIsLoading] = useState(false)
   const [txStatusMessage, setTxStatusMessage] = useState<string>('')
+
+  useEffect(() => {
+    setTxStatusMessage('')
+  }, [core])
+
+  const signatories = [sellerAddress, buyerAddress, LASTIC_ADDRESS]
 
   const _getEncodedAddress = (address: string | Uint8Array, ss58Format?: number) => {
     // check if the address is an ethereum address
@@ -48,9 +61,9 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
     }
   }
   const getMultisigAddress = () => {
-    if (threshold < 2 || signatories.length < 2) return
+    if (THRESHOLD < 2 || signatories.length < 2) return
     // Address as a byte array.
-    const multisigPubKey = createKeyMulti(signatories, threshold)
+    const multisigPubKey = createKeyMulti(signatories, THRESHOLD)
 
     // Convert byte array to SS58 encoding.
     return _getEncodedAddress(multisigPubKey)
@@ -127,8 +140,8 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
       signatories.filter((sig) => sig !== activeAccount!.address),
     )
     return api.tx.multisig.asMulti.meta.args.length === LEGACY_ASMULTI_PARAM_LENGTH
-      ? api.tx.multisig.asMulti(threshold, otherSignatories, when || null, tx, false, MAX_WEIGHT)
-      : api.tx.multisig.asMulti(threshold, otherSignatories, when || null, tx, MAX_WEIGHT)
+      ? api.tx.multisig.asMulti(THRESHOLD, otherSignatories, when || null, tx, false, MAX_WEIGHT)
+      : api.tx.multisig.asMulti(THRESHOLD, otherSignatories, when || null, tx, MAX_WEIGHT)
   }
 
   // temp function to test things
@@ -249,8 +262,8 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
    * @param amount - The balance amount the multisig address should hold
    * @returns - True if the multisig address holds the amount
    */
-  const hasMultisigAddressTheCoreFunds = (amount: BN) => {
-    if (balance?.gte(amount)) return true
+  const hasMultisigAddressTheCoreFunds = () => {
+    if (balance?.gte(new BN(core.cost.toString()))) return true
     return false
   }
 
@@ -259,7 +272,7 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
    * @param core - The core listing to check
    * @returns - True if the multisig address holds the core
    */
-  const hasMultisigAddressTheListedCore = async (core: CoreListing) => {
+  const hasMultisigAddressTheListedCore = async () => {
     // fetch multisig regions
     const entries = await api?.query.broker.regions.entries()
     const regions: RegionsType | undefined = entries?.map(([key, value]) => {
@@ -333,7 +346,7 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
       console.error('Selected account not part of signatories')
       return false
     }
-    if (threshold < 2) {
+    if (THRESHOLD < 2) {
       console.error('Threshold must be at least 2')
       return false
     }
@@ -347,7 +360,7 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
    * This function works but the Subsquid query provides a wrong call hash so the created storageKey is wrong. So use the getTimepoint() function for now instead.
    */
   const _getMultisigTimepointByStorageRead = async () => {
-    const multisigAddressBytes = createKeyMulti(signatories, threshold)
+    const multisigAddressBytes = createKeyMulti(signatories, THRESHOLD)
     const multisigAddress = _getEncodedAddress(multisigAddressBytes)
 
     // 1. Creating the Storage key of our Multisig Storage item following the schema below :
@@ -392,12 +405,13 @@ export const useMultisigTrading = (signatories: string[], threshold: number) => 
 
   return {
     initiateOrExecuteMultisigTradeCall,
-    getMultisigAddress,
+    multisigAddress,
     hasMultisigAddressTheCoreFunds,
     hasMultisigAddressTheListedCore,
     sendCoreToMultisig,
     sendFundsToMultisig,
     txStatusMessage,
     isLoading,
+    lasticAddress: LASTIC_ADDRESS,
   }
 }

@@ -98,13 +98,6 @@ export interface MultisigActionStatus {
   account?: string // Include other fields as necessary
 }
 
-export interface MultisigTradeModalProps extends ModalProps {
-  isOpen: boolean
-  className?: string
-  onClose: () => void
-  onStatusChange: (status: MultisigActionStatus) => void // Updated to use new type
-}
-
 export interface CreateOptions {
   genesisHash?: HexString
   name: string

@@ -1,18 +1,26 @@
 'use client'
 
 import CoreItemPurchase from '@/components/cores/CoreItemPurchase'
+import MultisigTradeModal from '@/components/multisig/MultisigTradeModal'
 import { CoreListing } from '@/hooks/useListings'
 import { useEffect, useState } from 'react'
-import MultisigTradeModal from '../../../components/multisig/MultisigTradeModal'
 import SubTitle from '../samesections/SubTitle'
 
 interface Database {
   listings: CoreListing[]
 }
 
-const ParaIdPage = () => {
+type MultisigModal = {
+  visible: boolean
+  core: CoreListing | null
+}
+
+const ListingsPage = () => {
   const [cores, setCores] = useState<CoreListing[]>([])
-  const [isMultisigVisible, setIsMultisigVisible] = useState(false)
+  const [multisigModalData, setMultisigModalData] = useState<MultisigModal>({
+    visible: false,
+    core: null,
+  })
 
   useEffect(() => {
     async function fetchCores() {
@@ -25,30 +33,30 @@ const ParaIdPage = () => {
   }, [])
 
   const openMultisig = () => {
-    setIsMultisigVisible(true)
+    setMultisigModalData((old) => ({ ...old, visible: true }))
   }
 
   const closeMultisig = () => {
-    setIsMultisigVisible(false)
+    setMultisigModalData((old) => ({ ...old, visible: false }))
   }
 
   return (
     <>
       <SubTitle subtitle="Cores for Sale" />
 
-      <div></div>
-
-      <MultisigTradeModal
-        isOpen={isMultisigVisible}
-        onClose={closeMultisig}
-        onStatusChange={() => {}}
-      />
+      {multisigModalData.core && (
+        <MultisigTradeModal
+          isOpen={multisigModalData.visible}
+          onClose={closeMultisig}
+          core={multisigModalData.core}
+          onStatusChange={() => {}}
+        />
+      )}
 
       <section className="mx-auto max-w-9xl px-5">
         <div className=" grid grid-cols-2 gap-6">
           {cores.map((core) => (
             <div key={core.id} className="">
-              {/* Assign the openMultisig function to the onClick event */}
               <CoreItemPurchase
                 coreNumber={core.coreNumber.toString()}
                 size={core.size.toString()}
@@ -59,7 +67,9 @@ const ParaIdPage = () => {
                 mask={core.mask}
                 begin={core.begin}
                 end={core.end}
-                buttonAction={openMultisig}
+                buttonAction={() => {
+                  setMultisigModalData({ visible: true, core })
+                }}
               />
             </div>
           ))}
@@ -69,4 +79,4 @@ const ParaIdPage = () => {
   )
 }
 
-export default ParaIdPage
+export default ListingsPage
