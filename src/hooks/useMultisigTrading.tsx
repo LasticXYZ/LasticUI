@@ -16,7 +16,12 @@ import {
   xxhashAsHex,
 } from '@polkadot/util-crypto'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
-import { getClient } from '@poppyseed/squid-sdk'
+import {
+  getClient,
+  MultisigCancelledEvent,
+  MultisigExecutedEvent,
+  NewMultisigEvent,
+} from '@poppyseed/squid-sdk'
 import { useEffect, useState } from 'react'
 
 const LEGACY_ASMULTI_PARAM_LENGTH = 6
@@ -33,7 +38,7 @@ export const useMultisigTrading = (
   buyerAddress: string,
   core: CoreListing,
 ) => {
-  const { api, activeSigner, activeAccount, activeChain, provider } = useInkathon()
+  const { api, activeSigner, activeAccount, activeChain, activeRelayChain } = useInkathon()
   const client = getClient()
   const [isLoading, setIsLoading] = useState(false)
   const [txStatusMessage, setTxStatusMessage] = useState<string>('')
@@ -183,34 +188,37 @@ export const useMultisigTrading = (
       : undefined
   }
 
-  /** Get the open multisig events for the current multisig address. Not implemented yet */
-  const getOpenMultisigEvents = async (): Promise<string[] | null> => {
-    // query via 'newMultisigs' all multisig events with current multisig address
-    // filter by approver.length == 1 & approver includes
-    /* const query = client.eventAllNewMultisig() */
+  /** Get opened multisig events for the current multisig address. Note: They can already be executed or cancelled.  */
+  const getOpenedMultisigEvents = async (): Promise<NewMultisigEvent[] | null> => {
+    if (!activeRelayChain) return null
+    const query = client.eventAllNewMultisig()
+    const response = await client.fetch(activeRelayChain.network, query)
+    let events = response.data.event as NewMultisigEvent[]
+    events = events.filter((event) => event.multisig === multisigAddress)
 
-    /* console.log(provider)
-    const data = await fetchQuery(query) */
-    return null
+    return events
   }
 
-  getOpenMultisigEvents()
+  /** Get the executed multisig events for the current multisig address. */
+  const getExecutedMultisigEvents = async (): Promise<MultisigExecutedEvent[] | null> => {
+    if (!activeRelayChain) return null
+    const query = client.eventAllMultisigExecuted()
+    const response = await client.fetch(activeRelayChain.network, query)
+    let events = response.data.event as MultisigExecutedEvent[]
+    events = events.filter((event) => event.multisig === multisigAddress)
 
-  /** Get the executed multisig events for the current multisig address. Not implemented yet */
-  const getExecutedMultisigEvents = async (): Promise<string[] | null> => {
-    // query via 'multisigExecuteds' all multisig events with current multisig address
-    // if openMultisigEvents.length > 1, you can use this to check which is still open and which already completed. Use timepoint of the executed event and compare it with the timepoint of the open event
-
-    /* const query = client.eventAllMultisigExecuted() */
-
-    return null
+    return events
   }
 
-  /** Get the cancelled multisig events for the current multisig address. Not implemented yet */
-  const getCancelledMultisigEvents = async (): Promise<string[] | null> => {
-    // query via 'multisigCancelleds' all multisig events with current multisig address
-    // if openMultisigEvents.length > 1, you can use this to check which is still open and which already completed. Use timepoint of the cancelled event and compare it with the timepoint of the open event
-    return null
+  /** Get the cancelled multisig events for the current multisig address. */
+  const getCancelledMultisigEvents = async (): Promise<MultisigCancelledEvent[] | null> => {
+    if (!activeRelayChain) return null
+    const query = client.eventAllMultisigCancelled()
+    const response = await client.fetch(activeRelayChain.network, query)
+    let events = response.data.event as MultisigCancelledEvent[]
+    events = events.filter((event) => event.multisig === multisigAddress)
+
+    return events
   }
 
   /**
