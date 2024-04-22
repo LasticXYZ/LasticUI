@@ -1,10 +1,10 @@
 'use client'
 
+import Subtitle from '@/app/[network]/(App)/samesections/SubTitle'
 import CoreItemPurchase from '@/components/cores/CoreItemPurchase'
 import MultisigTradeModal from '@/components/multisig/MultisigTradeModal'
 import { CoreListing } from '@/hooks/useListings'
 import { useEffect, useState } from 'react'
-import SubTitle from '../samesections/SubTitle'
 
 interface Database {
   listings: CoreListing[]
@@ -42,7 +42,7 @@ const ListingsPage = () => {
 
   return (
     <>
-      <SubTitle subtitle="Cores for Sale" />
+      <Subtitle subtitle="Cores for Sale" />
 
       {multisigModalData.core && (
         <MultisigTradeModal
