@@ -128,9 +128,9 @@ export const useMultisigTrading = (
           if (result.status.isInBlock) {
             console.log(`Transaction included at blockHash ${result.status.asInBlock}`)
             console.log('Tx hash: ' + result.txHash)
-            setTxStatusMessage('Multisig call included in block')
+            setTxStatusMessage(`🧊 Multisig call included in block ${result.status.asInBlock}`)
           } else if (result.status.isFinalized) {
-            setTxStatusMessage('Multisig call finalized')
+            setTxStatusMessage(`📜 Multisig call finalized ${result.status.asFinalized}`)
             // TODO: If new initiate, Fetch timepoint and update in db. Enables to have multiple trades in same address at once.
             unsub()
           }
@@ -312,9 +312,9 @@ export const useMultisigTrading = (
         if (result.status.isInBlock) {
           console.log(`Transaction included at blockHash ${result.status.asInBlock}`)
           console.log('Tx hash: ' + result.txHash)
-          setTxStatusMessage('Core sent and tx included in block')
+          setTxStatusMessage(`🧊 Core sent and tx included in block ${result.status.asInBlock}`)
         } else if (result.status.isFinalized) {
-          setTxStatusMessage('Core sent and tx finalized')
+          setTxStatusMessage(`📜 Core sent and tx finalized ${result.status.asFinalized}`)
         }
       })
     } catch (error: unknown) {
@@ -335,9 +335,9 @@ export const useMultisigTrading = (
       if (result.status.isInBlock) {
         console.log(`Transaction included at blockHash ${result.status.asInBlock}`)
         console.log('Tx hash: ' + result.txHash)
-        setTxStatusMessage('Funds sent and tx included in block')
+        setTxStatusMessage(`🧊 Funds sent and tx included in block ${result.status.asInBlock}`)
       } else if (result.status.isFinalized) {
-        setTxStatusMessage('Funds sent and tx finalized')
+        setTxStatusMessage(`📜 Funds sent and tx finalized ${result.status.asFinalized}`)
         // TODO if tx successful, track in db. Add multisig signers and that trade is in progress
       }
     })
