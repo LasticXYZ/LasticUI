@@ -18,6 +18,8 @@ const checkboxStyle = {
 export interface MultisigTradeModalProps extends ModalProps {
   isOpen: boolean
   core: CoreListing
+  // add stepstate here
+  // add onUpdateSteps here
 }
 
 const statusMessagesBuyerView = {
@@ -42,10 +44,10 @@ const statusMessagesLasticView = {
 }
 
 const statusMessagesNeutralView = {
-  step1: '⏳ Wait for a buyer to initiate the trade',
-  step2: '⏳ Wait for the seller to send the core to the multisig address',
-  step3: '⏳ Wait for the seller to open the multisig trade call',
-  step4: '⏳ Wait for Lastic to verify and finish the multisig call',
+  step1: '⏳ Waiting for a buyer to initiate the trade',
+  step2: '⏳ Waiting for the seller to send the core to the multisig address',
+  step3: '⏳ Waiting for the seller to open the multisig trade call',
+  step4: '⏳ Waiting for Lastic to verify and finish the multisig call',
 }
 
 const MultisigTradeModal: FC<MultisigTradeModalProps> = ({

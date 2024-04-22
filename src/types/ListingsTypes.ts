@@ -35,41 +35,6 @@ export function parseMultisigStorageInfo(
   }
 }
 
-export interface NewMultisigEvent {
-  blocknumber: number
-  approving: string
-  callHash: string
-  id: string
-  multisig: string
-  timestamp: string
-}
-
-export interface ExecutedMultisigEvent {
-  id: string
-  approving: string
-  blockNumber: number
-  callHash: string
-  multisig: string
-  timepoint: {
-    height: number
-    index: number
-  }
-  timestamp: string
-}
-
-export interface CancelledMultisigEvent {
-  id: string
-  cancelling: string
-  blockNumber: number
-  callHash: string
-  multisig: string
-  timepoint: {
-    height: number
-    index: number
-  }
-  timestamp: string
-}
-
 export interface AsMultiParams {
   tx?: SubmittableExtrinsic<'promise', ISubmittableResult>
   when?: MultisigStorageInfo['when']

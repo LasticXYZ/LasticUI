@@ -2,11 +2,8 @@ import { CoreListing } from '@/hooks/useListings'
 import { RegionDetail, RegionOwner, RegionsType } from '@/types'
 import {
   AsMultiParams,
-  CancelledMultisigEvent,
-  ExecutedMultisigEvent,
   MultisigStorageInfo,
   MultisigStorageInfoResponse,
-  NewMultisigEvent,
   parseMultisigStorageInfo,
 } from '@/types/ListingsTypes'
 import { BN } from '@polkadot/util'
@@ -19,6 +16,7 @@ import {
   xxhashAsHex,
 } from '@polkadot/util-crypto'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
+import { getClient } from '@poppyseed/squid-sdk'
 import { useEffect, useState } from 'react'
 
 const LEGACY_ASMULTI_PARAM_LENGTH = 6
@@ -35,7 +33,8 @@ export const useMultisigTrading = (
   buyerAddress: string,
   core: CoreListing,
 ) => {
-  const { api, activeSigner, activeAccount, activeChain } = useInkathon()
+  const { api, activeSigner, activeAccount, activeChain, provider } = useInkathon()
+  const client = getClient()
   const [isLoading, setIsLoading] = useState(false)
   const [txStatusMessage, setTxStatusMessage] = useState<string>('')
 
@@ -122,6 +121,7 @@ export const useMultisigTrading = (
             setTxStatusMessage('Multisig call included in block')
           } else if (result.status.isFinalized) {
             setTxStatusMessage('Multisig call finalized')
+            // TODO: If new initiate, Fetch timepoint and update in db. Enables to have multiple trades in same address at once.
             unsub()
           }
         },
@@ -184,22 +184,30 @@ export const useMultisigTrading = (
   }
 
   /** Get the open multisig events for the current multisig address. Not implemented yet */
-  const getOpenMultisigEvents = async (): Promise<NewMultisigEvent[] | null> => {
+  const getOpenMultisigEvents = async (): Promise<string[] | null> => {
     // query via 'newMultisigs' all multisig events with current multisig address
     // filter by approver.length == 1 & approver includes
+    /* const query = client.eventAllNewMultisig() */
+
+    /* console.log(provider)
+    const data = await fetchQuery(query) */
     return null
   }
 
+  getOpenMultisigEvents()
+
   /** Get the executed multisig events for the current multisig address. Not implemented yet */
-  const getExecutedMultisigEvents = async (): Promise<ExecutedMultisigEvent[] | null> => {
+  const getExecutedMultisigEvents = async (): Promise<string[] | null> => {
     // query via 'multisigExecuteds' all multisig events with current multisig address
     // if openMultisigEvents.length > 1, you can use this to check which is still open and which already completed. Use timepoint of the executed event and compare it with the timepoint of the open event
+
+    /* const query = client.eventAllMultisigExecuted() */
 
     return null
   }
 
   /** Get the cancelled multisig events for the current multisig address. Not implemented yet */
-  const getCancelledMultisigEvents = async (): Promise<CancelledMultisigEvent[] | null> => {
+  const getCancelledMultisigEvents = async (): Promise<string[] | null> => {
     // query via 'multisigCancelleds' all multisig events with current multisig address
     // if openMultisigEvents.length > 1, you can use this to check which is still open and which already completed. Use timepoint of the cancelled event and compare it with the timepoint of the open event
     return null
@@ -212,14 +220,13 @@ export const useMultisigTrading = (
    */
   const isMultisigCallExecuted = (
     multisigCallToCheck: MultisigStorageInfo,
-    events: ExecutedMultisigEvent[],
+    events: string[],
   ): boolean => {
     // Check if any event matches the timepoint of the multisig call to check
     const alreadyExecuted = events.some((executedEvent) => {
-      return (
-        executedEvent.timepoint.height === multisigCallToCheck.when.height &&
-        executedEvent.timepoint.index === multisigCallToCheck.when.index
-      )
+      return true
+      /* executedEvent.timepoint.height === multisigCallToCheck.when.height &&
+        executedEvent.timepoint.index === multisigCallToCheck.when.index */
     })
 
     return !alreadyExecuted
@@ -232,14 +239,13 @@ export const useMultisigTrading = (
    */
   const isMultisigCallCancelled = (
     multisigCallToCheck: MultisigStorageInfo,
-    events: CancelledMultisigEvent[],
+    events: string[],
   ): boolean => {
     // Check if any event matches the timepoint of the multisig call to check
     const alreadyCancelled = events.some((cancelledEvent) => {
-      return (
-        cancelledEvent.timepoint.height === multisigCallToCheck.when.height &&
-        cancelledEvent.timepoint.index === multisigCallToCheck.when.index
-      )
+      return true
+      /* cancelledEvent.timepoint.height === multisigCallToCheck.when.height &&
+        cancelledEvent.timepoint.index === multisigCallToCheck.when.index */
     })
 
     return !alreadyCancelled
@@ -248,8 +254,8 @@ export const useMultisigTrading = (
   /** Helper function to check if the multisig call is not executed or cancelled. */
   const isMultisigCallOpen = (
     multisigCallToCheck: MultisigStorageInfo,
-    cancelEvents: CancelledMultisigEvent[],
-    executeEvents: ExecutedMultisigEvent[],
+    cancelEvents: string[],
+    executeEvents: string[],
   ) => {
     return (
       !isMultisigCallExecuted(multisigCallToCheck, executeEvents) &&
