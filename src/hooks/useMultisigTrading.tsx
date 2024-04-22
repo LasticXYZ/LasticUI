@@ -223,47 +223,45 @@ export const useMultisigTrading = (
 
   /**
    * Check if the multisig call was already executed.
-   * @param multisigCallToCheck - The opened multisig call to check. Make sure to prefilter them by the multisig address.
+   * @param multisigCallToCheck - The opened multisig call to check. Make sure to prefilter it by the multisig address.
    * @param events - The executed multisig events. Make sure to prefilter them by the multisig address.
    */
   const isMultisigCallExecuted = (
     multisigCallToCheck: MultisigStorageInfo,
-    events: string[],
+    events: MultisigExecutedEvent[],
   ): boolean => {
-    // Check if any event matches the timepoint of the multisig call to check
-    const alreadyExecuted = events.some((executedEvent) => {
-      return true
-      /* executedEvent.timepoint.height === multisigCallToCheck.when.height &&
-        executedEvent.timepoint.index === multisigCallToCheck.when.index */
-    })
+    const alreadyExecuted = events.some(
+      (executedEvent) =>
+        executedEvent.timepoint.height === multisigCallToCheck.when.height &&
+        executedEvent.timepoint.index === multisigCallToCheck.when.index,
+    )
 
     return !alreadyExecuted
   }
 
   /**
    * Check if the multisig call was already cancelled. At the moment, 1 cancellation is sufficent, doesnt matter if the threshold could still be reached.
-   * @param multisigCallToCheck - The opened multisig call to check. Make sure to prefilter them by the multisig address.
+   * @param multisigCallToCheck - The opened multisig call to check. Make sure to prefilter it by the multisig address.
    * @param events - The cancelled multisig events. Make sure to prefilter them by the multisig address.
    */
   const isMultisigCallCancelled = (
     multisigCallToCheck: MultisigStorageInfo,
-    events: string[],
+    events: MultisigCancelledEvent[],
   ): boolean => {
     // Check if any event matches the timepoint of the multisig call to check
     const alreadyCancelled = events.some((cancelledEvent) => {
-      return true
-      /* cancelledEvent.timepoint.height === multisigCallToCheck.when.height &&
-        cancelledEvent.timepoint.index === multisigCallToCheck.when.index */
+      cancelledEvent.timepoint.height === multisigCallToCheck.when.height &&
+        cancelledEvent.timepoint.index === multisigCallToCheck.when.index
     })
 
     return !alreadyCancelled
   }
 
   /** Helper function to check if the multisig call is not executed or cancelled. */
-  const isMultisigCallOpen = (
+  const isMultisigCallStillOpen = (
     multisigCallToCheck: MultisigStorageInfo,
-    cancelEvents: string[],
-    executeEvents: string[],
+    cancelEvents: MultisigCancelledEvent[],
+    executeEvents: MultisigExecutedEvent[],
   ) => {
     return (
       !isMultisigCallExecuted(multisigCallToCheck, executeEvents) &&
