@@ -6,7 +6,7 @@ import { GenericCall } from '@polkadot/types'
 import type { Balance, Conviction } from '@polkadot/types/interfaces'
 import { Weight } from '@polkadot/types/interfaces'
 import { ISubmittableResult } from '@polkadot/types/types'
-import type { KeyringAddress } from '@polkadot/ui-keyring/types'
+
 import type { BN } from '@polkadot/util'
 
 export interface MultisigStorageInfo {
@@ -82,13 +82,6 @@ export interface Delegation {
   accountDelegated: string
   amount: Balance
   conviction: Conviction
-}
-
-export interface SortedAccount {
-  account: KeyringAddress
-  address: string
-  delegation?: Delegation
-  isFavorite: boolean
 }
 
 export interface AccountBalance {
