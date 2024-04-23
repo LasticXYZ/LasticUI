@@ -5,7 +5,13 @@ import { network_list } from '@/config/network'
 import { parseNativeTokenToHuman } from '@/utils/account/token'
 import { getChainFromPath } from '@/utils/common/chainPath'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
-import { CoreOwnerEvent, GraphLike, GraphQuery, getClient } from '@poppyseed/squid-sdk'
+import {
+  CoreOwnerEvent,
+  GraphLike,
+  GraphQuery,
+  SaleInitializedEvent,
+  getClient,
+} from '@poppyseed/squid-sdk'
 import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 
@@ -13,6 +19,9 @@ export default function MyCores() {
   const { activeAccount, activeChain, activeRelayChain } = useInkathon()
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
   const [result, setResult] = useState<GraphLike<CoreOwnerEvent[]> | null>(null)
+  const [currentSaleData, setCurrentSaleData] = useState<GraphLike<SaleInitializedEvent[]> | null>(
+    null,
+  )
   const client = useMemo(() => getClient(), [])
   const network = activeRelayChain?.network
   const pathname = usePathname()
@@ -23,14 +32,32 @@ export default function MyCores() {
 
   let query: GraphQuery
   //const newAddress = encodeAddress(publicKeyBytes, targetNetworkPrefix)
-  if (activeAccount) {
-    query = client.eventWhoPurchased(activeAccount?.address, 7)
-  }
 
-  const handleNextPage = () => setCurrentPage(currentPage + 1)
-  const handlePrevPage = () => setCurrentPage(currentPage - 1)
+  useMemo(() => {
+    query = client.eventAllSaleInitialized(2)
+    if (network && query) {
+      const fetchData = async () => {
+        const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(network, query)
+        setCurrentSaleData(fetchedResult)
+      }
+
+      fetchData()
+    }
+  }, [network, client])
 
   useEffect(() => {
+    if (activeAccount && currentSaleData?.data?.event?.length && configuration) {
+      const currentSaleRegion = currentSaleData.data.event[0]
+
+      if (currentSaleRegion.regionBegin) {
+        query = client.eventWhoCoreOwner(
+          activeAccount.address,
+          currentSaleRegion.regionBegin - configuration.regionLength,
+          currentSaleRegion.regionBegin + configuration.regionLength,
+        )
+      }
+    }
+
     if (network && query) {
       const fetchData = async () => {
         const fetchedResult: GraphLike<CoreOwnerEvent[]> = await client.fetch(network, query)
@@ -39,7 +66,10 @@ export default function MyCores() {
 
       fetchData()
     }
-  }, [])
+  }, [currentPage, activeAccount, network, currentSaleData, client])
+
+  const handleNextPage = () => setCurrentPage(currentPage + 1)
+  const handlePrevPage = () => setCurrentPage(currentPage - 1)
 
   if (!activeAccount || !activeChain) {
     return (
@@ -49,57 +79,123 @@ export default function MyCores() {
     )
   }
 
-  return result?.data.event ? (
+  // Splitting the results into two sections
+  const currentSaleRegion = currentSaleData?.data?.event?.[0]
+  const justBought =
+    result?.data?.event?.filter((region) =>
+      region.regionId.begin && currentSaleRegion?.regionBegin
+        ? region.regionId.begin > currentSaleRegion.regionBegin
+        : null,
+    ) || []
+  const currentlyActive =
+    result?.data?.event?.filter((region) =>
+      region.regionId.begin && currentSaleRegion?.regionBegin
+        ? region.regionId.begin <= currentSaleRegion.regionBegin
+        : null,
+    ) || []
+
+  return (
     <Border className="h-full flex flex-row justify-center items-center">
       <div className="h-full w-full flex flex-col justify-left items-left px-5 pb-10">
-        <div className="pt-10 pl-10">
-          <h1 className="text-xl font-unbounded uppercase font-bold">cores owned</h1>
+        <div className="pt-10 pl-4">
+          <h1 className="text-xl font-bold uppercase font-unbounded ">Cores Owned</h1>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4 mt-4">
-          {result?.data.event.map((region, index) => (
-            <div key={index} className="">
-              <CoreItem
-                config={configuration}
-                coreNumber={region.detail[0].core}
-                size={region.detail[0].mask === '0xffffffffffffffffffff' ? '1' : 'Interlaced'}
-                cost={parseNativeTokenToHuman({ paid: region.owner.paid, decimals: 12 })}
-                reward="0"
-                currencyCost={tokenSymbol}
-                mask={region.detail[0].mask}
-                begin={region.detail[0].begin}
-                end={region.owner.end}
-              />
-            </div>
-          ))}
-        </div>
-        {/* Pagination buttons 
-        {!filteredForDisplay ||
-          !regionData ||
-          (filteredForDisplay.length !== 0 && (
-            <div className="flex w-full items-center justify-between space-x-2 mt-4 px-5">
-              <button
-                onClick={handlePrevPage}
-                disabled={currentPage === 1}
-                className={`px-4 py-2 rounded-2xl text-black dark:text-gray-1 border border-gray-21 font-semibold ${currentPage === 1 ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : ' hover:bg-green-6'}`}
-              >
-                Previous
-              </button>
-              <p className="text-black dark:text-gray-1 font-semibold">{currentPage}</p>
-              <button
-                onClick={handleNextPage}
-                disabled={filteredForDisplay.length < itemsPerPage}
-                className={`px-4 py-2   border border-gray-21 text-black dark:text-gray-1 font-semibold rounded-2xl ${filteredForDisplay.length < itemsPerPage ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : ' hover:bg-green-6'}`}
-              >
-                Next
-              </button>
-            </div>
-          ))}
-          */}
+        <SectionDisplay
+          title="Just Bought"
+          regions={justBought}
+          configuration={configuration}
+          tokenSymbol={tokenSymbol}
+        />
+        <SectionDisplay
+          title="Currently Active"
+          regions={currentlyActive}
+          configuration={configuration}
+          tokenSymbol={tokenSymbol}
+        />
       </div>
-    </Border>
-  ) : (
-    <Border className="h-full flex flex-row justify-center items-center">
-      <WalletStatus />
     </Border>
   )
 }
+
+interface SectionProps {
+  title: string
+  regions: CoreOwnerEvent[]
+  configuration: any // Define more specific types based on what 'configuration' contains
+  tokenSymbol: string
+}
+
+function SectionDisplay({ title, regions, configuration, tokenSymbol }: SectionProps) {
+  return (
+    <>
+      <h2 className="pt-10 pl-10 text-lg font-bold uppercase font-unbounded">{title}</h2>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4">
+        {regions.map((region, index) => (
+          <CoreItem
+            key={index}
+            config={configuration}
+            coreNumber={region.regionId.core}
+            size={region.regionId.mask === '0xffffffffffffffffffff' ? '1' : 'Interlaced'}
+            cost={parseNativeTokenToHuman({ paid: region.price?.toString(), decimals: 12 })}
+            currencyCost={tokenSymbol}
+            mask={region.regionId.mask}
+            begin={region.regionId.begin}
+            duration={region.duration}
+          />
+        ))}
+      </div>
+    </>
+  )
+}
+
+//   return result?.data?.event ? (
+//     <Border className="h-full flex flex-row justify-center items-center">
+//       <div className="h-full w-full flex flex-col justify-left items-left px-5 pb-10">
+//         <div className="pt-10 pl-10">
+//           <h1 className="text-xl font-unbounded uppercase font-bold">cores owned</h1>
+//         </div>
+//         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4 mt-4">
+//           {result?.data.event.map((region, index) => (
+//             <div key={index} className="">
+//               <CoreItem
+//                 config={configuration}
+//                 coreNumber={region.regionId.core}
+//                 size={region.regionId.mask === '0xffffffffffffffffffff' ? '1' : 'Interlaced'}
+//                 cost={parseNativeTokenToHuman({ paid: region.price?.toString(), decimals: 12 })}
+//                 currencyCost={tokenSymbol}
+//                 mask={region.regionId.mask}
+//                 begin={region.regionId.begin}
+//                 duration={region.duration}
+//               />
+//             </div>
+//           ))}
+//         </div>
+//         {/* Pagination buttons */}
+//         {!result?.data.event ||
+//           (result?.data.event.length !== 0 && (
+//             <div className="flex w-full items-center justify-between space-x-2 mt-4 px-5">
+//               <button
+//                 onClick={handlePrevPage}
+//                 disabled={currentPage === 1}
+//                 className={`px-4 py-2 rounded-2xl text-black dark:text-gray-1 border border-gray-21 font-semibold ${currentPage === 1 ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : ' hover:bg-green-6'}`}
+//               >
+//                 Previous
+//               </button>
+//               <p className="text-black dark:text-gray-1 font-semibold">{currentPage}</p>
+//               <button
+//                 onClick={handleNextPage}
+//                 disabled={result?.data.event.length < 6}
+//                 className={`px-4 py-2   border border-gray-21 text-black dark:text-gray-1 font-semibold rounded-2xl ${result?.data.event.length < itemsPerPage ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : ' hover:bg-green-6'}`}
+//               >
+//                 Next
+//               </button>
+//             </div>
+//           ))}
+//       </div>
+//     </Border>
+//   ) : (
+//     <Border className="h-full flex flex-row justify-center items-center">
+//       <WalletStatus />
+//     </Border>
+//   )
+// }
+//

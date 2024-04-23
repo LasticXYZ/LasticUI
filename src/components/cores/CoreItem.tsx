@@ -9,14 +9,13 @@ import React from 'react'
 
 interface CardProps {
   config: ConfigurationType | null
-  coreNumber: string
+  coreNumber: number | null
   size: string
   cost: string
-  reward: string
   currencyCost: string
-  mask: string
-  begin: string
-  end: string
+  mask: string | null
+  begin: number | null
+  duration: number | null
 }
 
 const CoreItem: React.FC<CardProps> = ({
@@ -24,28 +23,25 @@ const CoreItem: React.FC<CardProps> = ({
   coreNumber,
   size,
   cost,
-  reward,
   currencyCost,
   mask,
   begin,
-  end,
+  duration,
 }) => {
-  const beginStr = begin.replace(/,/g, '')
-  const coreSize = parseInt(end.replace(/,/g, '')) - parseInt(begin.replace(/,/g, ''))
   const pathname = usePathname()
 
-  if (!config) return null
+  if (!config || !duration || !begin) return null
 
   return (
     <Border className="px-10 py-6 hover:bg-pink-1 hover:cursor-pointer">
-      <Link href={goToChainRoute(pathname, `/core/${coreNumber}/${beginStr}/${mask}`)}>
+      <Link href={goToChainRoute(pathname, `/core/${coreNumber}/${begin}/${mask}`)}>
         <div>
           <div className="font-unbounded uppercase tracking-wide text-md font-semibold flex justify-between items-center">
             <span>Core Nb. {coreNumber}</span>
             <div className="flex space-x-2">
               {' '}
               {/* Container to hold both buttons next to each other */}
-              {coreSize < config.regionLength && (
+              {duration < config.regionLength && (
                 <div className="bg-pink-3  dark:bg-pink-400 dark:bg-opacity-80 border border-gray-8 px-4 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
                   Partitioned
                 </div>
@@ -74,7 +70,7 @@ const CoreItem: React.FC<CardProps> = ({
             </div>
             <div className="flex flex-row text-gray-12 p-1 ">
               <p className="px-2">Begin: {begin}</p>
-              <p className="px-2">End: {end}</p>
+              <p className="px-2">End: {begin + duration}</p>
             </div>
           </div>
         </div>
