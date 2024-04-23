@@ -1,83 +1,45 @@
 import Border from '@/components/border/Border'
 import CoreItem from '@/components/cores/CoreItem'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
-import { useSubstrateQuery } from '@/hooks/useSubstrateQuery'
+import { network_list } from '@/config/network'
 import { parseNativeTokenToHuman } from '@/utils/account/token'
-import { ConfigurationType, useBalance, useInkathon } from '@poppyseed/lastic-sdk'
+import { getChainFromPath } from '@/utils/common/chainPath'
+import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
+import { CoreOwnerEvent, GraphLike, GraphQuery, getClient } from '@poppyseed/squid-sdk'
+import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 
-// Define a type for the queryParams
-type QueryParams = (string | number | Record<string, unknown>)[]
-
-type RegionDetailItem = {
-  begin: string
-  core: string
-  mask: string
-}
-
-type RegionDetail = RegionDetailItem[]
-
-type RegionOwner = {
-  end: string
-  owner: string
-  paid: string
-}
-
-type Region = {
-  detail: RegionDetail
-  owner: RegionOwner
-}
-
-type RegionsType = Region[]
-
-// Custom hook for querying substrate state
-const useRegionQuery = () => {
-  const { api } = useInkathon()
-  const [data, setData] = useState<RegionsType | null>(null)
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (api?.query?.broker?.regions) {
-        try {
-          const entries = await api.query.broker.regions.entries()
-          const regions: RegionsType = entries.map(([key, value]) => {
-            const detail = key.toHuman() as RegionDetail
-            const owner = value.toHuman() as RegionOwner
-            return { detail, owner }
-          })
-          setData(regions)
-        } catch (error) {
-          console.error('Failed to fetch regions:', error)
-        }
-      }
-    }
-
-    fetchData()
-    const intervalId = setInterval(fetchData, 5000)
-
-    return () => clearInterval(intervalId)
-  }, [api])
-
-  return data
-}
-
 export default function MyCores() {
-  const { activeAccount, activeChain, api } = useInkathon()
+  const { activeAccount, activeChain, activeRelayChain } = useInkathon()
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
-  const regionData = useRegionQuery()
-
-  const configurationString = useSubstrateQuery(api, 'configuration')
+  const [result, setResult] = useState<GraphLike<CoreOwnerEvent[]> | null>(null)
+  const client = useMemo(() => getClient(), [])
+  const network = activeRelayChain?.network
+  const pathname = usePathname()
+  const configuration = network_list[getChainFromPath(pathname)].configuration
 
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 6
 
+  let query: GraphQuery
+  //const newAddress = encodeAddress(publicKeyBytes, targetNetworkPrefix)
+  if (activeAccount) {
+    query = client.eventWhoPurchased(activeAccount?.address, 7)
+  }
+
   const handleNextPage = () => setCurrentPage(currentPage + 1)
   const handlePrevPage = () => setCurrentPage(currentPage - 1)
 
-  const configuration = useMemo(
-    () => (configurationString ? (JSON.parse(configurationString) as ConfigurationType) : null),
-    [configurationString],
-  )
+  useEffect(() => {
+    if (network && query) {
+      const fetchData = async () => {
+        const fetchedResult: GraphLike<CoreOwnerEvent[]> = await client.fetch(network, query)
+        setResult(fetchedResult)
+      }
+
+      fetchData()
+    }
+  }, [])
 
   if (!activeAccount || !activeChain) {
     return (
@@ -87,23 +49,14 @@ export default function MyCores() {
     )
   }
 
-  // Filter regions where activeAccount's address matches the region owner's address
-  const filteredRegionData = regionData?.filter(
-    (region) => region.owner.owner === activeAccount.address,
-  )
-  const filteredForDisplay = filteredRegionData?.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
-  )
-
-  return filteredForDisplay && filteredForDisplay.length > 0 ? (
+  return result?.data.event ? (
     <Border className="h-full flex flex-row justify-center items-center">
       <div className="h-full w-full flex flex-col justify-left items-left px-5 pb-10">
         <div className="pt-10 pl-10">
           <h1 className="text-xl font-unbounded uppercase font-bold">cores owned</h1>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4 mt-4">
-          {filteredForDisplay.map((region, index) => (
+          {result?.data.event.map((region, index) => (
             <div key={index} className="">
               <CoreItem
                 config={configuration}
@@ -119,7 +72,7 @@ export default function MyCores() {
             </div>
           ))}
         </div>
-        {/* Pagination buttons */}
+        {/* Pagination buttons 
         {!filteredForDisplay ||
           !regionData ||
           (filteredForDisplay.length !== 0 && (
@@ -141,6 +94,7 @@ export default function MyCores() {
               </button>
             </div>
           ))}
+          */}
       </div>
     </Border>
   ) : (

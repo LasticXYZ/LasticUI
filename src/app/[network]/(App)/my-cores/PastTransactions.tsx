@@ -19,7 +19,7 @@ const PastTransactions = () => {
   let query: GraphQuery
   //const newAddress = encodeAddress(publicKeyBytes, targetNetworkPrefix)
   if (activeAccount) {
-    query = client.eventWhoPurchased(activeAccount?.address)
+    query = client.eventWhoPurchased(activeAccount?.address, 7)
   }
 
   useEffect(() => {
@@ -33,11 +33,6 @@ const PastTransactions = () => {
     }
   }, [])
 
-  const reversedData = useMemo(() => {
-    // Make a copy of the event array (if it exists) and reverse the copy
-    return [...(result?.data.event || [])].reverse()
-  }, [result])
-
   const TableHeader = [
     { title: 'Time' },
     { title: 'Block Number' },
@@ -50,7 +45,7 @@ const PastTransactions = () => {
 
   // Transform result into table data
   const TableData =
-    reversedData.map((event, index) => ({
+    result?.data.event?.map((event, index) => ({
       data: [
         event.timestamp ? format(new Date(event.timestamp), 'MMMM dd, yyyy HH:mm:ss OOOO') : '',
         event.blockNumber?.toString(),
