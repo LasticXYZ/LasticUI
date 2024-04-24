@@ -1,27 +1,19 @@
 import { CoreListing } from '@/hooks/useListings'
-import { RegionDetail, RegionOwner, RegionsType } from '@/types'
+import { AsMultiParams } from '@/types/ListingsTypes'
 import {
-  AsMultiParams,
-  MultisigStorageInfo,
-  MultisigStorageInfoResponse,
-  parseMultisigStorageInfo,
-} from '@/types/ListingsTypes'
+  calculateMultisigAddress,
+  getAllOpenMultisigCalls,
+  getEncodedAddress,
+} from '@/utils/multisigHelper'
 import { BN } from '@polkadot/util'
 import {
   blake2AsHex,
   createKeyMulti,
   decodeAddress,
-  encodeAddress,
   sortAddresses,
   xxhashAsHex,
 } from '@polkadot/util-crypto'
-import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
-import {
-  getClient,
-  MultisigCancelledEvent,
-  MultisigExecutedEvent,
-  NewMultisigEvent,
-} from '@poppyseed/squid-sdk'
+import { useInkathon } from '@poppyseed/lastic-sdk'
 import { useEffect, useState } from 'react'
 
 const LEGACY_ASMULTI_PARAM_LENGTH = 6
@@ -39,7 +31,6 @@ export const useMultisigTrading = (
   core: CoreListing,
 ) => {
   const { api, activeSigner, activeAccount, activeChain, activeRelayChain } = useInkathon()
-  const client = getClient()
   const [isLoading, setIsLoading] = useState(false)
   const [txStatusMessage, setTxStatusMessage] = useState<string>('')
 
@@ -48,32 +39,7 @@ export const useMultisigTrading = (
   }, [core])
 
   const signatories = [sellerAddress, buyerAddress, LASTIC_ADDRESS]
-
-  const _getEncodedAddress = (address: string | Uint8Array, ss58Format?: number) => {
-    // check if the address is an ethereum address
-    if (typeof address === 'string' && address.startsWith('0x') && address.length === 42) {
-      console.log('Ethereum address detected, not encoding', address)
-      return address.toLowerCase()
-    }
-
-    try {
-      if (ss58Format) return encodeAddress(address, ss58Format)
-      if (!activeChain) return
-      return encodeAddress(address, activeChain.ss58Prefix)
-    } catch (e) {
-      console.error(`Error encoding the address ${address}, skipping`, e)
-    }
-  }
-  const getMultisigAddress = () => {
-    if (THRESHOLD < 2 || signatories.length < 2) return
-    // Address as a byte array.
-    const multisigPubKey = createKeyMulti(signatories, THRESHOLD)
-
-    // Convert byte array to SS58 encoding.
-    return _getEncodedAddress(multisigPubKey)
-  }
-  const multisigAddress = getMultisigAddress()
-  const { balance } = useBalance(multisigAddress, true)
+  const multisigAddress = calculateMultisigAddress(THRESHOLD, signatories, activeChain)
 
   const initiateOrExecuteMultisigTradeCall = async (): Promise<void> => {
     if (!_basicChecks()) return
@@ -83,7 +49,11 @@ export const useMultisigTrading = (
     // if there is 1 open multisig call -> execute the trade (add 'when')
     // if there is no open multisig call -> create a new one (no 'when')
     // if there are more than 1 open multisig calls -> find the right one and execute it (hard)
-    const openMultisigCalls = await getAllOpenMultisigCalls()
+    const openMultisigCalls = await getAllOpenMultisigCalls(
+      multisigAddress || '',
+      api,
+      activeRelayChain,
+    )
 
     if (openMultisigCalls && openMultisigCalls?.length === 1) {
       when = openMultisigCalls[0].when
@@ -152,149 +122,6 @@ export const useMultisigTrading = (
     return api.tx.multisig.asMulti.meta.args.length === LEGACY_ASMULTI_PARAM_LENGTH
       ? api.tx.multisig.asMulti(THRESHOLD, otherSignatories, when || null, tx, false, MAX_WEIGHT)
       : api.tx.multisig.asMulti(THRESHOLD, otherSignatories, when || null, tx, MAX_WEIGHT)
-  }
-
-  /**
-   * Get all open multisig calls for the current multisig address. It checks also if the multisig call was already executed or cancelled.
-   * @returns - The open multisig calls
-   */
-  const getAllOpenMultisigCalls = async (): Promise<MultisigStorageInfo[] | undefined> => {
-    if (!api) return
-
-    // get all open multisig calls
-    const allEntries = await api.query.multisig.multisigs.entries()
-
-    // filter by multisig address
-    let filtered = allEntries.filter(([key, _data]) => key.args[0].toHuman() === multisigAddress)
-
-    // filter out executed and cancelled events
-    const executedEvents = await getExecutedMultisigEvents()
-    const cancelledEvents = await getCancelledMultisigEvents()
-    filtered = filtered.filter(([_key, data]) =>
-      isMultisigCallStillOpen(
-        parseMultisigStorageInfo(data.toHuman() as unknown as MultisigStorageInfoResponse),
-        cancelledEvents || [],
-        executedEvents || [],
-      ),
-    )
-
-    // parse the filtered multisig calls
-    const openCalls = filtered.map(([_key, data]) =>
-      parseMultisigStorageInfo(data.toHuman() as unknown as MultisigStorageInfoResponse),
-    )
-
-    return openCalls
-  }
-
-  /** Get opened multisig events for the current multisig address. Note: They can already be executed or cancelled.  */
-  const getOpenedMultisigEvents = async (): Promise<NewMultisigEvent[] | null> => {
-    if (!activeRelayChain) return null
-    const query = client.eventAllNewMultisig()
-    const response = await client.fetch(activeRelayChain.network, query)
-    let events = response.data.event as NewMultisigEvent[]
-    events = events.filter((event) => event.multisig === multisigAddress)
-
-    return events
-  }
-
-  /** Get the executed multisig events for the current multisig address. */
-  const getExecutedMultisigEvents = async (): Promise<MultisigExecutedEvent[] | null> => {
-    if (!activeRelayChain) return null
-    const query = client.eventAllMultisigExecuted()
-    const response = await client.fetch(activeRelayChain.network, query)
-    let events = response.data.event as MultisigExecutedEvent[]
-    events = events.filter((event) => event.multisig === multisigAddress)
-
-    return events
-  }
-
-  /** Get the cancelled multisig events for the current multisig address. */
-  const getCancelledMultisigEvents = async (): Promise<MultisigCancelledEvent[] | null> => {
-    if (!activeRelayChain) return null
-    const query = client.eventAllMultisigCancelled()
-    const response = await client.fetch(activeRelayChain.network, query)
-    let events = response.data.event as MultisigCancelledEvent[]
-    events = events.filter((event) => event.multisig === multisigAddress)
-
-    return events
-  }
-
-  /**
-   * Check if the multisig call was already executed.
-   * @param multisigCallToCheck - The opened multisig call to check. Make sure to prefilter it by the multisig address.
-   * @param events - The executed multisig events. Make sure to prefilter them by the multisig address.
-   */
-  const isMultisigCallExecuted = (
-    multisigCallToCheck: MultisigStorageInfo,
-    events: MultisigExecutedEvent[],
-  ): boolean => {
-    return events.some(
-      (executedEvent) =>
-        executedEvent.timepoint.height === multisigCallToCheck.when.height &&
-        executedEvent.timepoint.index === multisigCallToCheck.when.index,
-    )
-  }
-
-  /**
-   * Check if the multisig call was already cancelled. At the moment, 1 cancellation is sufficent, doesnt matter if the threshold could still be reached.
-   * @param multisigCallToCheck - The opened multisig call to check. Make sure to prefilter it by the multisig address.
-   * @param events - The cancelled multisig events. Make sure to prefilter them by the multisig address.
-   */
-  const isMultisigCallCancelled = (
-    multisigCallToCheck: MultisigStorageInfo,
-    events: MultisigCancelledEvent[],
-  ): boolean => {
-    // Check if any event matches the timepoint of the multisig call to check
-    return events.some((cancelledEvent) => {
-      cancelledEvent.timepoint.height === multisigCallToCheck.when.height &&
-        cancelledEvent.timepoint.index === multisigCallToCheck.when.index
-    })
-  }
-
-  /** Helper function to check if the multisig call is not executed or cancelled. */
-  const isMultisigCallStillOpen = (
-    multisigCallToCheck: MultisigStorageInfo,
-    cancelEvents: MultisigCancelledEvent[],
-    executeEvents: MultisigExecutedEvent[],
-  ) => {
-    return (
-      !isMultisigCallExecuted(multisigCallToCheck, executeEvents) &&
-      !isMultisigCallCancelled(multisigCallToCheck, cancelEvents)
-    )
-  }
-
-  /**
-   * Check if the multisig address currently holds the core price as balance.
-   * @param amount - The balance amount the multisig address should hold
-   * @returns - True if the multisig address holds the amount
-   */
-  const hasMultisigAddressTheCoreFunds = () => {
-    if (balance?.gte(new BN(core.cost.toString()))) return true
-    return false
-  }
-
-  /**
-   * Check if the multisig address currently holds the listed core.
-   * @param core - The core listing to check
-   * @returns - True if the multisig address holds the core
-   */
-  const hasMultisigAddressTheListedCore = async () => {
-    // fetch multisig regions
-    const entries = await api?.query.broker.regions.entries()
-    const regions: RegionsType | undefined = entries?.map(([key, value]) => {
-      const detail = key.toHuman() as RegionDetail
-      const owner = value.toHuman() as RegionOwner
-      return { detail, owner }
-    })
-    const filteredRegions = regions?.filter((region) => region.owner.owner === multisigAddress)
-
-    // check if the multisig address has the core
-    return filteredRegions?.some((region) => {
-      const regionDetail = region.detail[0]
-      regionDetail.core === core.coreNumber.toString() &&
-        regionDetail.begin === core.begin &&
-        regionDetail.mask === core.mask
-    })
   }
 
   /** Sends the core to the multisig address
@@ -367,7 +194,7 @@ export const useMultisigTrading = (
    */
   const _getMultisigTimepointByStorageRead = async () => {
     const multisigAddressBytes = createKeyMulti(signatories, THRESHOLD)
-    const multisigAddress = _getEncodedAddress(multisigAddressBytes)
+    const multisigAddress = getEncodedAddress(multisigAddressBytes, activeChain)
 
     // 1. Creating the Storage key of our Multisig Storage item following the schema below :
     // Twox128("Multisig") + Twox128("Multisigs") + Twox64(multisigAddress) + multisigAddress + Blake128(multisigCallHash) + multisigCallHash
@@ -412,8 +239,6 @@ export const useMultisigTrading = (
   return {
     initiateOrExecuteMultisigTradeCall,
     multisigAddress,
-    hasMultisigAddressTheCoreFunds,
-    hasMultisigAddressTheListedCore,
     sendCoreToMultisig,
     sendFundsToMultisig,
     txStatusMessage,

@@ -1,10 +1,15 @@
 import { CoreListing } from '@/hooks/useListings'
+import { RegionDetail, RegionOwner, RegionsType } from '@/types'
+import { calculateMultisigAddress } from '@/utils/multisigHelper'
+import { BN } from '@polkadot/util'
 import { useInkathon } from '@poppyseed/lastic-sdk'
 import { useState } from 'react'
 
 const buyerAddress = '0x123'
 const sellerAddress = '0x456'
 const lasticAddress = '0x789'
+
+const THRESHOLD = 2
 
 type ListingID = number
 
@@ -27,7 +32,8 @@ const listingStateInit = {
 type ListingsTracker = Record<ListingID, ListingState>
 
 export const useListingsTracker = (coreListings: CoreListing[], intervalMs: number = 10000) => {
-  const { api, activeAccount } = useInkathon()
+  const { api, activeAccount, activeChain } = useInkathon()
+
   const [isLoading, setIsLoading] = useState(false)
   const [listingsState, setListingsState] = useState<ListingsTracker>(
     Object.create(
@@ -49,7 +55,7 @@ export const useListingsTracker = (coreListings: CoreListing[], intervalMs: numb
     // Step 2: if multisig has core; Or if DB says completed
     // Step 3: if multisig is opened AND step 1 + 2; Or if DB says completed. Expects no multisig is opened outside of the app.
     // Step 4: if DB says completed. This should be update in the DB when lastic approves or multisig executed event rises.
-    _getStatusMessage(123)
+    const msg = _getStatusMessage(123)
   }
 
   /**
@@ -75,6 +81,58 @@ export const useListingsTracker = (coreListings: CoreListing[], intervalMs: numb
     else if (!listingsState[id].step3) return statusMessages.step3
     else if (!listingsState[id].step4) return statusMessages.step4
     else return 'Trade completed'
+  }
+
+  /**
+   * Check if the multisig address currently holds the core price as balance.
+   * @returns - True if the multisig address holds the amount
+   */
+  const hasMultisigAddressTheCoreFunds = async (core: CoreListing) => {
+    if (!core?.buyerAddress || !core?.lasticAddress) return false
+
+    const multisigAddress = calculateMultisigAddress(
+      THRESHOLD,
+      [core.sellerAddress, core.buyerAddress, core.lasticAddress],
+      activeChain,
+    )
+    const { data: balance } = (await api?.query.system.account(multisigAddress)) as any
+    const cleanedBalance = balance?.free.toString().replace(/,/g, '')
+    const balanceBN = new BN(cleanedBalance)
+
+    if (balanceBN?.gte(new BN(core.cost))) return true
+    return false
+  }
+
+  /**
+   * Check if the multisig address currently holds the listed core.
+   * @param core - The core listing to check
+   * @returns - True if the multisig address holds the core
+   */
+  const hasMultisigAddressTheListedCore = async (core: CoreListing) => {
+    if (!core?.buyerAddress || !core?.lasticAddress) return false
+
+    const multisigAddress = calculateMultisigAddress(
+      THRESHOLD,
+      [core.sellerAddress, core.buyerAddress, core.lasticAddress],
+      activeChain,
+    )
+
+    // fetch multisig regions
+    const entries = await api?.query.broker.regions.entries()
+    const regions: RegionsType | undefined = entries?.map(([key, value]) => {
+      const detail = key.toHuman() as RegionDetail
+      const owner = value.toHuman() as RegionOwner
+      return { detail, owner }
+    })
+    const filteredRegions = regions?.filter((region) => region.owner.owner === multisigAddress)
+
+    // check if the multisig address has the core
+    return filteredRegions?.some((region) => {
+      const regionDetail = region.detail[0]
+      regionDetail.core === core.coreNumber.toString() &&
+        regionDetail.begin === core.begin &&
+        regionDetail.mask === core.mask
+    })
   }
 
   return { listingsState, isLoading, updateAllStates, dbSync }

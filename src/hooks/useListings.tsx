@@ -28,7 +28,7 @@ export interface CoreListing {
   network: 'polkadot' | 'kusama' | 'westend' | 'rococo'
   end: string
   timestamp: string
-  cost: number // native currency
+  cost: string // native currency in planck
   sellerAddress: string // address of current owner
   buyerAddress?: string | null // address, is added at buy init
   lasticAddress?: string | null // address, is added at buy init

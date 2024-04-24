@@ -1,7 +1,10 @@
+'use client'
 // components/Card.tsx
 import Border from '@/components/border/Border'
 import PrimaryButton from '@/components/button/PrimaryButton'
 import { CoreListing } from '@/hooks/useListings'
+import { parseNativeTokenToHuman } from '@/utils'
+import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
 import Image from 'next/image'
 import React from 'react'
 
@@ -12,10 +15,17 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({ listing, currency, buttonAction }) => {
+  const { activeAccount } = useInkathon()
+  const { tokenDecimals } = useBalance(activeAccount?.address)
   const beginStr = listing.begin.replace(/,/g, '')
   const coreSize =
     parseInt(listing.end.replace(/,/g, '')) - parseInt(listing.begin.replace(/,/g, ''))
   const bulkSize = 1260 // TODO replace this by config value
+  const price = parseNativeTokenToHuman({
+    paid: listing.cost,
+    decimals: tokenDecimals,
+    reduceDecimals: 3,
+  })
 
   return (
     <Border className="px-10 py-6 hover:bg-pink-1">
@@ -46,7 +56,7 @@ const Card: React.FC<CardProps> = ({ listing, currency, buttonAction }) => {
           <div className="flex flex-row p-1">
             <p className="text-gray-12 px-2">
               {' '}
-              Cost: {listing.cost} {currency}
+              Cost: {price} {currency}
             </p>
           </div>
 
