@@ -22,12 +22,11 @@ const ListingsModal: FC<ListingsModalProps> = ({ isOpen, onClose, regionId }) =>
     const coreData: CoreListing = {
       id: Date.now(), // Temporary unique ID, replace as needed
       coreNumber: Number(regionId.core),
-      size: 1, // Update this as per your logic
       cost: parseInt(newOwner), // Assuming newOwner is holding the cost
-      reward: 0, // Update this as per your logic
-      owner: activeAccount ? activeAccount.address : '',
-      currencyCost: tokenSymbol,
-      currencyReward: '', // Update this as per your logic
+      sellerAddress: activeAccount ? activeAccount.address : '',
+      network: 'rococo',
+      timestamp: new Date().toISOString(),
+
       mask: regionId.mask,
       begin: regionId.begin,
       end: '', // Update this as per your logic
