@@ -6,30 +6,58 @@ const buyerAddress = '0x123'
 const sellerAddress = '0x456'
 const lasticAddress = '0x789'
 
-export const useMultisigStatus = (coreListings: CoreListing[], intervalMs?: number) => {
+type ListingID = number
+
+interface ListingState {
+  step1: boolean
+  step2: boolean
+  step3: boolean
+  step4: boolean
+  statusMessage: string
+}
+
+const listingStateInit = {
+  step1: false,
+  step2: false,
+  step3: false,
+  step4: false,
+  statusMessage: '',
+}
+
+type ListingsTracker = Record<ListingID, ListingState>
+
+export const useListingsTracker = (coreListings: CoreListing[], intervalMs: number = 10000) => {
   const { api, activeAccount } = useInkathon()
   const [isLoading, setIsLoading] = useState(false)
-  // Make it support
-  const [steps, setSteps] = useState({
-    step1: true,
-    step2: false,
-    step3: false,
-    step4: false,
-  })
-  const [statusMessage, setStatusMessage] = useState(
-    '⏳ Wait for the seller to send the core to the multisig address',
+  const [listingsState, setListingsState] = useState<ListingsTracker>(
+    Object.create(
+      coreListings.reduce((acc, listing) => ({ ...acc, [listing.id]: listingStateInit }), {}),
+    ),
   )
 
+  /**
+   * Updates the state of all listings
+   */
+  const updateAllStates = async () => {}
+
+  /**
+   * Updates the state of a single listing
+   */
   const updateState = () => {
     // TODO: on step 4 make sure to add 'completed' state to listing. This should mark all steps as finished.
     // Step 1: if multisig has funds; Or if DB says completed
     // Step 2: if multisig has core; Or if DB says completed
     // Step 3: if multisig is opened AND step 1 + 2; Or if DB says completed. Expects no multisig is opened outside of the app.
     // Step 4: if DB says completed. This should be update in the DB when lastic approves or multisig executed event rises.
-    _updateStatusMessage()
+    _getStatusMessage(123)
   }
 
-  const _updateStatusMessage = () => {
+  /**
+   * Updates current listings by reading from the DB
+   */
+  const dbSync = async () => {}
+
+  const _getStatusMessage = (id: ListingID) => {
     let statusMessages = statusMessagesNeutralView
 
     // status message personalized for each user
@@ -42,14 +70,14 @@ export const useMultisigStatus = (coreListings: CoreListing[], intervalMs?: numb
     }
 
     // identify right step
-    if (!steps.step1) setStatusMessage(statusMessages.step1)
-    else if (!steps.step2) setStatusMessage(statusMessages.step2)
-    else if (!steps.step3) setStatusMessage(statusMessages.step3)
-    else if (!steps.step4) setStatusMessage(statusMessages.step4)
-    else setStatusMessage('Trade completed')
+    if (!listingsState[id].step1) return statusMessages.step1
+    else if (!listingsState[id].step2) return statusMessages.step2
+    else if (!listingsState[id].step3) return statusMessages.step3
+    else if (!listingsState[id].step4) return statusMessages.step4
+    else return 'Trade completed'
   }
 
-  return { isLoading }
+  return { listingsState, isLoading, updateAllStates, dbSync }
 }
 
 const statusMessagesBuyerView = {

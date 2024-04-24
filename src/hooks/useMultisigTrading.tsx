@@ -360,10 +360,10 @@ export const useMultisigTrading = (
   }
 
   /**
-   * The following function is used to get the block number and index of a multisig call.
+   * The following function is used to get the block number and index of a multisig call via accessing the state storage directly. It is currently not completely functional.
    * @remarks
    * It reads the rpc storage directly to get the multisig call information. The same is done by the PJS team here: https://github.com/paritytech/txwrapper-core/blob/768bb445beb2907582b2d5e13ade3be5d995af3e/packages/txwrapper-examples/multisig/src/multisig.ts#L171
-   * This function works but the Subsquid query provides a wrong call hash so the created storageKey is wrong. So use the getTimepoint() function for now instead.
+   * This function works but the Subsquid query provides a wrong 'callHash' so the created storageKey is wrong. So use the other functions above to get the multisig call information for now.
    */
   const _getMultisigTimepointByStorageRead = async () => {
     const multisigAddressBytes = createKeyMulti(signatories, THRESHOLD)

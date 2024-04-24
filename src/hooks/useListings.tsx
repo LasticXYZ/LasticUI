@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 
 // TODO: Update this as necessary
-export interface CoreListing {
+
+export interface CoreListingOld {
   id: number
   coreNumber: number
   size: number
@@ -13,6 +14,26 @@ export interface CoreListing {
   mask: string
   begin: string
   end: string
+}
+export interface CoreListing {
+  // listing identifier
+  id: number
+
+  // core identifiers
+  begin: string
+  coreNumber: number
+  mask: string
+
+  // details
+  network: 'polkadot' | 'kusama' | 'westend' | 'rococo'
+  end: string
+  timestamp: string
+  cost: number // native currency
+  sellerAddress: string // address of current owner
+  buyerAddress?: string | null // address, is added at buy init
+  lasticAddress?: string | null // address, is added at buy init
+
+  timepoint?: { height: number; index: number } // is added at multisig init. Used to identify right opened multisig if multiple are opened.
 }
 
 export const useListings = () => {

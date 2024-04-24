@@ -4,6 +4,7 @@ import Subtitle from '@/app/[network]/(App)/samesections/SubTitle'
 import CoreItemPurchase from '@/components/cores/CoreItemPurchase'
 import MultisigTradeModal from '@/components/multisig/MultisigTradeModal'
 import { CoreListing } from '@/hooks/useListings'
+import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
 import { useEffect, useState } from 'react'
 
 interface Database {
@@ -16,6 +17,8 @@ type MultisigModal = {
 }
 
 const ListingsPage = () => {
+  const { activeAccount } = useInkathon()
+  let { tokenSymbol } = useBalance(activeAccount?.address, true)
   const [cores, setCores] = useState<CoreListing[]>([])
   const [multisigModalData, setMultisigModalData] = useState<MultisigModal>({
     visible: false,
@@ -58,15 +61,8 @@ const ListingsPage = () => {
           {cores.map((core) => (
             <div key={core.id} className="">
               <CoreItemPurchase
-                coreNumber={core.coreNumber.toString()}
-                size={core.size.toString()}
-                cost={core.cost.toString()}
-                reward={core.reward.toString()}
-                currencyCost={core.currencyCost}
-                currencyReward={core.currencyReward}
-                mask={core.mask}
-                begin={core.begin}
-                end={core.end}
+                listing={core}
+                currency={tokenSymbol}
                 buttonAction={() => {
                   setMultisigModalData({ visible: true, core })
                 }}
