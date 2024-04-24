@@ -1,13 +1,11 @@
 import { CoreListing } from '@/hooks/useListings'
 import { RegionDetail, RegionOwner, RegionsType } from '@/types'
-import { calculateMultisigAddress } from '@/utils/multisigHelper'
+import { calculateMultisigAddress, getAllOpenMultisigCalls } from '@/utils/multisigHelper'
 import { BN } from '@polkadot/util'
 import { useInkathon } from '@poppyseed/lastic-sdk'
 import { useState } from 'react'
 
-const buyerAddress = '0x123'
-const sellerAddress = '0x456'
-const lasticAddress = '0x789'
+const LASTIC_ADDRESS = process.env.NEXT_PUBLIC_LASTIC_ADDRESS || '' // used for new multisigs and if db has no other address defined
 
 const THRESHOLD = 2
 
@@ -32,7 +30,7 @@ const listingStateInit = {
 type ListingsTracker = Record<ListingID, ListingState>
 
 export const useListingsTracker = (coreListings: CoreListing[], intervalMs: number = 10000) => {
-  const { api, activeAccount, activeChain } = useInkathon()
+  const { api, activeAccount, activeChain, activeRelayChain } = useInkathon()
 
   const [isLoading, setIsLoading] = useState(false)
   const [listingsState, setListingsState] = useState<ListingsTracker>(
@@ -41,45 +39,92 @@ export const useListingsTracker = (coreListings: CoreListing[], intervalMs: numb
     ),
   )
 
-  /**
-   * Updates the state of all listings
-   */
-  const updateAllStates = async () => {}
-
-  /**
-   * Updates the state of a single listing
-   */
-  const updateState = () => {
-    // TODO: on step 4 make sure to add 'completed' state to listing. This should mark all steps as finished.
-    // Step 1: if multisig has funds; Or if DB says completed
-    // Step 2: if multisig has core; Or if DB says completed
-    // Step 3: if multisig is opened AND step 1 + 2; Or if DB says completed. Expects no multisig is opened outside of the app.
-    // Step 4: if DB says completed. This should be update in the DB when lastic approves or multisig executed event rises.
-    const msg = _getStatusMessage(123)
+  /** Updates the state of all listings */
+  const updateAllStates = async () => {
+    try {
+      setIsLoading(true)
+      const updatedListingsState = await Promise.all(
+        coreListings.map(async (core) => {
+          const state = await _getListingState(core)
+          return { [core.id]: state }
+        }),
+      )
+      setListingsState(Object.assign({}, ...updatedListingsState))
+    } catch (error) {
+      console.error('Failed to update listings state:', error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
-  /**
-   * Updates current listings by reading from the DB
-   */
+  /** Updates the state of a single listing */
+  const _getListingState = async (core: CoreListing) => {
+    // on complete
+    if (core.status === 'completed')
+      return {
+        step1: true,
+        step2: true,
+        step3: true,
+        step4: true,
+        statusMessage: 'Trade completed',
+      }
+
+    if (!core.buyerAddress) return listingStateInit
+    let state = listingStateInit
+
+    // Step 1
+    if (await hasMultisigAddressTheCoreFunds(core)) {
+      state = { ...state, step1: true }
+    }
+
+    // Step 2
+    if (await hasMultisigAddressTheListedCore(core)) {
+      state = { ...state, step2: true }
+    }
+
+    // Step 3
+    const multisigAddress = calculateMultisigAddress(
+      THRESHOLD,
+      [core.sellerAddress, core.buyerAddress, core.lasticAddress || LASTIC_ADDRESS],
+      activeChain,
+    )
+    const multisigCalls = await getAllOpenMultisigCalls(
+      multisigAddress || '',
+      api,
+      activeRelayChain,
+    )
+
+    if (multisigCalls && multisigCalls.length == 1) {
+      state = { ...state, step3: true }
+    } else if (multisigCalls && multisigCalls.length > 1) {
+      // TODO support this case
+      console.error('More than one multisig call opened for the same multisig address')
+    }
+
+    const msg = _getStatusMessage(state, core)
+    return { ...state, statusMessage: msg }
+  }
+
+  /** Updates current listings by reading from the DB. Not implemented yet. */
   const dbSync = async () => {}
 
-  const _getStatusMessage = (id: ListingID) => {
+  const _getStatusMessage = (newState: ListingState, core: CoreListing) => {
     let statusMessages = statusMessagesNeutralView
 
     // status message personalized for each user
-    if (activeAccount?.address === buyerAddress) {
+    if (activeAccount?.address === core.buyerAddress) {
       statusMessages = statusMessagesBuyerView
-    } else if (activeAccount?.address === sellerAddress) {
+    } else if (activeAccount?.address === core.sellerAddress) {
       statusMessages = statusMessagesSellerView
-    } else if (activeAccount?.address === lasticAddress) {
+    } else if (activeAccount?.address === (core.lasticAddress || LASTIC_ADDRESS)) {
       statusMessages = statusMessagesLasticView
     }
 
     // identify right step
-    if (!listingsState[id].step1) return statusMessages.step1
-    else if (!listingsState[id].step2) return statusMessages.step2
-    else if (!listingsState[id].step3) return statusMessages.step3
-    else if (!listingsState[id].step4) return statusMessages.step4
+    if (newState.step1) return statusMessages.step1
+    else if (newState.step2) return statusMessages.step2
+    else if (newState.step3) return statusMessages.step3
+    else if (newState.step4) return statusMessages.step4
     else return 'Trade completed'
   }
 
@@ -135,7 +180,7 @@ export const useListingsTracker = (coreListings: CoreListing[], intervalMs: numb
     })
   }
 
-  return { listingsState, isLoading, updateAllStates, dbSync }
+  return { listingsState, isLoading, updateAllStates }
 }
 
 const statusMessagesBuyerView = {

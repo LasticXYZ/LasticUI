@@ -2,19 +2,6 @@ import { useEffect, useState } from 'react'
 
 // TODO: Update this as necessary
 
-export interface CoreListingOld {
-  id: number
-  coreNumber: number
-  size: number
-  cost: number
-  reward: number
-  owner: string
-  currencyCost: string
-  currencyReward: string
-  mask: string
-  begin: string
-  end: string
-}
 export interface CoreListing {
   // listing identifier
   id: number
@@ -25,6 +12,7 @@ export interface CoreListing {
   mask: string
 
   // details
+  status: 'listed' | 'tradeOngoing' | 'completed'
   network: 'polkadot' | 'kusama' | 'westend' | 'rococo'
   end: string
   timestamp: string

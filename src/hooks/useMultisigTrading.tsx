@@ -23,7 +23,7 @@ const MAX_WEIGHT = {
 }
 
 const THRESHOLD = 2 // always 2 out of 3 signatories
-const LASTIC_ADDRESS = '5GByzRyonPJC4kLg8dRenszsZD25dFjdJRCVCyfLkQ52HDev' //test 3; TODO: add to env
+const LASTIC_ADDRESS = process.env.NEXT_PUBLIC_LASTIC_ADDRESS || '' // used for new multisigs and if db has no other address defined
 
 export const useMultisigTrading = (
   sellerAddress: string,

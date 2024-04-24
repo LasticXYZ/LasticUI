@@ -25,6 +25,7 @@ const ListingsModal: FC<ListingsModalProps> = ({ isOpen, onClose, regionId }) =>
       cost: '3000000000000', // Replace with actual cost
       sellerAddress: activeAccount ? activeAccount.address : '',
       network: 'rococo',
+      status: 'listed',
       timestamp: new Date().toISOString(),
 
       mask: regionId.mask,
