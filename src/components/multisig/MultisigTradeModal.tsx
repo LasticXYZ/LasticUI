@@ -4,6 +4,7 @@ import { CoreListing } from '@/hooks/useListings'
 import { useListingsTracker } from '@/hooks/useListingsTracker'
 import { useMultisigTrading } from '@/hooks/useMultisigTrading'
 import { Checkbox } from '@mui/material'
+import { BN } from '@polkadot/util'
 import { useInkathon } from '@poppyseed/lastic-sdk'
 import { FC } from 'react'
 import { ModalProps } from '../../types/ListingsTypes'
@@ -55,17 +56,68 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
       label: 'Lastic',
     },
   ]
-  const { initiateOrExecuteMultisigTradeCall, multisigAddress, isLoading, txStatusMessage } =
-    useMultisigTrading(test2, test4, core)
+  const {
+    initiateOrExecuteMultisigTradeCall,
+    sendFundsToMultisig,
+    sendCoreToMultisig,
+    multisigAddress,
+    isLoading,
+    txStatusMessage,
+  } = useMultisigTrading(test2, test4, core)
 
-  let buttonEnabled = false
-  let methodCall = initiateOrExecuteMultisigTradeCall
+  const updateMethodAndButton = () => {
+    let buttonFunction = initiateOrExecuteMultisigTradeCall
+    let buttonEnabled = false
 
-  if (activeAccount?.address === core.sellerAddress) {
-    if (listingsState[core.id].step1) buttonEnabled = true
-  } else if (activeAccount?.address === (core.buyerAddress || activeAccount?.address)) {
-    if (!listingsState[core.id].step1) buttonEnabled = true
+    // If you are seller
+    if (activeAccount?.address === core.sellerAddress) {
+      if (listingsState[core.id].step1 && !listingsState[core.id].step2) {
+        buttonFunction = () => sendCoreToMultisig(core)
+        buttonEnabled = true
+      } else if (listingsState[core.id].step1 && !listingsState[core.id].step3) {
+        buttonFunction = initiateOrExecuteMultisigTradeCall
+        buttonEnabled = true
+      } else buttonEnabled = false
+    }
+
+    // If you are buyer
+    else if (activeAccount?.address === (core.buyerAddress || activeAccount?.address)) {
+      // step 1 interaction
+      if (!listingsState[core.id].step1) {
+        buttonFunction = () => sendFundsToMultisig(new BN(core.cost))
+        buttonEnabled = true
+      }
+      // finisher interaction
+      else if (
+        listingsState[core.id].step1 &&
+        listingsState[core.id].step2 &&
+        listingsState[core.id].step3
+      ) {
+        buttonFunction = initiateOrExecuteMultisigTradeCall
+        buttonEnabled = true
+      } else buttonEnabled = false
+    }
+
+    // If you are lastic
+    else if (activeAccount?.address === (core.lasticAddress || LASTIC_ADDRESS)) {
+      // only finisher interaction possible; if steps 1-3 are finished
+      if (
+        listingsState[core.id].step1 &&
+        listingsState[core.id].step2 &&
+        listingsState[core.id].step3
+      ) {
+        buttonFunction = initiateOrExecuteMultisigTradeCall
+        buttonEnabled = true
+      }
+    }
+
+    // If you are someone else. No interaction possible.
+    else buttonEnabled = false
+
+    return { buttonFunction, buttonEnabled }
   }
+
+  const { buttonFunction, buttonEnabled } = updateMethodAndButton()
 
   if (!isOpen || !api) {
     return null
@@ -106,8 +158,8 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
             <div className="flex items-center gap-1">
               <Checkbox disableRipple checked={listingsState[core.id].step4} sx={checkboxStyle} />
               <p>
-                Step 4: Lastic verifies and approves the multisig call and the the trade will be
-                executed
+                Step 4: Lastic or the buyer verifies and approves the multisig call and the the
+                trade will be executed.
               </p>
             </div>
           </div>
@@ -142,7 +194,7 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
           className="w-40 self-center"
           disabled={isLoading || !buttonEnabled}
           title="Process Trade"
-          onClick={methodCall}
+          onClick={buttonFunction}
         />
         {txStatusMessage && <p className="flex flex-wrap self-center text-xs">{txStatusMessage}</p>}
       </div>
