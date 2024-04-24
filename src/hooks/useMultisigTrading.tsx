@@ -107,8 +107,7 @@ export const useMultisigTrading = (
         },
       )
     } catch (error: unknown) {
-      if (error instanceof Error)
-        setTxStatusMessage('Error in executing the multisig call: ' + error.message)
+      if (error instanceof Error) setTxStatusMessage('Multisig call: ' + error.message)
     } finally {
       setIsLoading(false)
     }

@@ -4,7 +4,8 @@ import {
   parseMultisigStorageInfo,
 } from '@/types/ListingsTypes'
 import { ApiPromise } from '@polkadot/api'
-import { createKeyMulti, encodeAddress } from '@polkadot/util-crypto'
+import { hexToU8a, isHex } from '@polkadot/util'
+import { createKeyMulti, decodeAddress, encodeAddress } from '@polkadot/util-crypto'
 import { SubstrateChain } from '@poppyseed/lastic-sdk'
 import {
   getClient,
@@ -39,6 +40,7 @@ export const calculateMultisigAddress = (
   activeChain?: SubstrateChain,
 ) => {
   if (threshold < 2 || signatories.length < 2) return
+  if (!addressesValid(signatories)) return
   // Address as a byte array.
   const multisigPubKey = createKeyMulti(signatories, threshold)
 
@@ -169,4 +171,21 @@ export const getAllOpenMultisigCalls = async (
   )
 
   return openCalls
+}
+
+export const addressesValid = (addresses: string[]): boolean => {
+  if (addresses.length === 0) return false
+  if (addresses.includes('')) return false
+
+  return addresses.every((address) => isValidPolkadotAddress(address))
+}
+
+const isValidPolkadotAddress = (address: string) => {
+  try {
+    encodeAddress(isHex(address) ? hexToU8a(address) : decodeAddress(address))
+
+    return true
+  } catch (error) {
+    return false
+  }
 }
