@@ -7,7 +7,7 @@ interface CardProps {
   timeBought: string
   owner: string
   amITheOwner: boolean
-  paid: bigint | null
+  paid: string | null
   coreNumber: number
   phase: string
   cost: string

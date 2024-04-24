@@ -11,6 +11,7 @@ type SliderPropeTypes = {
 }
 
 const Slider: FC<SliderPropeTypes> = ({ currentBlockNumber, saleInfo, config, constants }) => {
+  if (!saleInfo.saleStart || !saleInfo.regularPrice) return null
   const saleDuration = (config.regionLength * constants.timeslicePeriod) / 2
 
   // Calculate percentages for each period
@@ -60,7 +61,9 @@ const Slider: FC<SliderPropeTypes> = ({ currentBlockNumber, saleInfo, config, co
         className="absolute top-0 -mt-1"
         style={{ left: `${(safeLeadinPercentage + 100) / 2}%` }}
       >
-        <p className="text-sm text-left mt-5 -ml-10">Stable price = {saleInfo.price / 10 ** 12}</p>
+        <p className="text-sm text-left mt-5 -ml-10">
+          Stable price = {Number(saleInfo.regularPrice) / 10 ** 12}
+        </p>
       </div>
       {/* Marker for Purchase Period */}
       <div className="absolute top-0 -mt-1" style={{ left: '100%' }}>

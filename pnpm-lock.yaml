@@ -39,8 +39,8 @@ dependencies:
     specifier: ^10.13.1
     version: 10.13.1
   '@poppyseed/squid-sdk':
-    specifier: ^0.2.2
-    version: 0.2.2(@subsquid/substrate-runtime@1.0.3)(typeorm@0.3.20)
+    specifier: ^0.2.3
+    version: 0.2.3(@subsquid/substrate-runtime@1.0.3)(typeorm@0.3.20)
   '@poppyseed/xcm-sdk':
     specifier: ^4.0.1
     version: 4.0.1(@polkadot/api-base@10.13.1)(@polkadot/api@10.13.1)(@polkadot/apps-config@0.133.1)(@polkadot/types@10.13.1)(@polkadot/util@12.6.2)
@@ -4401,8 +4401,8 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@poppyseed/squid-sdk@0.2.2(@subsquid/substrate-runtime@1.0.3)(typeorm@0.3.20):
-    resolution: {integrity: sha512-wrwJWcsqQ2GFT7Ky0i1y9+iDeNJqlkmCm669kj/yBPLcuURQqAD4EzjX+3n59N/iiNUOgkxid0Sw4zI1buZbXA==}
+  /@poppyseed/squid-sdk@0.2.3(@subsquid/substrate-runtime@1.0.3)(typeorm@0.3.20):
+    resolution: {integrity: sha512-bBDP9/+taSyQx+5DZ21pvcYIwVgucso1x51vHxmSzJnVk2itbL0z31TWU+A62TKzTKHC9RTZ/TtTqkZ+j2iAMg==}
     dependencies:
       '@kodadot1/static': 0.0.3
       '@subsquid/archive-registry': 3.3.2
