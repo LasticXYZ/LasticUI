@@ -198,6 +198,7 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
                 mask={region.regionId.mask}
                 begin={region.regionId.begin}
                 end={region.duration + region.regionId.begin}
+                region={region}
               />
             </div>
           </div>

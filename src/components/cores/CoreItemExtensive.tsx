@@ -1,5 +1,6 @@
 // components/Card.tsx
 import { parseNativeTokenToHuman, toShortAddress } from '@/utils/account/token'
+import { CoreOwnerEvent } from '@poppyseed/squid-sdk'
 import Image from 'next/image'
 import React from 'react'
 
@@ -15,6 +16,7 @@ interface CardProps {
   mask: string
   begin: number
   end: number
+  region: CoreOwnerEvent
 }
 
 const CoreItemExtensive: React.FC<CardProps> = ({
@@ -29,6 +31,7 @@ const CoreItemExtensive: React.FC<CardProps> = ({
   mask,
   begin,
   end,
+  region,
 }) => {
   return (
     <>
@@ -47,12 +50,14 @@ const CoreItemExtensive: React.FC<CardProps> = ({
           </div>
           <div>
             <div className="block mt-1 text-md leading-tight font-medium text-black dark:text-gray-1">
-              Paid: {parseNativeTokenToHuman({ paid: paid, decimals: 12 })} {currencyCost}
+              Paid: {parseNativeTokenToHuman({ paid: paid, decimals: 12, reduceDecimals: 6 })}{' '}
+              {currencyCost}
             </div>
           </div>
           <div>
             <div className="block mt-1 text-md leading-tight font-medium text-black dark:text-gray-1">
-              Time bought: {timeBought}
+              Last event time:{' '}
+              {region.timestamp ? new Date(region.timestamp).toLocaleString() : timeBought}
             </div>
           </div>
         </div>
@@ -65,6 +70,14 @@ const CoreItemExtensive: React.FC<CardProps> = ({
           </div>
           <div className="text-md  text-black dark:text-gray-1 ">
             <p>End: {end}</p>
+          </div>
+        </div>
+        <div className="flex w-full flex-col px-5 items-start justify-start space-y-3">
+          <div className="text-md  text-black dark:text-gray-1 ">
+            <p>Put into a pool: {region.pooled ? 'True' : 'False'}</p>
+          </div>
+          <div className="text-md  text-black dark:text-gray-1 ">
+            <p>Assigned: {region.assigned ? 'True' : 'False'}</p>
           </div>
         </div>
       </div>
