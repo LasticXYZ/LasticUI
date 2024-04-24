@@ -127,7 +127,13 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
             <p className="text-gray-400 flex">{multisigAddress}</p>
           </div>
         </div>
-        <p className="font-bold text-center">{listingsState[core.id].statusMessage}</p>
+        <div className="flex items-baseline gap-2 self-center">
+          <p className="font-bold text-center">{listingsState[core.id].statusMessage}</p>
+          <div
+            hidden={!isLoadingStateUpdate}
+            className="border-gray-300 h-3 w-3 animate-spin rounded-full border-2 border-t-lastic-red"
+          />
+        </div>
         <SecondaryButton
           className="w-40 self-center"
           disabled={isLoading}
