@@ -5,7 +5,6 @@ import {
   getAllOpenMultisigCalls,
   getEncodedAddress,
 } from '@/utils/multisigHelper'
-import { BN } from '@polkadot/util'
 import {
   blake2AsHex,
   createKeyMulti,
@@ -25,21 +24,17 @@ const MAX_WEIGHT = {
 const THRESHOLD = 2 // always 2 out of 3 signatories
 const LASTIC_ADDRESS = process.env.NEXT_PUBLIC_LASTIC_ADDRESS || '' // used for new multisigs and if db has no other address defined
 
-export const useMultisigTrading = (
-  sellerAddress: string,
-  buyerAddress: string,
-  core: CoreListing,
-) => {
+export const useMultisigTrading = (buyerAddress: string, core: CoreListing) => {
   const { api, activeSigner, activeAccount, activeChain, activeRelayChain } = useInkathon()
   const [isLoading, setIsLoading] = useState(false)
   const [txStatusMessage, setTxStatusMessage] = useState<string>('')
+  const signatories = [core.sellerAddress, buyerAddress, LASTIC_ADDRESS]
+  console.log('Signatories: ', signatories)
+  const multisigAddress = calculateMultisigAddress(THRESHOLD, signatories, activeChain)
 
   useEffect(() => {
     setTxStatusMessage('')
-  }, [core])
-
-  const signatories = [sellerAddress, buyerAddress, LASTIC_ADDRESS]
-  const multisigAddress = calculateMultisigAddress(THRESHOLD, signatories, activeChain)
+  }, [core, activeAccount])
 
   const initiateOrExecuteMultisigTradeCall = async (): Promise<void> => {
     if (!_basicChecks()) return
@@ -151,10 +146,10 @@ export const useMultisigTrading = (
   /** Sends the funds to the multisig address
    * @param corePrice - The price of the listed core
    */
-  const sendFundsToMultisig = async (corePrice: BN) => {
+  const sendFundsToMultisig = async (core: CoreListing) => {
     if (!_basicChecks()) return
     // simple transfer logic
-    const transfer = api?.tx.balances.transfer(multisigAddress, corePrice.toString())
+    const transfer = api?.tx.balances.transferKeepAlive(multisigAddress, core.cost)
 
     transfer?.signAndSend(activeAccount!.address, { signer: activeSigner }, (result) => {
       setTxStatusMessage(result.status.type)
@@ -164,7 +159,10 @@ export const useMultisigTrading = (
         setTxStatusMessage(`🧊 Funds sent and tx included in block ${result.status.asInBlock}`)
       } else if (result.status.isFinalized) {
         setTxStatusMessage(`📜 Funds sent and tx finalized ${result.status.asFinalized}`)
-        // TODO if tx successful, track in db. Add multisig signers and that trade is in progress
+
+        // TODO update DB
+        // core.status = 'tradeOngoing'
+        // core.buyerAddress = activeAccount!.address
       }
     })
   }

@@ -2,16 +2,16 @@
   "listings": [
     {
       "id": 101,
-      "begin": "500001",
-      "coreNumber": 1,
-      "mask": "0x12a456f7890",
+      "begin": "123242",
+      "coreNumber": 61,
+      "mask": "0xffffffffffffffffffff",
       "network": "rococo",
       "status": "listed",
       "end": "500200",
       "timestamp": "2024-04-01T12:05:00Z",
       "cost": "300000000000",
-      "sellerAddress": "5D88QJLCvrZXiHdCptSW5dP7rzE9nQGCgRSvDfEdti6erqGV",
-      "buyerAddress": null,
+      "sellerAddress": "5Gza9nxUQiiErg5NotZ6FPePcjBEHhawoNL3sGqpmjrVhgeo",
+      "buyerAddress": "5D88QJLCvrZXiHdCptSW5dP7rzE9nQGCgRSvDfEdti6erqGV",
       "lasticAddress": "5GByzRyonPJC4kLg8dRenszsZD25dFjdJRCVCyfLkQ52HDev",
       "timepoint": null
     },

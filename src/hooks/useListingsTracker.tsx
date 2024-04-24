@@ -52,7 +52,7 @@ export const useListingsTracker = (coreListings: CoreListing[], intervalMs?: num
       }, intervalMs)
       return () => clearInterval(interval)
     }
-  }, [])
+  }, [activeAccount])
 
   /** Updates the state of all listings */
   const updateAllStates = async () => {
@@ -180,30 +180,44 @@ export const useListingsTracker = (coreListings: CoreListing[], intervalMs?: num
    * @returns - True if the multisig address holds the core
    */
   const hasMultisigAddressTheListedCore = async (core: CoreListing) => {
-    if (!core?.buyerAddress || !core?.lasticAddress) return false
-
     const multisigAddress = calculateMultisigAddress(
       THRESHOLD,
-      [core.sellerAddress, core.buyerAddress, core.lasticAddress],
+      [
+        core.sellerAddress,
+        core.buyerAddress || activeAccount?.address || '',
+        core.lasticAddress || LASTIC_ADDRESS,
+      ],
       activeChain,
     )
 
     // fetch multisig regions
     const entries = await api?.query.broker.regions.entries()
+    console.log('entries', entries)
     const regions: RegionsType | undefined = entries?.map(([key, value]) => {
       const detail = key.toHuman() as RegionDetail
       const owner = value.toHuman() as RegionOwner
       return { detail, owner }
     })
-    const filteredRegions = regions?.filter((region) => region.owner.owner === multisigAddress)
 
-    // check if the multisig address has the core
-    return filteredRegions?.some((region) => {
+    // filter regions by coreNb, begin and mask
+    const filteredRegions = regions?.filter((region) => {
       const regionDetail = region.detail[0]
-      regionDetail.core === core.coreNumber.toString() &&
+      regionDetail.begin = regionDetail.begin.replace(/,/g, '')
+
+      return (
+        regionDetail.core === core.coreNumber.toString() &&
         regionDetail.begin === core.begin &&
         regionDetail.mask === core.mask
+      )
     })
+
+    console.log('filteredRegions', filteredRegions)
+    console.log('multisigAddress', multisigAddress)
+
+    console.log(filteredRegions?.some((region) => region.owner.owner === multisigAddress))
+
+    // check if the multisig address has the core
+    return filteredRegions?.some((region) => region.owner.owner === multisigAddress)
   }
 
   return { listingsState, isLoading, updateAllStates }

@@ -1,10 +1,10 @@
 import SecondaryButton from '@/components/button/SecondaryButton'
 import Modal from '@/components/modal/Modal'
+import LoadingSpinner from '@/components/multisig/Spinner'
 import { CoreListing } from '@/hooks/useListings'
 import { useListingsTracker } from '@/hooks/useListingsTracker'
 import { useMultisigTrading } from '@/hooks/useMultisigTrading'
 import { Checkbox } from '@mui/material'
-import { BN } from '@polkadot/util'
 import { useInkathon } from '@poppyseed/lastic-sdk'
 import { FC } from 'react'
 import { ModalProps } from '../../types/ListingsTypes'
@@ -63,7 +63,7 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
     multisigAddress,
     isLoading,
     txStatusMessage,
-  } = useMultisigTrading(test2, test4, core)
+  } = useMultisigTrading(activeAccount?.address || '', core)
 
   const updateMethodAndButton = () => {
     let buttonFunction = initiateOrExecuteMultisigTradeCall
@@ -81,10 +81,13 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
     }
 
     // If you are buyer
-    else if (activeAccount?.address === (core.buyerAddress || activeAccount?.address)) {
+    else if (
+      (activeAccount?.address === core.buyerAddress || !core.buyerAddress) &&
+      activeAccount?.address !== (core.lasticAddress || LASTIC_ADDRESS)
+    ) {
       // step 1 interaction
       if (!listingsState[core.id].step1) {
-        buttonFunction = () => sendFundsToMultisig(new BN(core.cost))
+        buttonFunction = () => sendFundsToMultisig(core)
         buttonEnabled = true
       }
       // finisher interaction
@@ -100,6 +103,7 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
 
     // If you are lastic
     else if (activeAccount?.address === (core.lasticAddress || LASTIC_ADDRESS)) {
+      console.log('lastic')
       // only finisher interaction possible; if steps 1-3 are finished
       if (
         listingsState[core.id].step1 &&
@@ -108,6 +112,9 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
       ) {
         buttonFunction = initiateOrExecuteMultisigTradeCall
         buttonEnabled = true
+      } else {
+        console.log('not all steps done')
+        buttonEnabled = false
       }
     }
 
@@ -167,7 +174,7 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
 
         <div className="self-center">
           {signatoriesWithLabel.map(({ address, label }) => (
-            <div key={address} className="flex items-center gap-3 text-xs">
+            <div key={address + label} className="flex items-center gap-3 text-xs">
               <p className="w-32 text-end">
                 {label} {activeAccount?.address === address && '(You)'}:
               </p>
@@ -184,10 +191,7 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
         </div>
         <div className="flex items-baseline gap-2 self-center">
           <p className="font-bold text-center">{listingsState[core.id].statusMessage}</p>
-          <div
-            hidden={!isLoadingStateUpdate}
-            className="border-gray-300 h-3 w-3 animate-spin rounded-full border-2 border-t-lastic-red"
-          />
+          <LoadingSpinner isLoading={isLoadingStateUpdate} />
         </div>
 
         <SecondaryButton
