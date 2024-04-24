@@ -57,22 +57,19 @@ export const useListingsTracker = (coreListings: CoreListing[], intervalMs?: num
   /** Updates the state of all listings */
   const updateAllStates = async () => {
     try {
-      console.log('try updating')
       setIsLoading(true)
-      let update: any = {}
 
-      for (let i = 0; i < coreListings.length; i++) {
-        const next = await _getListingState(coreListings[i])
-        console.log('next', next)
-        update = { ...update, [coreListings[i].id]: next }
-      }
+      const updates = await Promise.all(
+        coreListings.map((listing) =>
+          _getListingState(listing).then((state) => ({ [listing.id]: state })),
+        ),
+      )
+
+      const update = Object.assign({}, ...updates)
 
       setListingsState((prevState) => {
         return { ...prevState, ...update }
       })
-
-      console.log('update', update)
-      /* setListingsState(updatedListingsState) */
     } catch (error) {
       console.error('Failed to update listings state:', error)
     } finally {
