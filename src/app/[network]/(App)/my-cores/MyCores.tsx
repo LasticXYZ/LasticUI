@@ -84,35 +84,39 @@ export default function MyCores() {
   const justBought =
     result?.data?.event?.filter((region) =>
       region.regionId.begin && currentSaleRegion?.regionBegin
-        ? region.regionId.begin > currentSaleRegion.regionBegin
+        ? region.regionId.begin >= currentSaleRegion.regionBegin
         : null,
     ) || []
   const currentlyActive =
     result?.data?.event?.filter((region) =>
       region.regionId.begin && currentSaleRegion?.regionBegin
-        ? region.regionId.begin <= currentSaleRegion.regionBegin
+        ? region.regionId.begin < currentSaleRegion.regionBegin
         : null,
     ) || []
 
-  return (
+  return result?.data?.event && result?.data?.event.length > 0 ? (
     <Border className="h-full flex flex-row justify-center items-center">
       <div className="h-full w-full flex flex-col justify-left items-left px-5 pb-10">
         <div className="pt-10 pl-4">
           <h1 className="text-xl font-bold uppercase font-unbounded ">Cores Owned</h1>
         </div>
         <SectionDisplay
-          title="Just Bought"
+          title="Obtained in this Sale"
           regions={justBought}
           configuration={configuration}
           tokenSymbol={tokenSymbol}
         />
         <SectionDisplay
-          title="Currently Active"
+          title="Obtained in the previous Sale"
           regions={currentlyActive}
           configuration={configuration}
           tokenSymbol={tokenSymbol}
         />
       </div>
+    </Border>
+  ) : (
+    <Border className="h-full flex flex-row justify-center items-center">
+      <WalletStatus />
     </Border>
   )
 }
@@ -129,19 +133,23 @@ function SectionDisplay({ title, regions, configuration, tokenSymbol }: SectionP
     <>
       <h2 className="pt-10 pl-10 text-lg font-bold uppercase font-unbounded">{title}</h2>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4">
-        {regions.map((region, index) => (
-          <CoreItem
-            key={index}
-            config={configuration}
-            coreNumber={region.regionId.core}
-            size={region.regionId.mask === '0xffffffffffffffffffff' ? '1' : 'Interlaced'}
-            cost={parseNativeTokenToHuman({ paid: region.price?.toString(), decimals: 12 })}
-            currencyCost={tokenSymbol}
-            mask={region.regionId.mask}
-            begin={region.regionId.begin}
-            duration={region.duration}
-          />
-        ))}
+        {regions.length > 0 ? (
+          regions.map((region, index) => (
+            <CoreItem
+              key={index}
+              config={configuration}
+              coreNumber={region.regionId.core}
+              size={region.regionId.mask === '0xffffffffffffffffffff' ? '1' : 'Interlaced'}
+              cost={parseNativeTokenToHuman({ paid: region.price?.toString(), decimals: 12 })}
+              currencyCost={tokenSymbol}
+              mask={region.regionId.mask}
+              begin={region.regionId.begin}
+              duration={region.duration}
+            />
+          ))
+        ) : (
+          <div className="text-gray-12">No cores found</div>
+        )}
       </div>
     </>
   )
