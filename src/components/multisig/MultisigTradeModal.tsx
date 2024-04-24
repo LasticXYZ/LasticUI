@@ -58,10 +58,13 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
   const { initiateOrExecuteMultisigTradeCall, multisigAddress, isLoading, txStatusMessage } =
     useMultisigTrading(test2, test4, core)
 
-  const _multisigCall = async () => {
-    initiateOrExecuteMultisigTradeCall().then(() => {
-      console.log('Multisig call successful')
-    })
+  let buttonEnabled = false
+  let methodCall = initiateOrExecuteMultisigTradeCall
+
+  if (activeAccount?.address === core.sellerAddress) {
+    if (listingsState[core.id].step1) buttonEnabled = true
+  } else if (activeAccount?.address === (core.buyerAddress || activeAccount?.address)) {
+    if (!listingsState[core.id].step1) buttonEnabled = true
   }
 
   if (!isOpen || !api) {
@@ -134,11 +137,12 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
             className="border-gray-300 h-3 w-3 animate-spin rounded-full border-2 border-t-lastic-red"
           />
         </div>
+
         <SecondaryButton
           className="w-40 self-center"
-          disabled={isLoading}
+          disabled={isLoading || !buttonEnabled}
           title="Process Trade"
-          onClick={_multisigCall}
+          onClick={methodCall}
         />
         {txStatusMessage && <p className="flex flex-wrap self-center text-xs">{txStatusMessage}</p>}
       </div>
