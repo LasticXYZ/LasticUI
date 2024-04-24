@@ -1,10 +1,11 @@
-import { BrokerConstantsType, ConfigurationType, SaleInfoType } from '@poppyseed/lastic-sdk'
+import { BrokerConstantsType, ConfigurationType } from '@poppyseed/lastic-sdk'
+import { SaleInitializedEvent } from '@poppyseed/squid-sdk'
 import { FC } from 'react'
 
 // Additional interfaces, which should be defined according to your data structure
 type SliderPropeTypes = {
   currentBlockNumber: number
-  saleInfo: SaleInfoType
+  saleInfo: SaleInitializedEvent
   config: ConfigurationType
   constants: BrokerConstantsType
 }

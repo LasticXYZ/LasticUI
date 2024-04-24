@@ -7,14 +7,14 @@ interface CardProps {
   timeBought: string
   owner: string
   amITheOwner: boolean
-  paid: string
-  coreNumber: string
+  paid: bigint | null
+  coreNumber: number
   phase: string
   cost: string
   currencyCost: string
   mask: string
-  begin: string
-  end: string
+  begin: number
+  end: number
 }
 
 const CoreItemExtensive: React.FC<CardProps> = ({

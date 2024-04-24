@@ -8,67 +8,91 @@ import CoreItemExtensive from '@/components/cores/CoreItemExtensive'
 import TimelineComponent from '@/components/timelineComp/TimelineComp'
 import TimelineUtilizeCore from '@/components/timelineComp/TimelineUtilizeCore'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
+import { network_list } from '@/config/network'
 import { parseNativeTokenToHuman } from '@/utils/account/token'
+import { calculateCurrentPrice, saleStatus, useCurrentBlockNumber } from '@/utils/broker'
+import { getChainFromPath } from '@/utils/common/chainPath'
 import {
-  calculateCurrentPrice,
-  saleStatus,
-  useBrokerConstants,
-  useCurrentBlockNumber,
-  useQuerySpecificRegion,
-  useSubstrateQuery,
-} from '@/utils/broker'
-import {
-  ConfigurationType,
-  SaleInfoType,
-  StatusType,
   blockTimeToUTC,
   getCurrentBlockNumber,
   useBalance,
   useInkathon,
 } from '@poppyseed/lastic-sdk'
+import {
+  CoreOwnerEvent,
+  GraphLike,
+  GraphQuery,
+  SaleInitializedEvent,
+  getClient,
+} from '@poppyseed/squid-sdk'
+import { usePathname } from 'next/navigation'
 import { FC, useEffect, useMemo, useState } from 'react'
 
 interface BrokerRegionDataProps {
   coreNb: number
-  regionId: number
-  mask?: string
+  beginRegion: number
+  mask: string
 }
 
-const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask }) => {
-  const { activeAccount, relayApi, activeChain, api } = useInkathon()
+const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask }) => {
+  const { activeAccount, relayApi, activeRelayChain, activeChain, api } = useInkathon()
   let { tokenSymbol, tokenDecimals } = useBalance(activeAccount?.address, true)
-  const region = useQuerySpecificRegion({ api, coreNb, regionId, mask })
+  const [region, setRegionResult] = useState<CoreOwnerEvent | null>(null)
+  const [currentSaleRegion, setCurrentSaleRegion] = useState<SaleInitializedEvent | null>(null)
+  const client = useMemo(() => getClient(), [])
+  const network = activeRelayChain?.network
+  const pathname = usePathname()
+  const configuration = network_list[getChainFromPath(pathname)].configuration
+  const brokerConstants = network_list[getChainFromPath(pathname)].constants
+
+  //const region = useQuerySpecificRegion({ api, coreNb, regionId: beginRegion, mask })
 
   const currentBlockNumber = useCurrentBlockNumber(api)
 
-  const saleInfoString = useSubstrateQuery(api, 'saleInfo')
-  const configurationString = useSubstrateQuery(api, 'configuration')
-  const statusString = useSubstrateQuery(api, 'status')
+  let query: GraphQuery
 
-  const { brokerConstants, isLoading: isConstantsLoading } = useBrokerConstants(api)
+  useMemo(() => {
+    query = client.eventAllSaleInitialized(1)
+    if (network && query) {
+      const fetchData = async () => {
+        const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(network, query)
+        const currentSaleRegion: SaleInitializedEvent | null = fetchedResult?.data.event
+          ? fetchedResult.data.event[0]
+          : null
+        setCurrentSaleRegion(currentSaleRegion)
+      }
 
-  const saleInfo = useMemo(
-    () => (saleInfoString ? (JSON.parse(saleInfoString) as SaleInfoType) : null),
-    [saleInfoString],
-  )
-  const configuration = useMemo(
-    () => (configurationString ? (JSON.parse(configurationString) as ConfigurationType) : null),
-    [configurationString],
-  )
-  const status = useMemo(
-    () => (statusString ? (JSON.parse(statusString) as StatusType) : null),
-    [statusString],
-  )
+      fetchData()
+    }
+  }, [network, client])
+
+  useEffect(() => {
+    if (activeAccount && currentSaleRegion && configuration) {
+      if (currentSaleRegion.regionBegin) {
+        query = client.eventSpecificRegionCoreOwner(coreNb, beginRegion, mask)
+      }
+    }
+
+    if (network && query) {
+      const fetchData = async () => {
+        const fetchedResult: GraphLike<CoreOwnerEvent[]> = await client.fetch(network, query)
+        const region = fetchedResult?.data.event ? fetchedResult.data.event[0] : null
+        setRegionResult(region)
+      }
+
+      fetchData()
+    }
+  }, [activeAccount, network, currentSaleRegion, client])
 
   // Update saleStage every second based on the currentBlockNumber
   const [saleStage, setSaleStage] = useState('')
   const [saleTitle, setSaleTitle] = useState('')
   const [timeRemaining, setTimeRemaining] = useState('')
   useEffect(() => {
-    if (saleInfo && configuration && brokerConstants) {
+    if (currentSaleRegion && configuration && brokerConstants) {
       const { statusMessage, timeRemaining, statusTitle } = saleStatus(
         currentBlockNumber,
-        saleInfo,
+        currentSaleRegion,
         configuration,
         brokerConstants,
       )
@@ -76,7 +100,7 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
       setSaleTitle(statusTitle)
       setSaleStage(statusMessage)
     }
-  }, [currentBlockNumber, saleInfo, configuration, brokerConstants])
+  }, [currentBlockNumber, currentSaleRegion, configuration, brokerConstants])
 
   const [regionBeginTimestamp, setRegionBeginTimestamp] = useState<string | null>(null)
   const [regionEndTimestamp, setRegionEndTimestamp] = useState<string | null>(null)
@@ -90,12 +114,23 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
   useEffect(() => {
     const fetchRegionTimestamps = async () => {
       try {
-        if (saleInfo && brokerConstants) {
+        if (
+          currentSaleRegion &&
+          currentSaleRegion.regionBegin &&
+          currentSaleRegion.regionEnd &&
+          brokerConstants
+        ) {
           const beginTimestamp = relayApi
-            ? await blockTimeToUTC(relayApi, saleInfo.regionBegin * brokerConstants.timeslicePeriod)
+            ? await blockTimeToUTC(
+                relayApi,
+                currentSaleRegion.regionBegin * brokerConstants.timeslicePeriod,
+              )
             : null
           const endTimestamp = relayApi
-            ? await blockTimeToUTC(relayApi, saleInfo.regionEnd * brokerConstants.timeslicePeriod)
+            ? await blockTimeToUTC(
+                relayApi,
+                currentSaleRegion.regionEnd * brokerConstants.timeslicePeriod,
+              )
             : null
           const getCurrentRelayBlock = relayApi ? await getCurrentBlockNumber(relayApi) : null
 
@@ -109,9 +144,9 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
     }
 
     fetchRegionTimestamps()
-  }, [relayApi, saleInfo, brokerConstants])
+  }, [relayApi, brokerConstants])
 
-  if (!activeChain || !activeAccount || !api || !relayApi) {
+  if (!activeChain || !activeAccount || !api || !relayApi || !configuration) {
     return (
       <Border className="mt-5">
         <WalletStatus inactiveWalletMessage="Connecting to chain..." />
@@ -119,14 +154,19 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
     )
   }
 
+  let currentPrice = calculateCurrentPrice(currentBlockNumber, currentSaleRegion, configuration)
+
   if (
     !region ||
-    !saleInfo ||
     !configuration ||
-    !status ||
+    !currentSaleRegion ||
     !currentRelayBlock ||
     !brokerConstants ||
-    isConstantsLoading
+    !region.duration ||
+    !region.regionId.core ||
+    !region.regionId.begin ||
+    !region.regionId.mask ||
+    !region.owner
   ) {
     return (
       <Border className="mt-5">
@@ -140,8 +180,6 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
     )
   }
 
-  let currentPrice = calculateCurrentPrice(currentBlockNumber, saleInfo, configuration)
-
   return (
     <>
       <Border className="mt-5">
@@ -150,16 +188,16 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
             <div className="">
               <CoreItemExtensive
                 timeBought="- 2024"
-                owner={region.owner.owner}
-                amITheOwner={region.owner.owner === activeAccount.address}
-                paid={region.owner.paid}
-                coreNumber={region.detail[0].core}
+                owner={region.owner}
+                amITheOwner={region.owner === activeAccount.address}
+                paid={region.price}
+                coreNumber={region.regionId.core}
                 phase="- Period"
-                cost={parseNativeTokenToHuman({ paid: region.owner.paid, decimals: tokenDecimals })}
+                cost={parseNativeTokenToHuman({ paid: region.price, decimals: tokenDecimals })}
                 currencyCost={tokenSymbol}
-                mask={region.detail[0].mask}
-                begin={region.detail[0].begin}
-                end={region.owner.end}
+                mask={region.regionId.mask}
+                begin={region.regionId.begin}
+                end={region.duration + region.regionId.begin}
               />
             </div>
           </div>
@@ -183,7 +221,7 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
 
             <TimelineComponent
               currentBlockNumber={currentBlockNumber}
-              saleInfo={saleInfo}
+              saleInfo={currentSaleRegion}
               config={configuration}
               constants={brokerConstants}
             />
@@ -194,7 +232,7 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
 
             <TimelineUtilizeCore
               currentRelayBlock={currentRelayBlock}
-              beginRegion={regionId}
+              beginRegion={region.regionId.begin}
               config={configuration}
               constants={brokerConstants}
             />
@@ -204,7 +242,7 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
             </div>
 
             <div className="flex flex-row flex-wrap justify-between">
-              {region.owner.owner === activeAccount.address ? (
+              {region.owner === activeAccount.address ? (
                 <>
                   <div className="flex flex-col italic max-w-md text-gray-12 items-start justify-center px-4 py-8">
                     This core is yours. You are able to:
@@ -278,9 +316,9 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
           isOpen={isTransferModalOpen}
           onClose={() => setIsTransferModalOpen(false)}
           regionId={{
-            begin: region.detail[0].begin.replace(/,/g, ''),
-            core: region.detail[0].core,
-            mask: region.detail[0].mask,
+            begin: region.regionId.begin.toString(),
+            core: region.regionId.core.toString(),
+            mask: region.regionId.mask,
           }}
         />
 
@@ -288,9 +326,9 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
           isOpen={isAssignModalOpen}
           onClose={() => setIsAssignModalOpen(false)}
           regionId={{
-            begin: region.detail[0].begin.replace(/,/g, ''),
-            core: region.detail[0].core,
-            mask: region.detail[0].mask,
+            begin: region.regionId.begin.toString(),
+            core: region.regionId.core.toString(),
+            mask: region.regionId.mask,
           }}
         />
 
@@ -298,9 +336,9 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
           isOpen={isPartitionModalOpen}
           onClose={() => setIsPartitionModalOpen(false)}
           regionId={{
-            begin: region.detail[0].begin.replace(/,/g, ''),
-            core: region.detail[0].core,
-            mask: region.detail[0].mask,
+            begin: region.regionId.begin.toString(),
+            core: region.regionId.core.toString(),
+            mask: region.regionId.mask,
           }}
         />
 
@@ -308,9 +346,9 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
           isOpen={isInterlaceModalOpen}
           onClose={() => setIsInterlaceModalOpen(false)}
           regionId={{
-            begin: region.detail[0].begin.replace(/,/g, ''),
-            core: region.detail[0].core,
-            mask: region.detail[0].mask,
+            begin: region.regionId.begin.toString(),
+            core: region.regionId.core.toString(),
+            mask: region.regionId.mask,
           }}
         />
       </>

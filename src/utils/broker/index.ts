@@ -1,11 +1,7 @@
 import { QueryParams, Region, RegionDetail, RegionOwner, RegionsType } from '@/types/broker'
 import { ApiPromise } from '@polkadot/api'
-import {
-  BrokerConstantsType,
-  ConfigurationType,
-  SaleInfoType,
-  getConstants,
-} from '@poppyseed/lastic-sdk'
+import { BrokerConstantsType, ConfigurationType, getConstants } from '@poppyseed/lastic-sdk'
+import { SaleInitializedEvent } from '@poppyseed/squid-sdk'
 import { useEffect, useState } from 'react'
 import { getCurrentBlockNumber } from './blockTime'
 
@@ -159,15 +155,19 @@ export function useBrokerConstants(api: ApiPromise | undefined) {
 
 export function calculateCurrentPrice(
   currentBlockNumber: number,
-  saleInfo: SaleInfoType,
+  saleInfo: SaleInitializedEvent | null,
   config: ConfigurationType,
 ): number {
+  if (!saleInfo || !saleInfo.saleStart || !saleInfo.regularPrice) return 0
   if (
     currentBlockNumber < saleInfo.saleStart + config.leadinLength &&
     currentBlockNumber > saleInfo.saleStart
   ) {
-    return saleInfo.price * (2 - (currentBlockNumber - saleInfo.saleStart) / config.leadinLength)
+    return (
+      Number(saleInfo.regularPrice) *
+      (2 - (currentBlockNumber - saleInfo.saleStart) / config.leadinLength)
+    )
   } else {
-    return saleInfo.price
+    return Number(saleInfo.regularPrice)
   }
 }
