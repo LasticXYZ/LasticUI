@@ -30,14 +30,13 @@ export default function MyCores() {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 6
 
-  let query: GraphQuery
   //const newAddress = encodeAddress(publicKeyBytes, targetNetworkPrefix)
 
   useMemo(() => {
-    let query = client.eventAllSaleInitialized(2)
-    if (network && query) {
+    let query1 = client.eventAllSaleInitialized(2)
+    if (network && query1) {
       const fetchData = async () => {
-        const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(network, query)
+        const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(network, query1)
         setCurrentSaleData(fetchedResult)
       }
 
@@ -46,6 +45,8 @@ export default function MyCores() {
   }, [network, client])
 
   useEffect(() => {
+    let query: GraphQuery | undefined
+
     if (activeAccount && currentSaleData?.data?.event?.length && configuration) {
       const currentSaleRegion = currentSaleData.data.event[0]
 
@@ -66,7 +67,7 @@ export default function MyCores() {
 
       fetchData()
     }
-  }, [currentPage, activeAccount, network, currentSaleData, client])
+  }, [currentPage, activeAccount, network, currentSaleData, client, configuration])
 
   const handleNextPage = () => setCurrentPage(currentPage + 1)
   const handlePrevPage = () => setCurrentPage(currentPage - 1)
