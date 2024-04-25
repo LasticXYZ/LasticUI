@@ -26,7 +26,7 @@ const PastTransactions = ({ coreNb }: { coreNb: number }) => {
 
       fetchData()
     }
-  }, [])
+  }, [client, network, query])
 
   const TableHeader = [
     { title: 'Time' },

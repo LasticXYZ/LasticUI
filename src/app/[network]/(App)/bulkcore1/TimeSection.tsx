@@ -4,46 +4,28 @@ import BuyWalletStatus from '@/components/walletStatus/BuyWalletStatus'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
 import { useCurrentBlockNumber, useSubstrateQuery } from '@/hooks/useSubstrateQuery'
-import { saleStatus } from '@/utils/broker'
+import { calculateCurrentPrice, saleStatus } from '@/utils/broker'
 import { StatusCode } from '@/utils/broker/saleStatus'
 import { getChainFromPath } from '@/utils/common/chainPath'
-import {
-  ConfigurationType,
-  SaleInfoType,
-  getCurrentBlockNumber,
-  useBalance,
-  useInkathon,
-} from '@poppyseed/lastic-sdk'
+import { SaleInfoType, getCurrentBlockNumber, useBalance, useInkathon } from '@poppyseed/lastic-sdk'
+import { GraphLike, GraphQuery, SaleInitializedEvent, getClient } from '@poppyseed/squid-sdk'
 import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import AnalyticSection from './AnalyticSection'
 
-function calculateCurrentPrice(
-  currentBlockNumber: number,
-  saleInfo: SaleInfoType,
-  config: ConfigurationType,
-): number {
-  if (
-    currentBlockNumber < saleInfo.saleStart + config.leadinLength &&
-    currentBlockNumber > saleInfo.saleStart
-  ) {
-    return saleInfo.price * (2 - (currentBlockNumber - saleInfo.saleStart) / config.leadinLength)
-  } else {
-    return saleInfo.price
-  }
-}
-
 export default function BrokerSaleInfo() {
-  const { api, relayApi, activeAccount } = useInkathon()
+  const { activeAccount, relayApi, activeRelayChain, activeChain, api } = useInkathon()
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
+  const [currentSaleRegion, setCurrentSaleRegion] = useState<SaleInitializedEvent | null>(null)
+
+  const client = useMemo(() => getClient(), [])
+  const network = activeRelayChain?.network
   const pathname = usePathname()
 
   const currentBlockNumber = useCurrentBlockNumber(api)
 
   const saleInfoString = useSubstrateQuery(api, 'saleInfo')
   // const configurationString = useSubstrateQuery(api, 'configuration')
-
-  // const { brokerConstants, isLoading: isConstantsLoading } = useBrokerConstants(api)
 
   const configuration = network_list[getChainFromPath(pathname)].configuration
   const brokerConstants = network_list[getChainFromPath(pathname)].constants
@@ -52,10 +34,23 @@ export default function BrokerSaleInfo() {
     () => (saleInfoString ? (JSON.parse(saleInfoString) as SaleInfoType) : null),
     [saleInfoString],
   )
-  // const configuration = useMemo(
-  //   () => (configurationString ? (JSON.parse(configurationString) as ConfigurationType) : null),
-  //   [configurationString],
-  // )
+
+  let query: GraphQuery
+
+  useMemo(() => {
+    query = client.eventAllSaleInitialized(1)
+    if (network && query) {
+      const fetchData = async () => {
+        const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(network, query)
+        const currentSaleRegion: SaleInitializedEvent | null = fetchedResult?.data.event
+          ? fetchedResult.data.event[0]
+          : null
+        setCurrentSaleRegion(currentSaleRegion)
+      }
+
+      fetchData()
+    }
+  }, [network, client])
 
   // Update saleStage every second based on the currentBlockNumber
   const [saleStage, setSaleStage] = useState('')
@@ -63,10 +58,10 @@ export default function BrokerSaleInfo() {
   const [statusCode, setStatusCode] = useState<StatusCode | null>(null)
   const [timeRemaining, setTimeRemaining] = useState('')
   useEffect(() => {
-    if (saleInfo && configuration && brokerConstants) {
+    if (currentSaleRegion && configuration && brokerConstants) {
       const { statusMessage, timeRemaining, statusTitle, statusCode } = saleStatus(
         currentBlockNumber,
-        saleInfo,
+        currentSaleRegion,
         configuration,
         brokerConstants,
       )
@@ -112,7 +107,7 @@ export default function BrokerSaleInfo() {
       </>
     )
 
-  if (!saleInfo || !configuration || !currentRelayBlock || !brokerConstants) {
+  if (!currentSaleRegion || !saleInfo || !configuration || !currentRelayBlock || !brokerConstants) {
     return (
       <>
         <section className="mx-auto mb-5 max-w-9xl px-4 mt-5 sm:px-6 lg:px-8">
@@ -130,7 +125,7 @@ export default function BrokerSaleInfo() {
     )
   }
 
-  let currentPrice = calculateCurrentPrice(currentBlockNumber, saleInfo, configuration)
+  let currentPrice = calculateCurrentPrice(currentBlockNumber, currentSaleRegion, configuration)
 
   let analyticsData = [
     {
@@ -139,8 +134,8 @@ export default function BrokerSaleInfo() {
       change: `${(currentPrice / 10 ** 12).toFixed(9)} ${tokenSymbol} to be exact`,
     },
     {
-      title: `${saleInfo?.coresSold} / ${saleInfo?.coresOffered}`,
-      subtitle: `Core sold out of ${saleInfo?.coresOffered} available`,
+      title: `${saleInfo?.coresSold} / ${currentSaleRegion?.coresOffered}`,
+      subtitle: `Core sold out of ${currentSaleRegion?.coresOffered} available`,
       change: '',
     },
   ]
@@ -162,7 +157,7 @@ export default function BrokerSaleInfo() {
             </div>
             <TimelineComponent
               currentBlockNumber={currentBlockNumber}
-              saleInfo={saleInfo}
+              saleInfo={currentSaleRegion}
               config={configuration}
               constants={brokerConstants}
             />

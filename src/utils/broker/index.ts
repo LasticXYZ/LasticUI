@@ -1,9 +1,8 @@
-import { QueryParams, Region, RegionDetail, RegionOwner, RegionsType } from '@/types/broker'
+import { Region, RegionDetail, RegionOwner, RegionsType } from '@/types/broker'
 import { ApiPromise } from '@polkadot/api'
 import { BrokerConstantsType, ConfigurationType, getConstants } from '@poppyseed/lastic-sdk'
 import { SaleInitializedEvent } from '@poppyseed/squid-sdk'
 import { useEffect, useState } from 'react'
-import { getCurrentBlockNumber } from './blockTime'
 
 export { saleStatus } from './saleStatus'
 
@@ -68,59 +67,6 @@ export function useQuerySpecificRegion({
   }, [api, coreNb, regionId, mask])
 
   return data
-}
-
-// Custom hook for querying substrate state
-export function useSubstrateQuery(
-  api: ApiPromise | undefined,
-  queryKey: string,
-  queryParams: QueryParams = [],
-) {
-  const [data, setData] = useState<string | null>(null)
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (api?.query?.broker?.[queryKey]) {
-        try {
-          const result = await api.query.broker[queryKey](...queryParams)
-          // Check if the Option type is Some and unwrap the value
-          if (result) {
-            setData(result.toString())
-          } else {
-            setData(null)
-          }
-        } catch (error) {
-          console.error(`Failed to fetch ${queryKey}:`, error)
-        }
-      }
-    }
-
-    fetchData()
-    const intervalId = setInterval(fetchData, 5000)
-
-    return () => clearInterval(intervalId)
-  }, [api, queryKey, queryParams])
-
-  return data
-}
-
-export function useCurrentBlockNumber(api: ApiPromise | undefined) {
-  const [currentBlockNumber, setCurrentBlockNumber] = useState(0)
-
-  useEffect(() => {
-    if (!api) return
-
-    const fetchCurrentBlockNumber = async () => {
-      const currentBlock = await getCurrentBlockNumber(api)
-      setCurrentBlockNumber(currentBlock)
-    }
-
-    const intervalId = setInterval(fetchCurrentBlockNumber, 1000) // Update every second
-
-    return () => clearInterval(intervalId)
-  }, [api])
-
-  return currentBlockNumber
 }
 
 export function useBrokerConstants(api: ApiPromise | undefined) {

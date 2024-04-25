@@ -83,7 +83,7 @@ const ParachainInfo: React.FC = () => {
   if (error) return <div>Error: {error}</div>
 
   return auctionData ? (
-    <section className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8">
+    <section className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8 mt-5">
       <Border>
         <div className="pt-10 pl-10">
           <h1 className="text-xl font-unbounded uppercase font-bold">

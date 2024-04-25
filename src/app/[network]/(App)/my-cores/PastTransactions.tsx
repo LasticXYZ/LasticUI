@@ -2,7 +2,7 @@ import Border from '@/components/border/Border'
 import GeneralTable from '@/components/table/GeneralTable'
 import { parseNativeTokenToHuman } from '@/utils/account/token'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
-import { GraphLike, GraphQuery, PurchasedEvent, getClient } from '@poppyseed/squid-sdk'
+import { GraphLike, PurchasedEvent, getClient } from '@poppyseed/squid-sdk'
 import { format } from 'date-fns'
 import { useEffect, useMemo, useState } from 'react'
 
@@ -16,22 +16,19 @@ const PastTransactions = () => {
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
   tokenSymbol = tokenSymbol || 'UNIT'
 
-  let query: GraphQuery
-  //const newAddress = encodeAddress(publicKeyBytes, targetNetworkPrefix)
-  if (activeAccount) {
-    query = client.eventWhoPurchased(activeAccount?.address, 7)
-  }
-
   useEffect(() => {
-    if (network && query) {
-      const fetchData = async () => {
-        const fetchedResult: GraphLike<PurchasedEvent[]> = await client.fetch(network, query)
-        setResult(fetchedResult)
-      }
+    if (activeAccount) {
+      let query = client.eventWhoPurchased(activeAccount?.address, 7)
+      if (network && query) {
+        const fetchData = async () => {
+          const fetchedResult: GraphLike<PurchasedEvent[]> = await client.fetch(network, query)
+          setResult(fetchedResult)
+        }
 
-      fetchData()
+        fetchData()
+      }
     }
-  }, [])
+  }, [activeAccount, client, network])
 
   const TableHeader = [
     { title: 'Time' },

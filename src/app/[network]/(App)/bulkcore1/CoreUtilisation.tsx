@@ -32,7 +32,7 @@ const CoreUtilisation: React.FC = () => {
     }
 
     fetchData()
-  }, [])
+  }, [client, network])
 
   // Configurations for different data sets
   const dataConfigs = {

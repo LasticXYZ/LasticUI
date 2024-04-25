@@ -9,8 +9,9 @@ import TimelineComponent from '@/components/timelineComp/TimelineComp'
 import TimelineUtilizeCore from '@/components/timelineComp/TimelineUtilizeCore'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
+import { useCurrentBlockNumber } from '@/hooks/useSubstrateQuery'
 import { parseNativeTokenToHuman } from '@/utils/account/token'
-import { calculateCurrentPrice, saleStatus, useCurrentBlockNumber } from '@/utils/broker'
+import { calculateCurrentPrice, saleStatus } from '@/utils/broker'
 import { getChainFromPath } from '@/utils/common/chainPath'
 import {
   blockTimeToUTC,
@@ -187,7 +188,7 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
           <div>
             <div className="">
               <CoreItemExtensive
-                timeBought="- 2024"
+                timeBought={region.timestamp ? new Date(region.timestamp).toLocaleString() : '-'}
                 owner={region.owner}
                 amITheOwner={region.owner === activeAccount.address}
                 paid={region.price}

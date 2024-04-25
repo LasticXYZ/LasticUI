@@ -34,7 +34,7 @@ export default function MyCores() {
   //const newAddress = encodeAddress(publicKeyBytes, targetNetworkPrefix)
 
   useMemo(() => {
-    query = client.eventAllSaleInitialized(2)
+    let query = client.eventAllSaleInitialized(2)
     if (network && query) {
       const fetchData = async () => {
         const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(network, query)
