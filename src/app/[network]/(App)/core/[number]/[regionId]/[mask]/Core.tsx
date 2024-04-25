@@ -5,13 +5,14 @@ import PartitionCoreModal from '@/components/broker/extrinsics/PartitionCoreModa
 import TransferModal from '@/components/broker/extrinsics/TransferModal'
 import SecondaryButton from '@/components/button/SecondaryButton'
 import CoreItemExtensive from '@/components/cores/CoreItemExtensive'
+import CountDown from '@/components/countDown/CountDown'
 import TimelineComponent from '@/components/timelineComp/TimelineComp'
 import TimelineUtilizeCore from '@/components/timelineComp/TimelineUtilizeCore'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
 import { useCurrentBlockNumber } from '@/hooks/useSubstrateQuery'
 import { parseNativeTokenToHuman } from '@/utils/account/token'
-import { calculateCurrentPrice, saleStatus } from '@/utils/broker'
+import { saleStatus } from '@/utils/broker'
 import { getChainFromPath } from '@/utils/common/chainPath'
 import {
   blockTimeToUTC,
@@ -45,8 +46,6 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
   const pathname = usePathname()
   const configuration = network_list[getChainFromPath(pathname)].configuration
   const brokerConstants = network_list[getChainFromPath(pathname)].constants
-
-  //const region = useQuerySpecificRegion({ api, coreNb, regionId: beginRegion, mask })
 
   const currentBlockNumber = useCurrentBlockNumber(api)
 
@@ -155,8 +154,6 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
     )
   }
 
-  let currentPrice = calculateCurrentPrice(currentBlockNumber, currentSaleRegion, configuration)
-
   if (
     !region ||
     !configuration ||
@@ -210,16 +207,7 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
       <section className="mt-8">
         <Border>
           <div className="p-10">
-            <div>
-              <div className="flex justify-between rounded-full mx-10 bg-pink-300 dark:bg-pink-400  px-16 py-10 bg-opacity-30 dark:bg-opacity-80 items-center my-6">
-                <div className="text-xl font-bold font-unbounded uppercase text-gray-21">
-                  {saleTitle}
-                </div>
-                <div className="text-2xl font-bold font-unbounded uppercase text-gray-18">
-                  {timeRemaining}
-                </div>
-              </div>
-            </div>
+            <CountDown title={saleTitle} timeRemaining={timeRemaining} />
 
             <TimelineComponent
               currentBlockNumber={currentBlockNumber}

@@ -12,12 +12,13 @@ const PastTransactions = ({ coreNb }: { coreNb: number }) => {
 
   const [result, setResult] = useState<GraphLike<PurchasedEvent[]> | null>(null)
   const client = useMemo(() => getClient(), [])
-  const query = client.eventCorePurchased(coreNb)
 
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
   tokenSymbol = tokenSymbol || 'UNIT'
 
   useEffect(() => {
+    const query = client.eventCorePurchased(coreNb)
+
     if (network) {
       const fetchData = async () => {
         const fetchedResult: GraphLike<PurchasedEvent[]> = await client.fetch(network, query)
@@ -26,7 +27,7 @@ const PastTransactions = ({ coreNb }: { coreNb: number }) => {
 
       fetchData()
     }
-  }, [client, network, query])
+  }, [client, network, coreNb])
 
   const TableHeader = [
     { title: 'Time' },
