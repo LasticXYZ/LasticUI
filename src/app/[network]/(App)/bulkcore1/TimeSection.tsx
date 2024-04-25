@@ -8,15 +8,14 @@ import { useCurrentBlockNumber, useSubstrateQuery } from '@/hooks/useSubstrateQu
 import { calculateCurrentPrice, saleStatus } from '@/utils/broker'
 import { StatusCode } from '@/utils/broker/saleStatus'
 import { getChainFromPath } from '@/utils/common/chainPath'
-import { SaleInfoType, getCurrentBlockNumber, useBalance, useInkathon } from '@poppyseed/lastic-sdk'
+import { SaleInfoType, getCurrentBlockNumber, useInkathon } from '@poppyseed/lastic-sdk'
 import { GraphLike, SaleInitializedEvent, getClient } from '@poppyseed/squid-sdk'
 import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import AnalyticSection from './AnalyticSection'
 
 export default function BrokerSaleInfo() {
-  const { activeAccount, relayApi, activeRelayChain, activeChain, api } = useInkathon()
-  let { tokenSymbol } = useBalance(activeAccount?.address, true)
+  const { relayApi, api } = useInkathon()
   const [currentSaleRegion, setCurrentSaleRegion] = useState<SaleInitializedEvent | null>(null)
 
   const client = useMemo(() => getClient(), [])
@@ -30,6 +29,7 @@ export default function BrokerSaleInfo() {
 
   const configuration = network_list[network].configuration
   const brokerConstants = network_list[network].constants
+  const tokenSymbol = network_list[network].tokenSymbol
 
   const saleInfo = useMemo(
     () => (saleInfoString ? (JSON.parse(saleInfoString) as SaleInfoType) : null),
@@ -169,6 +169,7 @@ export default function BrokerSaleInfo() {
               <BuyWalletStatus
                 saleInfo={currentSaleRegion}
                 coresSold={saleInfo.coresSold}
+                firstCore={network_list[network].saleInfo?.firstCore || 0}
                 formatPrice={`${(currentPrice / 10 ** 12).toFixed(8)} ${tokenSymbol}`}
                 currentPrice={currentPrice}
                 statusCode={statusCode}

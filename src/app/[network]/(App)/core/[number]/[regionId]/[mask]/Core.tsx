@@ -37,15 +37,15 @@ interface BrokerRegionDataProps {
 }
 
 const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask }) => {
-  const { activeAccount, relayApi, activeRelayChain, activeChain, api } = useInkathon()
+  const { activeAccount, relayApi, activeChain, api } = useInkathon()
   let { tokenSymbol, tokenDecimals } = useBalance(activeAccount?.address, true)
   const [region, setRegionResult] = useState<CoreOwnerEvent | null>(null)
   const [currentSaleRegion, setCurrentSaleRegion] = useState<SaleInitializedEvent | null>(null)
   const client = useMemo(() => getClient(), [])
-  const network = activeRelayChain?.network
   const pathname = usePathname()
-  const configuration = network_list[getChainFromPath(pathname)].configuration
-  const brokerConstants = network_list[getChainFromPath(pathname)].constants
+  const network = getChainFromPath(pathname)
+  const configuration = network_list[network].configuration
+  const brokerConstants = network_list[network].constants
 
   const currentBlockNumber = useCurrentBlockNumber(api)
 

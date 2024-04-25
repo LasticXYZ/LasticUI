@@ -16,6 +16,7 @@ import React from 'react'
 type BuyWalletStatusType = {
   saleInfo: SaleInitializedEvent
   coresSold: number
+  firstCore: number
   formatPrice: string
   currentPrice: number
   statusCode: StatusCode | null
@@ -24,6 +25,7 @@ type BuyWalletStatusType = {
 const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({
   saleInfo,
   coresSold,
+  firstCore,
   formatPrice,
   currentPrice,
   statusCode,
@@ -119,7 +121,7 @@ const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({
         </div>
         <div className="dark:text-gray-6">
           <div className="text-gray-18 dark:text-gray-3 text-xl font-unbounded uppercase mb-5">
-            Core Nb: <span className="font-semibold">{saleInfo.firstCore + coresSold}</span>
+            Core Nb: <span className="font-semibold">{firstCore + coresSold}</span>
           </div>
           <div className=" mb-2 ">
             Available Cores:{' '}
