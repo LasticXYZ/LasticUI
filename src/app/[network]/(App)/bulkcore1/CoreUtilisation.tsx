@@ -11,8 +11,6 @@ type DataSetKey = 'price' | 'cores' // Add more keys as needed
 const CoreUtilisation: React.FC = () => {
   const pathname = usePathname()
   const network = getChainFromPath(pathname)
-  //const { activeRelayChain } = useInkathon()
-  //const network = activeRelayChain?.network
   const decimalPoints = 12
 
   const [result, setResult] = useState<GraphLike<SaleInitializedEvent[]> | null>(null)

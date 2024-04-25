@@ -5,7 +5,7 @@ import { BrokerConstantsType, ConfigurationType } from '@poppyseed/lastic-sdk'
 export type NetworkInfo = {
   [key: string]: {
     name: string
-    currency: string
+    tokenSymbol: string
     apiUrl: string
     paraId: {
       [key: string]: string // This tells TypeScript any string key returns a string value
@@ -18,7 +18,7 @@ export type NetworkInfo = {
 export const network_list: NetworkInfo = {
   polkadot: {
     name: 'Polkadot',
-    currency: 'DOT',
+    tokenSymbol: 'DOT',
     apiUrl: 'https://polkadot.api.subscan.io/api',
     paraId: {
       '1000': 'AssetHub',
@@ -87,7 +87,7 @@ export const network_list: NetworkInfo = {
   },
   kusama: {
     name: 'Kusama',
-    currency: 'KSM',
+    tokenSymbol: 'KSM',
     apiUrl: 'https://kusama.api.subscan.io/api',
     paraId: {
       '1000': 'AssetHub',
@@ -171,7 +171,7 @@ export const network_list: NetworkInfo = {
   },
   westend: {
     name: 'Westend',
-    currency: 'WST',
+    tokenSymbol: 'WST',
     apiUrl: 'https://westend.api.subscan.io/api',
     paraId: {
       '1000': 'assethub-westend',
@@ -206,7 +206,7 @@ export const network_list: NetworkInfo = {
   },
   rococo: {
     name: 'Rococo',
-    currency: 'ROC',
+    tokenSymbol: 'ROC',
     apiUrl: 'https://rococo.api.subscan.io/api',
     paraId: {
       '1000': 'AssetHub',

@@ -20,16 +20,16 @@ export default function BrokerSaleInfo() {
   const [currentSaleRegion, setCurrentSaleRegion] = useState<SaleInitializedEvent | null>(null)
 
   const client = useMemo(() => getClient(), [])
-  const network = activeRelayChain?.network
   const pathname = usePathname()
+  const network = getChainFromPath(pathname)
 
   const currentBlockNumber = useCurrentBlockNumber(api)
 
   const saleInfoString = useSubstrateQuery(api, 'saleInfo')
   // const configurationString = useSubstrateQuery(api, 'configuration')
 
-  const configuration = network_list[getChainFromPath(pathname)].configuration
-  const brokerConstants = network_list[getChainFromPath(pathname)].constants
+  const configuration = network_list[network].configuration
+  const brokerConstants = network_list[network].constants
 
   const saleInfo = useMemo(
     () => (saleInfoString ? (JSON.parse(saleInfoString) as SaleInfoType) : null),
@@ -167,7 +167,8 @@ export default function BrokerSaleInfo() {
           <div className="col-span-3 py-4">
             <Border className="h-full flex justify-center items-center">
               <BuyWalletStatus
-                saleInfo={saleInfo}
+                saleInfo={currentSaleRegion}
+                coresSold={saleInfo.coresSold}
                 formatPrice={`${(currentPrice / 10 ** 12).toFixed(8)} ${tokenSymbol}`}
                 currentPrice={currentPrice}
                 statusCode={statusCode}

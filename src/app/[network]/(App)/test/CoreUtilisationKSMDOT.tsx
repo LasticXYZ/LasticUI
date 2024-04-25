@@ -38,7 +38,7 @@ const CoreOwners: React.FC = () => {
     { title: 'Winner Address' },
   ]
 
-  const network_currency = network_list[0].currency
+  const network_currency = network_list[0].tokenSymbol
 
   const TableData = auctionData
     ? auctionData.data.auctions.map((auction) => ({

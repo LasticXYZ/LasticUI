@@ -7,13 +7,15 @@ import { StatusCode } from '@/utils/broker/saleStatus'
 import { goToChainRoute } from '@/utils/common/chainPath'
 import { truncateHash } from '@/utils/truncateHash'
 import { encodeAddress } from '@polkadot/util-crypto'
-import { SaleInfoType, useBalance, useInkathon, useRelayBalance } from '@poppyseed/lastic-sdk'
+import { useBalance, useInkathon, useRelayBalance } from '@poppyseed/lastic-sdk'
+import { SaleInitializedEvent } from '@poppyseed/squid-sdk'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import React from 'react'
 
 type BuyWalletStatusType = {
-  saleInfo: SaleInfoType
+  saleInfo: SaleInitializedEvent
+  coresSold: number
   formatPrice: string
   currentPrice: number
   statusCode: StatusCode | null
@@ -21,6 +23,7 @@ type BuyWalletStatusType = {
 
 const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({
   saleInfo,
+  coresSold,
   formatPrice,
   currentPrice,
   statusCode,
@@ -47,6 +50,16 @@ const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({
   const pathname = usePathname()
 
   let inputPurchasePrice = Math.ceil(currentPrice)
+
+  if (!saleInfo.coresOffered || !saleInfo.idealCoresSold) {
+    return (
+      <div className="flex justify-center items-center py-20 px-4">
+        <div className="flex flex-col items-center justify-center px-2 py-8">
+          <CuteInfo emoji="🔥" message="Sale not initialized yet." color="bg-lastic-spectrum-via" />
+        </div>
+      </div>
+    )
+  }
 
   if (!activeAccount || !statusCode) {
     return (
@@ -81,7 +94,7 @@ const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({
     )
   }
 
-  if (saleInfo.coresSold >= saleInfo.coresOffered) {
+  if (saleInfo.coresOffered && coresSold >= saleInfo.coresOffered) {
     return (
       <div className="flex justify-center items-center py-20 px-4">
         <div className="flex flex-col items-center justify-center px-2 py-8 ">
@@ -106,13 +119,12 @@ const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({
         </div>
         <div className="dark:text-gray-6">
           <div className="text-gray-18 dark:text-gray-3 text-xl font-unbounded uppercase mb-5">
-            Core Nb:{' '}
-            <span className="font-semibold">{saleInfo.firstCore + saleInfo.coresSold}</span>
+            Core Nb: <span className="font-semibold">{saleInfo.firstCore + coresSold}</span>
           </div>
           <div className=" mb-2 ">
             Available Cores:{' '}
             <span className="font-semibold">
-              {saleInfo.coresOffered - saleInfo.coresSold} / {saleInfo.coresOffered}{' '}
+              {saleInfo.coresOffered - coresSold} / {saleInfo.coresOffered}{' '}
             </span>
           </div>
           <div className=" mb-2">
