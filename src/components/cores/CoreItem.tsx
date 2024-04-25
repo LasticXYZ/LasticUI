@@ -33,7 +33,7 @@ const CoreItem: React.FC<CardProps> = ({
   if (!config || !duration || !begin) return null
 
   return (
-    <Border className="px-10 py-6 hover:bg-pink-1 hover:cursor-pointer">
+    <Border className="px-10 py-6 hover:bg-pink-50 hover:dark:bg-gray-22 hover:cursor-pointer">
       <Link href={goToChainRoute(pathname, `/core/${coreNumber}/${begin}/${mask}`)}>
         <div>
           <div className="font-unbounded uppercase tracking-wide text-md font-semibold flex justify-between items-center">
@@ -42,12 +42,12 @@ const CoreItem: React.FC<CardProps> = ({
               {' '}
               {/* Container to hold both buttons next to each other */}
               {duration < config.regionLength && (
-                <div className="bg-pink-3  dark:bg-pink-400 dark:bg-opacity-80 border border-gray-8 px-4 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
+                <div className="bg-pink-200  dark:bg-pink-400 dark:bg-opacity-80 border border-gray-8 px-4 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
                   Partitioned
                 </div>
               )}
               {mask !== '0xffffffffffffffffffff' && (
-                <div className="bg-pink-3 dark:bg-pink-400  dark:bg-opacity-80 border border-gray-8 px-4 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
+                <div className="bg-pink-200 dark:bg-pink-400  dark:bg-opacity-80 border border-gray-8 px-4 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
                   Interlaced
                 </div>
               )}

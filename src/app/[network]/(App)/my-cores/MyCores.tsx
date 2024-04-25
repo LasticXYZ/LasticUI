@@ -19,6 +19,8 @@ export default function MyCores() {
   const { activeAccount, activeChain, activeRelayChain } = useInkathon()
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
   const [result, setResult] = useState<GraphLike<CoreOwnerEvent[]> | null>(null)
+  const [assignedCores, setAssignedCores] = useState<GraphLike<CoreOwnerEvent[]> | null>(null)
+  const [pooledCores, setPooledCores] = useState<GraphLike<CoreOwnerEvent[]> | null>(null)
   const [currentSaleData, setCurrentSaleData] = useState<GraphLike<SaleInitializedEvent[]> | null>(
     null,
   )
@@ -46,6 +48,8 @@ export default function MyCores() {
 
   useEffect(() => {
     let query: GraphQuery | undefined
+    let query2: GraphQuery | undefined
+    let query3: GraphQuery | undefined
 
     if (activeAccount && currentSaleData?.data?.event?.length && configuration) {
       const currentSaleRegion = currentSaleData.data.event[0]
@@ -56,13 +60,22 @@ export default function MyCores() {
           currentSaleRegion.regionBegin - configuration.regionLength,
           currentSaleRegion.regionBegin + configuration.regionLength,
         )
+        query2 = client.eventOwnedAndAssignedCoreOwner(activeAccount.address, 6, 0)
+        query3 = client.eventOwnedAndPooledCoreOwner(activeAccount.address, 6, 0)
       }
     }
 
-    if (network && query) {
+    if (network && query && query2 && query3) {
       const fetchData = async () => {
         const fetchedResult: GraphLike<CoreOwnerEvent[]> = await client.fetch(network, query)
+        const assignedFetchedResult: GraphLike<CoreOwnerEvent[]> = await client.fetch(
+          network,
+          query2,
+        )
+        const pooledFetchedResult: GraphLike<CoreOwnerEvent[]> = await client.fetch(network, query3)
         setResult(fetchedResult)
+        setAssignedCores(assignedFetchedResult)
+        setPooledCores(pooledFetchedResult)
       }
 
       fetchData()
@@ -110,6 +123,18 @@ export default function MyCores() {
         <SectionDisplay
           title="Obtained in the previous Sale"
           regions={currentlyActive}
+          configuration={configuration}
+          tokenSymbol={tokenSymbol}
+        />
+        <SectionDisplay
+          title="Assigned Cores"
+          regions={assignedCores?.data?.event || []}
+          configuration={configuration}
+          tokenSymbol={tokenSymbol}
+        />
+        <SectionDisplay
+          title="Cores in the on Demand Pool"
+          regions={pooledCores?.data?.event || []}
           configuration={configuration}
           tokenSymbol={tokenSymbol}
         />

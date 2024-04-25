@@ -1,10 +1,12 @@
 // components/Card.tsx
 import { parseNativeTokenToHuman, toShortAddress } from '@/utils/account/token'
+import { ConfigurationType } from '@poppyseed/lastic-sdk'
 import { CoreOwnerEvent } from '@poppyseed/squid-sdk'
 import Image from 'next/image'
 import React from 'react'
 
 interface CardProps {
+  config: ConfigurationType | null
   timeBought: string
   owner: string
   amITheOwner: boolean
@@ -20,6 +22,7 @@ interface CardProps {
 }
 
 const CoreItemExtensive: React.FC<CardProps> = ({
+  config,
   timeBought,
   owner,
   amITheOwner,
@@ -33,6 +36,8 @@ const CoreItemExtensive: React.FC<CardProps> = ({
   end,
   region,
 }) => {
+  if (!config || !region.duration || !begin) return null
+
   return (
     <>
       <div className="pt-10 pl-10">
@@ -73,6 +78,23 @@ const CoreItemExtensive: React.FC<CardProps> = ({
           </div>
         </div>
         <div className="flex w-full flex-col px-5 items-start justify-start space-y-3">
+          <div className="flex flex-row gap-2">
+            {mask !== '0xfffffffffffffffffff' && (
+              <div className="bg-pink-400 dark:bg-pink-400  dark:bg-opacity-80 border border-gray-8 px-4 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
+                Interlaced
+              </div>
+            )}
+            {region.duration < config.regionLength && (
+              <div className="bg-pink-400  dark:bg-pink-400 dark:bg-opacity-80 border border-gray-8 px-4 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
+                Partitioned
+              </div>
+            )}
+            {region.duration === config.regionLength && (
+              <div className="bg-pink-400  dark:bg-pink-400 dark:bg-opacity-80 border border-gray-8 px-4 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
+                Full
+              </div>
+            )}
+          </div>
           <div className="text-md  text-black dark:text-gray-1 ">
             <p>Put into a pool: {region.pooled ? 'True' : 'False'}</p>
           </div>

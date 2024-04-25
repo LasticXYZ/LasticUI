@@ -34,7 +34,7 @@
     "@mui/x-date-pickers": "^6.19.9",
     "@paraspell/sdk": "^4.1.1",
     "@polkadot/api-base": "^10.13.1",
-    "@poppyseed/squid-sdk": "^0.2.3",
+    "@poppyseed/squid-sdk": "^0.2.4",
     "@poppyseed/xcm-sdk": "^4.0.1",
     "@reduxjs/toolkit": "^2.2.3",
     "animate.css": "^4.1.1",

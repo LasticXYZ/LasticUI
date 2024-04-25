@@ -185,6 +185,7 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
           <div>
             <div className="">
               <CoreItemExtensive
+                config={configuration}
                 timeBought={region.timestamp ? new Date(region.timestamp).toLocaleString() : '-'}
                 owner={region.owner}
                 amITheOwner={region.owner === activeAccount.address}
