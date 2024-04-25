@@ -82,7 +82,7 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
 
       fetchData()
     }
-  }, [activeAccount, network, currentSaleRegion, client])
+  }, [activeAccount, network, currentSaleRegion, client, configuration, coreNb, beginRegion, mask])
 
   // Update saleStage every second based on the currentBlockNumber
   const [saleStage, setSaleStage] = useState('')
