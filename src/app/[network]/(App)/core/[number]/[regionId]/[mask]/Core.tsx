@@ -49,13 +49,11 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
 
   const currentBlockNumber = useCurrentBlockNumber(api)
 
-  let query: GraphQuery
-
   useMemo(() => {
-    query = client.eventAllSaleInitialized(1)
-    if (network && query) {
+    const query1 = client.eventAllSaleInitialized(1)
+    if (network && query1) {
       const fetchData = async () => {
-        const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(network, query)
+        const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(network, query1)
         const currentSaleRegion: SaleInitializedEvent | null = fetchedResult?.data.event
           ? fetchedResult.data.event[0]
           : null
@@ -67,6 +65,8 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
   }, [network, client])
 
   useEffect(() => {
+    let query: GraphQuery | undefined
+
     if (activeAccount && currentSaleRegion && configuration) {
       if (currentSaleRegion.regionBegin) {
         query = client.eventSpecificRegionCoreOwner(coreNb, beginRegion, mask)

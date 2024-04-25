@@ -9,7 +9,7 @@ import { calculateCurrentPrice, saleStatus } from '@/utils/broker'
 import { StatusCode } from '@/utils/broker/saleStatus'
 import { getChainFromPath } from '@/utils/common/chainPath'
 import { SaleInfoType, getCurrentBlockNumber, useBalance, useInkathon } from '@poppyseed/lastic-sdk'
-import { GraphLike, GraphQuery, SaleInitializedEvent, getClient } from '@poppyseed/squid-sdk'
+import { GraphLike, SaleInitializedEvent, getClient } from '@poppyseed/squid-sdk'
 import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import AnalyticSection from './AnalyticSection'
@@ -36,13 +36,11 @@ export default function BrokerSaleInfo() {
     [saleInfoString],
   )
 
-  let query: GraphQuery
-
   useMemo(() => {
-    query = client.eventAllSaleInitialized(1)
-    if (network && query) {
+    let query1 = client.eventAllSaleInitialized(1)
+    if (network && query1) {
       const fetchData = async () => {
-        const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(network, query)
+        const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(network, query1)
         const currentSaleRegion: SaleInitializedEvent | null = fetchedResult?.data.event
           ? fetchedResult.data.event[0]
           : null
