@@ -4,7 +4,8 @@ import { ParachainInfoRequest, ParachainInfoResponse } from '@/components/callSu
 import GeneralTable from '@/components/table/GeneralTable'
 import { PossibleNetworks, network_list } from '@/config/network'
 import { toShortAddress } from '@/utils'
-import { useInkathon } from '@poppyseed/lastic-sdk'
+import { getChainFromPath } from '@/utils/common/chainPath'
+import { usePathname } from 'next/navigation'
 import React, { useMemo, useState } from 'react'
 
 const ParachainInfo: React.FC = () => {
@@ -18,9 +19,8 @@ const ParachainInfo: React.FC = () => {
     'Onboarding',
     'Parathread',
   ])
-  // Display depending on the network:
-  const { activeRelayChain } = useInkathon()
-  const network = activeRelayChain?.network
+  const pathname = usePathname()
+  const network = getChainFromPath(pathname)
 
   const handleNextPage = () => setCurrentPage(currentPage + 1)
   const handlePrevPage = () => setCurrentPage(currentPage - 1)

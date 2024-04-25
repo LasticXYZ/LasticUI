@@ -5,9 +5,14 @@ import { AuctionResponse, AuctionsRequest } from '@/components/callSubscan/types
 import BarGraph from '@/components/graph/BarGraph'
 import GeneralTable from '@/components/table/GeneralTable'
 import { network_list } from '@/config/network'
+import { getChainFromPath } from '@/utils/common/chainPath'
+import { usePathname } from 'next/navigation'
 import React, { useMemo } from 'react'
 
 const CoreOwners: React.FC = () => {
+  const pathname = usePathname()
+  const network = getChainFromPath(pathname)
+
   const requestData = useMemo<AuctionsRequest>(
     () => ({
       auction_index: 0,
@@ -38,7 +43,7 @@ const CoreOwners: React.FC = () => {
     { title: 'Winner Address' },
   ]
 
-  const network_currency = network_list[0].tokenSymbol
+  const tokenSymbol = network_list[network].tokenSymbol
 
   const TableData = auctionData
     ? auctionData.data.auctions.map((auction) => ({
@@ -52,7 +57,7 @@ const CoreOwners: React.FC = () => {
           auction.lease_index.toString(),
           auction.winners
             ? auction.winners
-                .map((winner) => `${winner.amount / 1000000000} ${network_currency}`)
+                .map((winner) => `${winner.amount / 1000000000} ${tokenSymbol}`)
                 .join(', ')
             : 'Auction ongoing',
           auction.winners

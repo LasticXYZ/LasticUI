@@ -4,7 +4,7 @@ import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
 import { parseNativeTokenToHuman } from '@/utils/account/token'
 import { getChainFromPath } from '@/utils/common/chainPath'
-import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
+import { useInkathon } from '@poppyseed/lastic-sdk'
 import {
   CoreOwnerEvent,
   GraphLike,
@@ -16,8 +16,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 
 export default function MyCores() {
-  const { activeAccount, activeChain, activeRelayChain } = useInkathon()
-  let { tokenSymbol } = useBalance(activeAccount?.address, true)
+  const { activeAccount, activeChain } = useInkathon()
   const [result, setResult] = useState<GraphLike<CoreOwnerEvent[]> | null>(null)
   const [assignedCores, setAssignedCores] = useState<GraphLike<CoreOwnerEvent[]> | null>(null)
   const [pooledCores, setPooledCores] = useState<GraphLike<CoreOwnerEvent[]> | null>(null)
@@ -25,9 +24,10 @@ export default function MyCores() {
     null,
   )
   const client = useMemo(() => getClient(), [])
-  const network = activeRelayChain?.network
   const pathname = usePathname()
-  const configuration = network_list[getChainFromPath(pathname)].configuration
+  const network = getChainFromPath(pathname)
+  const tokenSymbol = network_list[network].tokenSymbol
+  const configuration = network_list[network].configuration
 
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 6

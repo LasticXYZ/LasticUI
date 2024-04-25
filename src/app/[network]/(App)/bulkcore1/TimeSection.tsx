@@ -69,14 +69,14 @@ export default function BrokerSaleInfo() {
       setSaleStage(statusMessage)
       setStatusCode(statusCode)
     }
-  }, [currentBlockNumber, currentSaleRegion, saleInfo, configuration, brokerConstants])
+  }, [currentBlockNumber, currentSaleRegion, configuration, brokerConstants])
 
   const [currentRelayBlock, setCurrentRelayBlock] = useState<number | null>(null)
 
   useEffect(() => {
     const fetchRegionTimestamps = async () => {
       try {
-        if (saleInfo && brokerConstants) {
+        if (saleInfo) {
           const getCurrentRelayBlock = relayApi ? await getCurrentBlockNumber(relayApi) : null
 
           setCurrentRelayBlock(getCurrentRelayBlock)
@@ -87,7 +87,7 @@ export default function BrokerSaleInfo() {
     }
 
     fetchRegionTimestamps()
-  }, [relayApi, saleInfo, brokerConstants])
+  }, [relayApi, saleInfo])
 
   if (!api || !relayApi)
     return (

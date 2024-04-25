@@ -1,20 +1,22 @@
 import Border from '@/components/border/Border'
 import GeneralTable from '@/components/table/GeneralTable'
+import { network_list } from '@/config/network'
 import { parseNativeTokenToHuman } from '@/utils/account/token'
-import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
+import { getChainFromPath } from '@/utils/common/chainPath'
+import { useInkathon } from '@poppyseed/lastic-sdk'
 import { GraphLike, PurchasedEvent, getClient } from '@poppyseed/squid-sdk'
 import { format } from 'date-fns'
+import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 
 const PastTransactions = () => {
-  const { activeAccount, activeRelayChain } = useInkathon()
-  const network = activeRelayChain?.network
+  const { activeAccount } = useInkathon()
+  const pathname = usePathname()
+  const network = getChainFromPath(pathname)
+  const tokenSymbol = network_list[network].tokenSymbol
 
   const [result, setResult] = useState<GraphLike<PurchasedEvent[]> | null>(null)
   const client = useMemo(() => getClient(), [])
-
-  let { tokenSymbol } = useBalance(activeAccount?.address, true)
-  tokenSymbol = tokenSymbol || 'UNIT'
 
   useEffect(() => {
     if (activeAccount) {
