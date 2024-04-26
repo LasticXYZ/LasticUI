@@ -166,7 +166,6 @@ export function priceCurve(
   const saleStart = saleInfo.saleStart
   console.log(saleStart)
   const saleEnds = getSaleEnds(saleInfo, config, constant)
-  console.log(saleEnds - saleStart)
   console.log(config.leadinLength)
   let prices = []
   let blocks = []
