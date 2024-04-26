@@ -228,75 +228,106 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
               constants={brokerConstants}
             />
 
-            <div className="pt-5 pl-10">
-              <h3 className="text-xl font-unbounded uppercase font-bold">Note</h3>
-            </div>
-
-            <div className="flex flex-row flex-wrap justify-between">
-              {region.owner === activeAccount.address ? (
+            {region.assigned || region.pooled ? (
+              (region.assigned && (
                 <>
-                  <div className="flex flex-col italic max-w-md text-gray-12 items-start justify-center px-4 py-8">
-                    This core is yours. You are able to:
-                    <ul className="px-2 py-2">
-                      <li> * Transfer your core to another account</li>
-                      <li> * Utilize it for a parachain</li>
-                      <li> * Split it up</li>
-                      <li> * Change block production frequency</li>
-                      <li> * Assign it to a task</li>
-                    </ul>
+                  <div className="pt-5 pl-10">
+                    <h3 className="text-xl font-unbounded uppercase font-bold">Assigned</h3>
                   </div>
-
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 py-10">
-                    {/* Buttons*/}
-                    <div className="text-2xl font-bold font-unbounded uppercase text-gray-21">
-                      <SecondaryButton
-                        title="Transfer Core"
-                        onClick={() => setIsTransferModalOpen(true)}
-                        className="w-full"
-                      />
-                    </div>
-
-                    <div className="text-2xl font-bold font-unbounded uppercase text-gray-21">
-                      <SecondaryButton
-                        title="Assign Core"
-                        onClick={() => setIsAssignModalOpen(true)}
-                        className="w-full"
-                      />
-                    </div>
-
-                    <div className="text-2xl font-bold uppercase relative w-full max-w-xs mx-auto">
-                      {/* Overlay "New" Banner */}
-                      <div className="absolute right-0 top-0 transform translate-x-1/4 -translate-y-1/3 bg-pink-3 border border-gray-8 px-2 py-1 text-xs font-semibold uppercase rounded-full shadow-lg z-10">
-                        New
-                      </div>
-                      <SecondaryButton
-                        title="Change Frequency"
-                        onClick={() => setIsInterlaceModalOpen(true)}
-                        className="w-full"
-                      />
-                    </div>
-
-                    <div className="text-2xl font-bold uppercase relative w-full max-w-xs mx-auto">
-                      {/* Overlay "New" Banner */}
-                      <div className="absolute right-0 top-0 transform translate-x-1/4 -translate-y-1/3 bg-pink-3 border border-gray-8 px-2 py-1 text-xs font-semibold uppercase rounded-full shadow-lg z-10">
-                        New
-                      </div>
-
-                      <SecondaryButton
-                        title="Split Core"
-                        onClick={() => setIsPartitionModalOpen(true)}
-                        className="w-full"
-                      />
+                  <div className="flex flex-row flex-wrap justify-between">
+                    <div className="flex flex-col italic max-w-3xl text-gray-12 items-center justify-center px-2 py-8">
+                      Note: This region is Assigned.
                     </div>
                   </div>
                 </>
-              ) : (
-                <div className="flex flex-col italic max-w-3xl text-gray-12 items-center justify-center px-2 py-8">
-                  Note: You do not own this core. After buying a core you will be able to: Transfer
-                  it, Utilize it, Split it up, or change its frequency.
-                </div>
-              )}
-            </div>
+              )) ||
+              (region.pooled && (
+                <>
+                  <div className="pt-5 pl-10">
+                    <h3 className="text-xl font-unbounded uppercase font-bold">Pooled</h3>
+                  </div>
+                  <div className="flex flex-row flex-wrap justify-between">
+                    <div className="flex flex-col italic max-w-3xl text-gray-12 items-center justify-center px-2 py-8">
+                      Note: This region is in the On Demand Pool.
+                    </div>
+                  </div>
+                </>
+              ))
+            ) : (
+              <div className="flex flex-row flex-wrap justify-between">
+                {region.owner === activeAccount.address ? (
+                  <>
+                    <div className="pt-5 pl-10">
+                      <h3 className="text-xl font-unbounded uppercase font-bold">Note</h3>
+                    </div>
+                    <div className="flex flex-col italic max-w-md text-gray-12 items-start justify-center px-4 py-8">
+                      This core is yours. You are able to:
+                      <ul className="px-2 py-2">
+                        <li> * Transfer your core to another account</li>
+                        <li> * Utilize it for a parachain</li>
+                        <li> * Split it up</li>
+                        <li> * Change block production frequency</li>
+                        <li> * Assign it to a task</li>
+                      </ul>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 py-10">
+                      {/* Buttons*/}
+                      <div className="text-2xl font-bold font-unbounded uppercase text-gray-21">
+                        <SecondaryButton
+                          title="Transfer Core"
+                          onClick={() => setIsTransferModalOpen(true)}
+                          className="w-full"
+                        />
+                      </div>
+
+                      <div className="text-2xl font-bold font-unbounded uppercase text-gray-21">
+                        <SecondaryButton
+                          title="Assign Core"
+                          onClick={() => setIsAssignModalOpen(true)}
+                          className="w-full"
+                        />
+                      </div>
+
+                      <div className="text-2xl font-bold uppercase relative w-full max-w-xs mx-auto">
+                        {/* Overlay "New" Banner */}
+                        <div className="absolute right-0 top-0 transform translate-x-1/4 -translate-y-1/3 bg-pink-3 border border-gray-8 px-2 py-1 text-xs font-semibold uppercase rounded-full shadow-lg z-10">
+                          New
+                        </div>
+                        <SecondaryButton
+                          title="Change Frequency"
+                          onClick={() => setIsInterlaceModalOpen(true)}
+                          className="w-full"
+                        />
+                      </div>
+
+                      <div className="text-2xl font-bold uppercase relative w-full max-w-xs mx-auto">
+                        {/* Overlay "New" Banner */}
+                        <div className="absolute right-0 top-0 transform translate-x-1/4 -translate-y-1/3 bg-pink-3 border border-gray-8 px-2 py-1 text-xs font-semibold uppercase rounded-full shadow-lg z-10">
+                          New
+                        </div>
+
+                        <SecondaryButton
+                          title="Split Core"
+                          onClick={() => setIsPartitionModalOpen(true)}
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="pt-5 pl-10">
+                      <h3 className="text-xl font-unbounded uppercase font-bold">Note</h3>
+                    </div>
+                    <div className="flex flex-col italic max-w-3xl text-gray-12 items-center justify-center px-2 py-8">
+                      Note: You do not own this core. After buying a core you will be able to:
+                      Transfer it, Utilize it, Split it up, or change its frequency.
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
           </div>
         </Border>
       </section>

@@ -19,7 +19,7 @@ interface CoresSoldInThisSale {
 }
 
 export default function BrokerSaleInfo() {
-  const { relayApi, api } = useInkathon()
+  const { api } = useInkathon()
   const [currentSaleRegion, setCurrentSaleRegion] = useState<SaleInitializedEvent | null>(null)
   const [coresSoldInThisSale, setCoresSoldInThisSale] = useState<CoresSoldInThisSale | null>(null)
   // Update saleStage every second based on the currentBlockNumber
@@ -33,9 +33,6 @@ export default function BrokerSaleInfo() {
   const network = getChainFromPath(pathname)
 
   const currentBlockNumber = useCurrentBlockNumber(api)
-
-  // const saleInfoString = useSubstrateQuery(api, 'saleInfo')
-  // const configurationString = useSubstrateQuery(api, 'configuration')
 
   const configuration = network_list[network].configuration
   const brokerConstants = network_list[network].constants
@@ -73,7 +70,7 @@ export default function BrokerSaleInfo() {
         fetchData()
       }
     }
-  }, [currentSaleRegion])
+  }, [client, network, currentSaleRegion])
 
   useEffect(() => {
     if (currentSaleRegion && configuration && brokerConstants) {

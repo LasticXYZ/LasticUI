@@ -72,6 +72,10 @@ const AssignModal: FC<AssignModalProps> = ({ isOpen, onClose, regionId }) => {
             <option value="Provisional">Provisional</option>
             <option value="Final">Final</option>
           </select>
+          <p className="text-md italic text-gray-18 dark:text-gray-4 mb-2">
+            Note: If you have a full core it is better to choose Final Finality, if you do you will
+            be able to renew your core.
+          </p>
           <p className="text-lg mb-2">Region Begin: {regionId.begin}</p>
           <p className="text-md">Core Mask: {regionId.mask}</p>
         </div>
