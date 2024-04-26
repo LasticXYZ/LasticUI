@@ -15,7 +15,7 @@ import React from 'react'
 
 type BuyWalletStatusType = {
   saleInfo: SaleInitializedEvent
-  coresSold: number
+  coresSold: number | undefined
   firstCore: number
   formatPrice: string
   currentPrice: number
@@ -96,7 +96,7 @@ const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({
     )
   }
 
-  if (saleInfo.coresOffered && coresSold >= saleInfo.coresOffered) {
+  if (saleInfo.coresOffered && coresSold && coresSold >= saleInfo.coresOffered) {
     return (
       <div className="flex justify-center items-center py-20 px-4">
         <div className="flex flex-col items-center justify-center px-2 py-8 ">
@@ -121,12 +121,13 @@ const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({
         </div>
         <div className="dark:text-gray-6">
           <div className="text-gray-18 dark:text-gray-3 text-xl font-unbounded uppercase mb-5">
-            Core Nb: <span className="font-semibold">{firstCore + coresSold}</span>
+            Core Nb:{' '}
+            <span className="font-semibold">{coresSold ? firstCore + coresSold : 'NaN'}</span>
           </div>
           <div className=" mb-2 ">
             Available Cores:{' '}
             <span className="font-semibold">
-              {saleInfo.coresOffered - coresSold} / {saleInfo.coresOffered}{' '}
+              {coresSold ? saleInfo.coresOffered - coresSold : 'NaN'} / {saleInfo.coresOffered}{' '}
             </span>
           </div>
           <div className=" mb-2">

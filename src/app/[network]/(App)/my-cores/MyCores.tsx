@@ -29,9 +29,6 @@ export default function MyCores() {
   const tokenSymbol = network_list[network].tokenSymbol
   const configuration = network_list[network].configuration
 
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 6
-
   //const newAddress = encodeAddress(publicKeyBytes, targetNetworkPrefix)
 
   useMemo(() => {
@@ -60,8 +57,8 @@ export default function MyCores() {
           currentSaleRegion.regionBegin - configuration.regionLength,
           currentSaleRegion.regionBegin + configuration.regionLength,
         )
-        query2 = client.eventOwnedAndAssignedCoreOwner(activeAccount.address, 6, 0)
-        query3 = client.eventOwnedAndPooledCoreOwner(activeAccount.address, 6, 0)
+        query2 = client.eventOwnedAndAssignedCoreOwner(activeAccount.address)
+        query3 = client.eventOwnedAndPooledCoreOwner(activeAccount.address)
       }
     }
 
@@ -80,10 +77,7 @@ export default function MyCores() {
 
       fetchData()
     }
-  }, [currentPage, activeAccount, network, currentSaleData, client, configuration])
-
-  const handleNextPage = () => setCurrentPage(currentPage + 1)
-  const handlePrevPage = () => setCurrentPage(currentPage - 1)
+  }, [activeAccount, network, currentSaleData, client, configuration])
 
   if (!activeAccount || !activeChain) {
     return (
@@ -155,6 +149,11 @@ interface SectionProps {
 }
 
 function SectionDisplay({ title, regions, configuration, tokenSymbol }: SectionProps) {
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 6
+  const handleNextPage = () => setCurrentPage(currentPage + 1)
+  const handlePrevPage = () => setCurrentPage(currentPage - 1)
+
   return (
     <>
       <h2 className="pt-10 pl-10 text-lg font-bold uppercase font-unbounded">{title}</h2>
