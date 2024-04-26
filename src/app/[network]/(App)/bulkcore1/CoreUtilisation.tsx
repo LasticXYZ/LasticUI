@@ -1,5 +1,6 @@
 import Border from '@/components/border/Border'
 import MiniBarGraphData from '@/components/graph/MiniBarGraphData'
+import MiniLineGraphData from '@/components/graph/MiniLineGraphData'
 import { network_list } from '@/config/network'
 import { useSaleRegions } from '@/hooks/subsquid'
 import { priceCurve } from '@/utils'
@@ -16,7 +17,6 @@ const CoreUtilisation: React.FC = () => {
   const network = getChainFromPath(pathname)
   const decimalPoints = network_list[network].decimalPoints
 
-  //const [result, setResult] = useState<GraphLike<SaleInitializedEvent[]> | null>(null)
   const [activeDataSet, setActiveDataSet] = useState<DataSetKey>('price') // Change to string to accommodate multiple datasets
   const client = useMemo(() => getClient(), [])
 
@@ -27,41 +27,46 @@ const CoreUtilisation: React.FC = () => {
   let price_xy: { x: number[]; y: number[] } | undefined
   if (currentSaleRegion && config && constant) {
     price_xy = priceCurve(currentSaleRegion, config, constant)
-    console.log(price_xy)
+    //console.log(price_xy)
   }
 
   // Configurations for different data sets
   const dataConfigs = {
     priceOnePeriod: {
-      graph: 'line',
+      line: true,
       label: 'Price Per Core In One Period',
-      dataPoints: price_xy ? price_xy.y : [],
+      dataPoints: price_xy ? price_xy.y.map((price) => price / 10 ** 12) : [],
+      labels: price_xy ? price_xy.x.map((period) => `${period}`) : [],
     },
     price: {
-      graph: 'bar',
+      line: false,
       label: 'Price Per Core Over Time',
       dataPoints: saleRegions?.data.event
         ? [...saleRegions.data.event]
             .reverse()
             .map((event) => Number(event.regularPrice) / 10 ** decimalPoints || 0)
         : [],
+      labels: saleRegions?.data.event
+        ? [...saleRegions.data.event]
+            .reverse()
+            .map((event, index) => `Nb. ${index + 1} - Rg. ${event.regionBegin}`)
+        : [],
     },
     cores: {
-      graph: 'bar',
+      line: false,
       label: 'Cores Offered',
       dataPoints: saleRegions?.data.event
         ? [...saleRegions.data.event]
             .reverse()
             .map((event) => parseFloat(event.coresOffered?.toString() || '0'))
         : [],
+      labels: saleRegions?.data.event
+        ? [...saleRegions.data.event]
+            .reverse()
+            .map((event, index) => `Nb. ${index + 1} - Rg. ${event.regionBegin}`)
+        : [],
     },
   }
-
-  const labels = saleRegions?.data.event
-    ? [...saleRegions.data.event]
-        .reverse()
-        .map((event, index) => `Nb. ${index + 1} - Rg. ${event.regionBegin}`)
-    : []
 
   // Toggle between data sets
   const toggleActiveDataSet = (newDataSet: DataSetKey) => {
@@ -90,10 +95,16 @@ const CoreUtilisation: React.FC = () => {
             <div className="p-2 flex flex-col space-y-4">{dataSetOptions}</div>
           </div>
           <div className="col-span-3 p-4">
-            {labels.length > 0 && (
+            {dataConfigs[activeDataSet].line ? (
+              <MiniLineGraphData
+                title={dataConfigs[activeDataSet].label}
+                labels={dataConfigs[activeDataSet].labels}
+                dataPoints={dataConfigs[activeDataSet].dataPoints}
+              />
+            ) : (
               <MiniBarGraphData
                 title={dataConfigs[activeDataSet].label}
-                labels={labels}
+                labels={dataConfigs[activeDataSet].labels}
                 dataPoints={dataConfigs[activeDataSet].dataPoints}
               />
             )}

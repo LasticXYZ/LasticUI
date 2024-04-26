@@ -129,14 +129,11 @@ function calculate_k(saleInfo: SaleInitializedEvent, config: ConfigurationType):
 }
 
 // Calculate n - the y-intercept of the price curve when it is the interlude period
-// n = y2 - kx2
+// n = y2 - k * x2
 // n = regularPrice - k * (saleStart + interludeLength)
 function calculate_n(saleInfo: SaleInitializedEvent, config: ConfigurationType): number {
   if (!saleInfo.saleStart || !saleInfo.regularPrice) return Number(saleInfo.regularPrice)
-  return (
-    Number(saleInfo.regularPrice) -
-    calculate_k(saleInfo, config) * (saleInfo.saleStart + config.interludeLength)
-  )
+  return Number(saleInfo.startPrice) - calculate_k(saleInfo, config) * saleInfo.saleStart
 }
 
 // Calculate the price of a core at a given block number
@@ -151,8 +148,9 @@ export function calculateCurrentPricePerCore(
     return null
   if (
     currentBlockNumber < saleInfo.saleStart + config.leadinLength &&
-    currentBlockNumber > saleInfo.saleStart
+    currentBlockNumber >= saleInfo.saleStart
   ) {
+    console.log(calculate_k(saleInfo, config))
     return calculate_k(saleInfo, config) * currentBlockNumber + calculate_n(saleInfo, config)
   } else {
     return Number(saleInfo.regularPrice)
@@ -166,12 +164,15 @@ export function priceCurve(
   constant: BrokerConstantsType,
 ): { x: number[]; y: number[] } | undefined {
   const saleStart = saleInfo.saleStart
+  console.log(saleStart)
   const saleEnds = getSaleEnds(saleInfo, config, constant)
+  console.log(saleEnds - saleStart)
+  console.log(config.leadinLength)
   let prices = []
   let blocks = []
   if (!saleStart || !saleEnds) return
 
-  for (let block = saleStart; block <= saleEnds; block++) {
+  for (let block = saleStart; block <= saleEnds; block += 1000) {
     const price = calculateCurrentPricePerCore(block, saleInfo, config)
     if (price !== null) {
       prices.push(price)
