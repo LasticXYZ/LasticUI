@@ -29,6 +29,30 @@ interface CoresSoldInThisSale {
   totalCount: number
 }
 
+export function useSaleRegions(network: string | null, client: SquidClient) {
+  const [result, setResult] = useState<GraphLike<SaleInitializedEvent[]> | null>(null)
+
+  useMemo(() => {
+    const fetchData = async () => {
+      if (network) {
+        const query = client.eventAllSaleInitialized()
+        try {
+          const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(
+            network,
+            query,
+          )
+          setResult(fetchedResult)
+        } catch (error) {
+          console.error('Failed to fetch data:', error)
+        }
+      }
+    }
+    fetchData()
+  }, [network, client])
+
+  return result
+}
+
 // Function to fetch the cores sold in the current sale region
 // This function is used in the TimeSection component
 export function useCoresSold(

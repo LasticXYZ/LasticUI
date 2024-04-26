@@ -1,10 +1,12 @@
 import Border from '@/components/border/Border'
 import MiniBarGraphData from '@/components/graph/MiniBarGraphData'
 import { network_list } from '@/config/network'
+import { useSaleRegions } from '@/hooks/subsquid'
+import { priceCurve } from '@/utils'
 import { getChainFromPath } from '@/utils/common/chainPath'
-import { GraphLike, SaleInitializedEvent, getClient } from '@poppyseed/squid-sdk'
+import { getClient } from '@poppyseed/squid-sdk'
 import { usePathname } from 'next/navigation'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import CoreOwners from './CoreOwners'
 
 type DataSetKey = 'priceOnePeriod' | 'price' | 'cores' // Add more keys as needed
@@ -14,59 +16,49 @@ const CoreUtilisation: React.FC = () => {
   const network = getChainFromPath(pathname)
   const decimalPoints = network_list[network].decimalPoints
 
-  const [result, setResult] = useState<GraphLike<SaleInitializedEvent[]> | null>(null)
+  //const [result, setResult] = useState<GraphLike<SaleInitializedEvent[]> | null>(null)
   const [activeDataSet, setActiveDataSet] = useState<DataSetKey>('price') // Change to string to accommodate multiple datasets
   const client = useMemo(() => getClient(), [])
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (network) {
-        const query = client.eventAllSaleInitialized()
-        try {
-          const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(
-            network,
-            query,
-          )
-          setResult(fetchedResult)
-        } catch (error) {
-          console.error('Failed to fetch data:', error)
-        }
-      }
-    }
-
-    fetchData()
-  }, [client, network])
+  const saleRegions = useSaleRegions(network, client)
+  const currentSaleRegion = saleRegions?.data.event ? saleRegions.data.event[0] : null
+  const constant = network_list[network].constants
+  const config = network_list[network].configuration
+  let price_xy: { x: number[]; y: number[] } | undefined
+  if (currentSaleRegion && config && constant) {
+    price_xy = priceCurve(currentSaleRegion, config, constant)
+    console.log(price_xy)
+  }
 
   // Configurations for different data sets
   const dataConfigs = {
     priceOnePeriod: {
+      graph: 'line',
       label: 'Price Per Core In One Period',
-      dataPoints: result?.data.event
-        ? [...result.data.event]
-            .reverse()
-            .map((event) => Number(event.regularPrice) / 10 ** decimalPoints || 0)
-        : [],
+      dataPoints: price_xy ? price_xy.y : [],
     },
     price: {
+      graph: 'bar',
       label: 'Price Per Core Over Time',
-      dataPoints: result?.data.event
-        ? [...result.data.event]
+      dataPoints: saleRegions?.data.event
+        ? [...saleRegions.data.event]
             .reverse()
             .map((event) => Number(event.regularPrice) / 10 ** decimalPoints || 0)
         : [],
     },
     cores: {
+      graph: 'bar',
       label: 'Cores Offered',
-      dataPoints: result?.data.event
-        ? [...result.data.event]
+      dataPoints: saleRegions?.data.event
+        ? [...saleRegions.data.event]
             .reverse()
             .map((event) => parseFloat(event.coresOffered?.toString() || '0'))
         : [],
     },
   }
 
-  const labels = result?.data.event
-    ? [...result.data.event]
+  const labels = saleRegions?.data.event
+    ? [...saleRegions.data.event]
         .reverse()
         .map((event, index) => `Nb. ${index + 1} - Rg. ${event.regionBegin}`)
     : []

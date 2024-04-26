@@ -164,7 +164,7 @@ export function priceCurve(
   saleInfo: SaleInitializedEvent,
   config: ConfigurationType,
   constant: BrokerConstantsType,
-): [number[], number[]] | undefined {
+): { x: number[]; y: number[] } | undefined {
   const saleStart = saleInfo.saleStart
   const saleEnds = getSaleEnds(saleInfo, config, constant)
   let prices = []
@@ -180,5 +180,5 @@ export function priceCurve(
   }
 
   // Assuming a function plotGraph exists
-  return [blocks, prices]
+  return { x: blocks, y: prices }
 }
