@@ -5,20 +5,21 @@ import { BrokerConstantsType, ConfigurationType } from '@poppyseed/lastic-sdk'
 export type NetworkInfo = {
   [key: string]: {
     name: string
-    currency: string
+    tokenSymbol: string
     apiUrl: string
     paraId: {
       [key: string]: string // This tells TypeScript any string key returns a string value
     }
     constants: BrokerConstantsType | null // This values changes so little, that we can just store it here rather than having to read it from the state
     configuration: ConfigurationType | null
+    saleInfo: { firstCore: number } | null
   }
 }
 
 export const network_list: NetworkInfo = {
   polkadot: {
     name: 'Polkadot',
-    currency: 'DOT',
+    tokenSymbol: 'DOT',
     apiUrl: 'https://polkadot.api.subscan.io/api',
     paraId: {
       '1000': 'AssetHub',
@@ -84,10 +85,11 @@ export const network_list: NetworkInfo = {
     },
     constants: null,
     configuration: null,
+    saleInfo: null,
   },
   kusama: {
     name: 'Kusama',
-    currency: 'KSM',
+    tokenSymbol: 'KSM',
     apiUrl: 'https://kusama.api.subscan.io/api',
     paraId: {
       '1000': 'AssetHub',
@@ -168,10 +170,13 @@ export const network_list: NetworkInfo = {
       renewalBump: 3,
       contributionTimeout: 5040,
     },
+    saleInfo: {
+      firstCore: 52,
+    },
   },
   westend: {
     name: 'Westend',
-    currency: 'WST',
+    tokenSymbol: 'WST',
     apiUrl: 'https://westend.api.subscan.io/api',
     paraId: {
       '1000': 'assethub-westend',
@@ -203,10 +208,13 @@ export const network_list: NetworkInfo = {
       renewalBump: 0.35,
       contributionTimeout: 1260,
     },
+    saleInfo: {
+      firstCore: 5,
+    },
   },
   rococo: {
     name: 'Rococo',
-    currency: 'ROC',
+    tokenSymbol: 'ROC',
     apiUrl: 'https://rococo.api.subscan.io/api',
     paraId: {
       '1000': 'AssetHub',
@@ -288,6 +296,9 @@ export const network_list: NetworkInfo = {
       limitCoresOffered: null,
       renewalBump: 0.35,
       contributionTimeout: 1260,
+    },
+    saleInfo: {
+      firstCore: 47,
     },
   },
 }

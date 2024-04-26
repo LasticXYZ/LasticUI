@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 import {
   BarController,
   BarElement,
@@ -33,13 +31,6 @@ type MiniBarGraphDataProps = {
 }
 
 const MiniBarGraphData: React.FC<MiniBarGraphDataProps> = ({ title, dataPoints, labels }) => {
-  const displayOptions = [
-    { key: 'deposit', value: 'Deposit' },
-    { key: 'collateral', value: 'Collateral' },
-  ]
-
-  const [curentlyDisplayed, setCurrentDisplay] = useState(displayOptions[0].key)
-
   const data = {
     labels: labels,
     datasets: [

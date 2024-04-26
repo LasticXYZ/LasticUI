@@ -1,15 +1,17 @@
 import Border from '@/components/border/Border'
 import MiniBarGraphData from '@/components/graph/MiniBarGraphData'
-import { useInkathon } from '@poppyseed/lastic-sdk'
+import { getChainFromPath } from '@/utils/common/chainPath'
 import { GraphLike, SaleInitializedEvent, getClient } from '@poppyseed/squid-sdk'
+import { usePathname } from 'next/navigation'
 import React, { useEffect, useMemo, useState } from 'react'
 import CoreOwners from './CoreOwners'
 
 type DataSetKey = 'price' | 'cores' // Add more keys as needed
 
 const CoreUtilisation: React.FC = () => {
-  const { activeRelayChain } = useInkathon()
-  const network = activeRelayChain?.network
+  const pathname = usePathname()
+  const network = getChainFromPath(pathname)
+  const decimalPoints = 12
 
   const [result, setResult] = useState<GraphLike<SaleInitializedEvent[]> | null>(null)
   const [activeDataSet, setActiveDataSet] = useState<DataSetKey>('price') // Change to string to accommodate multiple datasets
@@ -32,24 +34,33 @@ const CoreUtilisation: React.FC = () => {
     }
 
     fetchData()
-  }, [])
+  }, [client, network])
 
   // Configurations for different data sets
   const dataConfigs = {
     price: {
       label: 'Price Per Core',
-      dataPoints:
-        result?.data.event?.map((event) => parseFloat(event.regularPrice?.toString() || '0')) || [],
+      dataPoints: result?.data.event
+        ? [...result.data.event]
+            .reverse()
+            .map((event) => Number(event.regularPrice) / 10 ** decimalPoints || 0)
+        : [],
     },
     cores: {
       label: 'Cores Offered',
-      dataPoints:
-        result?.data.event?.map((event) => parseFloat(event.coresOffered?.toString() || '0')) || [],
+      dataPoints: result?.data.event
+        ? [...result.data.event]
+            .reverse()
+            .map((event) => parseFloat(event.coresOffered?.toString() || '0'))
+        : [],
     },
   }
 
-  const labels =
-    result?.data.event?.map((event, index) => `Nb. ${index + 1} - Rg. ${event.regionBegin}`) || []
+  const labels = result?.data.event
+    ? [...result.data.event]
+        .reverse()
+        .map((event, index) => `Nb. ${index + 1} - Rg. ${event.regionBegin}`)
+    : []
 
   // Toggle between data sets
   const toggleActiveDataSet = (newDataSet: DataSetKey) => {

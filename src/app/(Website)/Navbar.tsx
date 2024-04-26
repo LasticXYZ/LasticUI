@@ -45,7 +45,7 @@ const Navbar: FC<NavbarProps> = ({ navigation }) => {
                           <Link
                             key={idx}
                             href={item.href}
-                            className={`${pathname === item.href ? 'text-pink-4' : 'text-white hover:text-pink-4'}`}
+                            className={`${pathname === item.href ? 'text-pink-400' : 'text-white hover:text-pink-400'}`}
                           >
                             {item.name}
                           </Link>
@@ -78,7 +78,7 @@ const Navbar: FC<NavbarProps> = ({ navigation }) => {
                     <Link
                       key={item.name}
                       href={item.href}
-                      className={`${pathname === item.href ? 'text-pink-4' : 'text-white hover:text-pink-4'}`}
+                      className={`${pathname === item.href ? 'text-pink-400' : 'text-white hover:text-pink-400'}`}
                     >
                       {item.name}
                     </Link>

@@ -4,7 +4,8 @@ import { ParachainInfoRequest, ParachainInfoResponse } from '@/components/callSu
 import GeneralTable from '@/components/table/GeneralTable'
 import { PossibleNetworks, network_list } from '@/config/network'
 import { toShortAddress } from '@/utils'
-import { useInkathon } from '@poppyseed/lastic-sdk'
+import { getChainFromPath } from '@/utils/common/chainPath'
+import { usePathname } from 'next/navigation'
 import React, { useMemo, useState } from 'react'
 
 const ParachainInfo: React.FC = () => {
@@ -18,9 +19,8 @@ const ParachainInfo: React.FC = () => {
     'Onboarding',
     'Parathread',
   ])
-  // Display depending on the network:
-  const { activeRelayChain } = useInkathon()
-  const network = activeRelayChain?.network
+  const pathname = usePathname()
+  const network = getChainFromPath(pathname)
 
   const handleNextPage = () => setCurrentPage(currentPage + 1)
   const handlePrevPage = () => setCurrentPage(currentPage - 1)
@@ -83,7 +83,7 @@ const ParachainInfo: React.FC = () => {
   if (error) return <div>Error: {error}</div>
 
   return auctionData ? (
-    <section className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8">
+    <section className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8 mt-5">
       <Border>
         <div className="pt-10 pl-10">
           <h1 className="text-xl font-unbounded uppercase font-bold">
