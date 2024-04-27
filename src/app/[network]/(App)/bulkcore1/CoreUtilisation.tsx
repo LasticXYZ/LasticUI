@@ -1,4 +1,6 @@
 import Border from '@/components/border/Border'
+import { useSubScanCall } from '@/components/callSubscan/callSubScan'
+import { AuctionResponse, AuctionsRequest } from '@/components/callSubscan/types'
 import MiniBarGraphData from '@/components/graph/MiniBarGraphData'
 import MiniLineGraphData from '@/components/graph/MiniLineGraphData'
 import { network_list } from '@/config/network'
@@ -10,7 +12,7 @@ import { usePathname } from 'next/navigation'
 import React, { useMemo, useState } from 'react'
 import CoreOwners from './CoreOwners'
 
-type DataSetKey = 'priceOnePeriod' | 'price' | 'cores' // Add more keys as needed
+type DataSetKey = 'priceOnePeriod' | 'price' | 'cores' | 'pastAuctions' // Add more keys as needed
 
 const CoreUtilisation: React.FC = () => {
   const pathname = usePathname()
@@ -29,6 +31,25 @@ const CoreUtilisation: React.FC = () => {
     price_xy = priceCurve(currentSaleRegion, config, constant)
     //console.log(price_xy)
   }
+
+  const requestAuctionData = useMemo<AuctionsRequest>(
+    () => ({
+      auction_index: 0,
+      page: 0,
+      row: 10,
+      status: 0,
+    }),
+    [],
+  )
+
+  const {
+    data: auctionData,
+    loading,
+    error,
+  } = useSubScanCall<AuctionResponse>({
+    apiUrl: `${network_list[network].apiUrl}/scan/parachain/auctions`,
+    requestData: requestAuctionData,
+  })
 
   // Configurations for different data sets
   const dataConfigs = {
@@ -75,6 +96,27 @@ const CoreUtilisation: React.FC = () => {
         : [],
       xLabel: 'Regions',
       yLabel: 'Number of Cores Offered',
+    },
+    pastAuctions: {
+      line: false,
+      label: 'Monthly Auctions in the Past',
+      dataPoints: auctionData?.data.auctions
+        ? auctionData?.data.auctions
+            .map((auction) =>
+              auction.winners
+                ? auction.winners.reduce(
+                    (acc, winner) => acc + winner.amount / 10 ** decimalPoints,
+                    0,
+                  )
+                : 0,
+            )
+            .reverse()
+        : [],
+      labels: auctionData?.data.auctions
+        ? auctionData?.data.auctions.map((auction) => auction.auction_index.toString()).reverse()
+        : [],
+      xLabel: 'Auction Index',
+      yLabel: `Amount in ${network_list[network].tokenSymbol}`,
     },
   }
 
