@@ -26,9 +26,17 @@ type MiniLineGraphDataProps = {
   title: string
   dataPoints: number[] // Assuming your data points are an array of numbers
   labels: string[] // Assuming your labels are an array of strings
+  xLabel?: string
+  yLabel?: string
 }
 
-const MiniLineGraphData: React.FC<MiniLineGraphDataProps> = ({ title, dataPoints, labels }) => {
+const MiniLineGraphData: React.FC<MiniLineGraphDataProps> = ({
+  title,
+  dataPoints,
+  labels,
+  xLabel = '',
+  yLabel = '',
+}) => {
   const data = {
     labels: labels,
     datasets: [
@@ -44,16 +52,32 @@ const MiniLineGraphData: React.FC<MiniLineGraphDataProps> = ({ title, dataPoints
 
   const options = {
     responsive: true,
-    // scales: {
-    //   x: {
-    //     display: true,
-    //     barPercentage: 0.5,
-    //     categoryPercentage: 1,
-    //   },
-    //   y: {
-    //     display: true,
-    //   },
-    // },
+    scales: {
+      x: {
+        display: true,
+        title: {
+          display: xLabel ? true : false,
+          text: xLabel, // Modify this text based on what you're actually displaying
+          color: '#666', // Optional: change the color of the y-axis label
+          font: {
+            size: 18,
+            family: 'Arial', // Optional: set the font type for the y-axis title
+          },
+        },
+      },
+      y: {
+        display: true,
+        title: {
+          display: yLabel ? true : false,
+          text: yLabel, // Modify this text based on what you're actually displaying
+          color: '#666', // Optional: change the color of the y-axis label
+          font: {
+            size: 18,
+            family: 'Arial', // Optional: set the font type for the y-axis title
+          },
+        },
+      },
+    },
     plugins: {
       legend: {
         display: false,

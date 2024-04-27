@@ -119,21 +119,23 @@ export function calculateCurrentPrice(
   }
 }
 
-// Calculate k - the slope of the price curve when it is the interlude period
+// Calculate k - the slope of the price curve when it is the leadin period
 // k = (y2 - y1) / (x2 - x1)
 // k = (startPrice - regularPrice) / leadinLength
 function calculate_k(saleInfo: SaleInitializedEvent, config: ConfigurationType): number {
-  return !saleInfo.startPrice || !saleInfo.regularPrice
-    ? (Number(saleInfo.regularPrice) - Number(saleInfo.startPrice)) / config.leadinLength
-    : 0
+  // Corrected the logic here to ensure proper calculation
+  return (
+    (Number(saleInfo.regularPrice?.toString()) - Number(saleInfo.startPrice?.toString())) /
+    config.leadinLength
+  )
 }
 
 // Calculate n - the y-intercept of the price curve when it is the interlude period
-// n = y2 - k * x2
-// n = regularPrice - k * (saleStart + interludeLength)
+// n = y1 - k * x1
+// n = startPrice - k * saleStart
 function calculate_n(saleInfo: SaleInitializedEvent, config: ConfigurationType): number {
-  if (!saleInfo.saleStart || !saleInfo.regularPrice) return Number(saleInfo.regularPrice)
-  return Number(saleInfo.startPrice) - calculate_k(saleInfo, config) * saleInfo.saleStart
+  let k = calculate_k(saleInfo, config)
+  return Number(saleInfo.startPrice?.toString()) - k * Number(saleInfo.saleStart?.toString())
 }
 
 // Calculate the price of a core at a given block number
@@ -147,11 +149,12 @@ export function calculateCurrentPricePerCore(
   if (!saleInfo || !saleInfo.saleStart || !saleInfo.regularPrice || !saleInfo.startPrice)
     return null
   if (
-    currentBlockNumber < saleInfo.saleStart + config.leadinLength &&
-    currentBlockNumber >= saleInfo.saleStart
+    currentBlockNumber >= saleInfo.saleStart &&
+    currentBlockNumber < saleInfo.saleStart + config.leadinLength
   ) {
-    console.log(calculate_k(saleInfo, config))
-    return calculate_k(saleInfo, config) * currentBlockNumber + calculate_n(saleInfo, config)
+    let k = calculate_k(saleInfo, config)
+    let n = calculate_n(saleInfo, config)
+    return k * currentBlockNumber + n
   } else {
     return Number(saleInfo.regularPrice)
   }

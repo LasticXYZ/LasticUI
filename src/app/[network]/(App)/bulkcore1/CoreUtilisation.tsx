@@ -17,7 +17,7 @@ const CoreUtilisation: React.FC = () => {
   const network = getChainFromPath(pathname)
   const decimalPoints = network_list[network].decimalPoints
 
-  const [activeDataSet, setActiveDataSet] = useState<DataSetKey>('price') // Change to string to accommodate multiple datasets
+  const [activeDataSet, setActiveDataSet] = useState<DataSetKey>('priceOnePeriod') // Change to string to accommodate multiple datasets
   const client = useMemo(() => getClient(), [])
 
   const saleRegions = useSaleRegions(network, client)
@@ -35,8 +35,14 @@ const CoreUtilisation: React.FC = () => {
     priceOnePeriod: {
       line: true,
       label: 'Price Per Core In One Period',
-      dataPoints: price_xy ? price_xy.y.map((price) => price / 10 ** 12) : [],
-      labels: price_xy ? price_xy.x.map((period) => `${period}`) : [],
+      dataPoints: price_xy ? price_xy.y.map((price) => price / 10 ** decimalPoints) : [],
+      labels: price_xy
+        ? price_xy.x.map(
+            (period) => `${period === currentSaleRegion?.saleStart ? 'Sale Start' : period}`,
+          )
+        : [],
+      xLabel: 'Block Number',
+      yLabel: `Price - ${network_list[network].tokenSymbol}`,
     },
     price: {
       line: false,
@@ -51,6 +57,8 @@ const CoreUtilisation: React.FC = () => {
             .reverse()
             .map((event, index) => `Nb. ${index + 1} - Rg. ${event.regionBegin}`)
         : [],
+      xLabel: 'Regions',
+      yLabel: `Stable Price - ${network_list[network].tokenSymbol}`,
     },
     cores: {
       line: false,
@@ -65,6 +73,8 @@ const CoreUtilisation: React.FC = () => {
             .reverse()
             .map((event, index) => `Nb. ${index + 1} - Rg. ${event.regionBegin}`)
         : [],
+      xLabel: 'Regions',
+      yLabel: 'Number of Cores Offered',
     },
   }
 
@@ -100,12 +110,16 @@ const CoreUtilisation: React.FC = () => {
                 title={dataConfigs[activeDataSet].label}
                 labels={dataConfigs[activeDataSet].labels}
                 dataPoints={dataConfigs[activeDataSet].dataPoints}
+                xLabel={dataConfigs[activeDataSet].xLabel}
+                yLabel={dataConfigs[activeDataSet].yLabel}
               />
             ) : (
               <MiniBarGraphData
                 title={dataConfigs[activeDataSet].label}
                 labels={dataConfigs[activeDataSet].labels}
                 dataPoints={dataConfigs[activeDataSet].dataPoints}
+                xLabel={dataConfigs[activeDataSet].xLabel}
+                yLabel={dataConfigs[activeDataSet].yLabel}
               />
             )}
           </div>
