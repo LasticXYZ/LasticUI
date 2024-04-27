@@ -79,7 +79,7 @@ const CoreItemExtensive: React.FC<CardProps> = ({
         </div>
         <div className="flex w-full flex-col px-5 items-start justify-start space-y-3">
           <div className="flex flex-row gap-2">
-            {mask !== '0xfffffffffffffffffff' && (
+            {mask !== '0xffffffffffffffffffff' && (
               <div className="bg-pink-400 dark:bg-pink-400  dark:bg-opacity-80 border border-gray-8 px-4 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
                 Interlaced
               </div>

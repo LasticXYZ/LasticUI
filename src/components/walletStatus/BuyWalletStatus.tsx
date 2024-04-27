@@ -18,7 +18,7 @@ type BuyWalletStatusType = {
   coresSold: number | undefined
   firstCore: number
   formatPrice: string
-  currentPrice: number
+  currentPrice: number | null
   statusCode: StatusCode | null
 }
 
@@ -51,7 +51,7 @@ const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({
 
   const pathname = usePathname()
 
-  let inputPurchasePrice = Math.ceil(currentPrice)
+  let inputPurchasePrice = currentPrice ? Math.ceil(currentPrice) : NaN
 
   if (!saleInfo.coresOffered || !saleInfo.idealCoresSold) {
     return (

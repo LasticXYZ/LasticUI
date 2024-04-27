@@ -164,7 +164,7 @@ function SectionDisplay({ title, regions, configuration, tokenSymbol }: SectionP
               key={index}
               config={configuration}
               coreNumber={region.regionId.core}
-              size={region.regionId.mask === '0xffffffffffffffffffff' ? '1' : 'Interlaced'}
+              size={region.regionId.mask === '0xffffffffffffffffffff' ? 'Whole' : 'Interlaced'}
               cost={parseNativeTokenToHuman({ paid: region.price?.toString(), decimals: 12 })}
               currencyCost={tokenSymbol}
               mask={region.regionId.mask}

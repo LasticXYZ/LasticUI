@@ -32,7 +32,7 @@ const statusInfoMap: Record<StatusCode, StatusInfo> = {
 
 // Non-exported util functions for saleStatus
 
-function getSaleEnds(
+export function getSaleEnds(
   saleInfo: SaleInitializedEvent,
   config: ConfigurationType,
   constant: BrokerConstantsType,

@@ -4,31 +4,26 @@ import TimelineComponent from '@/components/timelineComp/TimelineComp'
 import BuyWalletStatus from '@/components/walletStatus/BuyWalletStatus'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
+import { useCoresSold, useSaleRegion } from '@/hooks/subsquid'
 import { useCurrentBlockNumber } from '@/hooks/useSubstrateQuery'
-import { calculateCurrentPrice, saleStatus } from '@/utils/broker'
+import { calculateCurrentPricePerCore, saleStatus } from '@/utils/broker'
 import { StatusCode } from '@/utils/broker/saleStatus'
 import { getChainFromPath } from '@/utils/common/chainPath'
 import { useInkathon } from '@poppyseed/lastic-sdk'
-import { GraphLike, SaleInitializedEvent, getClient } from '@poppyseed/squid-sdk'
+import { SquidClient, getClient } from '@poppyseed/squid-sdk'
 import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import AnalyticSection from './AnalyticSection'
 
-interface CoresSoldInThisSale {
-  totalCount: number
-}
-
 export default function BrokerSaleInfo() {
   const { api } = useInkathon()
-  const [currentSaleRegion, setCurrentSaleRegion] = useState<SaleInitializedEvent | null>(null)
-  const [coresSoldInThisSale, setCoresSoldInThisSale] = useState<CoresSoldInThisSale | null>(null)
   // Update saleStage every second based on the currentBlockNumber
   const [saleStage, setSaleStage] = useState('')
   const [saleTitle, setSaleTitle] = useState('')
   const [statusCode, setStatusCode] = useState<StatusCode | null>(null)
   const [timeRemaining, setTimeRemaining] = useState('')
 
-  const client = useMemo(() => getClient(), [])
+  const client: SquidClient = useMemo(() => getClient(), [])
   const pathname = usePathname()
   const network = getChainFromPath(pathname)
 
@@ -37,40 +32,11 @@ export default function BrokerSaleInfo() {
   const configuration = network_list[network].configuration
   const brokerConstants = network_list[network].constants
   const tokenSymbol = network_list[network].tokenSymbol
+  const decimalPoints = network_list[network].decimalPoints
 
-  useMemo(() => {
-    let query1 = client.eventAllSaleInitialized(1)
+  const currentSaleRegion = useSaleRegion(network, client)
 
-    if (network && query1) {
-      const fetchData = async () => {
-        const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(network, query1)
-        const currentSaleRegion: SaleInitializedEvent | null = fetchedResult?.data.event
-          ? fetchedResult.data.event[0]
-          : null
-        setCurrentSaleRegion(currentSaleRegion)
-      }
-
-      fetchData()
-    }
-  }, [network, client])
-
-  useEffect(() => {
-    if (currentSaleRegion && currentSaleRegion.regionBegin) {
-      let query4 = client.coresSoldInThisSale(currentSaleRegion.regionBegin)
-      if (network && query4) {
-        const fetchData = async () => {
-          const fetchedResult: GraphLike<CoresSoldInThisSale> | null = await client.fetch(
-            network,
-            query4,
-          )
-          const coresSoldInThisSale = fetchedResult?.data.event ? fetchedResult.data.event : null
-          setCoresSoldInThisSale(coresSoldInThisSale)
-        }
-
-        fetchData()
-      }
-    }
-  }, [client, network, currentSaleRegion])
+  const coresSoldInThisSale = useCoresSold(network, client, currentSaleRegion)
 
   useEffect(() => {
     if (currentSaleRegion && configuration && brokerConstants) {
@@ -122,13 +88,17 @@ export default function BrokerSaleInfo() {
     )
   }
 
-  let currentPrice = calculateCurrentPrice(currentBlockNumber, currentSaleRegion, configuration)
+  let currentPrice = calculateCurrentPricePerCore(
+    currentBlockNumber,
+    currentSaleRegion,
+    configuration,
+  )
 
   let analyticsData = [
     {
-      title: `${(currentPrice / 10 ** 12).toFixed(4)} ${tokenSymbol}`,
+      title: `${currentPrice ? (currentPrice / 10 ** decimalPoints).toFixed(4) : '-'} ${tokenSymbol}`,
       subtitle: 'Current Price',
-      change: `${(currentPrice / 10 ** 12).toFixed(9)} ${tokenSymbol} to be exact`,
+      change: `${currentPrice ? (currentPrice / 10 ** decimalPoints).toFixed(9) : '-'} ${tokenSymbol} to be exact`,
     },
     {
       title: `${coresSoldInThisSale?.totalCount} / ${currentSaleRegion?.coresOffered}`,
@@ -168,7 +138,7 @@ export default function BrokerSaleInfo() {
                 saleInfo={currentSaleRegion}
                 coresSold={coresSoldInThisSale?.totalCount}
                 firstCore={network_list[network].saleInfo?.firstCore || 0}
-                formatPrice={`${(currentPrice / 10 ** 12).toFixed(8)} ${tokenSymbol}`}
+                formatPrice={`${currentPrice ? (currentPrice / 10 ** decimalPoints).toFixed(8) : '-'} ${tokenSymbol}`}
                 currentPrice={currentPrice}
                 statusCode={statusCode}
               />
