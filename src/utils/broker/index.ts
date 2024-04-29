@@ -1,13 +1,9 @@
-import { QueryParams, Region, RegionDetail, RegionOwner, RegionsType } from '@/types/broker'
+import { Region, RegionDetail, RegionOwner, RegionsType } from '@/types/broker'
+import { getSaleEnds } from '@/utils/broker/saleStatus'
 import { ApiPromise } from '@polkadot/api'
-import {
-  BrokerConstantsType,
-  ConfigurationType,
-  SaleInfoType,
-  getConstants,
-} from '@poppyseed/lastic-sdk'
+import { BrokerConstantsType, ConfigurationType, getConstants } from '@poppyseed/lastic-sdk'
+import { SaleInitializedEvent } from '@poppyseed/squid-sdk'
 import { useEffect, useState } from 'react'
-import { getCurrentBlockNumber } from './blockTime'
 
 export { saleStatus } from './saleStatus'
 
@@ -74,59 +70,6 @@ export function useQuerySpecificRegion({
   return data
 }
 
-// Custom hook for querying substrate state
-export function useSubstrateQuery(
-  api: ApiPromise | undefined,
-  queryKey: string,
-  queryParams: QueryParams = [],
-) {
-  const [data, setData] = useState<string | null>(null)
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (api?.query?.broker?.[queryKey]) {
-        try {
-          const result = await api.query.broker[queryKey](...queryParams)
-          // Check if the Option type is Some and unwrap the value
-          if (result) {
-            setData(result.toString())
-          } else {
-            setData(null)
-          }
-        } catch (error) {
-          console.error(`Failed to fetch ${queryKey}:`, error)
-        }
-      }
-    }
-
-    fetchData()
-    const intervalId = setInterval(fetchData, 5000)
-
-    return () => clearInterval(intervalId)
-  }, [api, queryKey, queryParams])
-
-  return data
-}
-
-export function useCurrentBlockNumber(api: ApiPromise | undefined) {
-  const [currentBlockNumber, setCurrentBlockNumber] = useState(0)
-
-  useEffect(() => {
-    if (!api) return
-
-    const fetchCurrentBlockNumber = async () => {
-      const currentBlock = await getCurrentBlockNumber(api)
-      setCurrentBlockNumber(currentBlock)
-    }
-
-    const intervalId = setInterval(fetchCurrentBlockNumber, 1000) // Update every second
-
-    return () => clearInterval(intervalId)
-  }, [api])
-
-  return currentBlockNumber
-}
-
 export function useBrokerConstants(api: ApiPromise | undefined) {
   const [brokerConstants, setBrokerConstants] = useState<BrokerConstantsType | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -159,15 +102,86 @@ export function useBrokerConstants(api: ApiPromise | undefined) {
 
 export function calculateCurrentPrice(
   currentBlockNumber: number,
-  saleInfo: SaleInfoType,
+  saleInfo: SaleInitializedEvent | null,
   config: ConfigurationType,
-): number {
+): number | null {
+  if (!saleInfo || !saleInfo.saleStart || !saleInfo.regularPrice) return null
   if (
     currentBlockNumber < saleInfo.saleStart + config.leadinLength &&
     currentBlockNumber > saleInfo.saleStart
   ) {
-    return saleInfo.price * (2 - (currentBlockNumber - saleInfo.saleStart) / config.leadinLength)
+    return (
+      Number(saleInfo.regularPrice) *
+      (2 - (currentBlockNumber - saleInfo.saleStart) / config.leadinLength)
+    )
   } else {
-    return saleInfo.price
+    return Number(saleInfo.regularPrice)
   }
+}
+
+// Calculate k - the slope of the price curve when it is the leadin period
+// k = (y2 - y1) / (x2 - x1)
+// k = (startPrice - regularPrice) / leadinLength
+function calculate_k(saleInfo: SaleInitializedEvent, config: ConfigurationType): number {
+  // Corrected the logic here to ensure proper calculation
+  return (
+    (Number(saleInfo.regularPrice?.toString()) - Number(saleInfo.startPrice?.toString())) /
+    config.leadinLength
+  )
+}
+
+// Calculate n - the y-intercept of the price curve when it is the interlude period
+// n = y1 - k * x1
+// n = startPrice - k * saleStart
+function calculate_n(saleInfo: SaleInitializedEvent, config: ConfigurationType): number {
+  let k = calculate_k(saleInfo, config)
+  return Number(saleInfo.startPrice?.toString()) - k * Number(saleInfo.saleStart?.toString())
+}
+
+// Calculate the price of a core at a given block number
+// y = kx + n
+// y = k * currentBlockNumber + n
+export function calculateCurrentPricePerCore(
+  currentBlockNumber: number,
+  saleInfo: SaleInitializedEvent | null,
+  config: ConfigurationType,
+): number | null {
+  if (!saleInfo || !saleInfo.saleStart || !saleInfo.regularPrice || !saleInfo.startPrice)
+    return null
+  if (
+    currentBlockNumber >= saleInfo.saleStart &&
+    currentBlockNumber < saleInfo.saleStart + config.leadinLength
+  ) {
+    let k = calculate_k(saleInfo, config)
+    let n = calculate_n(saleInfo, config)
+    return k * currentBlockNumber + n
+  } else {
+    return Number(saleInfo.regularPrice)
+  }
+}
+
+// Pseudocode to visualize the price per core over time
+export function priceCurve(
+  saleInfo: SaleInitializedEvent,
+  config: ConfigurationType,
+  constant: BrokerConstantsType,
+): { x: number[]; y: number[] } | undefined {
+  const saleStart = saleInfo.saleStart
+  console.log(saleStart)
+  const saleEnds = getSaleEnds(saleInfo, config, constant)
+  console.log(config.leadinLength)
+  let prices = []
+  let blocks = []
+  if (!saleStart || !saleEnds) return
+
+  for (let block = saleStart; block <= saleEnds; block += 1000) {
+    const price = calculateCurrentPricePerCore(block, saleInfo, config)
+    if (price !== null) {
+      prices.push(price)
+      blocks.push(block)
+    }
+  }
+
+  // Assuming a function plotGraph exists
+  return { x: blocks, y: prices }
 }

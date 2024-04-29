@@ -1,42 +1,36 @@
 import Border from '@/components/border/Border'
 import GeneralTable from '@/components/table/GeneralTable'
+import { network_list } from '@/config/network'
 import { parseNativeTokenToHuman } from '@/utils/account/token'
-import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
-import { GraphLike, GraphQuery, PurchasedEvent, getClient } from '@poppyseed/squid-sdk'
+import { getChainFromPath } from '@/utils/common/chainPath'
+import { useInkathon } from '@poppyseed/lastic-sdk'
+import { GraphLike, PurchasedEvent, getClient } from '@poppyseed/squid-sdk'
 import { format } from 'date-fns'
+import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 
 const PastTransactions = () => {
-  const { activeAccount, activeRelayChain } = useInkathon()
-  const network = activeRelayChain?.network
+  const { activeAccount } = useInkathon()
+  const pathname = usePathname()
+  const network = getChainFromPath(pathname)
+  const tokenSymbol = network_list[network].tokenSymbol
 
   const [result, setResult] = useState<GraphLike<PurchasedEvent[]> | null>(null)
   const client = useMemo(() => getClient(), [])
 
-  let { tokenSymbol } = useBalance(activeAccount?.address, true)
-  tokenSymbol = tokenSymbol || 'UNIT'
-
-  let query: GraphQuery
-  //const newAddress = encodeAddress(publicKeyBytes, targetNetworkPrefix)
-  if (activeAccount) {
-    query = client.eventWhoPurchased(activeAccount?.address)
-  }
-
   useEffect(() => {
-    if (network && query) {
-      const fetchData = async () => {
-        const fetchedResult: GraphLike<PurchasedEvent[]> = await client.fetch(network, query)
-        setResult(fetchedResult)
+    if (activeAccount) {
+      let query = client.eventWhoPurchased(activeAccount?.address, 7)
+      if (network && query) {
+        const fetchData = async () => {
+          const fetchedResult: GraphLike<PurchasedEvent[]> = await client.fetch(network, query)
+          setResult(fetchedResult)
+        }
+
+        fetchData()
       }
-
-      fetchData()
     }
-  }, [])
-
-  const reversedData = useMemo(() => {
-    // Make a copy of the event array (if it exists) and reverse the copy
-    return [...(result?.data.event || [])].reverse()
-  }, [result])
+  }, [activeAccount, client, network])
 
   const TableHeader = [
     { title: 'Time' },
@@ -50,7 +44,7 @@ const PastTransactions = () => {
 
   // Transform result into table data
   const TableData =
-    reversedData.map((event, index) => ({
+    result?.data.event?.map((event, index) => ({
       data: [
         event.timestamp ? format(new Date(event.timestamp), 'MMMM dd, yyyy HH:mm:ss OOOO') : '',
         event.blockNumber?.toString(),

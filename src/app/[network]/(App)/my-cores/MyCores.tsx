@@ -1,83 +1,83 @@
 import Border from '@/components/border/Border'
 import CoreItem from '@/components/cores/CoreItem'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
-import { useSubstrateQuery } from '@/hooks/useSubstrateQuery'
+import { network_list } from '@/config/network'
 import { parseNativeTokenToHuman } from '@/utils/account/token'
-import { ConfigurationType, useBalance, useInkathon } from '@poppyseed/lastic-sdk'
+import { getChainFromPath } from '@/utils/common/chainPath'
+import { useInkathon } from '@poppyseed/lastic-sdk'
+import {
+  CoreOwnerEvent,
+  GraphLike,
+  GraphQuery,
+  SaleInitializedEvent,
+  getClient,
+} from '@poppyseed/squid-sdk'
+import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 
-// Define a type for the queryParams
-type QueryParams = (string | number | Record<string, unknown>)[]
+export default function MyCores() {
+  const { activeAccount, activeChain } = useInkathon()
+  const [result, setResult] = useState<GraphLike<CoreOwnerEvent[]> | null>(null)
+  const [assignedCores, setAssignedCores] = useState<GraphLike<CoreOwnerEvent[]> | null>(null)
+  const [pooledCores, setPooledCores] = useState<GraphLike<CoreOwnerEvent[]> | null>(null)
+  const [currentSaleData, setCurrentSaleData] = useState<GraphLike<SaleInitializedEvent[]> | null>(
+    null,
+  )
+  const client = useMemo(() => getClient(), [])
+  const pathname = usePathname()
+  const network = getChainFromPath(pathname)
+  const tokenSymbol = network_list[network].tokenSymbol
+  const configuration = network_list[network].configuration
 
-type RegionDetailItem = {
-  begin: string
-  core: string
-  mask: string
-}
+  //const newAddress = encodeAddress(publicKeyBytes, targetNetworkPrefix)
 
-type RegionDetail = RegionDetailItem[]
+  useMemo(() => {
+    let query1 = client.eventAllSaleInitialized(2)
+    if (network && query1) {
+      const fetchData = async () => {
+        const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(network, query1)
+        setCurrentSaleData(fetchedResult)
+      }
 
-type RegionOwner = {
-  end: string
-  owner: string
-  paid: string
-}
-
-type Region = {
-  detail: RegionDetail
-  owner: RegionOwner
-}
-
-type RegionsType = Region[]
-
-// Custom hook for querying substrate state
-const useRegionQuery = () => {
-  const { api } = useInkathon()
-  const [data, setData] = useState<RegionsType | null>(null)
+      fetchData()
+    }
+  }, [network, client])
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (api?.query?.broker?.regions) {
-        try {
-          const entries = await api.query.broker.regions.entries()
-          const regions: RegionsType = entries.map(([key, value]) => {
-            const detail = key.toHuman() as RegionDetail
-            const owner = value.toHuman() as RegionOwner
-            return { detail, owner }
-          })
-          setData(regions)
-        } catch (error) {
-          console.error('Failed to fetch regions:', error)
-        }
+    let query: GraphQuery | undefined
+    let query2: GraphQuery | undefined
+    let query3: GraphQuery | undefined
+
+    if (activeAccount && currentSaleData?.data?.event?.length && configuration) {
+      const currentSaleRegion = currentSaleData.data.event[0]
+
+      if (currentSaleRegion.regionBegin) {
+        query = client.eventWhoCoreOwner(
+          activeAccount.address,
+          currentSaleRegion.regionBegin - configuration.regionLength,
+          currentSaleRegion.regionBegin + configuration.regionLength,
+        )
+        query2 = client.eventOwnedAndAssignedCoreOwner(activeAccount.address)
+        query3 = client.eventOwnedAndPooledCoreOwner(activeAccount.address)
       }
     }
 
-    fetchData()
-    const intervalId = setInterval(fetchData, 5000)
+    if (network && query && query2 && query3) {
+      const fetchData = async () => {
+        const fetchedResult: GraphLike<CoreOwnerEvent[]> = await client.fetch(network, query)
+        const assignedFetchedResult: GraphLike<CoreOwnerEvent[]> = await client.fetch(
+          network,
+          query2,
+        )
+        const pooledFetchedResult: GraphLike<CoreOwnerEvent[]> = await client.fetch(network, query3)
+        setResult(fetchedResult)
+        setAssignedCores(assignedFetchedResult)
+        setPooledCores(pooledFetchedResult)
+      }
 
-    return () => clearInterval(intervalId)
-  }, [api])
-
-  return data
-}
-
-export default function MyCores() {
-  const { activeAccount, activeChain, api } = useInkathon()
-  let { tokenSymbol } = useBalance(activeAccount?.address, true)
-  const regionData = useRegionQuery()
-
-  const configurationString = useSubstrateQuery(api, 'configuration')
-
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 6
-
-  const handleNextPage = () => setCurrentPage(currentPage + 1)
-  const handlePrevPage = () => setCurrentPage(currentPage - 1)
-
-  const configuration = useMemo(
-    () => (configurationString ? (JSON.parse(configurationString) as ConfigurationType) : null),
-    [configurationString],
-  )
+      fetchData()
+    }
+  }, [activeAccount, network, currentSaleData, client, configuration])
 
   if (!activeAccount || !activeChain) {
     return (
@@ -87,60 +87,51 @@ export default function MyCores() {
     )
   }
 
-  // Filter regions where activeAccount's address matches the region owner's address
-  const filteredRegionData = regionData?.filter(
-    (region) => region.owner.owner === activeAccount.address,
-  )
-  const filteredForDisplay = filteredRegionData?.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
-  )
+  // Splitting the results into two sections
+  const currentSaleRegion = currentSaleData?.data?.event?.[0]
+  const justBought =
+    result?.data?.event?.filter((region) =>
+      region.regionId.begin && currentSaleRegion?.regionBegin
+        ? region.regionId.begin >= currentSaleRegion.regionBegin
+        : null,
+    ) || []
+  const currentlyActive =
+    result?.data?.event?.filter((region) =>
+      region.regionId.begin && currentSaleRegion?.regionBegin
+        ? region.regionId.begin < currentSaleRegion.regionBegin
+        : null,
+    ) || []
 
-  return filteredForDisplay && filteredForDisplay.length > 0 ? (
+  return result?.data?.event && result?.data?.event.length > 0 ? (
     <Border className="h-full flex flex-row justify-center items-center">
       <div className="h-full w-full flex flex-col justify-left items-left px-5 pb-10">
-        <div className="pt-10 pl-10">
-          <h1 className="text-xl font-unbounded uppercase font-bold">cores owned</h1>
+        <div className="pt-10 pl-4">
+          <h1 className="text-xl font-bold uppercase font-unbounded ">Cores Owned</h1>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4 mt-4">
-          {filteredForDisplay.map((region, index) => (
-            <div key={index} className="">
-              <CoreItem
-                config={configuration}
-                coreNumber={region.detail[0].core}
-                size={region.detail[0].mask === '0xffffffffffffffffffff' ? '1' : 'Interlaced'}
-                cost={parseNativeTokenToHuman({ paid: region.owner.paid, decimals: 12 })}
-                reward="0"
-                currencyCost={tokenSymbol}
-                mask={region.detail[0].mask}
-                begin={region.detail[0].begin}
-                end={region.owner.end}
-              />
-            </div>
-          ))}
-        </div>
-        {/* Pagination buttons */}
-        {!filteredForDisplay ||
-          !regionData ||
-          (filteredForDisplay.length !== 0 && (
-            <div className="flex w-full items-center justify-between space-x-2 mt-4 px-5">
-              <button
-                onClick={handlePrevPage}
-                disabled={currentPage === 1}
-                className={`px-4 py-2 rounded-2xl text-black dark:text-gray-1 border border-gray-21 font-semibold ${currentPage === 1 ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : ' hover:bg-green-6'}`}
-              >
-                Previous
-              </button>
-              <p className="text-black dark:text-gray-1 font-semibold">{currentPage}</p>
-              <button
-                onClick={handleNextPage}
-                disabled={filteredForDisplay.length < itemsPerPage}
-                className={`px-4 py-2   border border-gray-21 text-black dark:text-gray-1 font-semibold rounded-2xl ${filteredForDisplay.length < itemsPerPage ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : ' hover:bg-green-6'}`}
-              >
-                Next
-              </button>
-            </div>
-          ))}
+        <SectionDisplay
+          title="Obtained in this Sale"
+          regions={justBought}
+          configuration={configuration}
+          tokenSymbol={tokenSymbol}
+        />
+        <SectionDisplay
+          title="Obtained in the previous Sale"
+          regions={currentlyActive}
+          configuration={configuration}
+          tokenSymbol={tokenSymbol}
+        />
+        <SectionDisplay
+          title="Assigned Cores"
+          regions={assignedCores?.data?.event || []}
+          configuration={configuration}
+          tokenSymbol={tokenSymbol}
+        />
+        <SectionDisplay
+          title="Cores in the on Demand Pool"
+          regions={pooledCores?.data?.event || []}
+          configuration={configuration}
+          tokenSymbol={tokenSymbol}
+        />
       </div>
     </Border>
   ) : (
@@ -149,3 +140,95 @@ export default function MyCores() {
     </Border>
   )
 }
+
+interface SectionProps {
+  title: string
+  regions: CoreOwnerEvent[]
+  configuration: any // Define more specific types based on what 'configuration' contains
+  tokenSymbol: string
+}
+
+function SectionDisplay({ title, regions, configuration, tokenSymbol }: SectionProps) {
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 6
+  const handleNextPage = () => setCurrentPage(currentPage + 1)
+  const handlePrevPage = () => setCurrentPage(currentPage - 1)
+
+  return (
+    <>
+      <h2 className="pt-10 pl-10 text-lg font-bold uppercase font-unbounded">{title}</h2>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4">
+        {regions.length > 0 ? (
+          regions.map((region, index) => (
+            <CoreItem
+              key={index}
+              config={configuration}
+              coreNumber={region.regionId.core}
+              size={region.regionId.mask === '0xffffffffffffffffffff' ? 'Whole' : 'Interlaced'}
+              cost={parseNativeTokenToHuman({ paid: region.price?.toString(), decimals: 12 })}
+              currencyCost={tokenSymbol}
+              mask={region.regionId.mask}
+              begin={region.regionId.begin}
+              duration={region.duration}
+            />
+          ))
+        ) : (
+          <div className="text-gray-12">No cores found</div>
+        )}
+      </div>
+    </>
+  )
+}
+
+//   return result?.data?.event ? (
+//     <Border className="h-full flex flex-row justify-center items-center">
+//       <div className="h-full w-full flex flex-col justify-left items-left px-5 pb-10">
+//         <div className="pt-10 pl-10">
+//           <h1 className="text-xl font-unbounded uppercase font-bold">cores owned</h1>
+//         </div>
+//         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4 mt-4">
+//           {result?.data.event.map((region, index) => (
+//             <div key={index} className="">
+//               <CoreItem
+//                 config={configuration}
+//                 coreNumber={region.regionId.core}
+//                 size={region.regionId.mask === '0xffffffffffffffffffff' ? '1' : 'Interlaced'}
+//                 cost={parseNativeTokenToHuman({ paid: region.price?.toString(), decimals: 12 })}
+//                 currencyCost={tokenSymbol}
+//                 mask={region.regionId.mask}
+//                 begin={region.regionId.begin}
+//                 duration={region.duration}
+//               />
+//             </div>
+//           ))}
+//         </div>
+//         {/* Pagination buttons */}
+//         {!result?.data.event ||
+//           (result?.data.event.length !== 0 && (
+//             <div className="flex w-full items-center justify-between space-x-2 mt-4 px-5">
+//               <button
+//                 onClick={handlePrevPage}
+//                 disabled={currentPage === 1}
+//                 className={`px-4 py-2 rounded-2xl text-black dark:text-gray-1 border border-gray-21 font-semibold ${currentPage === 1 ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : ' hover:bg-green-6'}`}
+//               >
+//                 Previous
+//               </button>
+//               <p className="text-black dark:text-gray-1 font-semibold">{currentPage}</p>
+//               <button
+//                 onClick={handleNextPage}
+//                 disabled={result?.data.event.length < 6}
+//                 className={`px-4 py-2   border border-gray-21 text-black dark:text-gray-1 font-semibold rounded-2xl ${result?.data.event.length < itemsPerPage ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : ' hover:bg-green-6'}`}
+//               >
+//                 Next
+//               </button>
+//             </div>
+//           ))}
+//       </div>
+//     </Border>
+//   ) : (
+//     <Border className="h-full flex flex-row justify-center items-center">
+//       <WalletStatus />
+//     </Border>
+//   )
+// }
+//

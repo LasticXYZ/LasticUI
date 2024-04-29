@@ -221,6 +221,7 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
             orientation="landscape"
             value={selectedDateTime}
             onAccept={handleAccept}
+            className="bg-gray-2 dark:bg-gray-5 border border-gray-9 rounded-2xl p-2 w-full"
             format="MMM dd, yyyy HH:mm:ss"
           />
         </LocalizationProvider>

@@ -1,38 +1,36 @@
 import {
-  BarController,
-  BarElement,
   CategoryScale,
   Chart as ChartJS,
   Filler,
   Legend,
+  LineElement,
   LinearScale,
   PointElement,
   Title,
   Tooltip,
 } from 'chart.js'
-import { Bar } from 'react-chartjs-2'
+import { Line } from 'react-chartjs-2'
 
 ChartJS.register(
-  BarController,
-  BarElement,
   CategoryScale,
   LinearScale,
   PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend,
   Filler,
 )
 
-type MiniBarGraphDataProps = {
+type MiniLineGraphDataProps = {
   title: string
-  dataPoints: number[]
-  labels: string[]
+  dataPoints: number[] // Assuming your data points are an array of numbers
+  labels: string[] // Assuming your labels are an array of strings
   xLabel?: string
   yLabel?: string
 }
 
-const MiniBarGraphData: React.FC<MiniBarGraphDataProps> = ({
+const MiniLineGraphData: React.FC<MiniLineGraphDataProps> = ({
   title,
   dataPoints,
   labels,
@@ -44,7 +42,7 @@ const MiniBarGraphData: React.FC<MiniBarGraphDataProps> = ({
     datasets: [
       {
         borderRadius: 2,
-        borderColor: '#fff',
+        borderColor: '#F9B7D9',
         fill: false,
         backgroundColor: '#F9B7D9',
         data: dataPoints,
@@ -53,11 +51,10 @@ const MiniBarGraphData: React.FC<MiniBarGraphDataProps> = ({
   }
 
   const options = {
+    responsive: true,
     scales: {
       x: {
         display: true,
-        barPercentage: 0.5,
-        categoryPercentage: 1,
         title: {
           display: xLabel ? true : false,
           text: xLabel, // Modify this text based on what you're actually displaying
@@ -99,11 +96,11 @@ const MiniBarGraphData: React.FC<MiniBarGraphDataProps> = ({
           {/* <SwitchDisplays displayOptions={displayOptions} active={curentlyDisplayed} setActive={setCurrentDisplay} /> */}
         </div>
         <div className="px-5 py-3">
-          <Bar data={data} height={200} options={options} />
+          <Line data={data} height={200} options={options} />
         </div>
       </div>
     </>
   )
 }
 
-export default MiniBarGraphData
+export default MiniLineGraphData

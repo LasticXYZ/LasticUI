@@ -20,7 +20,7 @@ const GeneralTable: FC<GeneralTableProps> = ({
           <div className="shadow overflow-hidden sm:rounded-2xl">
             <div
               className={joinClassNames(
-                'grid gap-2 bg-[#AFE4DD] dark:bg-pink-400 dark:bg-opacity-95 px-2 text-sm text-black dark:text-white rounded-full',
+                'grid gap-2 bg-pink-200 dark:bg-pink-400 dark:bg-opacity-95 px-2 text-sm text-black dark:text-white rounded-full',
                 colClass,
               )}
             >
