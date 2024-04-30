@@ -122,12 +122,13 @@ const BuyWalletStatus: React.FC<BuyWalletStatusType> = ({
         <div className="dark:text-gray-6">
           <div className="text-gray-18 dark:text-gray-3 text-xl font-unbounded uppercase mb-5">
             Core Nb:{' '}
-            <span className="font-semibold">{coresSold ? firstCore + coresSold : 'NaN'}</span>
+            <span className="font-semibold">{coresSold ? firstCore + coresSold : firstCore}</span>
           </div>
           <div className=" mb-2 ">
             Available Cores:{' '}
             <span className="font-semibold">
-              {coresSold ? saleInfo.coresOffered - coresSold : 'NaN'} / {saleInfo.coresOffered}{' '}
+              {coresSold ? saleInfo.coresOffered - coresSold : saleInfo.coresOffered} /{' '}
+              {saleInfo.coresOffered}{' '}
             </span>
           </div>
           <div className=" mb-2">
