@@ -63,7 +63,7 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
     multisigAddress,
     isLoading,
     txStatusMessage,
-  } = useMultisigTrading(activeAccount?.address || '', core)
+  } = useMultisigTrading(core)
 
   const updateMethodAndButton = () => {
     let buttonFunction = initiateOrExecuteMultisigTradeCall
@@ -200,6 +200,7 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
           title="Process Trade"
           onClick={buttonFunction}
         />
+        <SecondaryButton className="w-40 self-center" title="Update" onClick={updateAllStates} />
         {txStatusMessage && <p className="flex flex-wrap self-center text-xs">{txStatusMessage}</p>}
       </div>
     </Modal>

@@ -192,7 +192,6 @@ export const useListingsTracker = (coreListings: CoreListing[], intervalMs?: num
 
     // fetch multisig regions
     const entries = await api?.query.broker.regions.entries()
-    console.log('entries', entries)
     const regions: RegionsType | undefined = entries?.map(([key, value]) => {
       const detail = key.toHuman() as RegionDetail
       const owner = value.toHuman() as RegionOwner
@@ -210,11 +209,9 @@ export const useListingsTracker = (coreListings: CoreListing[], intervalMs?: num
         regionDetail.mask === core.mask
       )
     })
-
     console.log('filteredRegions', filteredRegions)
-    console.log('multisigAddress', multisigAddress)
 
-    console.log(filteredRegions?.some((region) => region.owner.owner === multisigAddress))
+    console.log('multisigAddress', multisigAddress)
 
     // check if the multisig address has the core
     return filteredRegions?.some((region) => region.owner.owner === multisigAddress)
@@ -233,7 +230,7 @@ const statusMessagesBuyerView = {
 const statusMessagesSellerView = {
   step1: '⏳ Wait for a buyer to initiate the trade',
   step2: '💥 Your Turn: Click below to send the core to the multisig address',
-  step3: '💥 Your Turn: Click below to open the multisig trade call',
+  step3: '💥 Your Turn: Click below to open the multisig trade call (And wait for finalization!)',
   step4: '⏳ Wait for Lastic to verify and finish the multisig call',
 }
 

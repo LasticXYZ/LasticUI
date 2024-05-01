@@ -24,12 +24,14 @@ const MAX_WEIGHT = {
 const THRESHOLD = 2 // always 2 out of 3 signatories
 const LASTIC_ADDRESS = process.env.NEXT_PUBLIC_LASTIC_ADDRESS || '' // used for new multisigs and if db has no other address defined
 
-export const useMultisigTrading = (buyerAddress: string, core: CoreListing) => {
+export const useMultisigTrading = (core: CoreListing) => {
   const { api, activeSigner, activeAccount, activeChain, activeRelayChain } = useInkathon()
   const [isLoading, setIsLoading] = useState(false)
   const [txStatusMessage, setTxStatusMessage] = useState<string>('')
-  const signatories = [core.sellerAddress, buyerAddress, LASTIC_ADDRESS]
-  console.log('Signatories: ', signatories)
+
+  const buyerAddress = core.buyerAddress || activeAccount?.address || ''
+  const lasticAddress = core.lasticAddress || LASTIC_ADDRESS
+  const signatories = [core.sellerAddress, buyerAddress, lasticAddress]
   const multisigAddress = calculateMultisigAddress(THRESHOLD, signatories, activeChain)
 
   useEffect(() => {
