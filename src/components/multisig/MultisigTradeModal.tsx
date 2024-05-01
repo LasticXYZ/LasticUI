@@ -4,6 +4,7 @@ import LoadingSpinner from '@/components/multisig/Spinner'
 import { CoreListing } from '@/hooks/useListings'
 import { useListingsTracker } from '@/hooks/useListingsTracker'
 import { useMultisigTrading } from '@/hooks/useMultisigTrading'
+import { ArrowPathIcon } from '@heroicons/react/24/outline'
 import { Checkbox } from '@mui/material'
 import { useInkathon } from '@poppyseed/lastic-sdk'
 import { FC } from 'react'
@@ -135,10 +136,13 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
       <div className="flex flex-col gap-5 ">
         <p className="text-left font-bold">How it works</p>
         <div className="text-xs border-2 rounded-xl p-2">
-          <p className="text-justify pb-2">
-            This trade is realized via a multisig account that requires 2 out of 3 signatories. It
-            requires the following steps to be completed:
-          </p>
+          <div className="flex items-center gap-2">
+            <p className="text-justify pb-2">
+              This trade is realized via a multisig account that requires 2 out of 3 signatories. It
+              requires the following steps to be completed:
+            </p>
+            <ArrowPathIcon className="w-5 h-5 hover:cursor-pointer" onClick={updateAllStates} />
+          </div>
 
           <div className="grid text-xs gap-2 items-start">
             <div className="flex items-center gap-1">
@@ -200,7 +204,6 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
           title="Process Trade"
           onClick={buttonFunction}
         />
-        <SecondaryButton className="w-40 self-center" title="Update" onClick={updateAllStates} />
         {txStatusMessage && <p className="flex flex-wrap self-center text-xs">{txStatusMessage}</p>}
       </div>
     </Modal>
