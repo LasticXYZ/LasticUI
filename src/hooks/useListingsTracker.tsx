@@ -230,7 +230,7 @@ const statusMessagesBuyerView = {
 const statusMessagesSellerView = {
   step1: '⏳ Wait for a buyer to initiate the trade',
   step2: '💥 Your Turn: Click below to send the core to the multisig address',
-  step3: '💥 Your Turn: Click below to open the multisig trade call (And wait for finalization!)',
+  step3: '💥 Your Turn: Click below to open the multisig trade call',
   step4: '⏳ Wait for Lastic to verify and finish the multisig call',
 }
 

@@ -17,8 +17,8 @@ import { useEffect, useState } from 'react'
 
 const LEGACY_ASMULTI_PARAM_LENGTH = 6
 const MAX_WEIGHT = {
-  refTime: 12000000, // 6096943 was reftime in test scenario for remark tx
-  proofSize: 0,
+  refTime: 900000000, // 315840934 was reftime in test scenario for batch tx. But must be quite higher to execute.
+  proofSize: 8000,
 }
 
 const THRESHOLD = 2 // always 2 out of 3 signatories
@@ -58,26 +58,22 @@ export const useMultisigTrading = (core: CoreListing) => {
       // TODO find the right open multisig call to execute. Suggestion: Use timepoint stored in DB.
     }
 
-    // TODO replace with batch call
-    const remarkTx = api!.tx.system.remark(`Lastic multisig creation5`)
-
-    // Batch example
-    /* const txs = [
-      api.tx.balances.transfer(addrBob, 12345),
-      api.tx.balances.transfer(addrEve, 12345),
-      api.tx.staking.unbond(12345),
-    ]
+    // create extrinsics
+    const transferFunds = api!.tx.balances.transferAllowDeath(core.sellerAddress, core.cost)
+    const transferCore = api!.tx.broker.transfer(
+      { begin: core.begin, core: core.coreNumber, mask: core.mask },
+      buyerAddress,
+    )
 
     // construct the batch and send the transactions
-    api.tx.utility.batch(txs).signAndSend(sender, ({ status }) => {
-      if (status.isInBlock) {
-        console.log(`included in ${status.asInBlock}`)
-      }
-    }) */
+    const batchTx = api!.tx.utility.batch([transferCore, transferFunds])
+
+    const info = await batchTx.paymentInfo(activeAccount!.address)
+    console.log(`weight=${info.weight.toString()}`)
 
     // create the multisig call
     const asMultiTx = getAsMultiTx({
-      tx: remarkTx,
+      tx: batchTx,
       when,
     })
 
