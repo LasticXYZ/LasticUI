@@ -3,6 +3,7 @@
 import './globals.css'
 //import type { Metadata } from 'next'
 import ThemeProvider from '@/components/themeToggle/themeProvider'
+import { BanknotesIcon } from '@heroicons/react/24/outline'
 import {
   ArrowPathIcon,
   Cog8ToothIcon,
@@ -51,6 +52,12 @@ function getNavigation(network: string) {
       name: 'Teleport Assets',
       icon: <ArrowPathIcon className="h-5 w-5" aria-hidden="true" />,
       href: `/${network}/teleport`,
+      current: false,
+    },
+    {
+      name: 'Trade Cores',
+      icon: <BanknotesIcon className="h-5 w-5" aria-hidden="true" />,
+      href: `/${network}/listings`,
       current: false,
     },
   ]
