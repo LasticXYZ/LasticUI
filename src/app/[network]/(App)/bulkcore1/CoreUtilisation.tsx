@@ -44,8 +44,8 @@ const CoreUtilisation: React.FC = () => {
 
   const {
     data: auctionData,
-    loading,
-    error,
+    loading: auctionLoading,
+    error: auctionError,
   } = useSubScanCall<AuctionResponse>({
     apiUrl: `${network_list[network].apiUrl}/scan/parachain/auctions`,
     requestData: requestAuctionData,

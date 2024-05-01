@@ -77,7 +77,7 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
                       key={w.id}
                       onClick={() => {
                         // If the wallet has only one account, connect directly.
-                        console.log('w:', w)
+                        //console.log('w:', w)
                         connect?.(undefined, undefined, w)
                         setChosenWallet(w)
                       }}

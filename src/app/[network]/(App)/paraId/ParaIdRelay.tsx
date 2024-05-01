@@ -55,7 +55,7 @@ const useParasParachains = () => {
       try {
         const entries = await relayApi.query.paras.parachains()
         const data: string[] = entries.toHuman() as string[]
-        console.log(data)
+        //console.log(data)
         setData(data)
       } catch (error) {
         console.error('Failed to fetch data:', error)
