@@ -156,7 +156,7 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
     }
 
     fetchRegionTimestamps()
-  }, [relayApi, brokerConstants, currentSaleRegion])
+  }, [region, relayApi, brokerConstants, currentSaleRegion])
 
   if (!api || !relayApi || !configuration) {
     return (
