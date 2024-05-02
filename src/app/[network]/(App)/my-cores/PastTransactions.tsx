@@ -3,6 +3,7 @@ import GeneralTable from '@/components/table/GeneralTable'
 import { network_list } from '@/config/network'
 import { parseNativeTokenToHuman } from '@/utils/account/token'
 import { getChainFromPath } from '@/utils/common/chainPath'
+import { encodeAddress } from '@polkadot/util-crypto'
 import { useInkathon } from '@poppyseed/lastic-sdk'
 import { GraphLike, PurchasedEvent, getClient } from '@poppyseed/squid-sdk'
 import { format } from 'date-fns'
@@ -10,7 +11,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 
 const PastTransactions = () => {
-  const { activeAccount } = useInkathon()
+  const { activeAccount, activeChain } = useInkathon()
   const pathname = usePathname()
   const network = getChainFromPath(pathname)
   const tokenSymbol = network_list[network].tokenSymbol
@@ -20,7 +21,10 @@ const PastTransactions = () => {
 
   useEffect(() => {
     if (activeAccount) {
-      let query = client.eventWhoPurchased(activeAccount?.address, 7)
+      let query = client.eventWhoPurchased(
+        encodeAddress(activeAccount.address, activeChain?.ss58Prefix || 42),
+        7,
+      )
       if (network && query) {
         const fetchData = async () => {
           const fetchedResult: GraphLike<PurchasedEvent[]> = await client.fetch(network, query)
@@ -30,7 +34,7 @@ const PastTransactions = () => {
         fetchData()
       }
     }
-  }, [activeAccount, client, network])
+  }, [activeAccount, activeChain, client, network])
 
   const TableHeader = [
     { title: 'Time' },

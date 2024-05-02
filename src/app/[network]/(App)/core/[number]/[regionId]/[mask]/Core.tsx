@@ -14,6 +14,7 @@ import { useCurrentBlockNumber } from '@/hooks/useSubstrateQuery'
 import { parseNativeTokenToHuman } from '@/utils/account/token'
 import { saleStatus } from '@/utils/broker'
 import { getChainFromPath } from '@/utils/common/chainPath'
+import { encodeAddress } from '@polkadot/util-crypto'
 import {
   blockTimeToUTC,
   getCurrentBlockNumber,
@@ -146,7 +147,7 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
     fetchRegionTimestamps()
   }, [relayApi, brokerConstants, currentSaleRegion])
 
-  if (!activeChain || !activeAccount || !api || !relayApi || !configuration) {
+  if (!activeChain || !api || !relayApi || !configuration) {
     return (
       <Border className="mt-5">
         <WalletStatus inactiveWalletMessage="Connecting to chain..." />
@@ -188,7 +189,12 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
                 config={configuration}
                 timeBought={region.timestamp ? new Date(region.timestamp).toLocaleString() : '-'}
                 owner={region.owner}
-                amITheOwner={region.owner === activeAccount.address}
+                amITheOwner={
+                  region.owner ===
+                  (activeAccount
+                    ? encodeAddress(activeAccount.address, activeChain?.ss58Prefix || 42)
+                    : null)
+                }
                 paid={region.price}
                 coreNumber={region.regionId.core}
                 phase="- Period"
@@ -255,7 +261,10 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
               ))
             ) : (
               <div className="flex flex-row flex-wrap justify-between">
-                {region.owner === activeAccount.address ? (
+                {region.owner ===
+                (activeAccount
+                  ? encodeAddress(activeAccount.address, activeChain?.ss58Prefix || 42)
+                  : null) ? (
                   <>
                     <div className="pt-5 pl-10">
                       <h3 className="text-xl font-unbounded uppercase font-bold">Note</h3>

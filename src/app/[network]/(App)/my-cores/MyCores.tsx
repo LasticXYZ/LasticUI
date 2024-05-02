@@ -4,6 +4,7 @@ import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
 import { parseNativeTokenToHuman } from '@/utils/account/token'
 import { getChainFromPath } from '@/utils/common/chainPath'
+import { encodeAddress } from '@polkadot/util-crypto'
 import { useInkathon } from '@poppyseed/lastic-sdk'
 import {
   CoreOwnerEvent,
@@ -53,12 +54,16 @@ export default function MyCores() {
 
       if (currentSaleRegion.regionBegin) {
         query = client.eventWhoCoreOwner(
-          activeAccount.address,
+          encodeAddress(activeAccount.address, activeChain?.ss58Prefix || 42),
           currentSaleRegion.regionBegin - configuration.regionLength,
           currentSaleRegion.regionBegin + configuration.regionLength,
         )
-        query2 = client.eventOwnedAndAssignedCoreOwner(activeAccount.address)
-        query3 = client.eventOwnedAndPooledCoreOwner(activeAccount.address)
+        query2 = client.eventOwnedAndAssignedCoreOwner(
+          encodeAddress(activeAccount.address, activeChain?.ss58Prefix || 42),
+        )
+        query3 = client.eventOwnedAndPooledCoreOwner(
+          encodeAddress(activeAccount.address, activeChain?.ss58Prefix || 42),
+        )
       }
     }
 
