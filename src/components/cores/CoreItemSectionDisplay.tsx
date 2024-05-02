@@ -8,7 +8,7 @@ interface SectionProps {
   title: string
   information: string
   constants: BrokerConstantsType | null
-  regions: CoreOwnerEvent[]
+  regions: CoreOwnerEvent[] | null
   configuration: any // Define more specific types based on what 'configuration' contains
   tokenSymbol: string
 }
@@ -28,7 +28,7 @@ export default function SectionDisplay({
 
   return (
     <>
-      {regions.length > 0 ? (
+      {regions && regions.length > 0 ? (
         <>
           <h2 className="pt-5 pl-10 text-lg font-bold uppercase font-unbounded">{title}</h2>
           <div className="pl-10 pt-4 italic">

@@ -1,4 +1,5 @@
 import Border from '@/components/border/Border'
+import SectionDisplay from '@/components/cores/CoreItemSectionDisplay'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
 import { getChainFromPath } from '@/utils/common/chainPath'
@@ -13,7 +14,6 @@ import {
 } from '@poppyseed/squid-sdk'
 import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
-import SectionDisplay from './SectionDisplay'
 
 export default function MyCores() {
   const { activeAccount, activeChain } = useInkathon()
