@@ -1,4 +1,11 @@
-import { GraphLike, SaleInitializedEvent, SquidClient } from '@poppyseed/squid-sdk'
+import { ConfigurationType } from '@poppyseed/lastic-sdk'
+import {
+  CoreOwnerEvent,
+  GraphLike,
+  GraphQuery,
+  SaleInitializedEvent,
+  SquidClient,
+} from '@poppyseed/squid-sdk'
 import { useEffect, useMemo, useState } from 'react'
 
 // Function to fetch the sale region
@@ -83,6 +90,7 @@ export function useCoresSold(
   return coresSoldInThisSale
 }
 
+// Use this function to fetch the current sale region
 export function useCurrentSaleRegion(network: string | null, client: SquidClient) {
   const [currentSaleRegion, setCurrentSaleRegion] = useState<SaleInitializedEvent | null>(null)
 
@@ -103,4 +111,35 @@ export function useCurrentSaleRegion(network: string | null, client: SquidClient
   }, [network, client])
 
   return currentSaleRegion
+}
+
+export function usePastCoresSold(
+  network: string | null,
+  client: SquidClient,
+  currentSaleRegion: SaleInitializedEvent | null,
+  configuration: ConfigurationType | null,
+) {
+  const [result, setResult] = useState<CoreOwnerEvent[] | null>(null)
+
+  useEffect(() => {
+    let query: GraphQuery | undefined
+
+    if (currentSaleRegion && configuration && currentSaleRegion.regionBegin) {
+      query = client.eventAllCoreOwner(
+        currentSaleRegion.regionBegin,
+        currentSaleRegion.regionBegin + configuration.regionLength,
+      )
+    }
+
+    if (network && query) {
+      const fetchData = async () => {
+        const fetchedResult: GraphLike<CoreOwnerEvent[]> = await client.fetch(network, query)
+        setResult(fetchedResult?.data.event ? fetchedResult?.data.event : null)
+      }
+
+      fetchData()
+    }
+  }, [network, client, currentSaleRegion, configuration])
+
+  return result
 }

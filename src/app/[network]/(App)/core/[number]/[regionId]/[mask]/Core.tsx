@@ -10,23 +10,14 @@ import TimelineComponent from '@/components/timelineComp/TimelineComp'
 import TimelineUtilizeCore from '@/components/timelineComp/TimelineUtilizeCore'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
-import { useCurrentBlockNumber } from '@/hooks/useSubstrateQuery'
-import { parseNativeTokenToHuman } from '@/utils/account/token'
+import { useSaleRegion } from '@/hooks/subsquid'
+import { useCurrentBlockNumber, useCurrentRelayBlockNumber } from '@/hooks/useSubstrateQuery'
 import { saleStatus } from '@/utils/broker'
+import { utilizationStatus } from '@/utils/broker/utilizationStatus'
 import { getChainFromPath } from '@/utils/common/chainPath'
-import {
-  blockTimeToUTC,
-  getCurrentBlockNumber,
-  useBalance,
-  useInkathon,
-} from '@poppyseed/lastic-sdk'
-import {
-  CoreOwnerEvent,
-  GraphLike,
-  GraphQuery,
-  SaleInitializedEvent,
-  getClient,
-} from '@poppyseed/squid-sdk'
+import { encodeAddress } from '@polkadot/util-crypto'
+import { blockTimeToUTC, useBalance, useInkathon } from '@poppyseed/lastic-sdk'
+import { CoreOwnerEvent, GraphLike, GraphQuery, getClient } from '@poppyseed/squid-sdk'
 import { usePathname } from 'next/navigation'
 import { FC, useEffect, useMemo, useState } from 'react'
 
@@ -37,10 +28,24 @@ interface BrokerRegionDataProps {
 }
 
 const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask }) => {
+  const [saleStage, setSaleStage] = useState('')
+  const [saleTitle, setSaleTitle] = useState('')
+  const [timeRemaining, setTimeRemaining] = useState('')
+  const [utilizationStage, setUtilizationStage] = useState('')
+  const [utilizationTitle, setUtilizationTitle] = useState('')
+  const [utilizationTimeRemaining, setUtilizationTimeRemaining] = useState('')
+
+  const [regionBeginTimestamp, setRegionBeginTimestamp] = useState<string | null>(null)
+  const [regionEndTimestamp, setRegionEndTimestamp] = useState<string | null>(null)
+
+  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
+  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false)
+  const [isPartitionModalOpen, setIsPartitionModalOpen] = useState(false)
+  const [isInterlaceModalOpen, setIsInterlaceModalOpen] = useState(false)
+
   const { activeAccount, relayApi, activeChain, api } = useInkathon()
   let { tokenSymbol, tokenDecimals } = useBalance(activeAccount?.address, true)
   const [region, setRegionResult] = useState<CoreOwnerEvent | null>(null)
-  const [currentSaleRegion, setCurrentSaleRegion] = useState<SaleInitializedEvent | null>(null)
   const client = useMemo(() => getClient(), [])
   const pathname = usePathname()
   const network = getChainFromPath(pathname)
@@ -48,26 +53,14 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
   const brokerConstants = network_list[network].constants
 
   const currentBlockNumber = useCurrentBlockNumber(api)
+  const currentRelayBlock = useCurrentRelayBlockNumber(relayApi)
 
-  useMemo(() => {
-    const query1 = client.eventAllSaleInitialized(1)
-    if (network && query1) {
-      const fetchData = async () => {
-        const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(network, query1)
-        const currentSaleRegion: SaleInitializedEvent | null = fetchedResult?.data.event
-          ? fetchedResult.data.event[0]
-          : null
-        setCurrentSaleRegion(currentSaleRegion)
-      }
-
-      fetchData()
-    }
-  }, [network, client])
+  const currentSaleRegion = useSaleRegion(network, client)
 
   useEffect(() => {
     let query: GraphQuery | undefined
 
-    if (activeAccount && currentSaleRegion && configuration) {
+    if (currentSaleRegion && configuration) {
       if (currentSaleRegion.regionBegin) {
         query = client.eventSpecificRegionCoreOwner(coreNb, beginRegion, mask)
       }
@@ -82,14 +75,10 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
 
       fetchData()
     }
-  }, [activeAccount, network, currentSaleRegion, client, configuration, coreNb, beginRegion, mask])
+  }, [network, currentSaleRegion, client, configuration, coreNb, beginRegion, mask])
 
-  // Update saleStage every second based on the currentBlockNumber
-  const [saleStage, setSaleStage] = useState('')
-  const [saleTitle, setSaleTitle] = useState('')
-  const [timeRemaining, setTimeRemaining] = useState('')
   useEffect(() => {
-    if (currentSaleRegion && configuration && brokerConstants) {
+    if (currentSaleRegion && region && currentRelayBlock && configuration && brokerConstants) {
       const { statusMessage, timeRemaining, statusTitle } = saleStatus(
         currentBlockNumber,
         currentSaleRegion,
@@ -99,44 +88,45 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
       setTimeRemaining(timeRemaining)
       setSaleTitle(statusTitle)
       setSaleStage(statusMessage)
+
+      const {
+        statusMessage: utilizationStatusMessage,
+        timeRemaining: utilizationTimeRemaining,
+        utilizationCode: utilizationStatusTitle,
+      } = utilizationStatus(currentRelayBlock, region, configuration, brokerConstants)
+
+      setUtilizationStage(utilizationStatusMessage)
+      setUtilizationTitle(utilizationStatusTitle)
+      setUtilizationTimeRemaining(utilizationTimeRemaining)
     }
-  }, [currentBlockNumber, currentSaleRegion, configuration, brokerConstants])
-
-  const [regionBeginTimestamp, setRegionBeginTimestamp] = useState<string | null>(null)
-  const [regionEndTimestamp, setRegionEndTimestamp] = useState<string | null>(null)
-  const [currentRelayBlock, setCurrentRelayBlock] = useState<number | null>(null)
-
-  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
-  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false)
-  const [isPartitionModalOpen, setIsPartitionModalOpen] = useState(false)
-  const [isInterlaceModalOpen, setIsInterlaceModalOpen] = useState(false)
+  }, [
+    currentBlockNumber,
+    currentRelayBlock,
+    currentSaleRegion,
+    region,
+    configuration,
+    brokerConstants,
+  ])
 
   useEffect(() => {
     const fetchRegionTimestamps = async () => {
       try {
-        if (
-          currentSaleRegion &&
-          currentSaleRegion.regionBegin &&
-          currentSaleRegion.regionEnd &&
-          brokerConstants
-        ) {
+        if (currentSaleRegion && region?.regionId?.begin && region.duration && brokerConstants) {
           const beginTimestamp = relayApi
             ? await blockTimeToUTC(
                 relayApi,
-                currentSaleRegion.regionBegin * brokerConstants.timeslicePeriod,
+                region.regionId.begin * brokerConstants.timeslicePeriod,
               )
             : null
           const endTimestamp = relayApi
             ? await blockTimeToUTC(
                 relayApi,
-                currentSaleRegion.regionEnd * brokerConstants.timeslicePeriod,
+                (region.regionId.begin + region.duration) * brokerConstants.timeslicePeriod,
               )
             : null
-          const getCurrentRelayBlock = relayApi ? await getCurrentBlockNumber(relayApi) : null
 
           setRegionBeginTimestamp(beginTimestamp)
           setRegionEndTimestamp(endTimestamp)
-          setCurrentRelayBlock(getCurrentRelayBlock)
         }
       } catch (error) {
         console.error('Error fetching block timestamp:', error)
@@ -144,9 +134,9 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
     }
 
     fetchRegionTimestamps()
-  }, [relayApi, brokerConstants, currentSaleRegion])
+  }, [region, relayApi, brokerConstants, currentSaleRegion])
 
-  if (!activeChain || !activeAccount || !api || !relayApi || !configuration) {
+  if (!api || !relayApi || !configuration) {
     return (
       <Border className="mt-5">
         <WalletStatus inactiveWalletMessage="Connecting to chain..." />
@@ -186,18 +176,22 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
             <div className="">
               <CoreItemExtensive
                 config={configuration}
+                constants={brokerConstants}
+                region={region}
                 timeBought={region.timestamp ? new Date(region.timestamp).toLocaleString() : '-'}
                 owner={region.owner}
-                amITheOwner={region.owner === activeAccount.address}
+                amITheOwner={
+                  region.owner ===
+                  (activeAccount
+                    ? encodeAddress(activeAccount.address, activeChain?.ss58Prefix || 42)
+                    : null)
+                }
                 paid={region.price}
                 coreNumber={region.regionId.core}
-                phase="- Period"
-                cost={parseNativeTokenToHuman({ paid: region.price, decimals: tokenDecimals })}
                 currencyCost={tokenSymbol}
-                mask={region.regionId.mask}
-                begin={region.regionId.begin}
-                end={region.duration + region.regionId.begin}
-                region={region}
+                regionBeginTimestamp={regionBeginTimestamp || '-'}
+                regionEndTimestamp={regionEndTimestamp || '-'}
+                utilizationStatus={`${utilizationTitle} ${utilizationTimeRemaining}`}
               />
             </div>
           </div>
@@ -208,22 +202,31 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
       <section className="mt-8">
         <Border>
           <div className="p-10">
+            {/* Utilization */}
+            <div className="pt-5 pl-10">
+              <h3 className="text-xl font-unbounded uppercase font-bold">Utilization</h3>
+            </div>
+            <CountDown title={utilizationTitle} timeRemaining={utilizationTimeRemaining} />
+
+            <TimelineUtilizeCore
+              currentRelayBlock={currentRelayBlock}
+              beginRegion={region.regionId.begin}
+              config={configuration}
+              constants={brokerConstants}
+            />
+            <div className="flex justify-center items-center mb-5">
+              <b className="mr-5 ">Utilization Status:</b> {utilizationStage}
+            </div>
+
+            {/* Sale Info */}
+            <div className="pt-5 pl-10">
+              <h3 className="text-xl font-unbounded uppercase font-bold">Sale Info</h3>
+            </div>
             <CountDown title={saleTitle} timeRemaining={timeRemaining} />
 
             <TimelineComponent
               currentBlockNumber={currentBlockNumber}
               saleInfo={currentSaleRegion}
-              config={configuration}
-              constants={brokerConstants}
-            />
-
-            <div className="pt-5 pl-10">
-              <h3 className="text-xl font-unbounded uppercase font-bold">Utilization</h3>
-            </div>
-
-            <TimelineUtilizeCore
-              currentRelayBlock={currentRelayBlock}
-              beginRegion={region.regionId.begin}
               config={configuration}
               constants={brokerConstants}
             />
@@ -255,7 +258,10 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
               ))
             ) : (
               <div className="flex flex-row flex-wrap justify-between">
-                {region.owner === activeAccount.address ? (
+                {region.owner ===
+                (activeAccount
+                  ? encodeAddress(activeAccount.address, activeChain?.ss58Prefix || 42)
+                  : null) ? (
                   <>
                     <div className="pt-5 pl-10">
                       <h3 className="text-xl font-unbounded uppercase font-bold">Note</h3>

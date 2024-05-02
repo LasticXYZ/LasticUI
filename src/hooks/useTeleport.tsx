@@ -233,8 +233,8 @@ export const useTeleport = (onTeleportSuccess?: () => void) => {
       }
 
       if (result.status.isFinalized) {
-        console.log('[EXEC] Finalized', result)
-        console.log(`[EXEC] blockHash ${result.status.asFinalized}`)
+        //console.log('[EXEC] Finalized', result)
+        //console.log(`[EXEC] blockHash ${result.status.asFinalized}`)
         onSuccess({ blockHash: result.status.asFinalized, txHash: result.txHash })
       }
     }
@@ -265,7 +265,8 @@ export const useTeleport = (onTeleportSuccess?: () => void) => {
       }
     },
     onResult: (result) => {
-      console.log('Transaction result:', result)
+      //console.log('Transaction result:', result)
+      setNotification({ type: 'success', message: `Transaction result ${result}`, isVisible: true })
     },
   })
 

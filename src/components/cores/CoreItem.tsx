@@ -1,7 +1,7 @@
 // components/Card.tsx
 import Border from '@/components/border/Border'
 import { goToChainRoute } from '@/utils/common/chainPath'
-import { ConfigurationType } from '@poppyseed/lastic-sdk'
+import { BrokerConstantsType, ConfigurationType } from '@poppyseed/lastic-sdk'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -16,6 +16,7 @@ interface CardProps {
   mask: string | null
   begin: number | null
   duration: number | null
+  constants: BrokerConstantsType | null
 }
 
 const CoreItem: React.FC<CardProps> = ({
@@ -27,10 +28,11 @@ const CoreItem: React.FC<CardProps> = ({
   mask,
   begin,
   duration,
+  constants,
 }) => {
   const pathname = usePathname()
 
-  if (!config || !duration || !begin) return null
+  if (!config || !duration || !begin || !constants) return null
 
   return (
     <Border className="px-10 py-6 hover:bg-pink-50 hover:dark:bg-gray-22 hover:cursor-pointer">
@@ -69,8 +71,12 @@ const CoreItem: React.FC<CardProps> = ({
               </p>
             </div>
             <div className="flex flex-row text-gray-12 p-1 ">
-              <p className="px-2">Begin: {begin}</p>
-              <p className="px-2">End: {begin + duration}</p>
+              <p className="px-2">Begin Relay Block: {begin * constants.timeslicePeriod}</p>
+            </div>
+            <div className="flex flex-row text-gray-12 p-1 ">
+              <p className="px-2">
+                End Relay Block: {(begin + duration) * constants.timeslicePeriod}
+              </p>
             </div>
           </div>
         </div>
