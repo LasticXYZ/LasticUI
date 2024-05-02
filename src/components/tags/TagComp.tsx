@@ -3,14 +3,20 @@ import { FC } from 'react'
 type TagCompProps = {
   title: string
   className?: string
+  color?: string
 }
 
-const TagComp: FC<TagCompProps> = ({ title, className }) => (
-  <div
-    className={`${className} flex text-sm  justify-center cursor-pointer rounded-2xl bg-gray-4 hover:bg-gray-18 align-middle px-2 py-2`}
-  >
-    {title}
-  </div>
-)
-
+const TagComp: FC<TagCompProps> = ({
+  title,
+  className,
+  color = 'bg-pink-400 dark:bg-pink-400',
+}) => {
+  return (
+    <div
+      className={`${className} ${color} dark:bg-opacity-80 border border-gray-8 px-4 py-1 text-xs font-semibold uppercase rounded-full shadow-lg`}
+    >
+      {title}
+    </div>
+  )
+}
 export default TagComp

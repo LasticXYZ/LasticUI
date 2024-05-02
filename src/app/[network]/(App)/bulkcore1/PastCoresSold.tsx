@@ -1,14 +1,13 @@
 import Border from '@/components/border/Border'
-import CoreItem from '@/components/cores/CoreItem'
+import SectionDisplay from '@/components/cores/CoreItemSectionDisplay'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
 import { useCurrentSaleRegion, usePastCoresSold } from '@/hooks/subsquid'
-import { parseNativeTokenToHuman } from '@/utils/account/token'
 import { getChainFromPath } from '@/utils/common/chainPath'
 import { useInkathon } from '@poppyseed/lastic-sdk'
-import { CoreOwnerEvent, getClient } from '@poppyseed/squid-sdk'
+import { getClient } from '@poppyseed/squid-sdk'
 import { usePathname } from 'next/navigation'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
 export default function PastCoresSold() {
   const { activeChain } = useInkathon()
@@ -21,6 +20,7 @@ export default function PastCoresSold() {
 
   const currentSaleRegion = useCurrentSaleRegion(network, client)
   const coresData = usePastCoresSold(network, client, currentSaleRegion, configuration)
+  const constants = network_list[network].constants
 
   if (!activeChain) {
     return (
@@ -45,50 +45,13 @@ export default function PastCoresSold() {
         </div>
         <SectionDisplay
           title="Bought in this Sale"
+          information="All cores the community has purchased in this sale cycle."
+          constants={constants}
           regions={coresData}
           configuration={configuration}
           tokenSymbol={tokenSymbol}
         />
       </div>
     </Border>
-  )
-}
-
-interface SectionProps {
-  title: string
-  regions: CoreOwnerEvent[] | null
-  configuration: any // Define more specific types based on what 'configuration' contains
-  tokenSymbol: string
-}
-
-function SectionDisplay({ title, regions, configuration, tokenSymbol }: SectionProps) {
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 6
-  const handleNextPage = () => setCurrentPage(currentPage + 1)
-  const handlePrevPage = () => setCurrentPage(currentPage - 1)
-
-  return (
-    <>
-      <h2 className="pt-10 pl-10 text-lg font-bold uppercase font-unbounded">{title}</h2>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4">
-        {regions && regions.length > 0 ? (
-          regions.map((region, index) => (
-            <CoreItem
-              key={index}
-              config={configuration}
-              coreNumber={region.regionId.core}
-              size={region.regionId.mask === '0xffffffffffffffffffff' ? 'Whole' : 'Interlaced'}
-              cost={parseNativeTokenToHuman({ paid: region.price?.toString(), decimals: 12 })}
-              currencyCost={tokenSymbol}
-              mask={region.regionId.mask}
-              begin={region.regionId.begin}
-              duration={region.duration}
-            />
-          ))
-        ) : (
-          <div className="text-gray-12">No cores found</div>
-        )}
-      </div>
-    </>
   )
 }

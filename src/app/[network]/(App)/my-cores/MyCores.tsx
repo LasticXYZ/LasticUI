@@ -1,8 +1,7 @@
 import Border from '@/components/border/Border'
-import CoreItem from '@/components/cores/CoreItem'
+import SectionDisplay from '@/components/cores/CoreItemSectionDisplay'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
-import { parseNativeTokenToHuman } from '@/utils/account/token'
 import { getChainFromPath } from '@/utils/common/chainPath'
 import { encodeAddress } from '@polkadot/util-crypto'
 import { useInkathon } from '@poppyseed/lastic-sdk'
@@ -29,6 +28,7 @@ export default function MyCores() {
   const network = getChainFromPath(pathname)
   const tokenSymbol = network_list[network].tokenSymbol
   const configuration = network_list[network].configuration
+  const constants = network_list[network].constants
 
   //const newAddress = encodeAddress(publicKeyBytes, targetNetworkPrefix)
 
@@ -115,24 +115,32 @@ export default function MyCores() {
         </div>
         <SectionDisplay
           title="Obtained in this Sale"
+          information="Cores you have bought in the current sale and are active during the next sale cycle."
+          constants={constants}
           regions={justBought}
           configuration={configuration}
           tokenSymbol={tokenSymbol}
         />
         <SectionDisplay
           title="Obtained in the previous Sale"
+          information="Cores you have bought in the previous sale cycle and are going to be active in this sale cycle."
+          constants={constants}
           regions={currentlyActive}
           configuration={configuration}
           tokenSymbol={tokenSymbol}
         />
         <SectionDisplay
           title="Assigned Cores"
+          information="All cores you have bought and are currently assigned to a task."
+          constants={constants}
           regions={assignedCores?.data?.event || []}
           configuration={configuration}
           tokenSymbol={tokenSymbol}
         />
         <SectionDisplay
           title="Cores in the on Demand Pool"
+          information="All cores that are currently in the on demand pool."
+          constants={constants}
           regions={pooledCores?.data?.event || []}
           configuration={configuration}
           tokenSymbol={tokenSymbol}
@@ -145,95 +153,3 @@ export default function MyCores() {
     </Border>
   )
 }
-
-interface SectionProps {
-  title: string
-  regions: CoreOwnerEvent[]
-  configuration: any // Define more specific types based on what 'configuration' contains
-  tokenSymbol: string
-}
-
-function SectionDisplay({ title, regions, configuration, tokenSymbol }: SectionProps) {
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 6
-  const handleNextPage = () => setCurrentPage(currentPage + 1)
-  const handlePrevPage = () => setCurrentPage(currentPage - 1)
-
-  return (
-    <>
-      <h2 className="pt-10 pl-10 text-lg font-bold uppercase font-unbounded">{title}</h2>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4">
-        {regions.length > 0 ? (
-          regions.map((region, index) => (
-            <CoreItem
-              key={index}
-              config={configuration}
-              coreNumber={region.regionId.core}
-              size={region.regionId.mask === '0xffffffffffffffffffff' ? 'Whole' : 'Interlaced'}
-              cost={parseNativeTokenToHuman({ paid: region.price?.toString(), decimals: 12 })}
-              currencyCost={tokenSymbol}
-              mask={region.regionId.mask}
-              begin={region.regionId.begin}
-              duration={region.duration}
-            />
-          ))
-        ) : (
-          <div className="text-gray-12">No cores found</div>
-        )}
-      </div>
-    </>
-  )
-}
-
-//   return result?.data?.event ? (
-//     <Border className="h-full flex flex-row justify-center items-center">
-//       <div className="h-full w-full flex flex-col justify-left items-left px-5 pb-10">
-//         <div className="pt-10 pl-10">
-//           <h1 className="text-xl font-unbounded uppercase font-bold">cores owned</h1>
-//         </div>
-//         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4 mt-4">
-//           {result?.data.event.map((region, index) => (
-//             <div key={index} className="">
-//               <CoreItem
-//                 config={configuration}
-//                 coreNumber={region.regionId.core}
-//                 size={region.regionId.mask === '0xffffffffffffffffffff' ? '1' : 'Interlaced'}
-//                 cost={parseNativeTokenToHuman({ paid: region.price?.toString(), decimals: 12 })}
-//                 currencyCost={tokenSymbol}
-//                 mask={region.regionId.mask}
-//                 begin={region.regionId.begin}
-//                 duration={region.duration}
-//               />
-//             </div>
-//           ))}
-//         </div>
-//         {/* Pagination buttons */}
-//         {!result?.data.event ||
-//           (result?.data.event.length !== 0 && (
-//             <div className="flex w-full items-center justify-between space-x-2 mt-4 px-5">
-//               <button
-//                 onClick={handlePrevPage}
-//                 disabled={currentPage === 1}
-//                 className={`px-4 py-2 rounded-2xl text-black dark:text-gray-1 border border-gray-21 font-semibold ${currentPage === 1 ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : ' hover:bg-green-6'}`}
-//               >
-//                 Previous
-//               </button>
-//               <p className="text-black dark:text-gray-1 font-semibold">{currentPage}</p>
-//               <button
-//                 onClick={handleNextPage}
-//                 disabled={result?.data.event.length < 6}
-//                 className={`px-4 py-2   border border-gray-21 text-black dark:text-gray-1 font-semibold rounded-2xl ${result?.data.event.length < itemsPerPage ? 'bg-gray-4 text-gray-18 cursor-not-allowed' : ' hover:bg-green-6'}`}
-//               >
-//                 Next
-//               </button>
-//             </div>
-//           ))}
-//       </div>
-//     </Border>
-//   ) : (
-//     <Border className="h-full flex flex-row justify-center items-center">
-//       <WalletStatus />
-//     </Border>
-//   )
-// }
-//
