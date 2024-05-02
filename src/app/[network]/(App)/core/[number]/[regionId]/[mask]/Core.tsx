@@ -110,7 +110,7 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
       setUtilizationTitle(utilizationStatusTitle)
       setUtilizationTimeRemaining(utilizationTimeRemaining)
     }
-  }, [currentBlockNumber, currentSaleRegion, configuration, brokerConstants])
+  }, [currentBlockNumber, currentSaleRegion, region, configuration, brokerConstants])
 
   const [regionBeginTimestamp, setRegionBeginTimestamp] = useState<string | null>(null)
   const [regionEndTimestamp, setRegionEndTimestamp] = useState<string | null>(null)
@@ -124,22 +124,17 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
   useEffect(() => {
     const fetchRegionTimestamps = async () => {
       try {
-        if (
-          currentSaleRegion &&
-          currentSaleRegion.regionBegin &&
-          currentSaleRegion.regionEnd &&
-          brokerConstants
-        ) {
+        if (currentSaleRegion && region?.regionId?.begin && region.duration && brokerConstants) {
           const beginTimestamp = relayApi
             ? await blockTimeToUTC(
                 relayApi,
-                currentSaleRegion.regionBegin * brokerConstants.timeslicePeriod,
+                region.regionId.begin * brokerConstants.timeslicePeriod,
               )
             : null
           const endTimestamp = relayApi
             ? await blockTimeToUTC(
                 relayApi,
-                currentSaleRegion.regionEnd * brokerConstants.timeslicePeriod,
+                (region.regionId.begin + region.duration) * brokerConstants.timeslicePeriod,
               )
             : null
           const getCurrentRelayBlock = relayApi ? await getCurrentBlockNumber(relayApi) : null
