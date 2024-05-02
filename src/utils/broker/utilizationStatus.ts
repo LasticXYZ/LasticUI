@@ -10,8 +10,8 @@ interface StatusInfo {
 
 export enum UtilizationCode {
   Undefined = 'Undefined',
-  NotStarted = 'Not Started',
-  Running = 'Running',
+  NotStarted = 'Starts in',
+  Running = 'Running till',
   Ended = 'Ended',
 }
 
@@ -21,7 +21,7 @@ const utilizationInfoMap: Record<UtilizationCode, StatusInfo> = {
     statusMessage: 'The utilization period for this core is undefined.',
   },
   [UtilizationCode.NotStarted]: {
-    statusTitle: 'Not Started',
+    statusTitle: 'Starts in',
     statusMessage: 'The utilization period for this core has not started yet.',
   },
   [UtilizationCode.Running]: {

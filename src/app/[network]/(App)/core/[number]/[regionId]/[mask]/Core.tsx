@@ -11,17 +11,12 @@ import TimelineUtilizeCore from '@/components/timelineComp/TimelineUtilizeCore'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
 import { useSaleRegion } from '@/hooks/subsquid'
-import { useCurrentBlockNumber } from '@/hooks/useSubstrateQuery'
+import { useCurrentBlockNumber, useCurrentRelayBlockNumber } from '@/hooks/useSubstrateQuery'
 import { saleStatus } from '@/utils/broker'
 import { utilizationStatus } from '@/utils/broker/utilizationStatus'
 import { getChainFromPath } from '@/utils/common/chainPath'
 import { encodeAddress } from '@polkadot/util-crypto'
-import {
-  blockTimeToUTC,
-  getCurrentBlockNumber,
-  useBalance,
-  useInkathon,
-} from '@poppyseed/lastic-sdk'
+import { blockTimeToUTC, useBalance, useInkathon } from '@poppyseed/lastic-sdk'
 import { CoreOwnerEvent, GraphLike, GraphQuery, getClient } from '@poppyseed/squid-sdk'
 import { usePathname } from 'next/navigation'
 import { FC, useEffect, useMemo, useState } from 'react'
@@ -42,7 +37,6 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
 
   const [regionBeginTimestamp, setRegionBeginTimestamp] = useState<string | null>(null)
   const [regionEndTimestamp, setRegionEndTimestamp] = useState<string | null>(null)
-  const [currentRelayBlock, setCurrentRelayBlock] = useState<number | null>(null)
 
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false)
@@ -59,21 +53,7 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
   const brokerConstants = network_list[network].constants
 
   const currentBlockNumber = useCurrentBlockNumber(api)
-
-  // useMemo(() => {
-  //   const query1 = client.eventAllSaleInitialized(1)
-  //   if (network && query1) {
-  //     const fetchData = async () => {
-  //       const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(network, query1)
-  //       const currentSaleRegion: SaleInitializedEvent | null = fetchedResult?.data.event
-  //         ? fetchedResult.data.event[0]
-  //         : null
-  //       setCurrentSaleRegion(currentSaleRegion)
-  //     }
-
-  //     fetchData()
-  //   }
-  // }, [network, client])
+  const currentRelayBlock = useCurrentRelayBlockNumber(relayApi)
 
   const currentSaleRegion = useSaleRegion(network, client)
 
@@ -144,11 +124,9 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
                 (region.regionId.begin + region.duration) * brokerConstants.timeslicePeriod,
               )
             : null
-          const getCurrentRelayBlock = relayApi ? await getCurrentBlockNumber(relayApi) : null
 
           setRegionBeginTimestamp(beginTimestamp)
           setRegionEndTimestamp(endTimestamp)
-          setCurrentRelayBlock(getCurrentRelayBlock)
         }
       } catch (error) {
         console.error('Error fetching block timestamp:', error)
@@ -213,7 +191,7 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
                 currencyCost={tokenSymbol}
                 regionBeginTimestamp={regionBeginTimestamp || '-'}
                 regionEndTimestamp={regionEndTimestamp || '-'}
-                utilizationStatus={utilizationTitle}
+                utilizationStatus={`${utilizationTitle} - ${utilizationTimeRemaining}`}
               />
             </div>
           </div>

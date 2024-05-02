@@ -58,6 +58,25 @@ export function useCurrentBlockNumber(api: ApiPromise | undefined) {
   return currentBlockNumber
 }
 
+export function useCurrentRelayBlockNumber(relayApi: ApiPromise | undefined) {
+  const [currentBlockNumber, setCurrentBlockNumber] = useState(0)
+
+  useEffect(() => {
+    if (!relayApi) return
+
+    const fetchCurrentBlockNumber = async () => {
+      const currentBlock = await getCurrentBlockNumber(relayApi)
+      setCurrentBlockNumber(currentBlock)
+    }
+
+    const intervalId = setInterval(fetchCurrentBlockNumber, 1000) // Update every second
+
+    return () => clearInterval(intervalId)
+  }, [relayApi])
+
+  return currentBlockNumber
+}
+
 export function useBrokerConstants(api: ApiPromise | undefined) {
   const [brokerConstants, setBrokerConstants] = useState<BrokerConstantsType | null>(null)
   const [isLoading, setIsLoading] = useState(true)
