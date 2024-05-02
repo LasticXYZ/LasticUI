@@ -33,6 +33,22 @@ interface BrokerRegionDataProps {
 }
 
 const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask }) => {
+  const [saleStage, setSaleStage] = useState('')
+  const [saleTitle, setSaleTitle] = useState('')
+  const [timeRemaining, setTimeRemaining] = useState('')
+  const [utilizationStage, setUtilizationStage] = useState('')
+  const [utilizationTitle, setUtilizationTitle] = useState('')
+  const [utilizationTimeRemaining, setUtilizationTimeRemaining] = useState('')
+
+  const [regionBeginTimestamp, setRegionBeginTimestamp] = useState<string | null>(null)
+  const [regionEndTimestamp, setRegionEndTimestamp] = useState<string | null>(null)
+  const [currentRelayBlock, setCurrentRelayBlock] = useState<number | null>(null)
+
+  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
+  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false)
+  const [isPartitionModalOpen, setIsPartitionModalOpen] = useState(false)
+  const [isInterlaceModalOpen, setIsInterlaceModalOpen] = useState(false)
+
   const { activeAccount, relayApi, activeChain, api } = useInkathon()
   let { tokenSymbol, tokenDecimals } = useBalance(activeAccount?.address, true)
   const [region, setRegionResult] = useState<CoreOwnerEvent | null>(null)
@@ -81,13 +97,6 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
     }
   }, [network, currentSaleRegion, client, configuration, coreNb, beginRegion, mask])
 
-  // Update saleStage every second based on the currentBlockNumber
-  const [saleStage, setSaleStage] = useState('')
-  const [saleTitle, setSaleTitle] = useState('')
-  const [timeRemaining, setTimeRemaining] = useState('')
-  const [utilizationStage, setUtilizationStage] = useState('')
-  const [utilizationTitle, setUtilizationTitle] = useState('')
-  const [utilizationTimeRemaining, setUtilizationTimeRemaining] = useState('')
   useEffect(() => {
     if (currentSaleRegion && region && currentRelayBlock && configuration && brokerConstants) {
       const { statusMessage, timeRemaining, statusTitle } = saleStatus(
@@ -110,16 +119,14 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
       setUtilizationTitle(utilizationStatusTitle)
       setUtilizationTimeRemaining(utilizationTimeRemaining)
     }
-  }, [currentBlockNumber, currentSaleRegion, region, configuration, brokerConstants])
-
-  const [regionBeginTimestamp, setRegionBeginTimestamp] = useState<string | null>(null)
-  const [regionEndTimestamp, setRegionEndTimestamp] = useState<string | null>(null)
-  const [currentRelayBlock, setCurrentRelayBlock] = useState<number | null>(null)
-
-  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
-  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false)
-  const [isPartitionModalOpen, setIsPartitionModalOpen] = useState(false)
-  const [isInterlaceModalOpen, setIsInterlaceModalOpen] = useState(false)
+  }, [
+    currentBlockNumber,
+    currentRelayBlock,
+    currentSaleRegion,
+    region,
+    configuration,
+    brokerConstants,
+  ])
 
   useEffect(() => {
     const fetchRegionTimestamps = async () => {
