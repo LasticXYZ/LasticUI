@@ -15,10 +15,9 @@ interface CardProps {
   paid: string | null
   coreNumber: number
   currencyCost: string
-  mask: string
-  begin: number
-  end: number
   region: CoreOwnerEvent
+  regionBeginTimestamp: string
+  regionEndTimestamp: string
 }
 
 const CoreItemExtensive: React.FC<CardProps> = ({
@@ -30,6 +29,8 @@ const CoreItemExtensive: React.FC<CardProps> = ({
   amITheOwner,
   coreNumber,
   currencyCost,
+  regionBeginTimestamp,
+  regionEndTimestamp,
 }) => {
   const mask = region.regionId.mask
   const begin = region.regionId.begin
@@ -86,42 +87,45 @@ const CoreItemExtensive: React.FC<CardProps> = ({
               {currencyCost}
             </div>
             <div className="text-md leading-tight font-medium text-black dark:text-gray-1">
+              Task: {region.task ? region.task : 'Not Assigned'}
+            </div>
+          </div>
+          <div className="flex flex-row pb-4 justify-between space-x-3">
+            <div className="text-md leading-tight font-medium text-black dark:text-gray-1">
               Utilization: Not Started
             </div>
           </div>
           <div className=" grid grid-cols-2 gap-5 lg:grid-cols-4 justify-between mt-5">
             <div className="flex flex-col pr-5 text-md text-black dark:text-gray-1">
               <p>
-                <b>Begins</b>
+                <b>Utilization Begins</b>
               </p>
-              <p>Region: {begin}</p>
               <p>Relay Block: {begin * constants.timeslicePeriod}</p>
-              <p>Time: </p>
+              <p>Time: {regionBeginTimestamp}</p>
             </div>
             <div className="flex flex-col px-5 text-md text-black dark:text-gray-1">
               <p>
-                <b>Ends</b>
+                <b>Utilization Ends</b>
               </p>
-              <p>Region: {end}</p>
               <p>Relay Block: {end ? end * constants.timeslicePeriod : null}</p>
-              <p>Time: </p>
+              <p>Time: {regionEndTimestamp}</p>
             </div>
             <div className="flex flex-col px-5 text-md text-black dark:text-gray-1">
               <p>
-                <b>Mask</b>
+                <b>Status</b>
               </p>
-              <p>HEX: {mask}</p>
               <p>
-                Status: {mask === '0xffffffffffffffffffff' ? 'Full Region' : 'Interlaced Region'}
+                Frequency:{' '}
+                {mask === '0xffffffffffffffffffff' ? 'Full' : `Interlaced Region - ${mask}`}
               </p>
             </div>
             <div className="flex flex-col  px-5 text-md text-black dark:text-gray-1">
               <p>
                 <b>Duration</b>
               </p>
-              <p>Regions: {duration}</p>
-              <p>Blocks: {duration ? duration * constants.timeslicePeriod : null}</p>
-              <p>Time: </p>
+              <p>
+                Blocks on the Relay chain: {duration ? duration * constants.timeslicePeriod : null}
+              </p>
             </div>
           </div>
         </div>

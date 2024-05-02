@@ -10,8 +10,10 @@ import TimelineComponent from '@/components/timelineComp/TimelineComp'
 import TimelineUtilizeCore from '@/components/timelineComp/TimelineUtilizeCore'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
+import { useSaleRegion } from '@/hooks/subsquid'
 import { useCurrentBlockNumber } from '@/hooks/useSubstrateQuery'
 import { saleStatus } from '@/utils/broker'
+import { utilizationStatus } from '@/utils/broker/utilizationStatus'
 import { getChainFromPath } from '@/utils/common/chainPath'
 import { encodeAddress } from '@polkadot/util-crypto'
 import {
@@ -20,13 +22,7 @@ import {
   useBalance,
   useInkathon,
 } from '@poppyseed/lastic-sdk'
-import {
-  CoreOwnerEvent,
-  GraphLike,
-  GraphQuery,
-  SaleInitializedEvent,
-  getClient,
-} from '@poppyseed/squid-sdk'
+import { CoreOwnerEvent, GraphLike, GraphQuery, getClient } from '@poppyseed/squid-sdk'
 import { usePathname } from 'next/navigation'
 import { FC, useEffect, useMemo, useState } from 'react'
 
@@ -40,7 +36,6 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
   const { activeAccount, relayApi, activeChain, api } = useInkathon()
   let { tokenSymbol, tokenDecimals } = useBalance(activeAccount?.address, true)
   const [region, setRegionResult] = useState<CoreOwnerEvent | null>(null)
-  const [currentSaleRegion, setCurrentSaleRegion] = useState<SaleInitializedEvent | null>(null)
   const client = useMemo(() => getClient(), [])
   const pathname = usePathname()
   const network = getChainFromPath(pathname)
@@ -49,20 +44,22 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
 
   const currentBlockNumber = useCurrentBlockNumber(api)
 
-  useMemo(() => {
-    const query1 = client.eventAllSaleInitialized(1)
-    if (network && query1) {
-      const fetchData = async () => {
-        const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(network, query1)
-        const currentSaleRegion: SaleInitializedEvent | null = fetchedResult?.data.event
-          ? fetchedResult.data.event[0]
-          : null
-        setCurrentSaleRegion(currentSaleRegion)
-      }
+  // useMemo(() => {
+  //   const query1 = client.eventAllSaleInitialized(1)
+  //   if (network && query1) {
+  //     const fetchData = async () => {
+  //       const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(network, query1)
+  //       const currentSaleRegion: SaleInitializedEvent | null = fetchedResult?.data.event
+  //         ? fetchedResult.data.event[0]
+  //         : null
+  //       setCurrentSaleRegion(currentSaleRegion)
+  //     }
 
-      fetchData()
-    }
-  }, [network, client])
+  //     fetchData()
+  //   }
+  // }, [network, client])
+
+  const currentSaleRegion = useSaleRegion(network, client)
 
   useEffect(() => {
     let query: GraphQuery | undefined
@@ -88,8 +85,11 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
   const [saleStage, setSaleStage] = useState('')
   const [saleTitle, setSaleTitle] = useState('')
   const [timeRemaining, setTimeRemaining] = useState('')
+  const [utilizationStage, setUtilizationStage] = useState('')
+  const [utilizationTitle, setUtilizationTitle] = useState('')
+  const [utilizationTimeRemaining, setUtilizationTimeRemaining] = useState('')
   useEffect(() => {
-    if (currentSaleRegion && configuration && brokerConstants) {
+    if (currentSaleRegion && region && currentRelayBlock && configuration && brokerConstants) {
       const { statusMessage, timeRemaining, statusTitle } = saleStatus(
         currentBlockNumber,
         currentSaleRegion,
@@ -99,6 +99,16 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
       setTimeRemaining(timeRemaining)
       setSaleTitle(statusTitle)
       setSaleStage(statusMessage)
+
+      const {
+        statusMessage: utilizationStatusMessage,
+        timeRemaining: utilizationTimeRemaining,
+        utilizationCode: utilizationStatusTitle,
+      } = utilizationStatus(currentRelayBlock, region, configuration, brokerConstants)
+
+      setUtilizationStage(utilizationStatusMessage)
+      setUtilizationTitle(utilizationStatusTitle)
+      setUtilizationTimeRemaining(utilizationTimeRemaining)
     }
   }, [currentBlockNumber, currentSaleRegion, configuration, brokerConstants])
 
@@ -199,9 +209,8 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
                 paid={region.price}
                 coreNumber={region.regionId.core}
                 currencyCost={tokenSymbol}
-                mask={region.regionId.mask}
-                begin={region.regionId.begin}
-                end={region.duration + region.regionId.begin}
+                regionBeginTimestamp={regionBeginTimestamp || '-'}
+                regionEndTimestamp={regionEndTimestamp || '-'}
               />
             </div>
           </div>
@@ -212,22 +221,31 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
       <section className="mt-8">
         <Border>
           <div className="p-10">
+            {/* Utilization */}
+            <div className="pt-5 pl-10">
+              <h3 className="text-xl font-unbounded uppercase font-bold">Utilization</h3>
+            </div>
+            <CountDown title={utilizationTitle} timeRemaining={utilizationTimeRemaining} />
+
+            <TimelineUtilizeCore
+              currentRelayBlock={currentRelayBlock}
+              beginRegion={region.regionId.begin}
+              config={configuration}
+              constants={brokerConstants}
+            />
+            <div className="flex justify-center items-center mb-5">
+              <b className="mr-5 ">Utilization Status:</b> {utilizationStage}
+            </div>
+
+            {/* Sale Info */}
+            <div className="pt-5 pl-10">
+              <h3 className="text-xl font-unbounded uppercase font-bold">Sale Info</h3>
+            </div>
             <CountDown title={saleTitle} timeRemaining={timeRemaining} />
 
             <TimelineComponent
               currentBlockNumber={currentBlockNumber}
               saleInfo={currentSaleRegion}
-              config={configuration}
-              constants={brokerConstants}
-            />
-
-            <div className="pt-5 pl-10">
-              <h3 className="text-xl font-unbounded uppercase font-bold">Utilization</h3>
-            </div>
-
-            <TimelineUtilizeCore
-              currentRelayBlock={currentRelayBlock}
-              beginRegion={region.regionId.begin}
               config={configuration}
               constants={brokerConstants}
             />
