@@ -18,6 +18,7 @@ interface CardProps {
   region: CoreOwnerEvent
   regionBeginTimestamp: string
   regionEndTimestamp: string
+  utilizationStatus: string
 }
 
 const CoreItemExtensive: React.FC<CardProps> = ({
@@ -31,6 +32,7 @@ const CoreItemExtensive: React.FC<CardProps> = ({
   currencyCost,
   regionBeginTimestamp,
   regionEndTimestamp,
+  utilizationStatus,
 }) => {
   const mask = region.regionId.mask
   const begin = region.regionId.begin
@@ -92,7 +94,7 @@ const CoreItemExtensive: React.FC<CardProps> = ({
           </div>
           <div className="flex flex-row pb-4 justify-between space-x-3">
             <div className="text-md leading-tight font-medium text-black dark:text-gray-1">
-              Utilization: Not Started
+              Utilization: {utilizationStatus}
             </div>
           </div>
           <div className=" grid grid-cols-2 gap-5 lg:grid-cols-4 justify-between mt-5">
