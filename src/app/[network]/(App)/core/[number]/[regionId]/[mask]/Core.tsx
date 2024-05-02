@@ -11,7 +11,6 @@ import TimelineUtilizeCore from '@/components/timelineComp/TimelineUtilizeCore'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
 import { useCurrentBlockNumber } from '@/hooks/useSubstrateQuery'
-import { parseNativeTokenToHuman } from '@/utils/account/token'
 import { saleStatus } from '@/utils/broker'
 import { getChainFromPath } from '@/utils/common/chainPath'
 import { encodeAddress } from '@polkadot/util-crypto'
@@ -187,6 +186,8 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
             <div className="">
               <CoreItemExtensive
                 config={configuration}
+                constants={brokerConstants}
+                region={region}
                 timeBought={region.timestamp ? new Date(region.timestamp).toLocaleString() : '-'}
                 owner={region.owner}
                 amITheOwner={
@@ -197,13 +198,10 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
                 }
                 paid={region.price}
                 coreNumber={region.regionId.core}
-                phase="- Period"
-                cost={parseNativeTokenToHuman({ paid: region.price, decimals: tokenDecimals })}
                 currencyCost={tokenSymbol}
                 mask={region.regionId.mask}
                 begin={region.regionId.begin}
                 end={region.duration + region.regionId.begin}
-                region={region}
               />
             </div>
           </div>
