@@ -68,7 +68,7 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
   useEffect(() => {
     let query: GraphQuery | undefined
 
-    if (activeAccount && currentSaleRegion && configuration) {
+    if (currentSaleRegion && configuration) {
       if (currentSaleRegion.regionBegin) {
         query = client.eventSpecificRegionCoreOwner(coreNb, beginRegion, mask)
       }
@@ -83,7 +83,7 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
 
       fetchData()
     }
-  }, [activeAccount, network, currentSaleRegion, client, configuration, coreNb, beginRegion, mask])
+  }, [network, currentSaleRegion, client, configuration, coreNb, beginRegion, mask])
 
   // Update saleStage every second based on the currentBlockNumber
   const [saleStage, setSaleStage] = useState('')
@@ -147,7 +147,7 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
     fetchRegionTimestamps()
   }, [relayApi, brokerConstants, currentSaleRegion])
 
-  if (!activeChain || !api || !relayApi || !configuration) {
+  if (!api || !relayApi || !configuration) {
     return (
       <Border className="mt-5">
         <WalletStatus inactiveWalletMessage="Connecting to chain..." />

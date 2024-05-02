@@ -82,7 +82,7 @@ export default function MyCores() {
 
       fetchData()
     }
-  }, [activeAccount, network, currentSaleData, client, configuration])
+  }, [activeAccount, activeChain, network, currentSaleData, client, configuration])
 
   if (!activeAccount || !activeChain) {
     return (
