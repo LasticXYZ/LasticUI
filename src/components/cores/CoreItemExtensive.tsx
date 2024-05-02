@@ -51,21 +51,9 @@ const CoreItemExtensive: React.FC<CardProps> = ({
             <h1 className="text-xl font-unbounded uppercase font-bold">Core Nb. {coreNumber}</h1>
             <div className="flex flex-row space-x-5">
               <div className="flex gap-2">
-                {mask !== '0xffffffffffffffffffff' && (
-                  <div className="bg-pink-400 dark:bg-pink-400 dark:bg-opacity-80 border border-gray-8 px-4 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
-                    Interlaced
-                  </div>
-                )}
-                {duration && duration < config.regionLength && (
-                  <div className="bg-pink-400 dark:bg-pink-400 dark:bg-opacity-80 border border-gray-8 px-4 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
-                    Partitioned
-                  </div>
-                )}
-                {duration && duration === config.regionLength && (
-                  <div className="bg-pink-400 dark:bg-pink-400 dark:bg-opacity-80 border border-gray-8 px-4 py-1 text-xs font-semibold uppercase rounded-full shadow-lg">
-                    Full
-                  </div>
-                )}
+                {mask !== '0xffffffffffffffffffff' && <TagComp title="Interlaced" />}
+                {duration && duration < config.regionLength && <TagComp title="Partitioned" />}
+                {duration && duration === config.regionLength && <TagComp title="Full" />}
               </div>
               <div className="flex gap-2">
                 {region.assigned ? (
@@ -96,6 +84,9 @@ const CoreItemExtensive: React.FC<CardProps> = ({
             <div className="text-md leading-tight font-medium text-black dark:text-gray-1">
               Paid: {parseNativeTokenToHuman({ paid: paid, decimals: 12, reduceDecimals: 6 })}{' '}
               {currencyCost}
+            </div>
+            <div className="text-md leading-tight font-medium text-black dark:text-gray-1">
+              Utilization: Not Started
             </div>
           </div>
           <div className=" grid grid-cols-2 gap-5 lg:grid-cols-4 justify-between mt-5">
