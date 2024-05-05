@@ -27,15 +27,14 @@ const ListingsModal: FC<ListingsModalProps> = ({ isOpen, onClose, regionId }) =>
       network: 'rococo',
       status: 'listed',
       timestamp: new Date().toISOString(),
+      end: '',
 
       mask: regionId.mask,
       begin: regionId.begin,
-      end: '', // Update this as per your logic
     }
 
     try {
       const response = await fetch('/api/updateDatabase', {
-        // Use your API endpoint
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -67,6 +66,7 @@ const ListingsModal: FC<ListingsModalProps> = ({ isOpen, onClose, regionId }) =>
           <label htmlFor="newOwner" className="text-lg mb-2">
             For the Price of:
           </label>
+
           <div className="flex flex-row items-center w-full">
             <input
               id="newOwner"

@@ -12,9 +12,9 @@ export interface CoreListing {
   mask: string
 
   // details
-  status: 'listed' | 'tradeOngoing' | 'completed'
-  network: 'polkadot' | 'kusama' | 'westend' | 'rococo'
   end: string
+  status: 'listed' | 'tradeOngoing' | 'completed | cancelled'
+  network: 'polkadot' | 'kusama' | 'westend' | 'rococo' // can and should obviously be separated in the future into multiple db tables
   timestamp: string
   cost: string // native currency in planck
   sellerAddress: string // address of current owner
@@ -32,11 +32,23 @@ export const useListings = () => {
     fetchListings()
   }, [])
 
-  const fetchListings = async () => {
+  const fetchListings = async (filterParams?: Record<string, string>) => {
     setIsLoading(true)
     try {
-      const response = await fetch('') // TODO extract to service folder
+      // Construct query parameters from filterParams
+      let queryParams = ''
+      if (filterParams) {
+        queryParams = new URLSearchParams(filterParams).toString()
+      }
+
+      // Create the URL with parameters
+      const url = `/api/listings${queryParams ? '?' + queryParams : ''}`
+
+      const response = await fetch(url)
       const data = await response.json()
+
+      if (!response.ok) throw new Error()
+
       setListings(data)
     } catch (error) {
       console.error('Failed to fetch listings:', error)
@@ -45,11 +57,49 @@ export const useListings = () => {
     }
   }
 
-  const addListing = async (listing: CoreListing) => {}
+  const addListing = async (listing: CoreListing) => {
+    setIsLoading(true)
+    try {
+      const response = await fetch('/api/listings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(listing),
+      })
+
+      if (!response.ok) throw new Error()
+
+      fetchListings()
+    } catch (error) {
+      console.error('Failed to add listing:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const deleteListing = async (listing: CoreListing) => {}
 
-  const updateListing = async (listing: CoreListing) => {}
+  const updateListing = async (listing: CoreListing) => {
+    setIsLoading(true)
+    try {
+      const response = await fetch('/api/listings', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(listing),
+      })
+
+      if (!response.ok) throw new Error()
+
+      fetchListings()
+    } catch (error) {
+      console.error('Failed to update listing:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return { listings, isLoading, updateListings: fetchListings }
 }
