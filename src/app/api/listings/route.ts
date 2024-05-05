@@ -64,7 +64,7 @@ export async function PATCH(req: NextRequest) {
 
   // Update the listing
   const index = database.listings.findIndex((listing) => listing.id === data.id)
-  database.listings[index] = data
+  database.listings[index] = { ...database.listings[index], ...data }
 
   // Write the updated database back to the file
   await fs.writeFile(filePath, JSON.stringify(database, null, 2), 'utf8')

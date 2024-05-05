@@ -40,7 +40,11 @@ const ListingsModal: FC<ListingsModalProps> = ({ isOpen, onClose, regionId }) =>
       timestamp: new Date().toISOString(),
     }
 
-    await addListing(coreData)
+    addListing(coreData).then(() => {
+      setTimeout(() => {
+        onClose()
+      }, 3000)
+    })
   }
 
   if (!isOpen) return null
@@ -75,7 +79,7 @@ const ListingsModal: FC<ListingsModalProps> = ({ isOpen, onClose, regionId }) =>
               disabled={!cost || !activeAccount || parseFloat(cost) < 0}
             />
           </div>
-          <div className="text-red-4">{statusMessage}</div>
+          <div className="self-center pt-5">{statusMessage}</div>
         </div>
       </div>
     </Modal>

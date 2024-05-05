@@ -24,7 +24,17 @@ const MAX_WEIGHT = {
 const THRESHOLD = 2 // always 2 out of 3 signatories
 const LASTIC_ADDRESS = process.env.NEXT_PUBLIC_LASTIC_ADDRESS || '' // used for new multisigs and if db has no other address defined
 
-export const useMultisigTrading = (core: CoreListing) => {
+interface MultisigTradingProps {
+  core: CoreListing
+  onTradeStarted?: (listingsID: number, buyerAddress: string) => Promise<void>
+  onTradeCompleted?: (listingsID: number) => Promise<void>
+}
+
+export const useMultisigTrading = ({
+  core,
+  onTradeStarted,
+  onTradeCompleted,
+}: MultisigTradingProps) => {
   const { api, activeSigner, activeAccount, activeChain, activeRelayChain } = useInkathon()
   const [isLoading, setIsLoading] = useState(false)
   const [txStatusMessage, setTxStatusMessage] = useState<string>('')
@@ -68,9 +78,6 @@ export const useMultisigTrading = (core: CoreListing) => {
     // construct the batch and send the transactions
     const batchTx = api!.tx.utility.batch([transferCore, transferFunds])
 
-    const info = await batchTx.paymentInfo(activeAccount!.address)
-    console.log(`weight=${info.weight.toString()}`)
-
     // create the multisig call
     const asMultiTx = getAsMultiTx({
       tx: batchTx,
@@ -91,6 +98,10 @@ export const useMultisigTrading = (core: CoreListing) => {
           if (result.status.isInBlock) {
             console.log(`Transaction included at blockHash ${result.status.asInBlock}`)
             console.log('Tx hash: ' + result.txHash)
+
+            // update DB
+            if (when && onTradeCompleted) onTradeCompleted(core.id)
+
             setTxStatusMessage(`🧊 Multisig call included in block ${result.status.asInBlock}`)
           } else if (result.status.isFinalized) {
             setTxStatusMessage(`📜 Multisig call finalized ${result.status.asFinalized}`)
@@ -154,9 +165,15 @@ export const useMultisigTrading = (core: CoreListing) => {
       if (result.status.isInBlock) {
         console.log(`Transaction included at blockHash ${result.status.asInBlock}`)
         console.log('Tx hash: ' + result.txHash)
+
+        // update DB
+        if (onTradeStarted) onTradeStarted(core.id, activeAccount!.address)
+
         setTxStatusMessage(`🧊 Funds sent and tx included in block ${result.status.asInBlock}`)
       } else if (result.status.isFinalized) {
         setTxStatusMessage(`📜 Funds sent and tx finalized ${result.status.asFinalized}`)
+        // better update DB again to make sure to have correct values
+        if (onTradeStarted) onTradeStarted(core.id, activeAccount!.address)
 
         // TODO update DB
         // core.status = 'tradeOngoing'

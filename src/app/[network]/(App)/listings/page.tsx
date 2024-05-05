@@ -27,7 +27,7 @@ type MultisigModal = {
 const ListingsPage = () => {
   const { activeAccount } = useInkathon()
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
-  const { listings } = useListings()
+  const { listings, fetchListings } = useListings()
   const [filter, setFilter] = useState<string>('openListings')
 
   const [multisigModalData, setMultisigModalData] = useState<MultisigModal>({
@@ -88,7 +88,7 @@ const ListingsPage = () => {
           isOpen={multisigModalData.visible}
           onClose={closeMultisig}
           core={multisigModalData.core}
-          onStatusChange={() => {}}
+          onUpdateListingDB={fetchListings}
         />
       )}
 

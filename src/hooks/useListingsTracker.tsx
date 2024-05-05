@@ -92,33 +92,39 @@ export const useListingsTracker = (coreListings: CoreListing[], intervalMs?: num
     let state = listingStateInit
 
     // Step 1
-    if (await hasMultisigAddressTheCoreFunds(core)) {
+    if (
+      core.status === 'tradeOngoing' &&
+      core.buyerAddress &&
+      (await hasMultisigAddressTheCoreFunds(core))
+    ) {
       state = { ...state, step1: true }
     }
 
     // Step 2
-    if (await hasMultisigAddressTheListedCore(core)) {
+    if (core.status === 'tradeOngoing' && (await hasMultisigAddressTheListedCore(core))) {
       state = { ...state, step2: true }
     }
 
     // Step 3
-    const buyer = core.buyerAddress || activeAccount?.address
-    const multisigAddress = calculateMultisigAddress(
-      THRESHOLD,
-      [core.sellerAddress, buyer || '', core.lasticAddress || LASTIC_ADDRESS],
-      activeChain,
-    )
-    const multisigCalls = await getAllOpenMultisigCalls(
-      multisigAddress || '',
-      api,
-      activeRelayChain,
-    )
+    if (core.status === 'tradeOngoing') {
+      const buyer = core.buyerAddress || activeAccount?.address
+      const multisigAddress = calculateMultisigAddress(
+        THRESHOLD,
+        [core.sellerAddress, buyer || '', core.lasticAddress || LASTIC_ADDRESS],
+        activeChain,
+      )
+      const multisigCalls = await getAllOpenMultisigCalls(
+        multisigAddress || '',
+        api,
+        activeRelayChain,
+      )
 
-    if (multisigCalls && multisigCalls.length == 1) {
-      state = { ...state, step3: true }
-    } else if (multisigCalls && multisigCalls.length > 1) {
-      // TODO support this case
-      console.error('More than one multisig call opened for the same multisig address')
+      if (multisigCalls && multisigCalls.length == 1) {
+        state = { ...state, step3: true }
+      } else if (multisigCalls && multisigCalls.length > 1) {
+        // TODO support this case
+        console.error('More than one multisig call opened for the same multisig address')
+      }
     }
 
     const msg = _getStatusMessage(state, core)
@@ -162,10 +168,6 @@ export const useListingsTracker = (coreListings: CoreListing[], intervalMs?: num
       ],
       activeChain,
     )
-    console.log('buyer', core.buyerAddress || activeAccount?.address || '')
-    console.log('seller', core.sellerAddress)
-    console.log('lastic', core.lasticAddress || LASTIC_ADDRESS)
-    console.log('multisigAddress', multisigAddress)
 
     const { data: balance } = (await api?.query.system.account(multisigAddress)) as any
     const cleanedBalance = balance?.free.toString().replace(/,/g, '')

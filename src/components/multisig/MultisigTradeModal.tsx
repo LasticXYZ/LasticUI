@@ -1,14 +1,13 @@
 import SecondaryButton from '@/components/button/SecondaryButton'
 import Modal from '@/components/modal/Modal'
 import LoadingSpinner from '@/components/multisig/Spinner'
-import { CoreListing } from '@/hooks/useListings'
+import { CoreListing, useListings } from '@/hooks/useListings'
 import { useListingsTracker } from '@/hooks/useListingsTracker'
 import { useMultisigTrading } from '@/hooks/useMultisigTrading'
 import { ArrowPathIcon } from '@heroicons/react/24/outline'
 import { Checkbox } from '@mui/material'
 import { useInkathon } from '@poppyseed/lastic-sdk'
 import { FC } from 'react'
-import { ModalProps } from '../../types/ListingsTypes'
 
 const LASTIC_ADDRESS = process.env.NEXT_PUBLIC_LASTIC_ADDRESS || '' // used for new multisigs and if db has no other address defined
 
@@ -20,16 +19,18 @@ const checkboxStyle = {
   p: 0,
 }
 
-export interface MultisigTradeModalProps extends ModalProps {
+export interface MultisigTradeModalProps {
   isOpen: boolean
+  onClose: () => void
   core: CoreListing
+  onUpdateListingDB?: () => Promise<any>
 }
 
 const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
   isOpen,
   onClose,
   core,
-  onStatusChange,
+  onUpdateListingDB,
 }) => {
   const { api, activeAccount } = useInkathon()
   const {
@@ -37,13 +38,7 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
     listingsState,
     updateAllStates,
   } = useListingsTracker([core], 8000)
-
-  console.log(core)
-
-  const test1 = '5Gza9nxUQiiErg5NotZ6FPePcjBEHhawoNL3sGqpmjrVhgeo'
-  const test2 = '5Hp7jnPx2bBZDTvAWZ3udtxar1nhhbmGvnU7eg37P4kmKUev'
-  const test3 = '5GByzRyonPJC4kLg8dRenszsZD25dFjdJRCVCyfLkQ52HDev'
-  const test4 = '5D88QJLCvrZXiHdCptSW5dP7rzE9nQGCgRSvDfEdti6erqGV'
+  const { markTradeStarted } = useListings(false)
 
   const signatoriesWithLabel = [
     {
@@ -66,7 +61,7 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
     multisigAddress,
     isLoading,
     txStatusMessage,
-  } = useMultisigTrading(core)
+  } = useMultisigTrading({ core, onTradeStarted: markTradeStarted })
 
   const updateMethodAndButton = () => {
     let buttonFunction = initiateOrExecuteMultisigTradeCall
@@ -90,7 +85,10 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
     ) {
       // step 1 interaction
       if (!listingsState[core.id].step1) {
-        buttonFunction = () => sendFundsToMultisig(core)
+        buttonFunction = async () => {
+          await sendFundsToMultisig(core)
+          if (onUpdateListingDB) await onUpdateListingDB()
+        }
         buttonEnabled = true
       }
       // finisher interaction
@@ -99,7 +97,10 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
         listingsState[core.id].step2 &&
         listingsState[core.id].step3
       ) {
-        buttonFunction = initiateOrExecuteMultisigTradeCall
+        buttonFunction = async () => {
+          await initiateOrExecuteMultisigTradeCall()
+          if (onUpdateListingDB) await onUpdateListingDB()
+        }
         buttonEnabled = true
       } else buttonEnabled = false
     }
@@ -113,7 +114,10 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
         listingsState[core.id].step2 &&
         listingsState[core.id].step3
       ) {
-        buttonFunction = initiateOrExecuteMultisigTradeCall
+        buttonFunction = async () => {
+          await initiateOrExecuteMultisigTradeCall()
+          await onUpdateListingDB?.()
+        }
         buttonEnabled = true
       } else {
         console.log('not all steps done')
@@ -126,7 +130,6 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
 
     return { buttonFunction, buttonEnabled }
   }
-
   const { buttonFunction, buttonEnabled } = updateMethodAndButton()
 
   if (!isOpen || !api) {

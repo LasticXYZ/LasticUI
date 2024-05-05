@@ -44,6 +44,18 @@
       "buyerAddress": null,
       "lasticAddress": "5EUjh2hkQP67HajqcXx9hVVsdmg5QG6wUZPxA5Eje5RDPkCo",
       "timepoint": null
+    },
+    {
+      "id": 1714925759519,
+      "coreNumber": 58,
+      "mask": "0xffffffffffffffffffff",
+      "begin": "129210",
+      "cost": "2000000000000",
+      "sellerAddress": "5Hp7jnPx2bBZDTvAWZ3udtxar1nhhbmGvnU7eg37P4kmKUev",
+      "network": "Rococo Coretime Testnet",
+      "status": "listed",
+      "timestamp": "2024-05-05T16:15:59.519Z",
+      "end": "130470"
     }
   ]
 }

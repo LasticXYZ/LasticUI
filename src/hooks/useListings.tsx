@@ -34,7 +34,7 @@ export interface CoreListing {
   timepoint?: { height: number; index: number } // is added at multisig init. Used to identify right opened multisig if multiple are opened.
 }
 
-export const useListings = () => {
+export const useListings = (fetchOnInit = true) => {
   const { api } = useInkathon()
   const [listings, setListings] = useState<CoreListing[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -49,7 +49,7 @@ export const useListings = () => {
   }, [isLoading])
 
   useEffect(() => {
-    fetchListings()
+    if (fetchOnInit) fetchListings()
   }, [])
 
   const fetchListings = async (filterParams?: Record<string, string>) => {
@@ -72,8 +72,10 @@ export const useListings = () => {
       console.log('data', data)
 
       setListings(data)
+      return data as CoreListing[]
     } catch (error) {
       console.error('Failed to fetch listings:', error)
+      return []
     } finally {
       setIsLoading(false)
     }
@@ -99,7 +101,8 @@ export const useListings = () => {
 
       if (!response.ok) throw new Error()
 
-      fetchListings()
+      await fetchListings()
+      setStatusMessage('Listing added successfully')
     } catch (error) {
       console.error('Failed to add listing:', error)
     } finally {
@@ -123,6 +126,68 @@ export const useListings = () => {
       if (!response.ok) throw new Error()
 
       fetchListings()
+    } catch (error) {
+      console.error('Failed to update listing:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  /** Checks if listing is still open to buy. Useful as a pre-check before starting a trade. */
+  const _isListingStillOpen = async (listingID: number) => {
+    const newListings = await fetchListings()
+    const listing = newListings.find((listing) => listing.id === listingID)
+
+    if (!listing || listing.status !== 'listed' || listing.buyerAddress) return false
+
+    return true
+  }
+
+  /** Marks a trade as started. Updates status and buyerAddress. Make sure to check if listing is still open. */
+  const markTradeStarted = async (listingID: number, buyerAddress: string) => {
+    setIsLoading(true)
+    try {
+      // update status & buyerAddress
+      const updatedListing = {
+        id: listingID,
+        status: 'tradeOngoing',
+        buyerAddress,
+      }
+
+      const response = await fetch('/api/listings', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedListing),
+      })
+
+      if (!response.ok) throw new Error()
+    } catch (error) {
+      console.error('Failed to update listing:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const markTradeCompleted = async (listingID: number) => {
+    setIsLoading(true)
+    try {
+      // update status
+      const updatedListing = {
+        id: listingID,
+        status: 'completed',
+      }
+
+      const response = await fetch('/api/listings', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedListing),
+      })
+
+      if (!response.ok) throw new Error()
     } catch (error) {
       console.error('Failed to update listing:', error)
     } finally {
@@ -158,9 +223,11 @@ export const useListings = () => {
     listings,
     isLoading,
     statusMessage,
-    reloadListings: fetchListings,
+    fetchListings,
     addListing,
     deleteListing,
     updateListing,
+    markTradeStarted,
+    markTradeCompleted,
   }
 }
