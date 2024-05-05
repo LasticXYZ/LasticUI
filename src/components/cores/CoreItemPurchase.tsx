@@ -4,8 +4,11 @@ import Border from '@/components/border/Border'
 import PrimaryButton from '@/components/button/PrimaryButton'
 import { CoreListing } from '@/hooks/useListings'
 import { parseNativeTokenToHuman } from '@/utils'
+import { goToChainRoute } from '@/utils/common/chainPath'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
 import Image from 'next/image'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import React from 'react'
 
 interface CardProps {
@@ -17,9 +20,10 @@ interface CardProps {
 const Card: React.FC<CardProps> = ({ listing, currency, buttonAction }) => {
   const { activeAccount } = useInkathon()
   const { tokenDecimals } = useBalance(activeAccount?.address)
+  const pathname = usePathname()
   const beginStr = listing.begin.replace(/,/g, '')
-  const coreSize =
-    parseInt(listing.end.replace(/,/g, '')) - parseInt(listing.begin.replace(/,/g, ''))
+  const endStr = listing.end ? listing.end.replace(/,/g, '') : ''
+  const coreSize = endStr ? parseInt(endStr) - parseInt(listing.begin.replace(/,/g, '')) : 0
   const bulkSize = 1260 // TODO replace this by config value
   const price = parseNativeTokenToHuman({
     paid: listing.cost,
@@ -48,24 +52,32 @@ const Card: React.FC<CardProps> = ({ listing, currency, buttonAction }) => {
           </div>
         </div>
       </div>
-      <div className="mx-auto pt-4 flex flex-row items-center justify-between overflow-hidden">
-        <div className="px-5">
-          <Image src="/assets/Images/core1.png" alt="Lastic Logo" width={130} height={100} />
-        </div>
-        <div className="flex w-full text-lg flex-col px-5items-start justify-center">
-          <div className="flex flex-row p-1">
-            <p className="text-gray-12 px-2">
-              {' '}
-              Cost: {price} {currency}
-            </p>
-          </div>
 
-          <div>
-            <p className="text-gray-12 px-2">Mask: {listing.mask}</p>
+      <div className="mx-auto pt-4 flex flex-row items-center justify-between overflow-hidden">
+        <Link
+          href={goToChainRoute(pathname, `/core/${listing.coreNumber}/${beginStr}/${listing.mask}`)}
+        >
+          <div className="px-5">
+            <Image src="/assets/Images/core1.png" alt="Lastic Logo" width={130} height={100} />
           </div>
-          <div className="flex flex-row text-gray-12 p-1 ">
-            <p className="px-2">Begin: {listing.begin}</p>
-            <p className="px-2">End: {listing.end}</p>
+        </Link>
+        <div className="flex w-full text-lg flex-col px-5items-start justify-center">
+          <Link
+            href={goToChainRoute(
+              pathname,
+              `/core/${listing.coreNumber}/${beginStr}/${listing.mask}`,
+            )}
+          >
+            <div className="flex flex-col text-gray-12">
+              <p className="text-gray-12 px-2">Mask: {listing.mask}</p>
+              <p className="px-2">Begin: {listing.begin}</p>
+              <p className="px-2">End: {listing.end}</p>
+            </div>
+          </Link>
+          <div className="pt-5 pl-10">
+            <p className="font-bold text-2xl">
+              {price} {currency}
+            </p>
           </div>
           <div className="flex flex-col p-5 items-start justify-center">
             <PrimaryButton title="Purchase" onClick={buttonAction} />

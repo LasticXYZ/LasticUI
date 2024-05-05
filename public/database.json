@@ -44,21 +44,6 @@
       "buyerAddress": null,
       "lasticAddress": "5EUjh2hkQP67HajqcXx9hVVsdmg5QG6wUZPxA5Eje5RDPkCo",
       "timepoint": null
-    },
-    {
-      "id": 104,
-      "begin": "520100",
-      "coreNumber": 4,
-      "mask": "0x56d789f012d",
-      "network": "kusama",
-      "status": "listed",
-      "end": "520400",
-      "timestamp": "2024-04-03T10:15:00Z",
-      "cost": "300000000000",
-      "sellerAddress": "5HkKm5nF5DXBq4jL5E3U3qTmU7riX8JhtXPSZ6Duh2h1MSPu",
-      "buyerAddress": null,
-      "lasticAddress": "5EUjh2hkQP67HajqcXx9hVVsdmg5QG6wUZPxA5Eje5RDPkCo",
-      "timepoint": null
     }
   ]
 }

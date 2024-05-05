@@ -38,6 +38,8 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
     updateAllStates,
   } = useListingsTracker([core], 8000)
 
+  console.log(core)
+
   const test1 = '5Gza9nxUQiiErg5NotZ6FPePcjBEHhawoNL3sGqpmjrVhgeo'
   const test2 = '5Hp7jnPx2bBZDTvAWZ3udtxar1nhhbmGvnU7eg37P4kmKUev'
   const test3 = '5GByzRyonPJC4kLg8dRenszsZD25dFjdJRCVCyfLkQ52HDev'

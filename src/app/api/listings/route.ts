@@ -47,7 +47,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(listing)
   }
 
-  return NextResponse.json(database)
+  return NextResponse.json(database.listings)
 }
 
 /** Updates an existing listing. For example, used to update buyerAddress, status, or timepoint. */

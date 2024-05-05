@@ -1,7 +1,17 @@
+import { RegionDetail, RegionOwner, RegionsType } from '@/types'
+import { useInkathon } from '@poppyseed/lastic-sdk'
 import { useEffect, useState } from 'react'
 
-// TODO: Update this as necessary
+// resembles ActiveChain.name ;can and should obviously be separated in the future into multiple db tables
+export type networks =
+  | 'Polkadot Coretime'
+  | 'Kusama Coretime'
+  | 'Westend Coretime Chain'
+  | 'Rococo Coretime Testnet'
 
+type states = 'listed' | 'tradeOngoing' | 'completed' | 'cancelled'
+
+// TODO: Update this as necessary
 export interface CoreListing {
   // listing identifier
   id: number
@@ -12,9 +22,9 @@ export interface CoreListing {
   mask: string
 
   // details
-  end: string
-  status: 'listed' | 'tradeOngoing' | 'completed | cancelled'
-  network: 'polkadot' | 'kusama' | 'westend' | 'rococo' // can and should obviously be separated in the future into multiple db tables
+  end?: string
+  status: states
+  network: networks
   timestamp: string
   cost: string // native currency in planck
   sellerAddress: string // address of current owner
@@ -25,8 +35,18 @@ export interface CoreListing {
 }
 
 export const useListings = () => {
-  const [listings, setListings] = useState([])
+  const { api } = useInkathon()
+  const [listings, setListings] = useState<CoreListing[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const [statusMessage, setStatusMessage] = useState('')
+
+  useEffect(() => {
+    if (isLoading) {
+      setStatusMessage('Loading...')
+    } else {
+      setStatusMessage((prev) => (prev === 'Loading...' ? '' : prev))
+    }
+  }, [isLoading])
 
   useEffect(() => {
     fetchListings()
@@ -45,9 +65,11 @@ export const useListings = () => {
       const url = `/api/listings${queryParams ? '?' + queryParams : ''}`
 
       const response = await fetch(url)
+      if (!response.ok) throw new Error()
+
       const data = await response.json()
 
-      if (!response.ok) throw new Error()
+      console.log('data', data)
 
       setListings(data)
     } catch (error) {
@@ -60,12 +82,19 @@ export const useListings = () => {
   const addListing = async (listing: CoreListing) => {
     setIsLoading(true)
     try {
+      // get core end
+      const end = await _getCoreEnd(listing)
+      const enhancedListing = {
+        ...listing,
+        end,
+      }
+
       const response = await fetch('/api/listings', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(listing),
+        body: JSON.stringify(enhancedListing),
       })
 
       if (!response.ok) throw new Error()
@@ -101,5 +130,37 @@ export const useListings = () => {
     }
   }
 
-  return { listings, isLoading, updateListings: fetchListings }
+  const _getCoreEnd = async (core: CoreListing) => {
+    const entries = await api?.query.broker.regions.entries()
+    const regions: RegionsType | undefined = entries?.map(([key, value]) => {
+      const detail = key.toHuman() as RegionDetail
+      const owner = value.toHuman() as RegionOwner
+      return { detail, owner }
+    })
+
+    const filteredRegions = regions?.filter((region) => {
+      const regionDetail = region.detail[0]
+      regionDetail.begin = regionDetail.begin.replace(/,/g, '')
+
+      return (
+        regionDetail.core === core.coreNumber.toString() &&
+        regionDetail.begin === core.begin &&
+        regionDetail.mask === core.mask
+      )
+    })
+
+    if (filteredRegions && filteredRegions.length > 0) {
+      return filteredRegions[0].owner.end.replace(/,/g, '')
+    }
+  }
+
+  return {
+    listings,
+    isLoading,
+    statusMessage,
+    reloadListings: fetchListings,
+    addListing,
+    deleteListing,
+    updateListing,
+  }
 }

@@ -216,6 +216,7 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
                       <li> * Split it up</li>
                       <li> * Change block production frequency</li>
                       <li> * Assign it to a task</li>
+                      <li> * Sell it</li>
                     </ul>
                   </div>
 
@@ -223,7 +224,7 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
                     {/* Buttons*/}
                     <div className="text-2xl font-bold uppercase relative w-full max-w-xs mx-auto">
                       <div className="absolute right-0 top-0 transform translate-x-1/4 -translate-y-1/3 bg-red-4 border border-gray-8 px-2 py-1 text-xs font-semibold uppercase rounded-full shadow-lg z-10">
-                        Danger!
+                        Beta
                       </div>
                       <SecondaryButton
                         title="List Core for Sale"

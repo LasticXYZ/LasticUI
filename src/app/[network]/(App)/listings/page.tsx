@@ -3,10 +3,10 @@
 import Subtitle from '@/app/[network]/(App)/samesections/SubTitle'
 import CoreItemPurchase from '@/components/cores/CoreItemPurchase'
 import MultisigTradeModal from '@/components/multisig/MultisigTradeModal'
-import { CoreListing } from '@/hooks/useListings'
+import { CoreListing, useListings } from '@/hooks/useListings'
 import { FormControlLabel, Radio } from '@mui/material'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 const filterStyle = {
   color: '#FF6370',
@@ -27,27 +27,13 @@ type MultisigModal = {
 const ListingsPage = () => {
   const { activeAccount } = useInkathon()
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
-  const [cores, setCores] = useState<CoreListing[]>([])
+  const { listings } = useListings()
   const [filter, setFilter] = useState<string>('openListings')
 
   const [multisigModalData, setMultisigModalData] = useState<MultisigModal>({
     visible: false,
     core: null,
   })
-
-  useEffect(() => {
-    async function fetchCores() {
-      const response = await fetch('/database.json')
-      const data: Database = await response.json()
-      setCores(data.listings)
-    }
-
-    fetchCores().catch(console.error)
-  }, [])
-
-  const openMultisig = () => {
-    setMultisigModalData((old) => ({ ...old, visible: true }))
-  }
 
   const closeMultisig = () => {
     setMultisigModalData((old) => ({ ...old, visible: false }))
@@ -56,7 +42,7 @@ const ListingsPage = () => {
     setFilter((event.target as HTMLInputElement).value)
   }
 
-  const filteredCores = cores.filter((core) => {
+  const filteredCores = listings.filter((core) => {
     if (filter === 'openListings') {
       return core.buyerAddress === '' || !core.buyerAddress
     } else if (filter === 'yourBuys') {

@@ -162,6 +162,10 @@ export const useListingsTracker = (coreListings: CoreListing[], intervalMs?: num
       ],
       activeChain,
     )
+    console.log('buyer', core.buyerAddress || activeAccount?.address || '')
+    console.log('seller', core.sellerAddress)
+    console.log('lastic', core.lasticAddress || LASTIC_ADDRESS)
+    console.log('multisigAddress', multisigAddress)
 
     const { data: balance } = (await api?.query.system.account(multisigAddress)) as any
     const cleanedBalance = balance?.free.toString().replace(/,/g, '')

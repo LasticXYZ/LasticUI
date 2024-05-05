@@ -39,8 +39,14 @@ export const calculateMultisigAddress = (
   signatories: string[],
   activeChain?: SubstrateChain,
 ) => {
-  if (threshold < 2 || signatories.length < 2) return
-  if (!addressesValid(signatories)) return
+  if (threshold < 2 || signatories.length < 2) {
+    console.error('Threshold or signatories are too low')
+    return
+  }
+  if (!addressesValid(signatories)) {
+    console.error('Invalid signatories')
+    return
+  }
   // Address as a byte array.
   const multisigPubKey = createKeyMulti(signatories, threshold)
 
