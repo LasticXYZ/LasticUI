@@ -123,7 +123,10 @@ export const useListingsTracker = (coreListings: CoreListing[], intervalMs?: num
         state = { ...state, step3: true }
       } else if (multisigCalls && multisigCalls.length > 1) {
         // TODO support this case
-        console.error('More than one multisig call opened for the same multisig address')
+        console.error(
+          'More than one multisig call opened for the same multisig address. Trying the first.',
+        )
+        state = { ...state, step3: true }
       }
     }
 

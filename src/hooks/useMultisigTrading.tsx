@@ -65,7 +65,8 @@ export const useMultisigTrading = ({
     if (openMultisigCalls && openMultisigCalls?.length === 1) {
       when = openMultisigCalls[0].when
     } else if (openMultisigCalls && openMultisigCalls?.length > 1) {
-      // TODO find the right open multisig call to execute. Suggestion: Use timepoint stored in DB.
+      // TODO find the right open multisig call to execute. Suggestion: Use timepoint stored in DB. For now just pick and try the first.
+      when = openMultisigCalls[0].when
     }
 
     // create extrinsics
@@ -100,7 +101,10 @@ export const useMultisigTrading = ({
             console.log('Tx hash: ' + result.txHash)
 
             // update DB
-            if (when && onTradeCompleted) onTradeCompleted(core.id)
+            if (when && onTradeCompleted) {
+              console.log('Trade completed')
+              onTradeCompleted(core.id)
+            }
 
             setTxStatusMessage(`🧊 Multisig call included in block ${result.status.asInBlock}`)
           } else if (result.status.isFinalized) {

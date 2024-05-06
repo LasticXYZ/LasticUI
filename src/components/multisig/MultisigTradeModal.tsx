@@ -38,7 +38,7 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
     listingsState,
     updateAllStates,
   } = useListingsTracker([core], 8000)
-  const { markTradeStarted } = useListings(false)
+  const { markTradeStarted, markTradeCompleted } = useListings(false)
 
   const signatoriesWithLabel = [
     {
@@ -61,7 +61,11 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
     multisigAddress,
     isLoading,
     txStatusMessage,
-  } = useMultisigTrading({ core, onTradeStarted: markTradeStarted })
+  } = useMultisigTrading({
+    core,
+    onTradeStarted: markTradeStarted,
+    onTradeCompleted: markTradeCompleted,
+  })
 
   const updateMethodAndButton = () => {
     let buttonFunction = initiateOrExecuteMultisigTradeCall
