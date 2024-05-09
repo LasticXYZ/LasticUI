@@ -5,7 +5,7 @@ import CoreItemPurchase from '@/components/cores/CoreItemPurchase'
 import MultisigTradeModal from '@/components/multisig/MultisigTradeModal'
 import { CoreListing, useListings } from '@/hooks/useListings'
 import { useListingsTracker } from '@/hooks/useListingsTracker'
-import { FormControlLabel, Radio } from '@mui/material'
+import { FormControlLabel, Radio, Switch } from '@mui/material'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
 import { useState } from 'react'
 
@@ -32,6 +32,7 @@ const ListingsPage = () => {
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
   const { listings, fetchListings } = useListings()
   const [filter, setFilter] = useState<string>('openListings')
+  const [includeCompleted, setIncludeCompleted] = useState<boolean>(true)
 
   const {
     isLoading: isLoadingStateUpdate,
@@ -51,7 +52,12 @@ const ListingsPage = () => {
     setFilter((event.target as HTMLInputElement).value)
   }
 
-  const filteredCores = listings.filter((core) => {
+  const filteredByCompleted = listings.filter((core) => {
+    if (!includeCompleted) return core.status !== 'completed'
+    else return true
+  })
+
+  const filteredCores = filteredByCompleted.filter((core) => {
     if (filter === 'openListings') {
       return core.buyerAddress === '' || !core.buyerAddress
     } else if (filter === 'yourBuys') {
@@ -104,6 +110,15 @@ const ListingsPage = () => {
               label="Ongoing Trades (Lastic only)"
             />
           )}
+          <FormControlLabel
+            control={
+              <Switch
+                checked={includeCompleted}
+                onChange={() => setIncludeCompleted(!includeCompleted)}
+              />
+            }
+            label="Include Completed"
+          />
         </div>
       </div>
 
