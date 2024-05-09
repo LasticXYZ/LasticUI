@@ -73,7 +73,7 @@
       "cost": "4000000000000",
       "sellerAddress": "5GxX2eaMM2mboKrZe3HDCDj9dRad7uzZnpRfj3StWdTAsG16",
       "network": "Rococo Coretime Testnet",
-      "status": "tradeOngoing",
+      "status": "completed",
       "timestamp": "2024-05-09T11:31:59.154Z",
       "end": "131730",
       "buyerAddress": "5Gza9nxUQiiErg5NotZ6FPePcjBEHhawoNL3sGqpmjrVhgeo"

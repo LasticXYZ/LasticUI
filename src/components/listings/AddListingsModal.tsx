@@ -6,6 +6,8 @@ import { Alert } from '@mui/material'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
 import { FC, useState } from 'react'
 
+const LASTIC_ADDRESS = process.env.NEXT_PUBLIC_LASTIC_ADDRESS
+
 interface ListingsModalProps {
   isOpen: boolean
   onClose: () => void
@@ -24,11 +26,7 @@ const ListingsModal: FC<ListingsModalProps> = ({ isOpen, onClose, regionId }) =>
 
     const network = activeChain?.name as networks
 
-    // get core end
-
-    const coreData: CoreListing = {
-      id: Date.now(), // Temporary unique ID, replace as needed
-
+    const coreData: Omit<CoreListing, 'id'> = {
       coreNumber: Number(regionId.core),
       mask: regionId.mask,
       begin: regionId.begin.replace(/,/g, ''),
@@ -37,7 +35,6 @@ const ListingsModal: FC<ListingsModalProps> = ({ isOpen, onClose, regionId }) =>
       sellerAddress: activeAccount.address,
       network,
       status: 'listed',
-      timestamp: new Date().toISOString(),
     }
 
     addListing(coreData).then(() => {
@@ -53,8 +50,13 @@ const ListingsModal: FC<ListingsModalProps> = ({ isOpen, onClose, regionId }) =>
     <Modal isOpen={isOpen} onClose={onClose} title={`List Core Nb: ${regionId.core}`}>
       <div className="flex flex-col p-4">
         <div className="flex flex-col mb-4">
-          <label htmlFor="newOwner" className="text-lg mb-2">
-            For the price of:
+          <Alert severity="warning">
+            This feature is currently a Proof of Concept. Proceed at your own risk and double check
+            every tx.
+          </Alert>
+
+          <label htmlFor="newOwner" className="text-lg mb-2 mt-5">
+            List for the price of:
           </label>
 
           <div className="flex flex-row items-center w-full">
@@ -67,11 +69,6 @@ const ListingsModal: FC<ListingsModalProps> = ({ isOpen, onClose, regionId }) =>
             />
             <div className="ml-3 text-lg">{tokenSymbol}</div>
           </div>
-
-          <Alert severity="warning">
-            This feature is currently a Proof of Concept. Proceed at your own risk and double check
-            every tx.
-          </Alert>
 
           <div className="flex justify-center pt-5">
             <PrimaryButton

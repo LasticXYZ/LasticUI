@@ -7,7 +7,7 @@ import { CoreListing, useListings } from '@/hooks/useListings'
 import { useListingsTracker } from '@/hooks/useListingsTracker'
 import { FormControlLabel, Radio, Switch } from '@mui/material'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const LASTIC_ADDRESS = process.env.NEXT_PUBLIC_LASTIC_ADDRESS || ''
 
@@ -33,6 +33,10 @@ const ListingsPage = () => {
   const { listings, fetchListings } = useListings()
   const [filter, setFilter] = useState<string>('openListings')
   const [includeCompleted, setIncludeCompleted] = useState<boolean>(true)
+
+  useEffect(() => {
+    console.log(listings)
+  }, [listings])
 
   const {
     isLoading: isLoadingStateUpdate,

@@ -2,6 +2,8 @@ import { RegionDetail, RegionOwner, RegionsType } from '@/types'
 import { useInkathon } from '@poppyseed/lastic-sdk'
 import { useEffect, useState } from 'react'
 
+const LASTIC_ADDRESS = process.env.NEXT_PUBLIC_LASTIC_ADDRESS
+
 // resembles ActiveChain.name ;can and should obviously be separated in the future into multiple db tables
 export type networks =
   | 'Polkadot Coretime'
@@ -11,10 +13,9 @@ export type networks =
 
 type states = 'listed' | 'tradeOngoing' | 'completed' | 'cancelled'
 
-// TODO: Update this as necessary
 export interface CoreListing {
   // listing identifier
-  id: number
+  id: number // autoincremented
 
   // core identifiers
   begin: string
@@ -25,13 +26,14 @@ export interface CoreListing {
   end?: string
   status: states
   network: networks
-  timestamp: string
+  timestamp?: string
   cost: string // native currency in planck
   sellerAddress: string // address of current owner
   buyerAddress?: string | null // address, is added at buy init
   lasticAddress?: string | null // address, is added at buy init
 
-  timepoint?: { height: number; index: number } // is added at multisig init. Used to identify right opened multisig if multiple are opened.
+  height?: number // Used to identify right opened multisig if multiple are opened.
+  index?: number // Used to identify right opened multisig if multiple are opened.
 }
 
 export const useListings = (fetchOnInit = true) => {
@@ -49,7 +51,12 @@ export const useListings = (fetchOnInit = true) => {
   }, [isLoading])
 
   useEffect(() => {
-    if (fetchOnInit) fetchListings()
+    const fetchData = async () => {
+      await fetch('/api/create-listings-table')
+      if (fetchOnInit) await fetchListings()
+    }
+
+    fetchData()
   }, [])
 
   const fetchListings = async (filterParams?: Record<string, string>) => {
@@ -79,7 +86,7 @@ export const useListings = (fetchOnInit = true) => {
     }
   }
 
-  const addListing = async (listing: CoreListing) => {
+  const addListing = async (listing: Omit<CoreListing, 'id'>) => {
     setIsLoading(true)
     try {
       // get core end
@@ -150,6 +157,7 @@ export const useListings = (fetchOnInit = true) => {
         id: listingID,
         status: 'tradeOngoing',
         buyerAddress,
+        lasticAddress: LASTIC_ADDRESS,
       }
 
       const response = await fetch('/api/listings', {
@@ -193,7 +201,7 @@ export const useListings = (fetchOnInit = true) => {
     }
   }
 
-  const _getCoreEnd = async (core: CoreListing) => {
+  const _getCoreEnd = async (core: Omit<CoreListing, 'id'>) => {
     const entries = await api?.query.broker.regions.entries()
     const regions: RegionsType | undefined = entries?.map(([key, value]) => {
       const detail = key.toHuman() as RegionDetail
