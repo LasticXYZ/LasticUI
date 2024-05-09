@@ -2,7 +2,7 @@ import SecondaryButton from '@/components/button/SecondaryButton'
 import Modal from '@/components/modal/Modal'
 import LoadingSpinner from '@/components/multisig/Spinner'
 import { CoreListing, useListings } from '@/hooks/useListings'
-import { useListingsTracker } from '@/hooks/useListingsTracker'
+import { ListingsTracker } from '@/hooks/useListingsTracker'
 import { useMultisigTrading } from '@/hooks/useMultisigTrading'
 import { ArrowPathIcon } from '@heroicons/react/24/outline'
 import { Checkbox } from '@mui/material'
@@ -23,7 +23,10 @@ export interface MultisigTradeModalProps {
   isOpen: boolean
   onClose: () => void
   core: CoreListing
+  listingsState: ListingsTracker
   onUpdateListingDB?: () => Promise<any>
+  onUpdateListingState?: () => Promise<void>
+  isLoadingStateUpdate: boolean
 }
 
 const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
@@ -31,13 +34,11 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
   onClose,
   core,
   onUpdateListingDB,
+  listingsState,
+  onUpdateListingState: updateAllStates,
+  isLoadingStateUpdate,
 }) => {
   const { api, activeAccount } = useInkathon()
-  const {
-    isLoading: isLoadingStateUpdate,
-    listingsState,
-    updateAllStates,
-  } = useListingsTracker([core], 8000)
   const { markTradeStarted, markTradeCompleted } = useListings(false)
 
   const signatoriesWithLabel = [
@@ -63,8 +64,10 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
     txStatusMessage,
   } = useMultisigTrading({
     core,
-    onTradeStarted: markTradeStarted,
-    onTradeCompleted: markTradeCompleted,
+    onTradeStarted: (listingID, buyerAddress) =>
+      markTradeStarted(listingID, buyerAddress).then(() => onUpdateListingDB?.()),
+    onTradeCompleted: (listingID) =>
+      markTradeCompleted(listingID).then(() => onUpdateListingDB?.()),
   })
 
   const updateMethodAndButton = () => {
@@ -89,22 +92,17 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
     ) {
       // step 1 interaction
       if (!listingsState[core.id].step1) {
-        buttonFunction = async () => {
-          await sendFundsToMultisig(core)
-          if (onUpdateListingDB) await onUpdateListingDB()
-        }
+        buttonFunction = async () => await sendFundsToMultisig(core)
         buttonEnabled = true
       }
       // finisher interaction
       else if (
         listingsState[core.id].step1 &&
         listingsState[core.id].step2 &&
-        listingsState[core.id].step3
+        listingsState[core.id].step3 &&
+        !listingsState[core.id].step4
       ) {
-        buttonFunction = async () => {
-          await initiateOrExecuteMultisigTradeCall()
-          if (onUpdateListingDB) await onUpdateListingDB()
-        }
+        buttonFunction = async () => await initiateOrExecuteMultisigTradeCall()
         buttonEnabled = true
       } else buttonEnabled = false
     }
@@ -116,15 +114,12 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
       if (
         listingsState[core.id].step1 &&
         listingsState[core.id].step2 &&
-        listingsState[core.id].step3
+        listingsState[core.id].step3 &&
+        !listingsState[core.id].step4
       ) {
-        buttonFunction = async () => {
-          await initiateOrExecuteMultisigTradeCall()
-          await onUpdateListingDB?.()
-        }
+        buttonFunction = async () => await initiateOrExecuteMultisigTradeCall()
         buttonEnabled = true
       } else {
-        console.log('not all steps done')
         buttonEnabled = false
       }
     }
@@ -185,23 +180,27 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
           </div>
         </div>
 
-        <div className="self-center">
+        <div
+          hidden={signatoriesWithLabel[0].address === signatoriesWithLabel[1].address}
+          className="self-center"
+        >
           {signatoriesWithLabel.map(({ address, label }) => (
             <div key={address + label} className="flex items-center gap-3 text-xs">
               <p className="w-32 text-end">
                 {label} {activeAccount?.address === address && '(You)'}:
               </p>
               <div className="flex items-center gap-1 text-gray-400">
-                {/* <AddressMini value={address} withSidebar={false} /> */}
                 <p className="flex-1">{address}</p>
               </div>
             </div>
           ))}
+
           <div className="flex items-center gap-3 text-xs">
             <p className="w-32 text-end">Multisig Address:</p>
             <p className="text-gray-400 flex">{multisigAddress}</p>
           </div>
         </div>
+
         <div className="flex items-baseline gap-2 self-center">
           <p className="font-bold text-center">{listingsState[core.id].statusMessage}</p>
           <LoadingSpinner isLoading={isLoadingStateUpdate} />

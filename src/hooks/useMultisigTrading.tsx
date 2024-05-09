@@ -171,17 +171,16 @@ export const useMultisigTrading = ({
         console.log('Tx hash: ' + result.txHash)
 
         // update DB
-        if (onTradeStarted) onTradeStarted(core.id, activeAccount!.address)
+        if (onTradeStarted) {
+          onTradeStarted(core.id, activeAccount!.address)
+          console.log('Trade marked as started in DB')
+        }
 
         setTxStatusMessage(`🧊 Funds sent and tx included in block ${result.status.asInBlock}`)
       } else if (result.status.isFinalized) {
         setTxStatusMessage(`📜 Funds sent and tx finalized ${result.status.asFinalized}`)
         // better update DB again to make sure to have correct values
         if (onTradeStarted) onTradeStarted(core.id, activeAccount!.address)
-
-        // TODO update DB
-        // core.status = 'tradeOngoing'
-        // core.buyerAddress = activeAccount!.address
       }
     })
   }

@@ -4,6 +4,7 @@ import Subtitle from '@/app/[network]/(App)/samesections/SubTitle'
 import CoreItemPurchase from '@/components/cores/CoreItemPurchase'
 import MultisigTradeModal from '@/components/multisig/MultisigTradeModal'
 import { CoreListing, useListings } from '@/hooks/useListings'
+import { useListingsTracker } from '@/hooks/useListingsTracker'
 import { FormControlLabel, Radio } from '@mui/material'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
 import { useState } from 'react'
@@ -29,6 +30,12 @@ const ListingsPage = () => {
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
   const { listings, fetchListings } = useListings()
   const [filter, setFilter] = useState<string>('openListings')
+
+  const {
+    isLoading: isLoadingStateUpdate,
+    listingsState,
+    updateAllStates,
+  } = useListingsTracker(listings, 8000)
 
   const [multisigModalData, setMultisigModalData] = useState<MultisigModal>({
     visible: false,
@@ -89,6 +96,9 @@ const ListingsPage = () => {
           onClose={closeMultisig}
           core={multisigModalData.core}
           onUpdateListingDB={fetchListings}
+          listingsState={listingsState}
+          onUpdateListingState={updateAllStates}
+          isLoadingStateUpdate={isLoadingStateUpdate}
         />
       )}
 

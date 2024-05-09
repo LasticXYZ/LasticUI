@@ -69,7 +69,8 @@ const ListingsModal: FC<ListingsModalProps> = ({ isOpen, onClose, regionId }) =>
           </div>
 
           <Alert severity="warning">
-            This feature is currently in Beta. Proceed at your own risk.
+            This feature is currently a Proof of Concept. Proceed at your own risk and double check
+            every tx.
           </Alert>
 
           <div className="flex justify-center pt-5">

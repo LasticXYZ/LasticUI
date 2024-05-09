@@ -27,7 +27,7 @@ const listingStateInit = {
   statusMessage: '',
 }
 
-type ListingsTracker = Record<ListingID, ListingState>
+export type ListingsTracker = Record<ListingID, ListingState>
 
 export const useListingsTracker = (coreListings: CoreListing[], intervalMs?: number) => {
   const { api, activeAccount, activeChain, activeRelayChain } = useInkathon()
@@ -52,7 +52,7 @@ export const useListingsTracker = (coreListings: CoreListing[], intervalMs?: num
       }, intervalMs)
       return () => clearInterval(interval)
     }
-  }, [activeAccount])
+  }, [activeAccount, coreListings])
 
   /** Updates the state of all listings */
   const updateAllStates = async () => {
@@ -218,9 +218,6 @@ export const useListingsTracker = (coreListings: CoreListing[], intervalMs?: num
         regionDetail.mask === core.mask
       )
     })
-    console.log('filteredRegions', filteredRegions)
-
-    console.log('multisigAddress', multisigAddress)
 
     // check if the multisig address has the core
     return filteredRegions?.some((region) => region.owner.owner === multisigAddress)
@@ -233,7 +230,7 @@ const statusMessagesBuyerView = {
   step1: '💥 Click below to initiate the trade and send the funds to the multisig',
   step2: '⏳ Wait for the seller to send the core to the multisig address',
   step3: '⏳ Wait for the seller to open the multisig trade call',
-  step4: '⏳ Wait for Lastic to verify and finish the multisig call',
+  step4: '⏳ Wait for Lastic to verify and finish the multisig call. Or do it yourself.',
 }
 
 const statusMessagesSellerView = {
