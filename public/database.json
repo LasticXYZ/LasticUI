@@ -60,7 +60,7 @@
       "cost": "1220000000000",
       "sellerAddress": "5Gza9nxUQiiErg5NotZ6FPePcjBEHhawoNL3sGqpmjrVhgeo",
       "network": "Rococo Coretime Testnet",
-      "status": "tradeOngoing",
+      "status": "completed",
       "timestamp": "2024-05-09T11:00:25.280Z",
       "end": "119130",
       "buyerAddress": "5HDrZNTkL3sXAGn6DKmvV6rw2NHrNGn51Ee89cLMcYv8tuKZ"
@@ -77,6 +77,18 @@
       "timestamp": "2024-05-09T11:31:59.154Z",
       "end": "131730",
       "buyerAddress": "5Gza9nxUQiiErg5NotZ6FPePcjBEHhawoNL3sGqpmjrVhgeo"
+    },
+    {
+      "id": 1715258164170,
+      "coreNumber": 69,
+      "mask": "0xffffffffffffffffffff",
+      "begin": "117870",
+      "cost": "3110000000000",
+      "sellerAddress": "5HDrZNTkL3sXAGn6DKmvV6rw2NHrNGn51Ee89cLMcYv8tuKZ",
+      "network": "Rococo Coretime Testnet",
+      "status": "listed",
+      "timestamp": "2024-05-09T12:36:04.170Z",
+      "end": "119130"
     }
   ]
 }

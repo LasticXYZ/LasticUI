@@ -69,8 +69,6 @@ export const useListings = (fetchOnInit = true) => {
 
       const data = await response.json()
 
-      console.log('Fetching from DB', data)
-
       setListings(data)
       return data as CoreListing[]
     } catch (error) {

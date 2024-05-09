@@ -9,6 +9,8 @@ import { FormControlLabel, Radio } from '@mui/material'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
 import { useState } from 'react'
 
+const LASTIC_ADDRESS = process.env.NEXT_PUBLIC_LASTIC_ADDRESS || ''
+
 const filterStyle = {
   color: '#FF6370',
   '&.Mui-checked': {
@@ -56,6 +58,8 @@ const ListingsPage = () => {
       return core.buyerAddress === activeAccount?.address
     } else if (filter === 'yourSales') {
       return core.sellerAddress === activeAccount?.address
+    } else if (filter === 'ongoingTrades') {
+      return core.status === 'tradeOngoing'
     }
     return false
   })
@@ -87,6 +91,19 @@ const ListingsPage = () => {
             }
             label="Your Sales"
           />
+          {activeAccount?.address === LASTIC_ADDRESS && (
+            <FormControlLabel
+              value="ongoingTrades"
+              control={
+                <Radio
+                  checked={filter === 'ongoingTrades'}
+                  onChange={handleChange}
+                  sx={filterStyle}
+                />
+              }
+              label="Ongoing Trades (Lastic only)"
+            />
+          )}
         </div>
       </div>
 
@@ -109,6 +126,7 @@ const ListingsPage = () => {
             <div key={core.id} className="">
               <CoreItemPurchase
                 listing={core}
+                state={listingsState[core.id]}
                 currency={tokenSymbol}
                 buttonAction={() => {
                   setMultisigModalData({ visible: true, core })

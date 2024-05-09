@@ -11,7 +11,7 @@ const THRESHOLD = 2
 
 type ListingID = number
 
-interface ListingState {
+export interface ListingState {
   step1: boolean
   step2: boolean
   step3: boolean

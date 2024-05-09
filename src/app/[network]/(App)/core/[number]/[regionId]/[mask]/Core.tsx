@@ -9,6 +9,7 @@ import ListingsModal from '@/components/listings/AddListingsModal'
 import TimelineComponent from '@/components/timelineComp/TimelineComp'
 import TimelineUtilizeCore from '@/components/timelineComp/TimelineUtilizeCore'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
+import { useListings } from '@/hooks/useListings'
 import { parseNativeTokenToHuman } from '@/utils/account/token'
 import {
   calculateCurrentPrice,
@@ -39,6 +40,15 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
   const { activeAccount, relayApi, activeChain, api } = useInkathon()
   let { tokenSymbol, tokenDecimals } = useBalance(activeAccount?.address, true)
   const region = useQuerySpecificRegion({ api, coreNb, regionId, mask })
+  const { listings } = useListings()
+  const isCoreListed = listings.some(
+    (listing) =>
+      listing.coreNumber === coreNb &&
+      listing.mask === mask &&
+      listing.begin === region?.detail[0].begin.replace(/,/g, '') &&
+      listing.status !== 'completed' &&
+      listing.status !== 'cancelled',
+  )
 
   const currentBlockNumber = useCurrentBlockNumber(api)
 
@@ -222,16 +232,19 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
 
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 py-10">
                     {/* Buttons*/}
-                    <div className="text-2xl font-bold uppercase relative w-full max-w-xs mx-auto">
-                      <div className="absolute right-0 top-0 transform translate-x-1/4 -translate-y-1/3 bg-red-4 border border-gray-8 px-2 py-1 text-xs font-semibold uppercase rounded-full shadow-lg z-10">
-                        Beta
+                    {!isCoreListed && (
+                      <div className="text-2xl font-bold uppercase relative w-full max-w-xs mx-auto">
+                        <div className="absolute right-0 top-0 transform translate-x-1/4 -translate-y-1/3 bg-red-4 border border-gray-8 px-2 py-1 text-xs font-semibold uppercase rounded-full shadow-lg z-10">
+                          Beta
+                        </div>
+
+                        <SecondaryButton
+                          title="List Core for Sale"
+                          onClick={() => setIsListingsModalOpen(true)}
+                          className="w-full"
+                        />
                       </div>
-                      <SecondaryButton
-                        title="List Core for Sale"
-                        onClick={() => setIsListingsModalOpen(true)}
-                        className="w-full"
-                      />
-                    </div>
+                    )}
 
                     <div className="text-2xl font-bold font-unbounded uppercase text-gray-21">
                       <SecondaryButton

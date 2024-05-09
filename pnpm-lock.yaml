@@ -116,8 +116,8 @@ devDependencies:
     specifier: ^12.6.2
     version: 12.6.2(@polkadot/util@12.6.2)
   '@poppyseed/lastic-sdk':
-    specifier: ^0.2.7
-    version: 0.2.7(@nightlylabs/wallet-selector-polkadot@0.2.5)(@polkadot/api-contract@11.0.3)(@polkadot/api@11.0.3)(@polkadot/extension-inject@0.47.4)(@polkadot/types@11.0.3)(@polkadot/util-crypto@12.6.2)(@polkadot/util@12.6.2)(postcss@8.4.38)(react-dom@18.3.1)(react@18.3.1)
+    specifier: ^0.2.8
+    version: 0.2.8(@nightlylabs/wallet-selector-polkadot@0.2.5)(@polkadot/api-contract@11.0.3)(@polkadot/api@11.0.3)(@polkadot/extension-inject@0.47.4)(@polkadot/types@11.0.3)(@polkadot/util-crypto@12.6.2)(@polkadot/util@12.6.2)(postcss@8.4.38)(react-dom@18.3.1)(react@18.3.1)
   '@types/react':
     specifier: 18.2.25
     version: 18.2.25
@@ -4373,16 +4373,16 @@ packages:
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
     dev: false
 
-  /@poppyseed/lastic-sdk@0.2.7(@nightlylabs/wallet-selector-polkadot@0.2.5)(@polkadot/api-contract@11.0.3)(@polkadot/api@11.0.3)(@polkadot/extension-inject@0.47.4)(@polkadot/types@11.0.3)(@polkadot/util-crypto@12.6.2)(@polkadot/util@12.6.2)(postcss@8.4.38)(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-f/S9a28aJADb8UKEVKD0f5Cue94DDrRbonXLh8KrYimUwJAs6yaSzpEMgqJ/q9qNawh5ShIJGfRbY+5XKeeWMw==}
+  /@poppyseed/lastic-sdk@0.2.8(@nightlylabs/wallet-selector-polkadot@0.2.5)(@polkadot/api-contract@11.0.3)(@polkadot/api@11.0.3)(@polkadot/extension-inject@0.47.4)(@polkadot/types@11.0.3)(@polkadot/util-crypto@12.6.2)(@polkadot/util@12.6.2)(postcss@8.4.38)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-Yltf104uzUKmT4WW/se7ooOBH+WeMaytxTev55a25OpML3l4tBYH4HkJrddBqdLded1lGOdooQQ4Ngx68WQGpg==}
     engines: {node: '>=18', pnpm: '8'}
     peerDependencies:
       '@nightlylabs/wallet-selector-polkadot': '>=0.1.10'
-      '@polkadot/api': '>=10'
-      '@polkadot/api-contract': '>=10'
+      '@polkadot/api': '>=11'
+      '@polkadot/api-contract': '>=11'
       '@polkadot/extension-inject': '>=0.46'
-      '@polkadot/types': '>=10'
-      '@polkadot/util': '>=10'
+      '@polkadot/types': '>=11'
+      '@polkadot/util': '>=11'
       '@polkadot/util-crypto': '>=10'
       react: '>=18'
       react-dom: '>=18'

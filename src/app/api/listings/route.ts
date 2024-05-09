@@ -10,6 +10,8 @@ interface Database {
 
 /** Adds a new listing to the database */
 export async function POST(req: NextRequest) {
+  // Checks TODO: listing already exists? Sender owns core? etc.
+
   const data: CoreListing = await req.json()
   console.log(data)
 
@@ -52,6 +54,8 @@ export async function GET(req: NextRequest) {
 
 /** Updates an existing listing. For example, used to update buyerAddress, status, or timepoint. */
 export async function PATCH(req: NextRequest) {
+  // checks TODO
+
   const data: CoreListing = await req.json()
   console.log(data)
 
