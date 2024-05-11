@@ -6,7 +6,7 @@ import { ListingsTracker } from '@/hooks/useListingsTracker'
 import { useMultisigTrading } from '@/hooks/useMultisigTrading'
 import { ArrowPathIcon } from '@heroicons/react/24/outline'
 import { Checkbox } from '@mui/material'
-import { useInkathon } from '@poppyseed/lastic-sdk'
+import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
 import { FC } from 'react'
 
 const LASTIC_ADDRESS = process.env.NEXT_PUBLIC_LASTIC_ADDRESS || '' // used for new multisigs and if db has no other address defined
@@ -130,6 +130,7 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
     return { buttonFunction, buttonEnabled }
   }
   const { buttonFunction, buttonEnabled } = updateMethodAndButton()
+  const { tokenDecimals, tokenSymbol } = useBalance()
 
   if (!isOpen || !api) {
     return null
@@ -178,6 +179,12 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
               </p>
             </div>
           </div>
+        </div>
+
+        <div>
+          <p>
+            Price: {Number(core.cost) / 10 ** tokenDecimals} {tokenSymbol}
+          </p>
         </div>
 
         <div
