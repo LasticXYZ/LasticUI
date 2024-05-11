@@ -81,7 +81,9 @@ const ListingsPage = () => {
       <div className="flex flex-col flex-wrap gap-3 items-center">
         <Subtitle subtitle="Listed Cores" />
 
-        <div className="flex flex-row flex-wrap">
+        <div
+          className={`flex flex-row flex-wrap ${filter === 'openListings' || filter === 'ongoingTrades' ? 'pb-20' : ''}`}
+        >
           <FormControlLabel
             value="openListings"
             control={
@@ -131,9 +133,8 @@ const ListingsPage = () => {
             </>
           )}
         </div>
-        <div className="mb-8">
+        <div className="mb-8" hidden={filter === 'openListings' || filter === 'ongoingTrades'}>
           <FormControlLabel
-            hidden={filter === 'openListings'}
             control={
               <Switch
                 checked={includeCompleted}
