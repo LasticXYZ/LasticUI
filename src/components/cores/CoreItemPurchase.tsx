@@ -105,7 +105,7 @@ const Card: React.FC<CardProps> = ({ listing, currency, buttonAction, state }) =
             </p>
           </div>
           <div className="flex flex-col p-5 items-start justify-center">
-            <PrimaryButton title="Purchase" onClick={buttonAction} />
+            <PrimaryButton title={!state?.step1 ? 'Purchase' : 'Info'} onClick={buttonAction} />
           </div>
         </div>
       </div>

@@ -63,13 +63,15 @@ const ListingsPage = () => {
 
   const filteredCores = filteredByCompleted.filter((core) => {
     if (filter === 'openListings') {
-      return core.buyerAddress === '' || !core.buyerAddress
+      return (core.buyerAddress === '' || !core.buyerAddress) && core.status === 'listed'
     } else if (filter === 'yourBuys') {
       return core.buyerAddress === activeAccount?.address
     } else if (filter === 'yourSales') {
       return core.sellerAddress === activeAccount?.address
     } else if (filter === 'ongoingTrades') {
       return core.status === 'tradeOngoing'
+    } else if (filter === 'completedTrades') {
+      return core.status === 'completed'
     }
     return false
   })
@@ -102,17 +104,30 @@ const ListingsPage = () => {
             label="Your Sales"
           />
           {activeAccount?.address === LASTIC_ADDRESS && (
-            <FormControlLabel
-              value="ongoingTrades"
-              control={
-                <Radio
-                  checked={filter === 'ongoingTrades'}
-                  onChange={handleChange}
-                  sx={filterStyle}
-                />
-              }
-              label="Ongoing Trades (Lastic only)"
-            />
+            <>
+              <FormControlLabel
+                value="ongoingTrades"
+                control={
+                  <Radio
+                    checked={filter === 'ongoingTrades'}
+                    onChange={handleChange}
+                    sx={filterStyle}
+                  />
+                }
+                label="Ongoing Trades (Lastic only)"
+              />
+              <FormControlLabel
+                value="completedTrades"
+                control={
+                  <Radio
+                    checked={filter === 'completed'}
+                    onChange={handleChange}
+                    sx={filterStyle}
+                  />
+                }
+                label="Completed Trades (Lastic only)"
+              />
+            </>
           )}
           <FormControlLabel
             control={
