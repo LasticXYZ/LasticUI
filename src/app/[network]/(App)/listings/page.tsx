@@ -81,7 +81,7 @@ const ListingsPage = () => {
       <div className="flex flex-col flex-wrap gap-3 items-center">
         <Subtitle subtitle="Listed Cores" />
 
-        <div className="flex flex-row flex-wrap mb-8">
+        <div className="flex flex-row flex-wrap">
           <FormControlLabel
             value="openListings"
             control={
@@ -103,6 +103,7 @@ const ListingsPage = () => {
             }
             label="Your Sales"
           />
+
           {activeAccount?.address === LASTIC_ADDRESS && (
             <>
               <FormControlLabel
@@ -120,7 +121,7 @@ const ListingsPage = () => {
                 value="completedTrades"
                 control={
                   <Radio
-                    checked={filter === 'completed'}
+                    checked={filter === 'completedTrades'}
                     onChange={handleChange}
                     sx={filterStyle}
                   />
@@ -129,7 +130,10 @@ const ListingsPage = () => {
               />
             </>
           )}
+        </div>
+        <div className="mb-8">
           <FormControlLabel
+            hidden={filter === 'openListings'}
             control={
               <Switch
                 checked={includeCompleted}
