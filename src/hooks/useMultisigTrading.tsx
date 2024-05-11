@@ -30,6 +30,7 @@ interface MultisigTradingProps {
   onTradeCompleted?: (listingsID: number) => Promise<void>
 }
 
+/** Hook for handling multisig trading. Contains all functionality to trade a core. */
 export const useMultisigTrading = ({
   core,
   onTradeStarted,

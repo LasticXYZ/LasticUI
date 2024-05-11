@@ -29,6 +29,7 @@ const listingStateInit = {
 
 export type ListingsTracker = Record<ListingID, ListingState>
 
+/** Hook for tracking the state of listings. Uses PJS, events, and the DB */
 export const useListingsTracker = (coreListings: CoreListing[], intervalMs?: number) => {
   const { api, activeAccount, activeChain, activeRelayChain } = useInkathon()
 

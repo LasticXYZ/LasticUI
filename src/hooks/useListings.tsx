@@ -13,6 +13,7 @@ export type networks =
 
 type states = 'listed' | 'tradeOngoing' | 'completed' | 'cancelled'
 
+/** CoreListing is the main data structure for the DB listings table. */
 export interface CoreListing {
   // listing identifier
   id: number // autoincremented
@@ -36,6 +37,7 @@ export interface CoreListing {
   index?: number // Used to identify right opened multisig if multiple are opened.
 }
 
+/** Hook for fetching and managing listings on the DB. */
 export const useListings = (fetchOnInit = true) => {
   const { api } = useInkathon()
   const [listings, setListings] = useState<CoreListing[]>([])
