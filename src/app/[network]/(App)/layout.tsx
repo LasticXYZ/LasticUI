@@ -4,7 +4,6 @@ import { Analytics } from '@vercel/analytics/react'
 import './globals.css'
 //import type { Metadata } from 'next'
 import ThemeProvider from '@/components/themeToggle/themeProvider'
-import { BanknotesIcon } from '@heroicons/react/24/outline'
 import {
   ArrowPathIcon,
   Cog8ToothIcon,
@@ -31,12 +30,12 @@ function getNavigation(network: string) {
       href: `/${network}/bulkcore1`,
       current: false,
     },
-    {
-      name: 'Trade Cores',
-      icon: <BanknotesIcon className="h-5 w-5" aria-hidden="true" />,
-      href: `/${network}/listings`,
-      current: false,
-    },
+    // {
+    //   name: 'Trade Cores',
+    //   icon: <BanknotesIcon className="h-5 w-5" aria-hidden="true" />,
+    //   href: `/${network}/listings`,
+    //   current: false,
+    // },
     // {
     //   name: 'On-Demand Cores',
     //   icon: <BoltIcon className="h-5 w-5" aria-hidden="true" />,
