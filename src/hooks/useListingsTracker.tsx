@@ -53,7 +53,7 @@ export const useListingsTracker = (coreListings: CoreListing[], intervalMs?: num
       }, intervalMs)
       return () => clearInterval(interval)
     }
-  }, [activeAccount, coreListings])
+  }, [activeAccount, coreListings, intervalMs])
 
   /** Updates the state of all listings */
   const updateAllStates = async () => {

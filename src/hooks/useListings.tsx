@@ -59,7 +59,7 @@ export const useListings = (fetchOnInit = true) => {
     }
 
     fetchData()
-  }, [])
+  }, [fetchOnInit])
 
   const fetchListings = async (filterParams?: Record<string, string>) => {
     setIsLoading(true)
