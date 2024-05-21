@@ -12,6 +12,7 @@ import TimelineUtilizeCore from '@/components/timelineComp/TimelineUtilizeCore'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
 import { useSaleRegion } from '@/hooks/subsquid'
+import { useListings } from '@/hooks/useListings'
 import { useCurrentBlockNumber, useCurrentRelayBlockNumber } from '@/hooks/useSubstrateQuery'
 import { saleStatus } from '@/utils/broker'
 import { utilizationStatus } from '@/utils/broker/utilizationStatus'
@@ -53,6 +54,15 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
   const network = getChainFromPath(pathname)
   const configuration = network_list[network].configuration
   const brokerConstants = network_list[network].constants
+  const { listings } = useListings()
+  const isCoreListed = listings.some(
+    (listing) =>
+      listing.coreNumber === coreNb &&
+      listing.mask === mask &&
+      listing.begin === region?.regionId.begin?.toString() &&
+      listing.status !== 'completed' &&
+      listing.status !== 'cancelled',
+  )
 
   const currentBlockNumber = useCurrentBlockNumber(api)
   const currentRelayBlock = useCurrentRelayBlockNumber(relayApi)
@@ -281,6 +291,19 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 py-10">
                       {/* Buttons*/}
+                      {!isCoreListed && (
+                        <div className="text-2xl font-bold uppercase relative w-full max-w-xs mx-auto">
+                          <div className="absolute right-0 top-0 transform translate-x-1/4 -translate-y-1/3 bg-red-4 border border-gray-8 px-2 py-1 text-xs font-semibold uppercase rounded-full shadow-lg z-10">
+                            Beta
+                          </div>
+
+                          <SecondaryButton
+                            title="List Core for Sale"
+                            onClick={() => setIsListingsModalOpen(true)}
+                            className="w-full"
+                          />
+                        </div>
+                      )}
                       <div className="text-2xl font-bold font-unbounded uppercase text-gray-21">
                         <SecondaryButton
                           title="Transfer Core"
