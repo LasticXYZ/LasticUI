@@ -3,13 +3,17 @@ import RenewModal from '@/components/broker/extrinsics/RenewModal'
 import SecondaryButton from '@/components/button/SecondaryButton'
 import GeneralTable from '@/components/table/GeneralTable'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
+import { PossibleNetworks, network_list } from '@/config/network'
+
 import {
   AllowedRenewalAssignmentInfo,
   AllowedRenewalCoreInfoUnf,
   AllowedRenewalsType,
 } from '@/types'
 import { parseFormattedNumber, parseNativeTokenToHuman } from '@/utils'
+import { getChainFromPath } from '@/utils/common/chainPath'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
+import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 interface ModalDataType {
@@ -50,6 +54,8 @@ const useAllowedRenewalsQuery = () => {
 const RenewalsData = () => {
   const [isRenewModalOpen, setIsRenewModalOpen] = useState(false)
   const [modalData, setModalData] = useState<ModalDataType | null>(null)
+  const pathname = usePathname()
+  const network = getChainFromPath(pathname)
 
   const { activeAccount, activeChain } = useInkathon()
   const allowedRenewals = useAllowedRenewalsQuery()
@@ -69,8 +75,13 @@ const RenewalsData = () => {
         (!core || parseFormattedNumber(plan.coreInfo[0].core) === core) &&
         (!begin || parseFormattedNumber(plan.coreInfo[0].when) === begin) &&
         (!task ||
-          parseFormattedNumber(plan.assignmentInfo.completion?.Complete[0]?.assignment.Task) ===
-            task)
+          (plan.assignmentInfo &&
+            plan.assignmentInfo.completion &&
+            plan.assignmentInfo.completion.Complete &&
+            plan.assignmentInfo.completion.Complete[0] &&
+            plan.assignmentInfo.completion.Complete[0].assignment &&
+            parseFormattedNumber(plan.assignmentInfo.completion.Complete[0].assignment.Task) ===
+              task))
       )
     })
     .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
@@ -121,28 +132,41 @@ const RenewalsData = () => {
             <>
               <div className="w-full overflow-x-auto">
                 <GeneralTable
-                  tableData={filteredData.map(({ coreInfo, assignmentInfo }) => ({
-                    data: [
-                      assignmentInfo.completion?.Complete[0]?.assignment.Task || 'N/A',
-                      coreInfo[0].when,
-                      coreInfo[0].core,
-                      assignmentInfo.completion?.Complete[0]?.mask || 'N/A',
-                      `${parseNativeTokenToHuman({ paid: assignmentInfo.price?.toString(), decimals: 12, reduceDecimals: 4 })} ${tokenSymbol}`,
-                      <SecondaryButton
-                        title="Renew"
-                        onClick={() => {
-                          setModalData({ coreInfo: coreInfo[0], assignmentInfo })
-                          setIsRenewModalOpen(true)
-                        }}
-                        key="data"
-                      />,
-                    ],
-                  }))}
+                  tableData={filteredData.map(({ coreInfo, assignmentInfo }) => {
+                    let task: number | null = assignmentInfo.completion?.Complete[0]?.assignment
+                      .Task
+                      ? parseFormattedNumber(
+                          assignmentInfo.completion?.Complete[0]?.assignment.Task,
+                        )
+                      : null
+                    return {
+                      data: [
+                        task?.toString() || 'N/A',
+                        task &&
+                        network_list[network as PossibleNetworks].paraId.hasOwnProperty(
+                          task ? task : '',
+                        )
+                          ? network_list[network as PossibleNetworks].paraId[task]
+                          : null,
+                        coreInfo[0].when,
+                        coreInfo[0].core,
+                        `${parseNativeTokenToHuman({ paid: assignmentInfo.price?.toString(), decimals: 12, reduceDecimals: 4 })} ${tokenSymbol}`,
+                        <SecondaryButton
+                          title="Renew"
+                          onClick={() => {
+                            setModalData({ coreInfo: coreInfo[0], assignmentInfo })
+                            setIsRenewModalOpen(true)
+                          }}
+                          key="data"
+                        />,
+                      ],
+                    }
+                  })}
                   tableHeader={[
                     { title: 'Para ID' },
+                    { title: 'Network' },
                     { title: 'Begin' },
                     { title: 'Core' },
-                    { title: 'Mask' },
                     { title: 'Price' },
                     { title: 'Renew' },
                   ]}
