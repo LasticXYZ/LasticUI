@@ -1,5 +1,6 @@
 'use client'
 
+import { Analytics } from '@vercel/analytics/react'
 import './globals.css'
 //import type { Metadata } from 'next'
 import ThemeProvider from '@/components/themeToggle/themeProvider'
@@ -106,7 +107,10 @@ export default function RootLayout({
             >
               <Navbar navigation={navigation_app}>
                 <div className="py-10 font-montserrat">
-                  <main>{children}</main>
+                  <main>
+                    {children}
+                    <Analytics />
+                  </main>
                 </div>
               </Navbar>
             </UseInkathonProvider>

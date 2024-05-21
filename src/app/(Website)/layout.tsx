@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react'
 import type { Metadata } from 'next'
 import { DM_Sans, Syne } from 'next/font/google'
 import Footer from './Footer'
@@ -33,7 +34,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${dm_sans.variable} ${syne.variable}`}>
         <Navbar navigation={navigation_app} />
         <div className="pt-5 font-dm_sans">
-          <main>{children}</main>
+          <main>
+            {children}
+            <Analytics />
+          </main>
         </div>
         <Footer />
       </body>
