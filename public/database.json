@@ -1,0 +1,94 @@
+{
+  "listings": [
+    {
+      "id": 1714925759519,
+      "coreNumber": 58,
+      "mask": "0xffffffffffffffffffff",
+      "begin": "129210",
+      "cost": "2000000000000",
+      "sellerAddress": "5Hp7jnPx2bBZDTvAWZ3udtxar1nhhbmGvnU7eg37P4kmKUev",
+      "network": "Rococo Coretime Testnet",
+      "status": "completed",
+      "timestamp": "2024-05-05T16:15:59.519Z",
+      "end": "130470",
+      "buyerAddress": "5Gza9nxUQiiErg5NotZ6FPePcjBEHhawoNL3sGqpmjrVhgeo"
+    },
+    {
+      "id": 1715023702628,
+      "coreNumber": 68,
+      "mask": "0xffffffffffffffffffff",
+      "begin": "117870",
+      "cost": "1000000000000",
+      "sellerAddress": "5Gza9nxUQiiErg5NotZ6FPePcjBEHhawoNL3sGqpmjrVhgeo",
+      "network": "Rococo Coretime Testnet",
+      "status": "tradeOngoing",
+      "timestamp": "2024-05-06T19:28:22.629Z",
+      "end": "119130",
+      "buyerAddress": "5D88QJLCvrZXiHdCptSW5dP7rzE9nQGCgRSvDfEdti6erqGV"
+    },
+    {
+      "id": 1715109863772,
+      "coreNumber": 66,
+      "mask": "0xffffffffffffffffffff",
+      "begin": "117870",
+      "cost": "2220000000000",
+      "sellerAddress": "5Gza9nxUQiiErg5NotZ6FPePcjBEHhawoNL3sGqpmjrVhgeo",
+      "network": "Rococo Coretime Testnet",
+      "status": "tradeOngoing",
+      "timestamp": "2024-05-07T19:24:23.772Z",
+      "end": "119130",
+      "buyerAddress": "5D88QJLCvrZXiHdCptSW5dP7rzE9nQGCgRSvDfEdti6erqGV"
+    },
+    {
+      "id": 1715193922958,
+      "coreNumber": 61,
+      "mask": "0xffffffffffffffffffff",
+      "begin": "122910",
+      "cost": "4000000000000",
+      "sellerAddress": "5Gza9nxUQiiErg5NotZ6FPePcjBEHhawoNL3sGqpmjrVhgeo",
+      "network": "Rococo Coretime Testnet",
+      "status": "completed",
+      "timestamp": "2024-05-08T18:45:22.958Z",
+      "end": "123242",
+      "buyerAddress": "5HDrZNTkL3sXAGn6DKmvV6rw2NHrNGn51Ee89cLMcYv8tuKZ"
+    },
+    {
+      "id": 1715252425280,
+      "coreNumber": 69,
+      "mask": "0xffffffffffffffffffff",
+      "begin": "117870",
+      "cost": "1220000000000",
+      "sellerAddress": "5Gza9nxUQiiErg5NotZ6FPePcjBEHhawoNL3sGqpmjrVhgeo",
+      "network": "Rococo Coretime Testnet",
+      "status": "completed",
+      "timestamp": "2024-05-09T11:00:25.280Z",
+      "end": "119130",
+      "buyerAddress": "5HDrZNTkL3sXAGn6DKmvV6rw2NHrNGn51Ee89cLMcYv8tuKZ"
+    },
+    {
+      "id": 1715254319154,
+      "coreNumber": 55,
+      "mask": "0xffffffffffffffffffff",
+      "begin": "130470",
+      "cost": "4000000000000",
+      "sellerAddress": "5GxX2eaMM2mboKrZe3HDCDj9dRad7uzZnpRfj3StWdTAsG16",
+      "network": "Rococo Coretime Testnet",
+      "status": "completed",
+      "timestamp": "2024-05-09T11:31:59.154Z",
+      "end": "131730",
+      "buyerAddress": "5Gza9nxUQiiErg5NotZ6FPePcjBEHhawoNL3sGqpmjrVhgeo"
+    },
+    {
+      "id": 1715258164170,
+      "coreNumber": 69,
+      "mask": "0xffffffffffffffffffff",
+      "begin": "117870",
+      "cost": "3110000000000",
+      "sellerAddress": "5HDrZNTkL3sXAGn6DKmvV6rw2NHrNGn51Ee89cLMcYv8tuKZ",
+      "network": "Rococo Coretime Testnet",
+      "status": "listed",
+      "timestamp": "2024-05-09T12:36:04.170Z",
+      "end": "119130"
+    }
+  ]
+}

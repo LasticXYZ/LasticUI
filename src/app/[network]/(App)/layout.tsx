@@ -3,6 +3,7 @@
 import './globals.css'
 //import type { Metadata } from 'next'
 import ThemeProvider from '@/components/themeToggle/themeProvider'
+import { BanknotesIcon } from '@heroicons/react/24/outline'
 import {
   ArrowPathIcon,
   Cog8ToothIcon,
@@ -27,6 +28,12 @@ function getNavigation(network: string) {
       name: 'Coretime Sales',
       icon: <ShoppingCartIcon className="h-5 w-5" aria-hidden="true" />,
       href: `/${network}/bulkcore1`,
+      current: false,
+    },
+    {
+      name: 'Trade Cores',
+      icon: <BanknotesIcon className="h-5 w-5" aria-hidden="true" />,
+      href: `/${network}/listings`,
       current: false,
     },
     // {
