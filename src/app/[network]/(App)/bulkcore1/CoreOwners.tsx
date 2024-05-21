@@ -31,7 +31,7 @@ const PastTransactions = () => {
     }
 
     fetchData()
-  }, []) // Add offset to the dependency array
+  }, [activeRelayChain?.network, client, offset]) // Add offset to the dependency array
 
   const TableHeader = [
     { title: 'Time' },

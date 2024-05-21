@@ -1,55 +1,124 @@
 import Border from '@/components/border/Border'
+import { useSubScanCall } from '@/components/callSubscan/callSubScan'
+import { AuctionResponse, AuctionsRequest } from '@/components/callSubscan/types'
 import MiniBarGraphData from '@/components/graph/MiniBarGraphData'
-import { useInkathon } from '@poppyseed/lastic-sdk'
-import { GraphLike, SaleInitializedEvent, getClient } from '@poppyseed/squid-sdk'
-import React, { useEffect, useMemo, useState } from 'react'
+import MiniLineGraphData from '@/components/graph/MiniLineGraphData'
+import { network_list } from '@/config/network'
+import { useSaleRegions } from '@/hooks/subsquid'
+import { priceCurve } from '@/utils'
+import { getChainFromPath } from '@/utils/common/chainPath'
+import { getClient } from '@poppyseed/squid-sdk'
+import { usePathname } from 'next/navigation'
+import React, { useMemo, useState } from 'react'
 import CoreOwners from './CoreOwners'
 
-type DataSetKey = 'price' | 'cores' // Add more keys as needed
+type DataSetKey = 'priceOnePeriod' | 'price' | 'cores' | 'pastAuctions' // Add more keys as needed
 
 const CoreUtilisation: React.FC = () => {
-  const { activeRelayChain } = useInkathon()
-  const network = activeRelayChain?.network
+  const pathname = usePathname()
+  const network = getChainFromPath(pathname)
+  const decimalPoints = network_list[network].decimalPoints
 
-  const [result, setResult] = useState<GraphLike<SaleInitializedEvent[]> | null>(null)
-  const [activeDataSet, setActiveDataSet] = useState<DataSetKey>('price') // Change to string to accommodate multiple datasets
+  const [activeDataSet, setActiveDataSet] = useState<DataSetKey>('priceOnePeriod') // Change to string to accommodate multiple datasets
   const client = useMemo(() => getClient(), [])
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (network) {
-        const query = client.eventAllSaleInitialized()
-        try {
-          const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(
-            network,
-            query,
-          )
-          setResult(fetchedResult)
-        } catch (error) {
-          console.error('Failed to fetch data:', error)
-        }
-      }
-    }
+  const saleRegions = useSaleRegions(network, client)
+  const currentSaleRegion = saleRegions?.data.event ? saleRegions.data.event[0] : null
+  const constant = network_list[network].constants
+  const config = network_list[network].configuration
+  let price_xy: { x: number[]; y: number[] } | undefined
+  if (currentSaleRegion && config && constant) {
+    price_xy = priceCurve(currentSaleRegion, config, constant)
+    //console.log(price_xy)
+  }
 
-    fetchData()
-  }, [])
+  const requestAuctionData = useMemo<AuctionsRequest>(
+    () => ({
+      auction_index: 0,
+      page: 0,
+      row: 10,
+      status: 0,
+    }),
+    [],
+  )
+
+  const {
+    data: auctionData,
+    loading: auctionLoading,
+    error: auctionError,
+  } = useSubScanCall<AuctionResponse>({
+    apiUrl: `${network_list[network].apiUrl}/scan/parachain/auctions`,
+    requestData: requestAuctionData,
+  })
 
   // Configurations for different data sets
   const dataConfigs = {
+    priceOnePeriod: {
+      line: true,
+      label: 'Price Per Core In One Period',
+      dataPoints: price_xy ? price_xy.y.map((price) => price / 10 ** decimalPoints) : [],
+      labels: price_xy
+        ? price_xy.x.map(
+            (period) => `${period === currentSaleRegion?.saleStart ? 'Sale Start' : period}`,
+          )
+        : [],
+      xLabel: 'Block Number',
+      yLabel: `Price - ${network_list[network].tokenSymbol}`,
+    },
     price: {
-      label: 'Price Per Core',
-      dataPoints:
-        result?.data.event?.map((event) => parseFloat(event.regularPrice?.toString() || '0')) || [],
+      line: false,
+      label: 'Price Per Core Over Time',
+      dataPoints: saleRegions?.data.event
+        ? [...saleRegions.data.event]
+            .reverse()
+            .map((event) => Number(event.regularPrice) / 10 ** decimalPoints || 0)
+        : [],
+      labels: saleRegions?.data.event
+        ? [...saleRegions.data.event]
+            .reverse()
+            .map((event, index) => `Nb. ${index + 1} - Rg. ${event.regionBegin}`)
+        : [],
+      xLabel: 'Regions',
+      yLabel: `Stable Price - ${network_list[network].tokenSymbol}`,
     },
     cores: {
+      line: false,
       label: 'Cores Offered',
-      dataPoints:
-        result?.data.event?.map((event) => parseFloat(event.coresOffered?.toString() || '0')) || [],
+      dataPoints: saleRegions?.data.event
+        ? [...saleRegions.data.event]
+            .reverse()
+            .map((event) => parseFloat(event.coresOffered?.toString() || '0'))
+        : [],
+      labels: saleRegions?.data.event
+        ? [...saleRegions.data.event]
+            .reverse()
+            .map((event, index) => `Nb. ${index + 1} - Rg. ${event.regionBegin}`)
+        : [],
+      xLabel: 'Regions',
+      yLabel: 'Number of Cores Offered',
+    },
+    pastAuctions: {
+      line: false,
+      label: 'Monthly Auctions in the Past',
+      dataPoints: auctionData?.data.auctions
+        ? auctionData?.data.auctions
+            .map((auction) =>
+              auction.winners
+                ? auction.winners.reduce(
+                    (acc, winner) => acc + winner.amount / 10 ** decimalPoints,
+                    0,
+                  )
+                : 0,
+            )
+            .reverse()
+        : [],
+      labels: auctionData?.data.auctions
+        ? auctionData?.data.auctions.map((auction) => auction.auction_index.toString()).reverse()
+        : [],
+      xLabel: 'Auction Index',
+      yLabel: `Amount in ${network_list[network].tokenSymbol}`,
     },
   }
-
-  const labels =
-    result?.data.event?.map((event, index) => `Nb. ${index + 1} - Rg. ${event.regionBegin}`) || []
 
   // Toggle between data sets
   const toggleActiveDataSet = (newDataSet: DataSetKey) => {
@@ -78,11 +147,21 @@ const CoreUtilisation: React.FC = () => {
             <div className="p-2 flex flex-col space-y-4">{dataSetOptions}</div>
           </div>
           <div className="col-span-3 p-4">
-            {labels.length > 0 && (
+            {dataConfigs[activeDataSet].line ? (
+              <MiniLineGraphData
+                title={dataConfigs[activeDataSet].label}
+                labels={dataConfigs[activeDataSet].labels}
+                dataPoints={dataConfigs[activeDataSet].dataPoints}
+                xLabel={dataConfigs[activeDataSet].xLabel}
+                yLabel={dataConfigs[activeDataSet].yLabel}
+              />
+            ) : (
               <MiniBarGraphData
                 title={dataConfigs[activeDataSet].label}
-                labels={labels}
+                labels={dataConfigs[activeDataSet].labels}
                 dataPoints={dataConfigs[activeDataSet].dataPoints}
+                xLabel={dataConfigs[activeDataSet].xLabel}
+                yLabel={dataConfigs[activeDataSet].yLabel}
               />
             )}
           </div>

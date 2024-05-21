@@ -103,7 +103,7 @@ const MyCores = () => {
   return (
     <Border className="h-full flex flex-row justify-center items-center">
       <div className="h-full w-full flex flex-col justify-start items-start p-10">
-        <h1 className="text-xl font-bold uppercase mb-5">Cores set for execution</h1>
+        <h1 className="text-xl font-bold uppercase mb-5">Cores set for execution - Workload</h1>
         <div className="flex flex-row items-center gap-3 mb-5">
           <select
             value={filter}

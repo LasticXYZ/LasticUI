@@ -1,5 +1,6 @@
-import { BrokerConstantsType, ConfigurationType, SaleInfoType } from '@poppyseed/lastic-sdk'
+import { BrokerConstantsType, ConfigurationType } from '@poppyseed/lastic-sdk'
 
+import { SaleInitializedEvent } from '@poppyseed/squid-sdk'
 import { blocksToTimeFormat } from './blockTime'
 
 export enum StatusCode {
@@ -31,12 +32,13 @@ const statusInfoMap: Record<StatusCode, StatusInfo> = {
 
 // Non-exported util functions for saleStatus
 
-function getSaleEnds(
-  saleInfo: SaleInfoType,
+export function getSaleEnds(
+  saleInfo: SaleInitializedEvent,
   config: ConfigurationType,
   constant: BrokerConstantsType,
 ): number {
   // The logic assumes that the coretime chain runs 2 times slower then the relay chain
+  if (!saleInfo.saleStart) return 0
   return (
     saleInfo.saleStart +
     (config.regionLength * constant.timeslicePeriod) / 2 -
@@ -46,7 +48,7 @@ function getSaleEnds(
 
 function calculateTimeRemaining(
   currentBlockNumber: number,
-  saleInfo: SaleInfoType,
+  saleInfo: SaleInitializedEvent,
   config: ConfigurationType,
   constant: BrokerConstantsType,
   statusCode: StatusCode,
@@ -55,19 +57,22 @@ function calculateTimeRemaining(
 
   switch (statusCode) {
     case StatusCode.Interlude:
-      return blocksToTimeFormat(saleInfo.saleStart - currentBlockNumber, 'PARA')
+      return saleInfo.saleStart
+        ? blocksToTimeFormat(saleInfo.saleStart - currentBlockNumber, 'PARA')
+        : '-'
     case StatusCode.LeadIn:
-      return blocksToTimeFormat(
-        saleInfo.saleStart + config.leadinLength - currentBlockNumber,
-        'PARA',
-      )
+      return saleInfo.saleStart
+        ? blocksToTimeFormat(saleInfo.saleStart + config.leadinLength - currentBlockNumber, 'PARA')
+        : '-'
     case StatusCode.Purchase:
-      return blocksToTimeFormat(
-        saleInfo.saleStart +
-          (config.regionLength * constant.timeslicePeriod) / 2 -
-          currentBlockNumber,
-        'PARA',
-      )
+      return saleInfo.saleStart
+        ? blocksToTimeFormat(
+            saleInfo.saleStart +
+              (config.regionLength * constant.timeslicePeriod) / 2 -
+              currentBlockNumber,
+            'PARA',
+          )
+        : '-'
     default:
       return '-'
   }
@@ -75,9 +80,10 @@ function calculateTimeRemaining(
 
 function determineStatusCode(
   currentBlockNumber: number,
-  saleInfo: SaleInfoType,
+  saleInfo: SaleInitializedEvent,
   config: ConfigurationType,
 ): StatusCode {
+  if (!saleInfo.saleStart) return StatusCode.Interlude
   if (currentBlockNumber < saleInfo.saleStart) return StatusCode.Interlude
   if (currentBlockNumber < saleInfo.saleStart + config.leadinLength) return StatusCode.LeadIn
   return StatusCode.Purchase
@@ -87,7 +93,7 @@ function determineStatusCode(
 
 export function saleStatus(
   currentBlockNumber: number,
-  saleInfo: SaleInfoType,
+  saleInfo: SaleInitializedEvent,
   config: ConfigurationType,
   constant: BrokerConstantsType,
 ): {

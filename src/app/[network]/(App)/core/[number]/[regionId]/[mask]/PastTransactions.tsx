@@ -1,23 +1,27 @@
 import Border from '@/components/border/Border'
 import GeneralTable from '@/components/table/GeneralTable'
 import { parseNativeTokenToHuman, toShortAddress } from '@/utils/account/token'
+import { getChainFromPath } from '@/utils/common/chainPath'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
 import { GraphLike, PurchasedEvent, getClient } from '@poppyseed/squid-sdk'
 import { format } from 'date-fns'
+import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 
 const PastTransactions = ({ coreNb }: { coreNb: number }) => {
-  const { activeAccount, activeRelayChain } = useInkathon()
-  const network = activeRelayChain?.network
+  const { activeAccount } = useInkathon()
+  const pathname = usePathname()
+  const network = getChainFromPath(pathname)
 
   const [result, setResult] = useState<GraphLike<PurchasedEvent[]> | null>(null)
   const client = useMemo(() => getClient(), [])
-  const query = client.eventCorePurchased(coreNb)
 
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
   tokenSymbol = tokenSymbol || 'UNIT'
 
   useEffect(() => {
+    const query = client.eventCorePurchased(coreNb)
+
     if (network) {
       const fetchData = async () => {
         const fetchedResult: GraphLike<PurchasedEvent[]> = await client.fetch(network, query)
@@ -26,7 +30,7 @@ const PastTransactions = ({ coreNb }: { coreNb: number }) => {
 
       fetchData()
     }
-  }, [])
+  }, [client, network, coreNb])
 
   const TableHeader = [
     { title: 'Time' },

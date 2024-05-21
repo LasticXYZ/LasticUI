@@ -142,6 +142,9 @@ const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regi
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={`Change frequency for Core ${regionId.core} `}>
+      <div className="mb-5">
+        Changing core frequency is equivalent to interlacing the core with a new core.
+      </div>
       <div className="flex justify-center space-x-4 mx-auto">
         <Legend color="#FA857B" text="Core-1" />
         <Legend color="gray" text="Core-2" />
@@ -168,13 +171,13 @@ const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regi
               </tr>
               <tr>
                 <td className="w-1/2 text-md font-semibold">New Mask (Core-part-1):</td>
-                <td className="text-left text-md font-normal text-green-500 font-mono">
+                <td className="text-left text-md font-normal text-green-500 dark:text-green-2 font-mono">
                   {hexCoreMask}
                 </td>
               </tr>
               <tr>
                 <td className="w-1/2 text-md font-semibold">New Mask (Core-part-2):</td>
-                <td className="text-left text-md font-normal text-green-500 font-mono">
+                <td className="text-left text-md font-normal text-green-500 dark:text-green-2 font-mono">
                   {hexCoreMaskComplementary}
                 </td>
               </tr>

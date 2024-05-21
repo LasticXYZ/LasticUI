@@ -30,7 +30,18 @@ export const getChainFromPath = (path: string): string => {
 
   // Assuming the chain name is always the second segment after the initial '/'
   if (segments.length > 1 && segments[1]) {
-    return segments[1]
+    switch (segments[1]) {
+      case 'rococo':
+        return 'rococo'
+      case 'kusama':
+        return 'kusama'
+      case 'polkadot':
+        return 'polkadot'
+      case 'westend':
+        return 'westend'
+      default:
+        return ''
+    }
   }
 
   return ''

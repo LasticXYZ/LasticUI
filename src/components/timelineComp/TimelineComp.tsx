@@ -1,16 +1,18 @@
-import { BrokerConstantsType, ConfigurationType, SaleInfoType } from '@poppyseed/lastic-sdk'
+import { BrokerConstantsType, ConfigurationType } from '@poppyseed/lastic-sdk'
+import { SaleInitializedEvent } from '@poppyseed/squid-sdk'
 import { FC } from 'react'
 
 // Additional interfaces, which should be defined according to your data structure
 type SliderPropeTypes = {
   currentBlockNumber: number
-  saleInfo: SaleInfoType
+  saleInfo: SaleInitializedEvent
   config: ConfigurationType
   constants: BrokerConstantsType
 }
 
 const Slider: FC<SliderPropeTypes> = ({ currentBlockNumber, saleInfo, config, constants }) => {
-  const saleDuration = config.regionLength * constants.timeslicePeriod
+  if (!saleInfo.saleStart || !saleInfo.regularPrice) return null
+  const saleDuration = (config.regionLength * constants.timeslicePeriod) / 2
 
   // Calculate percentages for each period
   const startSalePercentage = (config.interludeLength / saleDuration) * 100
@@ -27,7 +29,7 @@ const Slider: FC<SliderPropeTypes> = ({ currentBlockNumber, saleInfo, config, co
     <div className="mx-10 my-16 relative">
       <div className="w-full bg-pink-300 dark:bg-pink-400 dark:bg-opacity-20 bg-opacity-20 h-3 rounded-full overflow-hidden">
         <div
-          className="bg-pink-300 dark:bg-pink-400 dark:bg-opacity-40 bg-opacity-50 h-full"
+          className="bg-pink-300 dark:bg-pink-400 dark:bg-opacity-80 bg-opacity-50 h-full"
           style={{ width: `${safePurchasePercentage}%` }}
         ></div>
       </div>
@@ -59,7 +61,9 @@ const Slider: FC<SliderPropeTypes> = ({ currentBlockNumber, saleInfo, config, co
         className="absolute top-0 -mt-1"
         style={{ left: `${(safeLeadinPercentage + 100) / 2}%` }}
       >
-        <p className="text-sm text-left mt-5 -ml-10">Stable price = {saleInfo.price / 10 ** 12}</p>
+        <p className="text-sm text-left mt-5 -ml-10">
+          Stable price = {Number(saleInfo.regularPrice) / 10 ** 12}
+        </p>
       </div>
       {/* Marker for Purchase Period */}
       <div className="absolute top-0 -mt-1" style={{ left: '100%' }}>

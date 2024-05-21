@@ -5,93 +5,39 @@ import PartitionCoreModal from '@/components/broker/extrinsics/PartitionCoreModa
 import TransferModal from '@/components/broker/extrinsics/TransferModal'
 import SecondaryButton from '@/components/button/SecondaryButton'
 import CoreItemExtensive from '@/components/cores/CoreItemExtensive'
+import CountDown from '@/components/countDown/CountDown'
 import ListingsModal from '@/components/listings/AddListingsModal'
 import TimelineComponent from '@/components/timelineComp/TimelineComp'
 import TimelineUtilizeCore from '@/components/timelineComp/TimelineUtilizeCore'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
-import { useListings } from '@/hooks/useListings'
-import { parseNativeTokenToHuman } from '@/utils/account/token'
-import {
-  calculateCurrentPrice,
-  saleStatus,
-  useBrokerConstants,
-  useCurrentBlockNumber,
-  useQuerySpecificRegion,
-  useSubstrateQuery,
-} from '@/utils/broker'
-import {
-  ConfigurationType,
-  SaleInfoType,
-  StatusType,
-  blockTimeToUTC,
-  getCurrentBlockNumber,
-  useBalance,
-  useInkathon,
-} from '@poppyseed/lastic-sdk'
+import { network_list } from '@/config/network'
+import { useSaleRegion } from '@/hooks/subsquid'
+import { useCurrentBlockNumber, useCurrentRelayBlockNumber } from '@/hooks/useSubstrateQuery'
+import { saleStatus } from '@/utils/broker'
+import { utilizationStatus } from '@/utils/broker/utilizationStatus'
+import { getChainFromPath } from '@/utils/common/chainPath'
+import { encodeAddress } from '@polkadot/util-crypto'
+import { blockTimeToUTC, useBalance, useInkathon } from '@poppyseed/lastic-sdk'
+import { CoreOwnerEvent, GraphLike, GraphQuery, getClient } from '@poppyseed/squid-sdk'
+import { usePathname } from 'next/navigation'
 import { FC, useEffect, useMemo, useState } from 'react'
 
 interface BrokerRegionDataProps {
   coreNb: number
-  regionId: number
-  mask?: string
+  beginRegion: number
+  mask: string
 }
 
-const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask }) => {
-  const { activeAccount, relayApi, activeChain, api } = useInkathon()
-  let { tokenSymbol, tokenDecimals } = useBalance(activeAccount?.address, true)
-  const region = useQuerySpecificRegion({ api, coreNb, regionId, mask })
-  const { listings } = useListings()
-  const isCoreListed = listings.some(
-    (listing) =>
-      listing.coreNumber === coreNb &&
-      listing.mask === mask &&
-      listing.begin === region?.detail[0].begin.replace(/,/g, '') &&
-      listing.status !== 'completed' &&
-      listing.status !== 'cancelled',
-  )
-
-  const currentBlockNumber = useCurrentBlockNumber(api)
-
-  const saleInfoString = useSubstrateQuery(api, 'saleInfo')
-  const configurationString = useSubstrateQuery(api, 'configuration')
-  const statusString = useSubstrateQuery(api, 'status')
-
-  const { brokerConstants, isLoading: isConstantsLoading } = useBrokerConstants(api)
-
-  const saleInfo = useMemo(
-    () => (saleInfoString ? (JSON.parse(saleInfoString) as SaleInfoType) : null),
-    [saleInfoString],
-  )
-  const configuration = useMemo(
-    () => (configurationString ? (JSON.parse(configurationString) as ConfigurationType) : null),
-    [configurationString],
-  )
-  const status = useMemo(
-    () => (statusString ? (JSON.parse(statusString) as StatusType) : null),
-    [statusString],
-  )
-
-  // Update saleStage every second based on the currentBlockNumber
+const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask }) => {
   const [saleStage, setSaleStage] = useState('')
   const [saleTitle, setSaleTitle] = useState('')
   const [timeRemaining, setTimeRemaining] = useState('')
-  useEffect(() => {
-    if (saleInfo && configuration && brokerConstants) {
-      const { statusMessage, timeRemaining, statusTitle } = saleStatus(
-        currentBlockNumber,
-        saleInfo,
-        configuration,
-        brokerConstants,
-      )
-      setTimeRemaining(timeRemaining)
-      setSaleTitle(statusTitle)
-      setSaleStage(statusMessage)
-    }
-  }, [currentBlockNumber, saleInfo, configuration, brokerConstants])
+  const [utilizationStage, setUtilizationStage] = useState('')
+  const [utilizationTitle, setUtilizationTitle] = useState('')
+  const [utilizationTimeRemaining, setUtilizationTimeRemaining] = useState('')
 
   const [regionBeginTimestamp, setRegionBeginTimestamp] = useState<string | null>(null)
   const [regionEndTimestamp, setRegionEndTimestamp] = useState<string | null>(null)
-  const [currentRelayBlock, setCurrentRelayBlock] = useState<number | null>(null)
 
   const [isListingsModalOpen, setIsListingsModalOpen] = useState(false)
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
@@ -99,21 +45,90 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
   const [isPartitionModalOpen, setIsPartitionModalOpen] = useState(false)
   const [isInterlaceModalOpen, setIsInterlaceModalOpen] = useState(false)
 
+  const { activeAccount, relayApi, activeChain, api } = useInkathon()
+  let { tokenSymbol, tokenDecimals } = useBalance(activeAccount?.address, true)
+  const [region, setRegionResult] = useState<CoreOwnerEvent | null>(null)
+  const client = useMemo(() => getClient(), [])
+  const pathname = usePathname()
+  const network = getChainFromPath(pathname)
+  const configuration = network_list[network].configuration
+  const brokerConstants = network_list[network].constants
+
+  const currentBlockNumber = useCurrentBlockNumber(api)
+  const currentRelayBlock = useCurrentRelayBlockNumber(relayApi)
+
+  const currentSaleRegion = useSaleRegion(network, client)
+
+  useEffect(() => {
+    let query: GraphQuery | undefined
+
+    if (currentSaleRegion && configuration) {
+      if (currentSaleRegion.regionBegin) {
+        query = client.eventSpecificRegionCoreOwner(coreNb, beginRegion, mask)
+      }
+    }
+
+    if (network && query) {
+      const fetchData = async () => {
+        const fetchedResult: GraphLike<CoreOwnerEvent[]> = await client.fetch(network, query)
+        const region = fetchedResult?.data.event ? fetchedResult.data.event[0] : null
+        setRegionResult(region)
+      }
+
+      fetchData()
+    }
+  }, [network, currentSaleRegion, client, configuration, coreNb, beginRegion, mask])
+
+  useEffect(() => {
+    if (currentSaleRegion && region && currentRelayBlock && configuration && brokerConstants) {
+      const { statusMessage, timeRemaining, statusTitle } = saleStatus(
+        currentBlockNumber,
+        currentSaleRegion,
+        configuration,
+        brokerConstants,
+      )
+      setTimeRemaining(timeRemaining)
+      setSaleTitle(statusTitle)
+      setSaleStage(statusMessage)
+
+      const {
+        statusMessage: utilizationStatusMessage,
+        timeRemaining: utilizationTimeRemaining,
+        utilizationCode: utilizationStatusTitle,
+      } = utilizationStatus(currentRelayBlock, region, configuration, brokerConstants)
+
+      setUtilizationStage(utilizationStatusMessage)
+      setUtilizationTitle(utilizationStatusTitle)
+      setUtilizationTimeRemaining(utilizationTimeRemaining)
+    }
+  }, [
+    currentBlockNumber,
+    currentRelayBlock,
+    currentSaleRegion,
+    region,
+    configuration,
+    brokerConstants,
+  ])
+
   useEffect(() => {
     const fetchRegionTimestamps = async () => {
       try {
-        if (saleInfo && brokerConstants) {
+        if (currentSaleRegion && region?.regionId?.begin && region.duration && brokerConstants) {
           const beginTimestamp = relayApi
-            ? await blockTimeToUTC(relayApi, saleInfo.regionBegin * brokerConstants.timeslicePeriod)
+            ? await blockTimeToUTC(
+                relayApi,
+                region.regionId.begin * brokerConstants.timeslicePeriod,
+              )
             : null
           const endTimestamp = relayApi
-            ? await blockTimeToUTC(relayApi, saleInfo.regionEnd * brokerConstants.timeslicePeriod)
+            ? await blockTimeToUTC(
+                relayApi,
+                (region.regionId.begin + region.duration) * brokerConstants.timeslicePeriod,
+              )
             : null
-          const getCurrentRelayBlock = relayApi ? await getCurrentBlockNumber(relayApi) : null
 
           setRegionBeginTimestamp(beginTimestamp)
           setRegionEndTimestamp(endTimestamp)
-          setCurrentRelayBlock(getCurrentRelayBlock)
         }
       } catch (error) {
         console.error('Error fetching block timestamp:', error)
@@ -121,9 +136,9 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
     }
 
     fetchRegionTimestamps()
-  }, [relayApi, saleInfo, brokerConstants])
+  }, [region, relayApi, brokerConstants, currentSaleRegion])
 
-  if (!activeChain || !activeAccount || !api || !relayApi) {
+  if (!api || !relayApi || !configuration) {
     return (
       <Border className="mt-5">
         <WalletStatus inactiveWalletMessage="Connecting to chain..." />
@@ -133,12 +148,15 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
 
   if (
     !region ||
-    !saleInfo ||
     !configuration ||
-    !status ||
+    !currentSaleRegion ||
     !currentRelayBlock ||
     !brokerConstants ||
-    isConstantsLoading
+    !region.duration ||
+    !region.regionId.core ||
+    !region.regionId.begin ||
+    !region.regionId.mask ||
+    !region.owner
   ) {
     return (
       <Border className="mt-5">
@@ -152,8 +170,6 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
     )
   }
 
-  let currentPrice = calculateCurrentPrice(currentBlockNumber, saleInfo, configuration)
-
   return (
     <>
       <Border className="mt-5">
@@ -161,17 +177,23 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
           <div>
             <div className="">
               <CoreItemExtensive
-                timeBought="- 2024"
-                owner={region.owner.owner}
-                amITheOwner={region.owner.owner === activeAccount.address}
-                paid={region.owner.paid}
-                coreNumber={region.detail[0].core}
-                phase="- Period"
-                cost={parseNativeTokenToHuman({ paid: region.owner.paid, decimals: tokenDecimals })}
+                config={configuration}
+                constants={brokerConstants}
+                region={region}
+                timeBought={region.timestamp ? new Date(region.timestamp).toLocaleString() : '-'}
+                owner={region.owner}
+                amITheOwner={
+                  region.owner ===
+                  (activeAccount
+                    ? encodeAddress(activeAccount.address, activeChain?.ss58Prefix || 42)
+                    : null)
+                }
+                paid={region.price}
+                coreNumber={region.regionId.core}
                 currencyCost={tokenSymbol}
-                mask={region.detail[0].mask}
-                begin={region.detail[0].begin}
-                end={region.owner.end}
+                regionBeginTimestamp={regionBeginTimestamp || '-'}
+                regionEndTimestamp={regionEndTimestamp || '-'}
+                utilizationStatus={`${utilizationTitle} ${utilizationTimeRemaining}`}
               />
             </div>
           </div>
@@ -182,119 +204,138 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
       <section className="mt-8">
         <Border>
           <div className="p-10">
-            <div>
-              <div className="flex justify-between rounded-full mx-10 bg-pink-300 dark:bg-pink-400  px-16 py-10 bg-opacity-30 dark:bg-opacity-80 items-center my-6">
-                <div className="text-xl font-bold font-unbounded uppercase text-gray-21">
-                  {saleTitle}
-                </div>
-                <div className="text-2xl font-bold font-unbounded uppercase text-gray-18">
-                  {timeRemaining}
-                </div>
-              </div>
-            </div>
-
-            <TimelineComponent
-              currentBlockNumber={currentBlockNumber}
-              saleInfo={saleInfo}
-              config={configuration}
-              constants={brokerConstants}
-            />
-
+            {/* Utilization */}
             <div className="pt-5 pl-10">
               <h3 className="text-xl font-unbounded uppercase font-bold">Utilization</h3>
             </div>
+            <CountDown title={utilizationTitle} timeRemaining={utilizationTimeRemaining} />
 
             <TimelineUtilizeCore
               currentRelayBlock={currentRelayBlock}
-              beginRegion={regionId}
+              beginRegion={region.regionId.begin}
+              config={configuration}
+              constants={brokerConstants}
+            />
+            <div className="flex justify-center items-center mb-5">
+              <b className="mr-5 ">Utilization Status:</b> {utilizationStage}
+            </div>
+
+            {/* Sale Info */}
+            <div className="pt-5 pl-10">
+              <h3 className="text-xl font-unbounded uppercase font-bold">Sale Info</h3>
+            </div>
+            <CountDown title={saleTitle} timeRemaining={timeRemaining} />
+
+            <TimelineComponent
+              currentBlockNumber={currentBlockNumber}
+              saleInfo={currentSaleRegion}
               config={configuration}
               constants={brokerConstants}
             />
 
-            <div className="pt-5 pl-10">
-              <h3 className="text-xl font-unbounded uppercase font-bold">Note</h3>
-            </div>
-
-            <div className="flex flex-row flex-wrap justify-between">
-              {region.owner.owner === activeAccount.address ? (
+            {region.assigned || region.pooled ? (
+              (region.assigned && (
                 <>
-                  <div className="flex flex-col italic max-w-md text-gray-12 items-start justify-center px-4 py-8">
-                    This core is yours. You are able to:
-                    <ul className="px-2 py-2">
-                      <li> * Transfer your core to another account</li>
-                      <li> * Utilize it for a parachain</li>
-                      <li> * Split it up</li>
-                      <li> * Change block production frequency</li>
-                      <li> * Assign it to a task</li>
-                      <li> * Sell it</li>
-                    </ul>
+                  <div className="pt-5 pl-10">
+                    <h3 className="text-xl font-unbounded uppercase font-bold">Assigned</h3>
                   </div>
-
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 py-10">
-                    {/* Buttons*/}
-                    {!isCoreListed && (
-                      <div className="text-2xl font-bold uppercase relative w-full max-w-xs mx-auto">
-                        <div className="absolute right-0 top-0 transform translate-x-1/4 -translate-y-1/3 bg-red-4 border border-gray-8 px-2 py-1 text-xs font-semibold uppercase rounded-full shadow-lg z-10">
-                          Beta
-                        </div>
-
-                        <SecondaryButton
-                          title="List Core for Sale"
-                          onClick={() => setIsListingsModalOpen(true)}
-                          className="w-full"
-                        />
-                      </div>
-                    )}
-
-                    <div className="text-2xl font-bold font-unbounded uppercase text-gray-21">
-                      <SecondaryButton
-                        title="Transfer Core"
-                        onClick={() => setIsTransferModalOpen(true)}
-                        className="w-full"
-                      />
-                    </div>
-
-                    <div className="text-2xl font-bold font-unbounded uppercase text-gray-21">
-                      <SecondaryButton
-                        title="Assign Core"
-                        onClick={() => setIsAssignModalOpen(true)}
-                        className="w-full"
-                      />
-                    </div>
-
-                    <div className="text-2xl font-bold uppercase relative w-full max-w-xs mx-auto">
-                      {/* Overlay "New" Banner */}
-                      <div className="absolute right-0 top-0 transform translate-x-1/4 -translate-y-1/3 bg-pink-3 border border-gray-8 px-2 py-1 text-xs font-semibold uppercase rounded-full shadow-lg z-10">
-                        New
-                      </div>
-                      <SecondaryButton
-                        title="Change Frequency"
-                        onClick={() => setIsInterlaceModalOpen(true)}
-                        className="w-full"
-                      />
-                    </div>
-
-                    <div className="text-2xl font-bold uppercase relative w-full max-w-xs mx-auto">
-                      {/* Overlay "New" Banner */}
-                      <div className="absolute right-0 top-0 transform translate-x-1/4 -translate-y-1/3 bg-pink-3 border border-gray-8 px-2 py-1 text-xs font-semibold uppercase rounded-full shadow-lg z-10">
-                        New
-                      </div>
-
-                      <SecondaryButton
-                        title="Split Core"
-                        onClick={() => setIsPartitionModalOpen(true)}
-                        className="w-full"
-                      />
+                  <div className="flex flex-row flex-wrap justify-between">
+                    <div className="flex flex-col italic max-w-3xl text-gray-12 items-center justify-center px-2 py-8">
+                      Note: This region is Assigned.
                     </div>
                   </div>
                 </>
-              ) : (
-                <div className="flex flex-col italic max-w-3xl text-gray-12 items-center justify-center px-2 py-8">
-                  Note: You do not own this core. After buying a core you will be able to: Transfer
-                  it, Utilize it, Split it up, or change its frequency.
-                </div>
-              )}
-            </div>
+              )) ||
+              (region.pooled && (
+                <>
+                  <div className="pt-5 pl-10">
+                    <h3 className="text-xl font-unbounded uppercase font-bold">Pooled</h3>
+                  </div>
+                  <div className="flex flex-row flex-wrap justify-between">
+                    <div className="flex flex-col italic max-w-3xl text-gray-12 items-center justify-center px-2 py-8">
+                      Note: This region is in the On Demand Pool.
+                    </div>
+                  </div>
+                </>
+              ))
+            ) : (
+              <div className="flex flex-row flex-wrap justify-between">
+                {region.owner ===
+                (activeAccount
+                  ? encodeAddress(activeAccount.address, activeChain?.ss58Prefix || 42)
+                  : null) ? (
+                  <>
+                    <div className="pt-5 pl-10">
+                      <h3 className="text-xl font-unbounded uppercase font-bold">Note</h3>
+                    </div>
+                    <div className="flex flex-col italic max-w-md text-gray-12 items-start justify-center px-4 py-8">
+                      This core is yours. You are able to:
+                      <ul className="px-2 py-2">
+                        <li> * Transfer your core to another account</li>
+                        <li> * Utilize it for a parachain</li>
+                        <li> * Split it up</li>
+                        <li> * Change block production frequency</li>
+                        <li> * Assign it to a task</li>
+                      </ul>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 py-10">
+                      {/* Buttons*/}
+                      <div className="text-2xl font-bold font-unbounded uppercase text-gray-21">
+                        <SecondaryButton
+                          title="Transfer Core"
+                          onClick={() => setIsTransferModalOpen(true)}
+                          className="w-full"
+                        />
+                      </div>
+
+                      <div className="text-2xl font-bold font-unbounded uppercase text-gray-21">
+                        <SecondaryButton
+                          title="Assign Core"
+                          onClick={() => setIsAssignModalOpen(true)}
+                          className="w-full"
+                        />
+                      </div>
+
+                      <div className="text-2xl font-bold uppercase relative w-full max-w-xs mx-auto">
+                        {/* Overlay "New" Banner */}
+                        <div className="absolute right-0 top-0 transform translate-x-1/4 -translate-y-1/3 bg-pink-3 border border-gray-8 px-2 py-1 text-xs font-semibold uppercase rounded-full shadow-lg z-10">
+                          New
+                        </div>
+                        <SecondaryButton
+                          title="Change Frequency"
+                          onClick={() => setIsInterlaceModalOpen(true)}
+                          className="w-full"
+                        />
+                      </div>
+
+                      <div className="text-2xl font-bold uppercase relative w-full max-w-xs mx-auto">
+                        {/* Overlay "New" Banner */}
+                        <div className="absolute right-0 top-0 transform translate-x-1/4 -translate-y-1/3 bg-pink-3 border border-gray-8 px-2 py-1 text-xs font-semibold uppercase rounded-full shadow-lg z-10">
+                          New
+                        </div>
+
+                        <SecondaryButton
+                          title="Split Core"
+                          onClick={() => setIsPartitionModalOpen(true)}
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="pt-5 pl-10">
+                      <h3 className="text-xl font-unbounded uppercase font-bold">Note</h3>
+                    </div>
+                    <div className="flex flex-col italic max-w-3xl text-gray-12 items-center justify-center px-2 py-8">
+                      Note: You do not own this core. After buying a core you will be able to:
+                      Transfer it, Utilize it, Split it up, or change its frequency.
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
           </div>
         </Border>
       </section>
@@ -306,9 +347,9 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
           isOpen={isListingsModalOpen}
           onClose={() => setIsListingsModalOpen(false)}
           regionId={{
-            begin: region.detail[0].begin.replace(/,/g, ''),
-            core: region.detail[0].core,
-            mask: region.detail[0].mask,
+            begin: region.regionId.begin.toString(),
+            core: region.regionId.core.toString(),
+            mask: region.regionId.mask,
           }}
         />
 
@@ -316,9 +357,9 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
           isOpen={isTransferModalOpen}
           onClose={() => setIsTransferModalOpen(false)}
           regionId={{
-            begin: region.detail[0].begin.replace(/,/g, ''),
-            core: region.detail[0].core,
-            mask: region.detail[0].mask,
+            begin: region.regionId.begin.toString(),
+            core: region.regionId.core.toString(),
+            mask: region.regionId.mask,
           }}
         />
 
@@ -326,9 +367,9 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
           isOpen={isAssignModalOpen}
           onClose={() => setIsAssignModalOpen(false)}
           regionId={{
-            begin: region.detail[0].begin.replace(/,/g, ''),
-            core: region.detail[0].core,
-            mask: region.detail[0].mask,
+            begin: region.regionId.begin.toString(),
+            core: region.regionId.core.toString(),
+            mask: region.regionId.mask,
           }}
         />
 
@@ -336,9 +377,9 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
           isOpen={isPartitionModalOpen}
           onClose={() => setIsPartitionModalOpen(false)}
           regionId={{
-            begin: region.detail[0].begin.replace(/,/g, ''),
-            core: region.detail[0].core,
-            mask: region.detail[0].mask,
+            begin: region.regionId.begin.toString(),
+            core: region.regionId.core.toString(),
+            mask: region.regionId.mask,
           }}
         />
 
@@ -346,9 +387,9 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, regionId, mask })
           isOpen={isInterlaceModalOpen}
           onClose={() => setIsInterlaceModalOpen(false)}
           regionId={{
-            begin: region.detail[0].begin.replace(/,/g, ''),
-            core: region.detail[0].core,
-            mask: region.detail[0].mask,
+            begin: region.regionId.begin.toString(),
+            core: region.regionId.core.toString(),
+            mask: region.regionId.mask,
           }}
         />
       </>

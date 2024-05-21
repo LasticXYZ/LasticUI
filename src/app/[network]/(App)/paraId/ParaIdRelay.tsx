@@ -3,7 +3,9 @@ import GeneralTable from '@/components/table/GeneralTable'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { PossibleNetworks, network_list } from '@/config/network'
 import { parseFormattedNumber, toShortHead } from '@/utils'
+import { getChainFromPath } from '@/utils/common/chainPath'
 import { useInkathon } from '@poppyseed/lastic-sdk'
+import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 
 type ParasHeadType = {
@@ -53,7 +55,7 @@ const useParasParachains = () => {
       try {
         const entries = await relayApi.query.paras.parachains()
         const data: string[] = entries.toHuman() as string[]
-        console.log(data)
+        //console.log(data)
         setData(data)
       } catch (error) {
         console.error('Failed to fetch data:', error)
@@ -73,7 +75,8 @@ const ParaIdRelay = () => {
   const [searchTerm, setSearchTerm] = useState<number | null>(null)
   const itemsPerPage = 10
   const { activeRelayChain } = useInkathon()
-  const network = activeRelayChain?.network
+  const pathname = usePathname()
+  const network = getChainFromPath(pathname)
 
   const parasHead = useParasHead()
   const parasParachains = useParasParachains()

@@ -60,7 +60,7 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
         // Connect Button + Modal
         <div className="relative">
           <button
-            className=" font-unbounded uppercase font-black rounded-2xl hover:bg-pink-3 border border-gray-8 text-xs inline-flex items-center justify-center px-12 py-3 mr-3 text-center text-black dark:text-gray-1 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300"
+            className=" font-unbounded uppercase font-black rounded-2xl hover:bg-pink-400 border border-gray-8 text-xs inline-flex items-center justify-center px-12 py-3 mr-3 text-center text-black dark:text-gray-1 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300"
             onClick={() => setOpenConnect(!openConnect)}
           >
             <span>Connect Wallet</span>
@@ -77,7 +77,7 @@ export const ConnectButton: FC<ConnectButtonProps> = () => {
                       key={w.id}
                       onClick={() => {
                         // If the wallet has only one account, connect directly.
-                        console.log('w:', w)
+                        //console.log('w:', w)
                         connect?.(undefined, undefined, w)
                         setChosenWallet(w)
                       }}
