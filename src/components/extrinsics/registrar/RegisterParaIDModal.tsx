@@ -1,4 +1,5 @@
 import PrimaryButton from '@/components/button/PrimaryButton'
+import NumberField from '@/components/inputField/NumberField'
 import InputFile from '@/components/inputFile/InputFile'
 import Modal from '@/components/modal/Modal'
 import { formatPrice } from '@/utils'
@@ -31,7 +32,7 @@ const ReserveParaIDModal: FC<TransferModalProps> = ({
   const [wasmCode, setWasmCode] = useState<Uint8Array>()
   const [paraId, setParaId] = useState<number | null>(null)
 
-  const regCost = dataDepositPerByte * (BigInt(genesisHead?.length ?? 0) + maxCodeSize)
+  const registrationCost = dataDepositPerByte * (BigInt(genesisHead?.length ?? 0) + maxCodeSize)
 
   const txButtonProps: TxButtonProps = {
     api: relayApi,
@@ -78,18 +79,14 @@ const ReserveParaIDModal: FC<TransferModalProps> = ({
               : 'error'}
           </p>
         </div>
-        <div className="mb-4">Registration Cost: {formatPrice(regCost.toString(), network)}</div>
-        <div className="flex flex-row justify-start items-center w-full space-x-4">
-          <label htmlFor="newOwner" className="text-md font-semibold mb-2">
-            Parachain Id:
-          </label>
-          <input
-            className="text-lg border w-full bg-gray-100 dark:bg-gray-800 text-black dark:text-white rounded-md p-2 mb-4 focus:ring-blue-500 focus:border-blue-500"
-            type="number"
-            value={paraId || ''}
-            onChange={(e) => setParaId(parseFloat(e.target.value) || null)}
-          />
+        <div className="mb-4">
+          Registration Cost: {formatPrice(registrationCost.toString(), network)}
         </div>
+        <NumberField
+          label="Parachain Id:"
+          value={paraId || ''}
+          onChange={(e) => setParaId(parseFloat(e.target.value) || null)}
+        />
         <InputFile
           label="Upload WASM validation function for this parachain."
           icon={<CodeBracketIcon className="h-5 w-5 text-gray-500" />}

@@ -1,6 +1,6 @@
 import Border from '@/components/border/Border'
-import RenewModal from '@/components/broker/extrinsics/RenewModal'
 import SecondaryButton from '@/components/button/SecondaryButton'
+import RenewModal from '@/components/extrinsics/broker/RenewModal'
 import GeneralTable from '@/components/table/GeneralTable'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { PossibleNetworks, network_list } from '@/config/network'

@@ -1,7 +1,7 @@
 'use client'
 import Border from '@/components/border/Border'
-import PurchaseCreditsModal from '@/components/broker/extrinsics/PurchaseCreditsModal'
 import SecondaryButton from '@/components/button/SecondaryButton'
+import PurchaseCreditsModal from '@/components/extrinsics/broker/PurchaseCreditsModal'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { useInkathon } from '@poppyseed/lastic-sdk'
 

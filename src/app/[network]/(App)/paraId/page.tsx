@@ -1,9 +1,9 @@
 'use client'
 
-import RegisterParaIDModal from '@/components/broker/extrinsics/registrar/RegisterParaIDModal'
-import ReserveParaIDModal from '@/components/broker/extrinsics/registrar/ReserveParaIDModal'
 import PrimaryButton from '@/components/button/PrimaryButton'
 import SecondaryButton from '@/components/button/SecondaryButton'
+import RegisterParaIDModal from '@/components/extrinsics/registrar/RegisterParaIDModal'
+import ReserveParaIDModal from '@/components/extrinsics/registrar/ReserveParaIDModal'
 import { useParachainInfo } from '@/hooks/useParachainInfo'
 import { getChainFromPath } from '@/utils/common/chainPath'
 import { usePathname } from 'next/navigation'
