@@ -32,7 +32,7 @@ export default function BrokerSaleInfo() {
   const configuration = network_list[network].configuration
   const brokerConstants = network_list[network].constants
   const tokenSymbol = network_list[network].tokenSymbol
-  const decimalPoints = network_list[network].decimalPoints
+  const decimalPoints = network_list[network].tokenDecimals
 
   const currentSaleRegion = useSaleRegion(network, client)
 

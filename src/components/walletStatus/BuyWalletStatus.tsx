@@ -1,5 +1,5 @@
-import PurchaseInteractor from '@/components/broker/extrinsics/PurchaseInteractor'
 import SecondaryButton from '@/components/button/SecondaryButton'
+import PurchaseInteractor from '@/components/extrinsics/broker/PurchaseInteractor'
 import CuteInfo from '@/components/info/CuteInfo'
 import { ConnectButton } from '@/components/web3/ConnectButton'
 import { parseNativeTokenToHuman } from '@/utils/account/token'

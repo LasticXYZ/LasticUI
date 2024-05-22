@@ -146,6 +146,7 @@ const ParaIdRelay = () => {
                       data.parachain.toString(),
                     )
                       ? network_list[network as PossibleNetworks].paraId[data.parachain.toString()]
+                          .name
                       : null,
                     data.head.toString(),
                     data.para.toString(),

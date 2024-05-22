@@ -1,5 +1,6 @@
 'use client'
 
+import { Analytics } from '@vercel/analytics/react'
 import './globals.css'
 //import type { Metadata } from 'next'
 import ThemeProvider from '@/components/themeToggle/themeProvider'
@@ -29,6 +30,12 @@ function getNavigation(network: string) {
       href: `/${network}/bulkcore1`,
       current: false,
     },
+    // {
+    //   name: 'Trade Cores',
+    //   icon: <BanknotesIcon className="h-5 w-5" aria-hidden="true" />,
+    //   href: `/${network}/listings`,
+    //   current: false,
+    // },
     // {
     //   name: 'On-Demand Cores',
     //   icon: <BoltIcon className="h-5 w-5" aria-hidden="true" />,
@@ -99,7 +106,10 @@ export default function RootLayout({
             >
               <Navbar navigation={navigation_app}>
                 <div className="py-10 font-montserrat">
-                  <main>{children}</main>
+                  <main>
+                    {children}
+                    <Analytics />
+                  </main>
                 </div>
               </Navbar>
             </UseInkathonProvider>
