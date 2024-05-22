@@ -9,6 +9,7 @@ import { getChainFromPath } from '@/utils/common/chainPath'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import ParaIdFetch from './ParaIdFetch'
+import ParaIdFetch2 from './ParaIdFetch2'
 import ParaIdRelay from './ParaIdRelay'
 import ParachainsSubscanInfo from './ParachainsSubscanInfo'
 
@@ -18,7 +19,8 @@ const InstaCore = () => {
   const [isParaReserveOpen, setIsParaReserveOpen] = useState(false)
   const [isParaRegisterOpen, setIsParaRegisterOpen] = useState(false)
 
-  const { nextParaId, reservationCost, dataDepositPerByte, maxCodeSize } = useParachainInfo()
+  const { parachains, nextParaId, reservationCost, dataDepositPerByte, maxCodeSize } =
+    useParachainInfo()
 
   return (
     <>
@@ -32,6 +34,9 @@ const InstaCore = () => {
             <SecondaryButton title="Register ParaId" onClick={() => setIsParaRegisterOpen(true)} />
           </div>
         </div>
+      </section>
+      <section className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8 flex flex-col items-stretch mt-5">
+        <ParaIdFetch2 parachains={parachains} />
       </section>
       <section className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8 flex flex-col items-stretch mt-5">
         <ParaIdFetch />

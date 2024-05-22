@@ -1,4 +1,3 @@
-import { network_list } from '@/config/network'
 import { parseHNStringToString } from '@/utils/broker/blockTime'
 import { ApiPromise } from '@polkadot/api'
 import { ParachainInfo, ParachainState } from '../../hooks/useParachainInfo'
@@ -70,24 +69,23 @@ export const fetchAllParachains = async (
 
   return parachainLifecycles.map(([key, value]) => {
     const [strId] = key.toHuman() as [string]
-    const id = parseInt(strId.replace(/,/g, ''))
+    const paraId = parseInt(strId.replace(/,/g, ''))
     const strState = value.toString()
-    const name = network_list[network].name ?? ''
-    const state = systemParas.includes(id)
+    const state = systemParas.includes(paraId)
       ? ParachainState.SYSTEM
-      : leaseHoldingParas.includes(id)
+      : leaseHoldingParas.includes(paraId)
         ? ParachainState.LEASE_HOLDING
         : strState === 'Onboarding'
           ? ParachainState.ONBOARDING
-          : activeParas.includes(id)
+          : activeParas.includes(paraId)
             ? ParachainState.ACTIVE_PARA
-            : workplanParas.includes(id)
+            : workplanParas.includes(paraId)
               ? ParachainState.IN_WORKPLAN
               : strState === 'Parathread'
                 ? ParachainState.ONDEMAND_PARACHAIN
                 : ParachainState.IDLE_PARA
 
-    return { id, state, name }
+    return { paraId, state, network }
   })
 }
 
@@ -102,10 +100,10 @@ export const getReservedParachains = async (
   const records = await relayApi.query.registrar.paras.entries()
   return records
     .map(([key, value]) => {
-      const id = parseInt(parseHNStringToString((key.toHuman() as any)[0]))
+      const paraId = parseInt(parseHNStringToString((key.toHuman() as any)[0]))
       const { manager } = value.toJSON() as any
       return manager === activeAccount?.address
-        ? { id, state: ParachainState.RESERVED, name: '' }
+        ? { paraId, state: ParachainState.RESERVED, network: '' }
         : null
     })
     .filter((parachain) => parachain !== null) as ParachainInfo[]

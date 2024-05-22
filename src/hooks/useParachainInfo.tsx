@@ -11,20 +11,20 @@ import { usePathname } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 
 export type ParachainInfo = {
-  id: number
+  paraId: number
   state: ParachainState
-  name: string
+  network: string
 }
 
 export enum ParachainState {
-  SYSTEM = 'System',
+  SYSTEM = 'System Chain',
   ACTIVE_PARA = 'Currently Active',
   IDLE_PARA = 'Idle Chain',
   RESERVED = 'Reserved',
   ONBOARDING = 'Onboarding',
-  ONDEMAND_PARACHAIN = 'On-Demand Parachain',
+  ONDEMAND_PARACHAIN = 'Parathread',
   IN_WORKPLAN = 'Idle(In workplan)',
-  LEASE_HOLDING = 'Lease Holding',
+  LEASE_HOLDING = 'Holding Slot',
 }
 
 export const useParachainInfo = () => {
@@ -53,9 +53,9 @@ export const useParachainInfo = () => {
     const uniqueParachains = [
       ...allParachains,
       ...reservedParachains.filter(
-        (reserved) => !allParachains.some((para) => para.id === reserved.id),
+        (reserved) => !allParachains.some((para) => para.paraId === reserved.paraId),
       ),
-    ].sort((a, b) => a.id - b.id)
+    ].sort((a, b) => a.paraId - b.paraId)
 
     setParachains(uniqueParachains)
     setLoading(false)

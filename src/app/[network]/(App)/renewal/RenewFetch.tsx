@@ -146,7 +146,7 @@ const RenewalsData = () => {
                         network_list[network as PossibleNetworks].paraId.hasOwnProperty(
                           task ? task : '',
                         )
-                          ? network_list[network as PossibleNetworks].paraId[task]
+                          ? network_list[network as PossibleNetworks].paraId[task].name
                           : null,
                         coreInfo[0].when,
                         coreInfo[0].core,
