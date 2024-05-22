@@ -40,9 +40,12 @@ export const getBlockTimestamp = async (
  * Use for future blocks only and approximations only.
  */
 export const blocksToTimeFormat = (
-  nbOfBlocks: number,
+  nbOfBlocks: number | null,
   typeOfChain?: 'PARA' | 'RELAY' | 'LOCAL',
 ): string => {
+  if (!nbOfBlocks) {
+    return '-'
+  }
   let secondsPerBlock: number = 6 // Default value for relay chain
   if (typeOfChain === 'PARA') {
     secondsPerBlock = 12 // Parachain
@@ -53,13 +56,20 @@ export const blocksToTimeFormat = (
   }
 
   const totalSeconds = nbOfBlocks * secondsPerBlock
-  const days = Math.floor(totalSeconds / (24 * 3600))
-  const hours = Math.floor((totalSeconds - days * 24 * 3600) / 3600)
+
+  const months = Math.floor(totalSeconds / (30 * 24 * 3600))
+  const weeks = Math.floor((totalSeconds % (30 * 24 * 3600)) / (7 * 24 * 3600))
+  const days = Math.floor((totalSeconds % (7 * 24 * 3600)) / (24 * 3600))
+  const hours = Math.floor((totalSeconds % (24 * 3600)) / 3600)
   const minutes = Math.floor((totalSeconds % 3600) / 60)
   const seconds = totalSeconds % 60
 
-  if (days > 0) {
-    return `${days} days ${hours} hours ${minutes} min ${seconds} sec`
+  if (months > 0) {
+    return `${months} months ${weeks} weeks ${days} days`
+  } else if (weeks > 0) {
+    return `${weeks} weeks ${days} days ${hours} hours`
+  } else if (days > 0) {
+    return `${days} days ${hours} hours ${minutes} min`
   } else if (hours > 0) {
     return `${hours} hours ${minutes} min ${seconds} sec`
   } else if (minutes > 0) {

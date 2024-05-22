@@ -23,7 +23,7 @@ export enum ParachainState {
   RESERVED = 'Reserved',
   ONBOARDING = 'Onboarding',
   ONDEMAND_PARACHAIN = 'Parathread',
-  IN_WORKPLAN = 'Idle(In workplan)',
+  IN_WORKPLAN = 'Idle - In workplan',
   LEASE_HOLDING = 'Holding Slot',
 }
 

@@ -4,6 +4,8 @@ import GeneralTableWithButtons from '@/components/table/GeneralTableWithButtons'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
 import { ParachainInfo, ParachainState } from '@/hooks/useParachainInfo'
+import { useCurrentRelayBlockNumber } from '@/hooks/useSubstrateQuery'
+import { blocksToTimeFormat } from '@/utils/broker/blockTime'
 import { useInkathon } from '@poppyseed/lastic-sdk'
 import { ChangeEvent, useState } from 'react'
 
@@ -14,14 +16,30 @@ const statusColors = {
   Reserved: 'bg-red-200',
   Onboarding: 'bg-purple-200',
   Parathread: 'bg-indigo-200',
-  'Idle(In workplan)': 'bg-pink-200',
+  'Idle - In workplan': 'bg-pink-200',
   'Holding Slot': 'bg-orange-200',
 }
 
+const statusDescriptions = {
+  'System Chain':
+    'A system chain is the main chain of a blockchain network, responsible for its core functionality.',
+  'Currently Active':
+    'An active parachain is currently producing blocks and participating in the relay chain.',
+  'Idle Chain': 'An idle chain is not currently active or producing blocks.',
+  Reserved: 'Reserved parachains have slots that are reserved but not yet active.',
+  Onboarding: 'Parachains that are currently in the process of onboarding to the network.',
+  Parathread:
+    'Parathreads are parachains that are not continuously active but can participate in the network on demand.',
+  'Idle - In workplan':
+    'Idle parachains that are included in a work plan but are not currently active.',
+  'Holding Slot': 'Parachains that hold a slot but are not actively producing blocks.',
+}
+
 const ParaIdFetch = ({ parachains }: { parachains: ParachainInfo[] }) => {
-  const { activeChain } = useInkathon()
+  const { activeChain, relayApi } = useInkathon()
   const [filter, setFilter] = useState<string>('all')
   const [paraIdSET, setParaId] = useState<number | null>(null)
+  const currentBlockNumber = useCurrentRelayBlockNumber(relayApi)
 
   if (!activeChain) {
     return (
@@ -57,6 +75,7 @@ const ParaIdFetch = ({ parachains }: { parachains: ParachainInfo[] }) => {
             <button
               onClick={() => setFilter('all')}
               className={`px-4 py-2 rounded-full text-black dark:text-white ${filter === 'all' ? 'font-bold' : ''}`}
+              title="Show all parachains"
             >
               All
             </button>
@@ -65,6 +84,7 @@ const ParaIdFetch = ({ parachains }: { parachains: ParachainInfo[] }) => {
                 key={stateKey}
                 onClick={() => setFilter(stateValue)}
                 className={`px-4 py-2 rounded-full text-black ${statusColors[stateValue]} ${filter === stateValue ? 'font-bold' : ''}`}
+                title={statusDescriptions[stateValue]}
               >
                 {stateValue}
               </button>
@@ -74,17 +94,24 @@ const ParaIdFetch = ({ parachains }: { parachains: ParachainInfo[] }) => {
         {filteredParachains.length > 0 ? (
           <div className="w-full overflow-x-auto">
             <GeneralTableWithButtons
-              tableData={filteredParachains.map(({ paraId, state, network }, idx) => ({
-                data: [
-                  paraId.toString(),
-                  network_list[network]?.paraId[paraId.toString()]?.name,
-                  network_list[network]?.paraId[paraId.toString()]?.description,
-                  <span key={idx} className={`${statusColors[state]} px-4 py-1 rounded-full`}>
-                    {state}
-                  </span>,
-                  network_list[network]?.paraId[paraId.toString()]?.lease?.toString(),
-                ],
-              }))}
+              tableData={filteredParachains.map(({ paraId, state, network }, idx) => {
+                const leaseEndBlock = network_list[network]?.paraId[paraId.toString()]?.lease
+                const remainingBlocks =
+                  leaseEndBlock !== null && currentBlockNumber !== null
+                    ? leaseEndBlock - currentBlockNumber
+                    : null
+                return {
+                  data: [
+                    paraId.toString(),
+                    network_list[network]?.paraId[paraId.toString()]?.name,
+                    network_list[network]?.paraId[paraId.toString()]?.description,
+                    <span key={idx} className={`${statusColors[state]} px-4 py-1 rounded-full`}>
+                      {state}
+                    </span>,
+                    blocksToTimeFormat(remainingBlocks, 'RELAY'),
+                  ],
+                }
+              })}
               tableHeader={[
                 { title: 'ParaId' },
                 { title: 'Name' },
