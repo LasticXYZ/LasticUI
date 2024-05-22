@@ -70,7 +70,7 @@ const ParachainInfo: React.FC = () => {
           network_list[network as PossibleNetworks].paraId.hasOwnProperty(
             paraInfo.para_id.toString(),
           )
-            ? network_list[network as PossibleNetworks].paraId[paraInfo.para_id.toString()]
+            ? network_list[network as PossibleNetworks].paraId[paraInfo.para_id.toString()]?.name
             : null,
           paraInfo.status,
           toShortAddress(paraInfo.manager_display?.address),
