@@ -8,10 +8,7 @@ import { useParachainInfo } from '@/hooks/useParachainInfo'
 import { getChainFromPath } from '@/utils/common/chainPath'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import ParaIdFetch from './ParaIdFetch'
 import ParaIdFetch2 from './ParaIdFetch2'
-import ParaIdRelay from './ParaIdRelay'
-import ParachainsSubscanInfo from './ParachainsSubscanInfo'
 
 const InstaCore = () => {
   const pathname = usePathname()
@@ -38,13 +35,12 @@ const InstaCore = () => {
       <section className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8 flex flex-col items-stretch mt-5">
         <ParaIdFetch2 parachains={parachains} />
       </section>
-      <section className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8 flex flex-col items-stretch mt-5">
+      {/* <section className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8 flex flex-col items-stretch mt-5">
         <ParaIdFetch />
       </section>
-      <ParachainsSubscanInfo />
       <section className="mx-auto max-w-9xl px-4 sm:px-6 lg:px-8 flex flex-col items-stretch mt-5">
         <ParaIdRelay />
-      </section>
+      </section> */}
       <ReserveParaIDModal
         isOpen={isParaReserveOpen}
         nextParaId={nextParaId}

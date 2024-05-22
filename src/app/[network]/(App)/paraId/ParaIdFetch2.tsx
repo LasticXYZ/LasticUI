@@ -1,24 +1,27 @@
 import Border from '@/components/border/Border'
-import GeneralTable from '@/components/table/GeneralTable'
+import NumberField from '@/components/inputField/NumberField'
+import GeneralTableWithButtons from '@/components/table/GeneralTableWithButtons'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
-import { ParachainInfo } from '@/hooks/useParachainInfo'
+import { ParachainInfo, ParachainState } from '@/hooks/useParachainInfo'
 import { useInkathon } from '@poppyseed/lastic-sdk'
-import { useState } from 'react'
+import { ChangeEvent, useState } from 'react'
+
+const statusColors = {
+  'System Chain': 'bg-blue-200',
+  'Currently Active': 'bg-green-200',
+  'Idle Chain': 'bg-yellow-200',
+  Reserved: 'bg-red-200',
+  Onboarding: 'bg-purple-200',
+  Parathread: 'bg-indigo-200',
+  'Idle(In workplan)': 'bg-pink-200',
+  'Holding Slot': 'bg-orange-200',
+}
 
 const ParaIdFetch = ({ parachains }: { parachains: ParachainInfo[] }) => {
-  const { activeAccount, activeChain } = useInkathon()
-  const [filter, setFilter] = useState('all')
-  const [task, setTask] = useState<number | null>(null)
-  const [core, setCore] = useState<number | null>(null)
-  const [begin, setBegin] = useState<number | null>(null)
-
-  // Pagination state
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 8
-  // Pagination functions
-  const handleNextPage = () => setCurrentPage(currentPage + 1)
-  const handlePrevPage = () => setCurrentPage(currentPage - 1)
+  const { activeChain } = useInkathon()
+  const [filter, setFilter] = useState<string>('all')
+  const [paraIdSET, setParaId] = useState<number | null>(null)
 
   if (!activeChain) {
     return (
@@ -28,77 +31,70 @@ const ParaIdFetch = ({ parachains }: { parachains: ParachainInfo[] }) => {
     )
   }
 
+  const handleParaIdChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setParaId(value ? parseFloat(value) : null)
+  }
+
+  const filteredParachains = parachains.filter((parachain) => {
+    const matchesFilter = filter === 'all' || parachain.state === filter
+    const matchesParaId = paraIdSET === null || parachain.paraId === paraIdSET
+    return matchesFilter && matchesParaId
+  })
+
   return (
     <Border className="h-full flex flex-row justify-center items-center">
       <div className="h-full w-full flex flex-col justify-start items-start p-10">
-        <h1 className="text-xl font-bold uppercase mb-5">Cores set for execution - Workload</h1>
-        <div className="flex flex-row items-center gap-3 mb-5">
-          <select
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="p-2 border rounded"
-          >
-            <option value="all">All</option>
-            <option value="tasks">Tasks</option>
-            <option value="pool">Pool</option>
-          </select>
-          {filter === 'tasks' && (
-            <>
-              <label htmlFor="task">Task:</label>
-              <input
-                id="task"
-                type="number"
-                placeholder="Task Number"
-                value={task || ''}
-                onChange={(e) => setTask(parseFloat(e.target.value) || null)}
-                className="ml-2 p-2 border rounded"
-              />
-            </>
-          )}
-          <label htmlFor="begin">Begin:</label>
-          <input
-            id="begin"
-            type="number"
-            placeholder="Begin Number"
-            value={begin || ''}
-            onChange={(e) => setBegin(parseFloat(e.target.value) || null)}
-            className="p-2 border rounded"
+        <h1 className="text-xl font-bold uppercase mb-5">Status of {filter} cores</h1>
+        <div className="grid grid-cols-3 gap-10 items-start">
+          <NumberField
+            label="ParaId"
+            value={paraIdSET !== null ? paraIdSET.toString() : ''}
+            onChange={handleParaIdChange}
+            className="mb-5"
           />
-          <label htmlFor="core">Core:</label>
-          <input
-            id="core"
-            type="number"
-            placeholder="Core Number"
-            value={core || ''}
-            onChange={(e) => setCore(parseFloat(e.target.value) || null)}
-            className="p-2 border rounded"
-          />
+          <div className="flex flex-wrap col-span-2 gap-3 mb-5">
+            <button
+              onClick={() => setFilter('all')}
+              className={`px-4 py-2 rounded-full text-black dark:text-white ${filter === 'all' ? 'font-bold' : ''}`}
+            >
+              All
+            </button>
+            {Object.entries(ParachainState).map(([stateKey, stateValue]) => (
+              <button
+                key={stateKey}
+                onClick={() => setFilter(stateValue)}
+                className={`px-4 py-2 rounded-full text-black ${statusColors[stateValue]} ${filter === stateValue ? 'font-bold' : ''}`}
+              >
+                {stateValue}
+              </button>
+            ))}
+          </div>
         </div>
-        {parachains ? (
-          <>
-            <div className="w-full overflow-x-auto">
-              <GeneralTable
-                tableData={parachains.map(({ paraId, state, network }) => ({
-                  data: [
-                    paraId.toString(),
-                    network_list[network]?.paraId[paraId.toString()]?.name,
-                    network_list[network]?.paraId[paraId.toString()]?.description,
-                    state,
-                    network_list[network]?.paraId[paraId.toString()]?.lease,
-                    ,
-                  ],
-                }))}
-                tableHeader={[
-                  { title: 'ParaId' },
-                  { title: 'Name' },
-                  { title: 'Description' },
-                  { title: 'Status' },
-                  { title: 'Lease Period' },
-                ]}
-                colClass="grid-cols-5"
-              />
-            </div>
-          </>
+        {filteredParachains.length > 0 ? (
+          <div className="w-full overflow-x-auto">
+            <GeneralTableWithButtons
+              tableData={filteredParachains.map(({ paraId, state, network }, idx) => ({
+                data: [
+                  paraId.toString(),
+                  network_list[network]?.paraId[paraId.toString()]?.name,
+                  network_list[network]?.paraId[paraId.toString()]?.description,
+                  <span key={idx} className={`${statusColors[state]} px-4 py-1 rounded-full`}>
+                    {state}
+                  </span>,
+                  network_list[network]?.paraId[paraId.toString()]?.lease?.toString(),
+                ],
+              }))}
+              tableHeader={[
+                { title: 'ParaId' },
+                { title: 'Name' },
+                { title: 'Description' },
+                { title: 'Status' },
+                { title: 'Lease Period' },
+              ]}
+              colClass="grid-cols-5"
+            />
+          </div>
         ) : (
           <p>No data available.</p>
         )}
