@@ -1,14 +1,14 @@
 import { getChainFromPath } from '@/utils/common/chainPath'
-import { useInkathon } from '@poppyseed/lastic-sdk'
-import { usePathname } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
 import {
   fetchAllParachains,
   fetchNextParachainId,
   fetchRegistrationConstants,
   fetchReservationCost,
   getReservedParachains,
-} from './parachainUtils'
+} from '@/utils/parachain/parachainUtils'
+import { useInkathon } from '@poppyseed/lastic-sdk'
+import { usePathname } from 'next/navigation'
+import { useCallback, useEffect, useState } from 'react'
 
 export type ParachainInfo = {
   id: number

@@ -1,7 +1,7 @@
 import { network_list } from '@/config/network'
 import { parseHNStringToString } from '@/utils/broker/blockTime'
 import { ApiPromise } from '@polkadot/api'
-import { ParachainInfo, ParachainState } from './useParachainInfo'
+import { ParachainInfo, ParachainState } from '../../hooks/useParachainInfo'
 
 // Fetches the list of currently active parachains.
 export const getActiveParachains = async (
