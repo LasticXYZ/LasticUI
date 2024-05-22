@@ -6,7 +6,7 @@ export type NetworkInfo = {
   [key: string]: {
     name: string
     tokenSymbol: string
-    decimalPoints: number
+    tokenDecimals: number
     apiUrl: string
     paraId: {
       [key: string]: string // This tells TypeScript any string key returns a string value
@@ -21,7 +21,7 @@ export const network_list: NetworkInfo = {
   polkadot: {
     name: 'Polkadot',
     tokenSymbol: 'DOT',
-    decimalPoints: 10,
+    tokenDecimals: 10,
     apiUrl: 'https://polkadot.api.subscan.io/api',
     paraId: {
       '1000': 'AssetHub',
@@ -92,7 +92,7 @@ export const network_list: NetworkInfo = {
   kusama: {
     name: 'Kusama',
     tokenSymbol: 'KSM',
-    decimalPoints: 12,
+    tokenDecimals: 12,
     apiUrl: 'https://kusama.api.subscan.io/api',
     paraId: {
       '1000': 'AssetHub',
@@ -180,7 +180,7 @@ export const network_list: NetworkInfo = {
   westend: {
     name: 'Westend',
     tokenSymbol: 'WST',
-    decimalPoints: 12,
+    tokenDecimals: 12,
     apiUrl: 'https://westend.api.subscan.io/api',
     paraId: {
       '1000': 'assethub-westend',
@@ -219,7 +219,7 @@ export const network_list: NetworkInfo = {
   rococo: {
     name: 'Rococo',
     tokenSymbol: 'ROC',
-    decimalPoints: 12,
+    tokenDecimals: 12,
     apiUrl: 'https://rococo.api.subscan.io/api',
     paraId: {
       '1000': 'AssetHub',

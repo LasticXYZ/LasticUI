@@ -17,7 +17,7 @@ type DataSetKey = 'priceOnePeriod' | 'price' | 'cores' | 'pastAuctions' // Add m
 const CoreUtilisation: React.FC = () => {
   const pathname = usePathname()
   const network = getChainFromPath(pathname)
-  const decimalPoints = network_list[network].decimalPoints
+  const decimalPoints = network_list[network].tokenDecimals
 
   const [activeDataSet, setActiveDataSet] = useState<DataSetKey>('priceOnePeriod') // Change to string to accommodate multiple datasets
   const client = useMemo(() => getClient(), [])
