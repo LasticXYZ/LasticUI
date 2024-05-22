@@ -29,6 +29,7 @@ const ReserveParaIDModal: FC<TransferModalProps> = ({
   const network = getChainFromPath(pathname)
   const [genesisHead, setGenesisHead] = useState<Uint8Array>()
   const [wasmCode, setWasmCode] = useState<Uint8Array>()
+  const [paraId, setParaId] = useState<number | null>(null)
 
   const regCost = dataDepositPerByte * (BigInt(genesisHead?.length ?? 0) + maxCodeSize)
 
@@ -39,12 +40,14 @@ const ReserveParaIDModal: FC<TransferModalProps> = ({
       palletRpc: 'registrar',
       callable: 'register',
       inputParams: [
+        paraId ? paraId : undefined,
         genesisHead ? compactAddLength(genesisHead) : undefined,
         wasmCode ? compactAddLength(wasmCode) : undefined,
       ],
       paramFields: [
+        { name: 'id', type: 'u32', optional: false },
         { name: 'genesisHead', type: 'Bytes', optional: false },
-        { name: 'wasmCode', type: 'Bytes', optional: false },
+        { name: 'validationCode', type: 'Bytes', optional: false },
       ],
     },
     type: 'SIGNED-TX',
@@ -76,6 +79,17 @@ const ReserveParaIDModal: FC<TransferModalProps> = ({
           </p>
         </div>
         <div className="mb-4">Registration Cost: {formatPrice(regCost.toString(), network)}</div>
+        <div className="flex flex-row justify-start items-center w-full space-x-4">
+          <label htmlFor="newOwner" className="text-md font-semibold mb-2">
+            Parachain Id:
+          </label>
+          <input
+            className="text-lg border w-full bg-gray-100 dark:bg-gray-800 text-black dark:text-white rounded-md p-2 mb-4 focus:ring-blue-500 focus:border-blue-500"
+            type="number"
+            value={paraId || ''}
+            onChange={(e) => setParaId(parseFloat(e.target.value) || null)}
+          />
+        </div>
         <InputFile
           label="Upload WASM validation function for this parachain."
           icon={<CodeBracketIcon className="h-5 w-5 text-gray-500" />}
