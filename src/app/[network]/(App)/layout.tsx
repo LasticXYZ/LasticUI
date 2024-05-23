@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/react'
 import './globals.css'
 //import type { Metadata } from 'next'
 import ThemeProvider from '@/components/themeToggle/themeProvider'
+import ToastContextProvider from '@/context/toast/ToastContext'
 import {
   ArrowPathIcon,
   Cog8ToothIcon,
@@ -104,14 +105,16 @@ export default function RootLayout({
               defaultChain={default_chain}
               relayChain={relay_chain}
             >
-              <Navbar navigation={navigation_app}>
-                <div className="py-10 font-montserrat">
-                  <main>
-                    {children}
-                    <Analytics />
-                  </main>
-                </div>
-              </Navbar>
+              <ToastContextProvider>
+                <Navbar navigation={navigation_app}>
+                  <div className="py-10 font-montserrat">
+                    <main>
+                      {children}
+                      <Analytics />
+                    </main>
+                  </div>
+                </Navbar>
+              </ToastContextProvider>
             </UseInkathonProvider>
           </Background>
         </ThemeProvider>
