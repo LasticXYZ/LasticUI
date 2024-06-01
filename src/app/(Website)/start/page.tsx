@@ -31,7 +31,6 @@ const StartPage = () => {
               </p>
               <div className="flex flex-col justify-center py-5 items-center w-full">
                 <div className="p-2">
-                  <PrimaryButtonWeb title="Launch App"  />
                   <PrimaryButtonWeb
                     title="Launch App"
                     location="https://ethprague.vercel.app/"
