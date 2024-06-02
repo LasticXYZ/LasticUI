@@ -176,6 +176,10 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
                 trade will be executed.
               </p>
             </div>
+            <span>
+              Note: Trading multiple cores at once in the same multisig is currently not supported
+              and can lead to issues.
+            </span>
           </div>
         </div>
 
