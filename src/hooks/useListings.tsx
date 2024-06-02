@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 const LASTIC_ADDRESS = process.env.NEXT_PUBLIC_LASTIC_ADDRESS
 
-// resembles ActiveChain.name ;can and should obviously be separated in the future into multiple db tables
+// resembles activeChain.name. Can be separated in the future into multiple db tables
 export type networks =
   | 'Polkadot Coretime'
   | 'Kusama Coretime'
@@ -39,7 +39,7 @@ export interface CoreListing {
 
 /** Hook for fetching and managing listings on the DB. */
 export const useListings = (fetchOnInit = true) => {
-  const { api } = useInkathon()
+  const { api, activeChain } = useInkathon()
   const [listings, setListings] = useState<CoreListing[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [statusMessage, setStatusMessage] = useState('')
@@ -55,23 +55,18 @@ export const useListings = (fetchOnInit = true) => {
   useEffect(() => {
     const fetchData = async () => {
       await fetch('/api/create-listings-table')
-      if (fetchOnInit) await fetchListings()
+      if (fetchOnInit && activeChain?.name) await fetchListings(activeChain.name as networks)
     }
 
     fetchData()
-  }, [fetchOnInit])
+  }, [fetchOnInit, activeChain?.name])
 
-  const fetchListings = async (filterParams?: Record<string, string>) => {
+  const fetchListings = async (network: networks, id?: string) => {
     setIsLoading(true)
     try {
-      // Construct query parameters from filterParams
-      let queryParams = ''
-      if (filterParams) {
-        queryParams = new URLSearchParams(filterParams).toString()
-      }
-
       // Create the URL with parameters
-      const url = `/api/listings${queryParams ? '?' + queryParams : ''}`
+      const url = `/api/listings?network=${network}`
+      if (id) url.concat(`&id=${id}`)
 
       const response = await fetch(url)
       if (!response.ok) throw new Error()
@@ -108,7 +103,7 @@ export const useListings = (fetchOnInit = true) => {
 
       if (!response.ok) throw new Error()
 
-      await fetchListings()
+      if (activeChain?.name) await fetchListings(activeChain.name as networks)
       setStatusMessage('Listing added successfully')
     } catch (error) {
       console.error('Failed to add listing:', error)
@@ -119,30 +114,9 @@ export const useListings = (fetchOnInit = true) => {
 
   const deleteListing = async (listing: CoreListing) => {}
 
-  const updateListing = async (listing: CoreListing) => {
-    setIsLoading(true)
-    try {
-      const response = await fetch('/api/listings', {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(listing),
-      })
-
-      if (!response.ok) throw new Error()
-
-      fetchListings()
-    } catch (error) {
-      console.error('Failed to update listing:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
   /** Checks if listing is still open to buy. Useful as a pre-check before starting a trade. */
   const _isListingStillOpen = async (listingID: number) => {
-    const newListings = await fetchListings()
+    const newListings = await fetchListings(activeChain?.name as networks)
     const listing = newListings.find((listing) => listing.id === listingID)
 
     if (!listing || listing.status !== 'listed' || listing.buyerAddress) return false
@@ -180,7 +154,7 @@ export const useListings = (fetchOnInit = true) => {
         status: 'completed',
       }
 
-      const response = await fetch('/api/listings', {
+      const response = await fetch('/api/finish-trade', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -227,7 +201,6 @@ export const useListings = (fetchOnInit = true) => {
     fetchListings,
     addListing,
     deleteListing,
-    updateListing,
     markTradeStarted,
     markTradeCompleted,
   }

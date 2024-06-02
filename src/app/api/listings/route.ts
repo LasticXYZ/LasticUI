@@ -87,34 +87,3 @@ export async function GET(req: NextRequest) {
     })
   }
 }
-
-/** Updates an existing listing. For example, used to update buyerAddress, status, or timepoint. */
-export async function PATCH(req: NextRequest): Promise<NextResponse> {
-  try {
-    const data: CoreListing = await req.json()
-
-    if (!data.id) {
-      return new NextResponse(JSON.stringify({ message: 'Parameters required' }), { status: 400 })
-    }
-
-    const result = await sql`
-      UPDATE listings
-      SET "buyerAddress" = ${data.buyerAddress}, status = ${data.status}, "lasticAddress" = ${data.lasticAddress}
-      WHERE id = ${data.id}
-      RETURNING *;
-    `
-
-    console.log(result)
-
-    if (result.rowCount > 0) {
-      return new NextResponse(JSON.stringify({ result: result.rows[0] }), { status: 200 })
-    } else {
-      return new NextResponse(JSON.stringify({ message: 'Listing not found or no changes made' }), {
-        status: 404,
-      })
-    }
-  } catch (error) {
-    console.error('PATCH Error:', error)
-    return new NextResponse(JSON.stringify({ error: 'Internal server error' }), { status: 500 })
-  }
-}
