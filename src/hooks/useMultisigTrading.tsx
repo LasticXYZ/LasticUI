@@ -56,7 +56,7 @@ export const useMultisigTrading = ({
     // get latest open multisig call
     // if there is 1 open multisig call -> execute the trade (add 'when')
     // if there is no open multisig call -> create a new one (no 'when')
-    // if there are more than 1 open multisig calls -> find the right one and execute it (hard)
+    // if there are more than 1 open multisig calls -> find the right one and execute it (hard, because event callHash differs from actual one)
     const openMultisigCalls = await getAllOpenMultisigCalls(
       multisigAddress || '',
       api,

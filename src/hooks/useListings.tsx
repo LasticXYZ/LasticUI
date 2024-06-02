@@ -127,13 +127,14 @@ export const useListings = (fetchOnInit = true) => {
   /** Marks a trade as started. Updates status and buyerAddress. Make sure to check if listing is still open. */
   const markTradeStarted = async (listingID: number, buyerAddress: string) => {
     setIsLoading(true)
+    const network = activeChain?.name as networks
     try {
       const response = await fetch('/api/start-trade', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: listingID, buyerAddress }),
+        body: JSON.stringify({ id: listingID, buyerAddress, network }),
       })
 
       if (!response.ok) throw new Error()
@@ -147,11 +148,12 @@ export const useListings = (fetchOnInit = true) => {
 
   const markTradeCompleted = async (listingID: number) => {
     setIsLoading(true)
+    const network = activeChain?.name as networks
     try {
       // update status
       const updatedListing = {
         id: listingID,
-        status: 'completed',
+        network,
       }
 
       const response = await fetch('/api/finish-trade', {
