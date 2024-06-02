@@ -9,10 +9,23 @@ interface Database {
 
 /** Adds a new listing to the database */
 export async function POST(req: NextRequest) {
-  // Checks TODO: listing already exists? Sender owns core? etc.
-
   const data: CoreListing = await req.json()
 
+  // TODO: check if seller is logged in and authorized
+  // TODO: check if sender owns core
+
+  // check if listing already exists
+  const current = await sql`
+      SELECT * FROM listings WHERE "coreNumber" = ${data.coreNumber}, mask = ${data.mask}, "begin" = ${data.begin}, network = ${data.network};
+    `
+  if (current.rowCount > 0)
+    current.rows.forEach((row) => {
+      const listing = row as CoreListing
+      if (listing.status === 'listed' || listing.status === 'tradeOngoing')
+        return NextResponse.json({ message: 'Listing already exists' }, { status: 400 })
+    })
+
+  // insert
   try {
     const result = await sql`
   INSERT INTO listings (
