@@ -66,8 +66,7 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
     core,
     onTradeStarted: (listingID, buyerAddress) =>
       markTradeStarted(listingID, buyerAddress).then(() => onUpdateListingDB?.()),
-    onTradeCompleted: (listingID) =>
-      markTradeCompleted(listingID).then(() => onUpdateListingDB?.()),
+    onTradeCompleted: (listingID) => markTradeCompleted(core).then(() => onUpdateListingDB?.()),
   })
 
   const updateMethodAndButton = () => {

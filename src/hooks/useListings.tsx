@@ -148,13 +148,13 @@ export const useListings = (fetchOnInit = true) => {
     }
   }
 
-  const markTradeCompleted = async (listingID: number) => {
+  const markTradeCompleted = async (core: CoreListing) => {
     setIsLoading(true)
     const network = activeChain?.name as networks
     try {
       // update status
       const updatedListing = {
-        id: listingID,
+        ...core,
         network,
       }
 
