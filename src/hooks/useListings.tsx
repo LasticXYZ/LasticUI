@@ -93,6 +93,8 @@ export const useListings = (fetchOnInit = true) => {
         end,
       }
 
+      console.log(JSON.stringify(enhancedListing))
+
       const response = await fetch('/api/listings', {
         method: 'POST',
         headers: {
@@ -172,7 +174,7 @@ export const useListings = (fetchOnInit = true) => {
     }
   }
 
-  const _getCoreEnd = async (core: Omit<CoreListing, 'id'>) => {
+  const _getCoreEnd = async (core: Omit<CoreListing, 'id'>): Promise<string | undefined> => {
     const entries = await api?.query.broker.regions.entries()
     const regions: RegionsType | undefined = entries?.map(([key, value]) => {
       const detail = key.toHuman() as RegionDetail

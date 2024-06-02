@@ -16,20 +16,28 @@ export async function POST(req: NextRequest) {
 
   // check if listing already exists
   const current = await sql`
-      SELECT * FROM listings WHERE "coreNumber" = ${data.coreNumber}, mask = ${data.mask}, "begin" = ${data.begin}, network = ${data.network};
+      SELECT * FROM listings 
+      WHERE "coreNumber" = ${data.coreNumber} 
+      AND mask = ${data.mask} 
+      AND "begin" = ${data.begin} 
+      AND network = ${data.network};
     `
-  if (current.rowCount > 0)
-    current.rows.forEach((row) => {
+  if (current.rowCount > 0) {
+    const duplicate = current.rows.some((row) => {
       const listing = row as CoreListing
-      if (listing.status === 'listed' || listing.status === 'tradeOngoing')
-        return NextResponse.json({ message: 'Listing already exists' }, { status: 400 })
+      return listing.status === 'listed' || listing.status === 'tradeOngoing'
     })
+
+    if (duplicate) {
+      return NextResponse.json({ message: 'Listing already exists' }, { status: 400 })
+    }
+  }
 
   // insert
   try {
     const result = await sql`
   INSERT INTO listings (
-    begin, "coreNumber", mask, "end", status, network, cost, "sellerAddress", "buyerAddress", "lasticAddress", height, "index"
+    "begin", "coreNumber", mask, "end", "status", network, cost, "sellerAddress", "buyerAddress", "lasticAddress", height, "index"
   ) VALUES (
     ${data.begin}, ${data.coreNumber}, ${data.mask}, ${data.end}, ${data.status}, ${data.network}, 
     ${data.cost}, ${data.sellerAddress}, ${data.buyerAddress}, ${data.lasticAddress}, ${data.height}, ${data.index}
@@ -62,8 +70,9 @@ export async function GET(req: NextRequest) {
     if (id) {
       // Query to get a specific listing by id
       const result = await sql`
-        SELECT * FROM listings WHERE id = ${id}, network = ${network};
+      SELECT * FROM listings WHERE id = ${id} AND network = ${network};
       `
+
       console.log(result)
       if (result.rowCount > 0) {
         // Return the first row found

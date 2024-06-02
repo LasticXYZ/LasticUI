@@ -16,7 +16,8 @@ export async function PATCH(req: NextRequest): Promise<NextResponse> {
 
     // read current listing
     const current = await sql`
-      SELECT * FROM listings WHERE id = ${data.id}, network = ${data.network};
+    SELECT * FROM listings
+    WHERE id = ${data.id} AND network = ${data.network};
     `
 
     // check listing exists
@@ -47,10 +48,10 @@ export async function PATCH(req: NextRequest): Promise<NextResponse> {
 
     // mutate
     const result = await sql`
-      UPDATE listings
-      SET "buyerAddress" = ${data.buyerAddress}, status = 'tradeOngoing', "lasticAddress" = ${LASTIC_ADDRESS}
-      WHERE id = ${data.id}, network = ${data.network}
-      RETURNING *;
+    UPDATE listings
+    SET "buyerAddress" = ${data.buyerAddress}, status = 'tradeOngoing', "lasticAddress" = ${LASTIC_ADDRESS}
+    WHERE id = ${data.id} AND network = ${data.network}
+    RETURNING *;
     `
 
     console.log(result)

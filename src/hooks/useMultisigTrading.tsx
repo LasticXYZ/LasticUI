@@ -47,6 +47,8 @@ export const useMultisigTrading = ({
 
   useEffect(() => {
     setTxStatusMessage('')
+
+    getAllOpenMultisigCalls(multisigAddress || '', api, activeRelayChain)
   }, [core, activeAccount])
 
   const initiateOrExecuteMultisigTradeCall = async (): Promise<void> => {
@@ -110,7 +112,6 @@ export const useMultisigTrading = ({
             setTxStatusMessage(`🧊 Multisig call included in block ${result.status.asInBlock}`)
           } else if (result.status.isFinalized) {
             setTxStatusMessage(`📜 Multisig call finalized ${result.status.asFinalized}`)
-            // TODO: If new initiate, Fetch timepoint and update in db. Enables to have multiple trades in same address at once.
             unsub()
           }
         },
