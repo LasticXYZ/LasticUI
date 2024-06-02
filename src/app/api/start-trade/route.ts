@@ -7,16 +7,16 @@ const LASTIC_ADDRESS = process.env.NEXT_PUBLIC_LASTIC_ADDRESS
 /** Updates an existing listing by marking it as started. Updates buyerAddress, status and lastic address. */
 export async function PATCH(req: NextRequest): Promise<NextResponse> {
   try {
-    const data: Pick<CoreListing, 'id' | 'buyerAddress'> = await req.json()
+    const data: Pick<CoreListing, 'id' | 'buyerAddress' | 'network'> = await req.json()
 
     // checks
-    if (!data.id || !data.buyerAddress) {
+    if (!data.id || !data.buyerAddress || !data.network) {
       return new NextResponse(JSON.stringify({ message: 'Parameters required' }), { status: 400 })
     }
 
     // read current listing
     const current = await sql`
-      SELECT * FROM listings WHERE id = ${data.id};
+      SELECT * FROM listings WHERE id = ${data.id}, network = ${data.network};
     `
 
     // check listing exists
@@ -35,15 +35,7 @@ export async function PATCH(req: NextRequest): Promise<NextResponse> {
       })
     }
 
-    // check funds were sent to multisig
-
-    const updatedListing = {
-      ...listing,
-      buyerAddress: data.buyerAddress,
-      lasticAddress: LASTIC_ADDRESS,
-    }
-
-    // TODO: check if multisig has funds. Read from chain
+    // TODO: check if multisig has funds. Read from chain. Similar to hasMultisigAddressTheCoreFunds inside useListingsTracker.tsx
     const hasFunds = true
     if (!hasFunds) {
       return new NextResponse(JSON.stringify({ message: 'Funds not sent to multisig' }), {
@@ -57,7 +49,7 @@ export async function PATCH(req: NextRequest): Promise<NextResponse> {
     const result = await sql`
       UPDATE listings
       SET "buyerAddress" = ${data.buyerAddress}, status = 'tradeOngoing', "lasticAddress" = ${LASTIC_ADDRESS}
-      WHERE id = ${data.id}
+      WHERE id = ${data.id}, network = ${data.network}
       RETURNING *;
     `
 

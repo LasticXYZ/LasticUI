@@ -51,12 +51,18 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams
   const id = searchParams.get('id')
+  const network = searchParams.get('network')
+
+  if (!network)
+    return new NextResponse(JSON.stringify({ message: 'Network parameter required' }), {
+      status: 400,
+    })
 
   try {
     if (id) {
       // Query to get a specific listing by id
       const result = await sql`
-        SELECT * FROM listings WHERE id = ${id};
+        SELECT * FROM listings WHERE id = ${id}, network = ${network};
       `
       console.log(result)
       if (result.rowCount > 0) {
@@ -69,14 +75,16 @@ export async function GET(req: NextRequest) {
     } else {
       // Query to get all listings
       const result = await sql`
-        SELECT * FROM listings;
+        SELECT * FROM listings WHERE network = ${network};
       `
       // Return all rows
       return new NextResponse(JSON.stringify(result.rows), { status: 200 })
     }
   } catch (error) {
     console.error('Error during database operation:', error)
-    return new NextResponse(JSON.stringify({ error: 'Internal server error' }), { status: 500 })
+    return new NextResponse(JSON.stringify({ error: 'Internal server error' }), {
+      status: 500,
+    })
   }
 }
 
