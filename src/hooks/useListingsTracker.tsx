@@ -224,7 +224,11 @@ export const useListingsTracker = (coreListings: CoreListing[], intervalMs?: num
     return filteredRegions?.some((region) => region.owner.owner === multisigAddress)
   }
 
-  return { listingsState, isLoading, updateAllStates }
+  return {
+    listingsState,
+    isLoading,
+    updateAllStates,
+  }
 }
 
 const statusMessagesBuyerView = {

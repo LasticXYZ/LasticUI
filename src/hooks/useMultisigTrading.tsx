@@ -168,19 +168,17 @@ export const useMultisigTrading = ({
     transfer?.signAndSend(activeAccount!.address, { signer: activeSigner }, (result) => {
       setTxStatusMessage(result.status.type)
       if (result.status.isInBlock) {
-        console.log(`Transaction included at blockHash ${result.status.asInBlock}`)
-        console.log('Tx hash: ' + result.txHash)
+        console.log(
+          `Transaction included at blockHash ${result.status.asInBlock}; Tx hash: ${result.txHash}`,
+        )
 
         // update DB
-        if (onTradeStarted) {
-          onTradeStarted(core.id, activeAccount!.address)
-          console.log('Trade marked as started in DB')
-        }
+        if (onTradeStarted) onTradeStarted(core.id, activeAccount!.address)
 
         setTxStatusMessage(`🧊 Funds sent and tx included in block ${result.status.asInBlock}`)
       } else if (result.status.isFinalized) {
         setTxStatusMessage(`📜 Funds sent and tx finalized ${result.status.asFinalized}`)
-        // better update DB again to make sure to have correct values
+        // update DB again to make sure to have correct values
         if (onTradeStarted) onTradeStarted(core.id, activeAccount!.address)
       }
     })

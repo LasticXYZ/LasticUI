@@ -154,23 +154,16 @@ export const useListings = (fetchOnInit = true) => {
   const markTradeStarted = async (listingID: number, buyerAddress: string) => {
     setIsLoading(true)
     try {
-      // update status & buyerAddress
-      const updatedListing = {
-        id: listingID,
-        status: 'tradeOngoing',
-        buyerAddress,
-        lasticAddress: LASTIC_ADDRESS,
-      }
-
-      const response = await fetch('/api/listings', {
+      const response = await fetch('/api/start-trade', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(updatedListing),
+        body: JSON.stringify({ id: listingID, buyerAddress }),
       })
 
       if (!response.ok) throw new Error()
+      console.log('Trade marked as started in DB')
     } catch (error) {
       console.error('Failed to update listing:', error)
     } finally {

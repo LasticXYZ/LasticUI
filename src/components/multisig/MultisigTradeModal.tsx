@@ -76,10 +76,10 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
 
     // If you are seller
     if (activeAccount?.address === core.sellerAddress) {
-      if (listingsState[core.id].step1 && !listingsState[core.id].step2) {
+      if (listingsState[core.id]?.step1 && !listingsState[core.id]?.step2) {
         buttonFunction = () => sendCoreToMultisig(core)
         buttonEnabled = true
-      } else if (listingsState[core.id].step1 && !listingsState[core.id].step3) {
+      } else if (listingsState[core.id]?.step1 && !listingsState[core.id]?.step3) {
         buttonFunction = initiateOrExecuteMultisigTradeCall
         buttonEnabled = true
       } else buttonEnabled = false
@@ -91,16 +91,16 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
       activeAccount?.address !== (core.lasticAddress || LASTIC_ADDRESS)
     ) {
       // step 1 interaction
-      if (!listingsState[core.id].step1) {
+      if (!listingsState[core.id]?.step1) {
         buttonFunction = async () => await sendFundsToMultisig(core)
         buttonEnabled = true
       }
       // finisher interaction
       else if (
-        listingsState[core.id].step1 &&
-        listingsState[core.id].step2 &&
-        listingsState[core.id].step3 &&
-        !listingsState[core.id].step4
+        listingsState[core.id]?.step1 &&
+        listingsState[core.id]?.step2 &&
+        listingsState[core.id]?.step3 &&
+        !listingsState[core.id]?.step4
       ) {
         buttonFunction = async () => await initiateOrExecuteMultisigTradeCall()
         buttonEnabled = true
@@ -112,10 +112,10 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
       console.log('lastic')
       // only finisher interaction possible; if steps 1-3 are finished
       if (
-        listingsState[core.id].step1 &&
-        listingsState[core.id].step2 &&
-        listingsState[core.id].step3 &&
-        !listingsState[core.id].step4
+        listingsState[core.id]?.step1 &&
+        listingsState[core.id]?.step2 &&
+        listingsState[core.id]?.step3 &&
+        !listingsState[core.id]?.step4
       ) {
         buttonFunction = async () => await initiateOrExecuteMultisigTradeCall()
         buttonEnabled = true
@@ -151,20 +151,20 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
 
           <div className="grid text-xs gap-2 items-start">
             <div className="flex items-center gap-1">
-              <Checkbox disableRipple checked={listingsState[core.id].step1} sx={checkboxStyle} />
+              <Checkbox disableRipple checked={listingsState[core.id]?.step1} sx={checkboxStyle} />
               <p>Step 1: The buyer sends the price amount to the multisig address</p>
             </div>
             <div className="flex items-center gap-1">
               <Checkbox
                 disableRipple
-                checked={listingsState[core.id].step2}
+                checked={listingsState[core.id]?.step2}
                 size="small"
                 sx={checkboxStyle}
               />
               <p>Step 2: The seller sends the core to the multisig address</p>
             </div>
             <div className="flex items-center gap-1">
-              <Checkbox disableRipple checked={listingsState[core.id].step3} sx={checkboxStyle} />
+              <Checkbox disableRipple checked={listingsState[core.id]?.step3} sx={checkboxStyle} />
               <p>
                 Step 3: The seller opens a batch multisig call that sends the core to the buyer and
                 the balance to himself
@@ -172,7 +172,7 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
             </div>
 
             <div className="flex items-center gap-1">
-              <Checkbox disableRipple checked={listingsState[core.id].step4} sx={checkboxStyle} />
+              <Checkbox disableRipple checked={listingsState[core.id]?.step4} sx={checkboxStyle} />
               <p>
                 Step 4: Lastic or the buyer verifies and approves the multisig call and the the
                 trade will be executed.
