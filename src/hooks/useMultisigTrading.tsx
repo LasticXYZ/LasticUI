@@ -105,7 +105,6 @@ export const useMultisigTrading = ({
 
             // update DB
             if (when && onTradeCompleted) {
-              console.log('Trade completed')
               onTradeCompleted(core.id)
             }
 

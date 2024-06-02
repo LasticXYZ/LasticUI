@@ -108,7 +108,6 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
 
     // If you are lastic
     else if (activeAccount?.address === (core.lasticAddress || LASTIC_ADDRESS)) {
-      console.log('lastic')
       // only finisher interaction possible; if steps 1-3 are finished
       if (
         listingsState[core.id]?.step1 &&
@@ -208,7 +207,7 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
         </div>
 
         <div className="flex items-baseline gap-2 self-center">
-          <p className="font-bold text-center">{listingsState[core.id].statusMessage}</p>
+          <p className="font-bold text-center">{listingsState[core.id]?.statusMessage}</p>
           <LoadingSpinner isLoading={isLoadingStateUpdate} />
         </div>
 

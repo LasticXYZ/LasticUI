@@ -93,8 +93,6 @@ export const useListings = (fetchOnInit = true) => {
         end,
       }
 
-      console.log(JSON.stringify(enhancedListing))
-
       const response = await fetch('/api/listings', {
         method: 'POST',
         headers: {
