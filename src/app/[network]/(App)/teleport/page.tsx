@@ -6,6 +6,7 @@ import SideButton from '@/components/button/SideButton'
 import ModalNotification from '@/components/modal/ModalNotification'
 import ModalTranasaction from '@/components/modal/ModalTransaction'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
+import { useToasts } from '@/context/toast/ToastContext'
 import { useTeleport } from '@/hooks/useTeleport'
 import { toShortAddress } from '@/utils/account/token'
 import { ArrowPathIcon } from '@heroicons/react/24/outline'
@@ -29,9 +30,16 @@ const handleTransaction =
     onResult?: (result: ISubmittableResult) => void
   }) =>
   (result: ISubmittableResult): void => {
+    const { addToast } = useToasts()
+
     onResult(result)
     if (result.dispatchError) {
       console.warn('[EXEC] dispatchError', result)
+      addToast({
+        title: '[EXEC] dispatchError',
+        type: 'error',
+        link: '',
+      })
       onError(result.dispatchError)
       return
     }
