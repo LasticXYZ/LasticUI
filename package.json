@@ -34,7 +34,7 @@
     "@mui/x-date-pickers": "^6.19.12",
     "@polkadot/api-base": "^11.0.3",
     "@poppyseed/squid-sdk": "^0.2.4",
-    "@poppyseed/xcm-sdk": "^4.0.3",
+    "@paraspell/sdk": "^5.5.0",
     "@reduxjs/toolkit": "^2.2.5",
     "@vercel/analytics": "^1.2.2",
     "@vercel/postgres": "^0.8.0",
