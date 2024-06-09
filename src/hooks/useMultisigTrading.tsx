@@ -49,7 +49,7 @@ export const useMultisigTrading = ({
     setTxStatusMessage('')
 
     getAllOpenMultisigCalls(multisigAddress || '', api, activeRelayChain)
-  }, [core, activeAccount])
+  }, [core, activeAccount, api, multisigAddress, activeRelayChain])
 
   const initiateOrExecuteMultisigTradeCall = async (): Promise<void> => {
     if (!_basicChecks()) return
