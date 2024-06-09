@@ -218,7 +218,7 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
         <SecondaryButton
           className="w-40 self-center"
           disabled={isLoading || !buttonEnabled}
-          title="Process Trade"
+          title={isLoading ? 'Please Wait' : 'Process Trade'}
           onClick={buttonFunction}
         />
         {txStatusMessage && <p className="flex flex-wrap self-center text-xs">{txStatusMessage}</p>}

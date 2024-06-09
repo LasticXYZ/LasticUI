@@ -173,7 +173,9 @@ export const useListingsTracker = (coreListings: CoreListing[], intervalMs?: num
       activeChain,
     )
 
-    const { data: balance } = (await api?.query.system.account(multisigAddress)) as any
+    const res = (await api?.query.system.account(multisigAddress)) as any
+    if (!res) return false
+    const { data: balance } = res
     const cleanedBalance = balance?.free.toString().replace(/,/g, '')
     const balanceBN = new BN(cleanedBalance)
 
@@ -235,7 +237,8 @@ const statusMessagesBuyerView = {
   step1: '💥 Click below to initiate the trade and send the funds to the multisig',
   step2: '⏳ Wait for the seller to send the core to the multisig address',
   step3: '⏳ Wait for the seller to open the multisig trade call',
-  step4: '⏳ Wait for Lastic to verify and finish the multisig call. Or do it yourself.',
+  step4:
+    '⏳ Wait for Lastic to verify and finish the multisig call. Or do it yourself. And wait for finalization.',
 }
 
 const statusMessagesSellerView = {
@@ -249,7 +252,8 @@ const statusMessagesLasticView = {
   step1: '⏳ Wait for a buyer to initiate the trade. As Lastic, you cannot initiate the trade',
   step2: '⏳ Wait for the seller to send the core to the multisig address',
   step3: '⏳ Wait for the seller to open the multisig trade call',
-  step4: '💥 Your Turn: Click below to verify and finish the multisig call',
+  step4:
+    '💥 Your Turn: Click below to verify and finish the multisig call. And wait for finalization.',
 }
 
 const statusMessagesNeutralView = {
