@@ -103,6 +103,10 @@ export const useMultisigTrading = ({
             console.log(`Transaction included at blockHash ${result.status.asInBlock}`)
             console.log('Tx hash: ' + result.txHash)
 
+            result.events.forEach(({ phase, event: { data, method, section } }) => {
+              console.log(`\t' ${phase}: ${section}.${method}:: ${data}`)
+            })
+
             // update DB
             if (when && onTradeCompleted) {
               onTradeCompleted(core.id)

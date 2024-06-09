@@ -105,8 +105,11 @@ export const useListings = (fetchOnInit = true) => {
 
       if (activeChain?.name) await fetchListings(activeChain.name as networks)
       setStatusMessage('Listing added successfully')
+      return true
     } catch (error) {
       console.error('Failed to add listing:', error)
+      setStatusMessage('Failed to add listing')
+      return false
     } finally {
       setIsLoading(false)
     }
