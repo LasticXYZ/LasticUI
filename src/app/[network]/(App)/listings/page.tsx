@@ -3,7 +3,7 @@
 import Subtitle from '@/app/[network]/(App)/samesections/SubTitle'
 import CoreItemPurchase from '@/components/cores/CoreItemPurchase'
 import MultisigTradeModal from '@/components/multisig/MultisigTradeModal'
-import { CoreListing, useListings } from '@/hooks/useListings'
+import { CoreListing, networks, useListings } from '@/hooks/useListings'
 import { useListingsTracker } from '@/hooks/useListingsTracker'
 import { FormControlLabel, Radio, Switch } from '@mui/material'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
@@ -28,7 +28,7 @@ type MultisigModal = {
 }
 
 const ListingsPage = () => {
-  const { activeAccount } = useInkathon()
+  const { activeAccount, activeChain } = useInkathon()
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
   const { listings, fetchListings } = useListings()
   const [filter, setFilter] = useState<string>('openListings')
@@ -151,7 +151,7 @@ const ListingsPage = () => {
           isOpen={multisigModalData.visible}
           onClose={closeMultisig}
           core={multisigModalData.core}
-          onUpdateListingDB={fetchListings}
+          onUpdateListingDB={() => fetchListings(activeChain?.name as networks)}
           listingsState={listingsState}
           onUpdateListingState={updateAllStates}
           isLoadingStateUpdate={isLoadingStateUpdate}
