@@ -1,10 +1,10 @@
 import { TxCbOnSuccessParams } from '@/app/[network]/(App)/teleport/page'
 import { notificationTypes } from '@/components/modal/ModalNotification'
+import { Builder, Extrinsic } from '@paraspell/sdk'
 import { DispatchError } from '@polkadot/types/interfaces'
 import { ISubmittableResult } from '@polkadot/types/types'
 import { BN } from '@polkadot/util'
 import { useBalance, useInkathon, useRelayBalance } from '@poppyseed/lastic-sdk'
-import { Builder, Extrinsic } from '@poppyseed/xcm-sdk'
 import { useState } from 'react'
 
 /** Small buffer for teleporting to prevent potential errors. Adjust it as needed. */
