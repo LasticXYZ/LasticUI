@@ -216,7 +216,7 @@ const MultisigTradeModal: FC<MultisigTradeModalProps> = ({
         </div>
 
         <SecondaryButton
-          className="w-40 self-center"
+          className={`w-40 self-center ${listingsState[core.id]?.step4 ? 'hidden' : ''}`}
           disabled={isLoading || !buttonEnabled}
           title={isLoading ? 'Please Wait' : 'Process Trade'}
           onClick={buttonFunction}

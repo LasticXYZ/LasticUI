@@ -105,7 +105,9 @@ export const useMultisigTrading = ({
             console.log(`Transaction included at blockHash ${result.status.asInBlock}`)
             console.log('Tx hash: ' + result.txHash)
 
-            setTxStatusMessage(`🧊 Multisig call included in block ${result.status.asInBlock}`)
+            setTxStatusMessage(
+              `🧊 Multisig call included in block. Please wait for it to finalize!`,
+            )
 
             // If tx completes the trade, check for the event and update the DB
             if (when && onTradeCompleted) {
@@ -118,7 +120,7 @@ export const useMultisigTrading = ({
               })
             }
           } else if (result.status.isFinalized) {
-            setTxStatusMessage(`📜 Multisig call finalized ${result.status.asFinalized}`)
+            setTxStatusMessage(`📜 Multisig call finalized!`)
 
             if (!isMarkedInDB && when && onTradeCompleted) {
               result.events.forEach(({ phase, event: { data, method, section } }) => {
@@ -168,12 +170,12 @@ export const useMultisigTrading = ({
           console.log(`Transaction included at blockHash ${result.status.asInBlock}`)
           console.log('Tx hash: ' + result.txHash)
           setTxStatusMessage(
-            `🧊 Core sent and tx included in block. Recommended to wait for finalization. ${result.status.asInBlock}`,
+            `🧊 Core sent and tx included in block. It's recommended to wait for it to be finalized.`,
           )
 
           setIsLoading(false)
         } else if (result.status.isFinalized) {
-          setTxStatusMessage(`📜 Core sent and tx finalized ${result.status.asFinalized}`)
+          setTxStatusMessage(`📜 Core sent and tx finalized!`)
         }
       })
     } catch (error: unknown) {
@@ -206,9 +208,11 @@ export const useMultisigTrading = ({
             isMarkedInDB = true
           }
 
-          setTxStatusMessage(`🧊 Funds sent and tx included in block ${result.status.asInBlock}`)
+          setTxStatusMessage(
+            `🧊 Funds sent and tx included in block. Please wait for it to finalize.`,
+          )
         } else if (result.status.isFinalized) {
-          setTxStatusMessage(`📜 Funds sent and tx finalized ${result.status.asFinalized}`)
+          setTxStatusMessage(`📜 Funds sent and tx finalized!`)
           // update DB again to make sure to have correct values
           if (!isMarkedInDB && onTradeStarted) onTradeStarted(core.id, activeAccount!.address)
           setIsLoading(false)

@@ -32,7 +32,7 @@ const ListingsPage = () => {
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
   const { listings, fetchListings } = useListings()
   const [filter, setFilter] = useState<string>('openListings')
-  const [includeCompleted, setIncludeCompleted] = useState<boolean>(true)
+  const [includeCompleted, setIncludeCompleted] = useState<boolean>(false)
 
   useEffect(() => {
     console.log(listings)

@@ -142,8 +142,11 @@ export const useListings = (fetchOnInit = true) => {
 
       if (!response.ok) throw new Error()
       console.log('Trade marked as started in DB')
+      return true
     } catch (error) {
+      if (error instanceof Error) setStatusMessage(`Error occured: ${error.message}`)
       console.error('Failed to update listing:', error)
+      return false
     } finally {
       setIsLoading(false)
     }
@@ -169,6 +172,7 @@ export const useListings = (fetchOnInit = true) => {
 
       if (!response.ok) throw new Error()
     } catch (error) {
+      if (error instanceof Error) setStatusMessage(`Error occured: ${error.message}`)
       console.error('Failed to update listing:', error)
     } finally {
       setIsLoading(false)
