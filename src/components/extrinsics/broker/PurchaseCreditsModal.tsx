@@ -12,7 +12,7 @@ interface PurchaseCreditsProps {
 }
 
 const PurchaseCreditsModal: FC<PurchaseCreditsProps> = ({ isOpen, onClose }) => {
-  const { api, activeSigner, activeAccount, activeChain } = useInkathon()
+  const { api, activeSigner, activeAccount, activeChain, addToast } = useInkathon()
   const [dotAmount, setDotAmount] = useState<number | undefined>(0)
   const [receiver, setReceiver] = useState<string | undefined>(activeAccount?.address)
 
@@ -31,6 +31,7 @@ const PurchaseCreditsModal: FC<PurchaseCreditsProps> = ({ isOpen, onClose }) => 
   const txButtonProps: TxButtonProps = {
     api,
     setStatus: (status: string | null) => console.log('tx status:', status),
+    addToast: addToast,
     attrs: {
       palletRpc: 'broker',
       callable: 'purchaseCredit',
@@ -93,7 +94,7 @@ const PurchaseCreditsModal: FC<PurchaseCreditsProps> = ({ isOpen, onClose }) => 
             amountNeeded={new BN(planck.toString())}
             teleportTo="coretime"
           />
-          <div className="mt-5 text-sm text-gray-16 dark:text-gray-2 ">{status}</div>
+          {/* <div className="mt-5 text-sm text-gray-16 dark:text-gray-2 ">{status}</div> */}
         </div>
       </div>
     </Modal>

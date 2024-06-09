@@ -25,7 +25,7 @@ const ReserveParaIDModal: FC<TransferModalProps> = ({
   maxCodeSize,
   onClose,
 }) => {
-  const { relayApi, activeSigner, activeAccount, activeChain } = useInkathon()
+  const { relayApi, activeSigner, activeAccount, activeChain, addToast } = useInkathon()
   const pathname = usePathname()
   const network = getChainFromPath(pathname)
   const [genesisHead, setGenesisHead] = useState<Uint8Array>()
@@ -37,6 +37,7 @@ const ReserveParaIDModal: FC<TransferModalProps> = ({
   const txButtonProps: TxButtonProps = {
     api: relayApi,
     setStatus: (status: string | null) => console.log('tx status:', status),
+    addToast: addToast,
     attrs: {
       palletRpc: 'registrar',
       callable: 'register',
@@ -106,7 +107,7 @@ const ReserveParaIDModal: FC<TransferModalProps> = ({
             disabled={!canSubmitTransaction()}
           />
         </div>
-        <div className="mt-5 text-sm text-gray-400">{status}</div>
+        {/* <div className="mt-5 text-sm text-gray-400">{status}</div> */}
       </div>
     </Modal>
   )

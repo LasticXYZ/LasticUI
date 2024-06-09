@@ -13,13 +13,14 @@ interface AssignModalProps {
 }
 
 const AssignModal: FC<AssignModalProps> = ({ isOpen, onClose, regionId }) => {
-  const { api, activeSigner, activeAccount, activeChain } = useInkathon()
+  const { api, activeSigner, activeAccount, activeChain, addToast } = useInkathon()
   const [task, setTask] = useState(0)
   const [finality, setFinality] = useState('Provisional')
 
   const txButtonProps: TxButtonProps = {
     api, // api is guaranteed to be defined here
     setStatus: (status: string | null) => console.log('tx status:', status),
+    addToast: addToast,
     attrs: {
       palletRpc: 'broker',
       callable: 'assign',
@@ -81,7 +82,7 @@ const AssignModal: FC<AssignModalProps> = ({ isOpen, onClose, regionId }) => {
         </div>
         <div className="flex justify-center pt-5">
           <PrimaryButton title="Assign Core" onClick={transaction} disabled={!allParamsFilled()} />
-          <div className="mt-5 text-sm text-gray-16 ">{status}</div>
+          {/* <div className="mt-5 text-sm text-gray-16 ">{status}</div> */}
         </div>
       </div>
     </Modal>
