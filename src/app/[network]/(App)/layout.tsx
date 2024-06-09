@@ -4,7 +4,6 @@ import { Analytics } from '@vercel/analytics/react'
 import './globals.css'
 //import type { Metadata } from 'next'
 import ThemeProvider from '@/components/themeToggle/themeProvider'
-// import ToastContextProvider from '@/context/toast/ToastContext'
 import {
   ArrowPathIcon,
   Cog8ToothIcon,

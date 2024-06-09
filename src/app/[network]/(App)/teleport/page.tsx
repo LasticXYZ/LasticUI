@@ -6,12 +6,10 @@ import SideButton from '@/components/button/SideButton'
 import ModalNotification from '@/components/modal/ModalNotification'
 import ModalTranasaction from '@/components/modal/ModalTransaction'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
-import { useToasts } from '@/context/toast/ToastContext'
 import { useTeleport } from '@/hooks/useTeleport'
 import { toShortAddress } from '@/utils/account/token'
 import { ArrowPathIcon } from '@heroicons/react/24/outline'
-import { DispatchError, Hash } from '@polkadot/types/interfaces'
-import { ISubmittableResult } from '@polkadot/types/types'
+import { Hash } from '@polkadot/types/interfaces'
 import { useBalance, useInkathon, useRelayBalance } from '@poppyseed/lastic-sdk'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -19,37 +17,37 @@ import { useState } from 'react'
 
 export type TxCbOnSuccessParams = { blockHash: Hash; txHash: Hash }
 
-const handleTransaction =
-  ({
-    onSuccess,
-    onError,
-    onResult = console.log,
-  }: {
-    onSuccess: (prams: TxCbOnSuccessParams) => void
-    onError: (err: DispatchError) => void
-    onResult?: (result: ISubmittableResult) => void
-  }) =>
-  (result: ISubmittableResult): void => {
-    const { addToast } = useToasts()
+// const handleTransaction =
+//   ({
+//     onSuccess,
+//     onError,
+//     onResult = console.log,
+//   }: {
+//     onSuccess: (prams: TxCbOnSuccessParams) => void
+//     onError: (err: DispatchError) => void
+//     onResult?: (result: ISubmittableResult) => void
+//   }) =>
+//   (result: ISubmittableResult): void => {
+//     const { addToast } = useToasts()
 
-    onResult(result)
-    if (result.dispatchError) {
-      console.warn('[EXEC] dispatchError', result)
-      addToast({
-        title: '[EXEC] dispatchError',
-        type: 'error',
-        link: '',
-      })
-      onError(result.dispatchError)
-      return
-    }
+//     onResult(result)
+//     if (result.dispatchError) {
+//       console.warn('[EXEC] dispatchError', result)
+//       addToast({
+//         title: '[EXEC] dispatchError',
+//         type: 'error',
+//         link: '',
+//       })
+//       onError(result.dispatchError)
+//       return
+//     }
 
-    if (result.status.isFinalized) {
-      console.log('[EXEC] Finalized', result)
-      console.log(`[EXEC] blockHash ${result.status.asFinalized}`)
-      onSuccess({ blockHash: result.status.asFinalized, txHash: result.txHash })
-    }
-  }
+//     if (result.status.isFinalized) {
+//       console.log('[EXEC] Finalized', result)
+//       console.log(`[EXEC] blockHash ${result.status.asFinalized}`)
+//       onSuccess({ blockHash: result.status.asFinalized, txHash: result.txHash })
+//     }
+//   }
 
 const chainOptions: { [key: string]: string } = {
   rococo: '/assets/Images/NetworkIcons/rococo-img.svg',

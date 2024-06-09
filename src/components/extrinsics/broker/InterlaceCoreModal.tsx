@@ -28,7 +28,7 @@ type regionTimeSpan = {
 }
 
 const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regionId }) => {
-  const { api, activeSigner, activeAccount, activeChain, relayApi } = useInkathon()
+  const { api, activeSigner, activeAccount, activeChain, relayApi, addToast } = useInkathon()
   const { brokerConstants, isLoading: isConstantsLoading } = useBrokerConstants(api)
 
   const [selectedMask, setSelectedMask] = useState<CoreMask | undefined>(undefined)
@@ -47,6 +47,7 @@ const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regi
   const txButtonProps: TxButtonProps = {
     api,
     setStatus: (status: string | null) => console.log('tx status:', status),
+    addToast: addToast,
     attrs: {
       palletRpc: 'broker',
       callable: 'interlace',
@@ -191,7 +192,7 @@ const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regi
             onClick={transaction}
             disabled={!allParamsFilled()}
           />
-          <div className="mt-5 text-sm text-gray-16 ">{status}</div>
+          {/* <div className="mt-5 text-sm text-gray-16 ">{status}</div> */}
         </div>
       </div>
     </Modal>

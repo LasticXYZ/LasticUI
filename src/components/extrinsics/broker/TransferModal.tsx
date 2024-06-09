@@ -18,12 +18,13 @@ interface TransferCall {
 }
 
 const TransferModal: FC<TransferModalProps> = ({ isOpen, onClose, regionId }) => {
-  const { api, activeSigner, activeAccount, activeChain } = useInkathon()
+  const { api, activeSigner, activeAccount, activeChain, addToast } = useInkathon()
   const [newOwner, setNewOwner] = useState('')
 
   const txButtonProps: TxButtonProps = {
     api, // api is guaranteed to be defined here
     setStatus: (status: string | null) => console.log('tx status:', status),
+    addToast: addToast,
     attrs: {
       palletRpc: 'broker',
       callable: 'transfer',
@@ -76,7 +77,7 @@ const TransferModal: FC<TransferModalProps> = ({ isOpen, onClose, regionId }) =>
             onClick={transaction}
             disabled={!allParamsFilled()}
           />
-          <div className="mt-5 text-sm text-gray-16 ">{status}</div>
+          {/* <div className="mt-5 text-sm text-gray-16 ">{status}</div> */}
         </div>
       </div>
     </Modal>
