@@ -68,7 +68,7 @@
     "@polkadot/types": "^11.2.1",
     "@polkadot/util": "^12.6.2",
     "@polkadot/util-crypto": "^12.6.2",
-    "@poppyseed/lastic-sdk": "^0.2.13",
+    "@poppyseed/lastic-sdk": "^0.2.16",
     "@types/react": "18.2.25",
     "autoprefixer": "^10.4.19",
     "eslint-config-next": "^13.5.6",

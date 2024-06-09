@@ -137,8 +137,8 @@ devDependencies:
     specifier: ^12.6.2
     version: 12.6.2(@polkadot/util@12.6.2)
   '@poppyseed/lastic-sdk':
-    specifier: ^0.2.13
-    version: 0.2.13(@polkadot/api-contract@11.2.1)(@polkadot/api@11.2.1)(@polkadot/extension-inject@0.47.5)(@polkadot/types@11.2.1)(@polkadot/util-crypto@12.6.2)(@polkadot/util@12.6.2)(postcss@8.4.38)(react-dom@18.3.1)(react@18.3.1)
+    specifier: ^0.2.16
+    version: 0.2.16(@polkadot/api-contract@11.2.1)(@polkadot/api@11.2.1)(@polkadot/extension-inject@0.47.5)(@polkadot/types@11.2.1)(@polkadot/util-crypto@12.6.2)(@polkadot/util@12.6.2)(postcss@8.4.38)(react-dom@18.3.1)(react@18.3.1)
   '@types/react':
     specifier: 18.2.25
     version: 18.2.25
@@ -4287,8 +4287,8 @@ packages:
   /@popperjs/core@2.11.8:
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
 
-  /@poppyseed/lastic-sdk@0.2.13(@polkadot/api-contract@11.2.1)(@polkadot/api@11.2.1)(@polkadot/extension-inject@0.47.5)(@polkadot/types@11.2.1)(@polkadot/util-crypto@12.6.2)(@polkadot/util@12.6.2)(postcss@8.4.38)(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-5g9lz0EnHPs+1KxDcz+JmOygAIqMck24d4v9+mXvDSfUIUp/ge/NCZhWD9twUMgOwLIlnY8jDfSZI4XbUXvrKg==}
+  /@poppyseed/lastic-sdk@0.2.16(@polkadot/api-contract@11.2.1)(@polkadot/api@11.2.1)(@polkadot/extension-inject@0.47.5)(@polkadot/types@11.2.1)(@polkadot/util-crypto@12.6.2)(@polkadot/util@12.6.2)(postcss@8.4.38)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-vvnO/2dcibelXrVTEiEtDc50d46+Kx565C2SABjW7rpH8b7Hvma2OT/HI2CXQ+77ZoxtkvkIKWdZ5YFAC8cKEQ==}
     engines: {node: '>=18', pnpm: '8'}
     peerDependencies:
       '@polkadot/api': '>=11'
