@@ -69,7 +69,8 @@ function calculateTimeRemaining(
         ? blocksToTimeFormat(
             saleInfo.saleStart +
               (config.regionLength * constant.timeslicePeriod) / 2 -
-              currentBlockNumber,
+              currentBlockNumber -
+              config.interludeLength,
             'PARA',
           )
         : '-'

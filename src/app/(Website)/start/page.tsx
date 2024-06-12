@@ -31,7 +31,11 @@ const StartPage = () => {
               </p>
               <div className="flex flex-col justify-center py-5 items-center w-full">
                 <div className="p-2">
-                  <PrimaryButtonWeb title="Launch App" location="https://ethprague.vercel.app/" />
+                  <PrimaryButtonWeb
+                    title="Launch App"
+                    disabled={true}
+                    onClick={() => console.log('')}
+                  />
                 </div>
                 <div className="p-2">
                   <SecondaryButtonWeb title="Read the Docs" location="https://docs.lastic.xyz/" />
