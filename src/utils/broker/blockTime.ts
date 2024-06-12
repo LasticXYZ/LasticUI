@@ -57,6 +57,10 @@ export const blocksToTimeFormat = (
 
   const totalSeconds = nbOfBlocks * secondsPerBlock
 
+  if (totalSeconds < 0) {
+    return `-`
+  }
+
   const months = Math.floor(totalSeconds / (30 * 24 * 3600))
   const weeks = Math.floor((totalSeconds % (30 * 24 * 3600)) / (7 * 24 * 3600))
   const days = Math.floor((totalSeconds % (7 * 24 * 3600)) / (24 * 3600))

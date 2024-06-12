@@ -165,9 +165,9 @@ export function priceCurve(
   constant: BrokerConstantsType,
 ): { x: number[]; y: number[] } | undefined {
   const saleStart = saleInfo.saleStart
-  console.log(saleStart)
+  // console.log(saleStart)
   const saleEnds = getSaleEnds(saleInfo, config, constant)
-  console.log(config.leadinLength)
+  // console.log(config.leadinLength)
   let prices = []
   let blocks = []
   if (!saleStart || !saleEnds) return

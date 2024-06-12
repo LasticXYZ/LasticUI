@@ -33,7 +33,7 @@ interface PartitionCoreModalProps {
 }
 
 const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regionId }) => {
-  const { api, activeSigner, activeAccount, activeChain, relayApi } = useInkathon()
+  const { api, activeSigner, activeAccount, activeChain, relayApi, addToast } = useInkathon()
   const { brokerConstants } = useBrokerConstants(api)
   const [selectedDateTime, setSelectedDateTime] = useState<Date | undefined | null>(null)
   const [pivotOptions, setPivotOptions] = useState<pivotInfo[]>([])
@@ -41,6 +41,7 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
   const txButtonProps: TxButtonProps = {
     api,
     setStatus: (status: string | null) => console.log('tx status:', status),
+    addToast: addToast,
     attrs: {
       palletRpc: 'broker',
       callable: 'partition',
@@ -276,7 +277,7 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
             onClick={transaction}
             disabled={!allParamsFilled() || !selectedPivotOffset}
           />
-          <div className="mt-5 text-sm text-gray-16 ">{status}</div>
+          {/* <div className="mt-5 text-sm text-gray-16 ">{status}</div> */}
         </div>
       </div>
     </Modal>

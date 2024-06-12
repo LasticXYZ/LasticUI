@@ -47,7 +47,9 @@ export const useMultisigTrading = ({
 
   useEffect(() => {
     setTxStatusMessage('')
-  }, [core, activeAccount])
+
+    getAllOpenMultisigCalls(multisigAddress || '', api, activeRelayChain)
+  }, [core, activeAccount, api, multisigAddress, activeRelayChain])
 
   const initiateOrExecuteMultisigTradeCall = async (): Promise<void> => {
     if (!_basicChecks()) return
@@ -56,7 +58,7 @@ export const useMultisigTrading = ({
     // get latest open multisig call
     // if there is 1 open multisig call -> execute the trade (add 'when')
     // if there is no open multisig call -> create a new one (no 'when')
-    // if there are more than 1 open multisig calls -> find the right one and execute it (hard)
+    // if there are more than 1 open multisig calls -> find the right one and execute it (hard, because event callHash differs from actual one)
     const openMultisigCalls = await getAllOpenMultisigCalls(
       multisigAddress || '',
       api,
@@ -103,14 +105,12 @@ export const useMultisigTrading = ({
 
             // update DB
             if (when && onTradeCompleted) {
-              console.log('Trade completed')
               onTradeCompleted(core.id)
             }
 
             setTxStatusMessage(`🧊 Multisig call included in block ${result.status.asInBlock}`)
           } else if (result.status.isFinalized) {
             setTxStatusMessage(`📜 Multisig call finalized ${result.status.asFinalized}`)
-            // TODO: If new initiate, Fetch timepoint and update in db. Enables to have multiple trades in same address at once.
             unsub()
           }
         },
@@ -168,19 +168,17 @@ export const useMultisigTrading = ({
     transfer?.signAndSend(activeAccount!.address, { signer: activeSigner }, (result) => {
       setTxStatusMessage(result.status.type)
       if (result.status.isInBlock) {
-        console.log(`Transaction included at blockHash ${result.status.asInBlock}`)
-        console.log('Tx hash: ' + result.txHash)
+        console.log(
+          `Transaction included at blockHash ${result.status.asInBlock}; Tx hash: ${result.txHash}`,
+        )
 
         // update DB
-        if (onTradeStarted) {
-          onTradeStarted(core.id, activeAccount!.address)
-          console.log('Trade marked as started in DB')
-        }
+        if (onTradeStarted) onTradeStarted(core.id, activeAccount!.address)
 
         setTxStatusMessage(`🧊 Funds sent and tx included in block ${result.status.asInBlock}`)
       } else if (result.status.isFinalized) {
         setTxStatusMessage(`📜 Funds sent and tx finalized ${result.status.asFinalized}`)
-        // better update DB again to make sure to have correct values
+        // update DB again to make sure to have correct values
         if (onTradeStarted) onTradeStarted(core.id, activeAccount!.address)
       }
     })

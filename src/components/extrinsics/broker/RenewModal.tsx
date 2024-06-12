@@ -24,11 +24,12 @@ const RenewModal: FC<RenewModalProps> = ({
   tokenSymbol,
   regionId,
 }) => {
-  const { api, activeSigner, activeAccount, activeChain } = useInkathon()
+  const { api, activeSigner, activeAccount, activeChain, addToast } = useInkathon()
 
   const txButtonProps: TxButtonProps = {
     api, // api is guaranteed to be defined here
     setStatus: (status: string | null) => console.log('tx status:', status),
+    addToast: addToast,
     attrs: {
       palletRpc: 'broker',
       callable: 'renew',
@@ -65,7 +66,7 @@ const RenewModal: FC<RenewModalProps> = ({
         <div className="flex justify-center pt-5">
           <PrimaryButton title="Renew Core" onClick={transaction} disabled={!allParamsFilled()} />
         </div>
-        <div className="mt-5 text-sm text-gray-16 ">{status}</div>
+        {/* <div className="mt-5 text-sm text-gray-16 ">{status}</div> */}
       </div>
     </Modal>
   )

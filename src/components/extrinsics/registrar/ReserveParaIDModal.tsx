@@ -21,13 +21,14 @@ const ReserveParaIDModal: FC<TransferModalProps> = ({
   reservationCost,
   onClose,
 }) => {
-  const { relayApi, activeSigner, activeAccount, activeChain } = useInkathon()
+  const { relayApi, activeSigner, activeAccount, activeChain, addToast } = useInkathon()
   const pathname = usePathname()
   const network = getChainFromPath(pathname)
 
   const txButtonProps: TxButtonProps = {
     api: relayApi, // api is guaranteed to be defined here
     setStatus: (status: string | null) => console.log('tx status:', status),
+    addToast: addToast,
     attrs: {
       palletRpc: 'registrar',
       callable: 'reserve',
@@ -69,7 +70,7 @@ const ReserveParaIDModal: FC<TransferModalProps> = ({
             disabled={!allParamsFilled()}
           />
         </div>
-        <div className="mt-5 text-sm text-gray-16 ">{status}</div>
+        {/* <div className="mt-5 text-sm text-gray-16 ">{status}</div> */}
       </div>
     </Modal>
   )

@@ -17,7 +17,6 @@ export type NetworkInfo = {
     }
     constants: BrokerConstantsType | null // This values changes so little, that we can just store it here rather than having to read it from the state
     configuration: ConfigurationType | null
-    saleInfo: { firstCore: number } | null
   }
 }
 
@@ -91,7 +90,6 @@ export const network_list: NetworkInfo = {
     },
     constants: null,
     configuration: null,
-    saleInfo: null,
   },
   kusama: {
     name: 'Kusama',
@@ -398,9 +396,6 @@ export const network_list: NetworkInfo = {
       renewalBump: 3,
       contributionTimeout: 5040,
     },
-    saleInfo: {
-      firstCore: 52,
-    },
   },
   westend: {
     name: 'Westend',
@@ -436,9 +431,6 @@ export const network_list: NetworkInfo = {
       limitCoresOffered: null,
       renewalBump: 0.35,
       contributionTimeout: 1260,
-    },
-    saleInfo: {
-      firstCore: 5,
     },
   },
   rococo: {
@@ -526,9 +518,6 @@ export const network_list: NetworkInfo = {
       limitCoresOffered: null,
       renewalBump: 0.35,
       contributionTimeout: 1260,
-    },
-    saleInfo: {
-      firstCore: 47,
     },
   },
 }
