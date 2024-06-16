@@ -78,7 +78,7 @@ const CoreUtilisation: React.FC = () => {
         <span>
           Pricing curve indicative of the{' '}
           <a
-            className="hover:underline"
+            className="underline hover:font-bold"
             href="https://grillapp.net/12935/agile-coretime-pricing-explained-166522"
             target="_blank"
           >
