@@ -105,8 +105,11 @@ export const useListings = (fetchOnInit = true) => {
 
       if (activeChain?.name) await fetchListings(activeChain.name as networks)
       setStatusMessage('Listing added successfully')
+      return true
     } catch (error) {
       console.error('Failed to add listing:', error)
+      setStatusMessage('Failed to add listing')
+      return false
     } finally {
       setIsLoading(false)
     }
@@ -139,8 +142,11 @@ export const useListings = (fetchOnInit = true) => {
 
       if (!response.ok) throw new Error()
       console.log('Trade marked as started in DB')
+      return true
     } catch (error) {
+      if (error instanceof Error) setStatusMessage(`Error occured: ${error.message}`)
       console.error('Failed to update listing:', error)
+      return false
     } finally {
       setIsLoading(false)
     }
@@ -166,6 +172,7 @@ export const useListings = (fetchOnInit = true) => {
 
       if (!response.ok) throw new Error()
     } catch (error) {
+      if (error instanceof Error) setStatusMessage(`Error occured: ${error.message}`)
       console.error('Failed to update listing:', error)
     } finally {
       setIsLoading(false)

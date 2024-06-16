@@ -47,6 +47,7 @@ export const useMultisigTrading = ({
 
   useEffect(() => {
     setTxStatusMessage('')
+    setIsLoading(false)
 
     getAllOpenMultisigCalls(multisigAddress || '', api, activeRelayChain)
   }, [core, activeAccount, api, multisigAddress, activeRelayChain])
@@ -94,6 +95,7 @@ export const useMultisigTrading = ({
     }
     try {
       setIsLoading(true)
+      let isMarkedInDB = false
       const unsub = await asMultiTx.signAndSend(
         activeAccount!.address,
         { signer: activeSigner },
@@ -103,21 +105,40 @@ export const useMultisigTrading = ({
             console.log(`Transaction included at blockHash ${result.status.asInBlock}`)
             console.log('Tx hash: ' + result.txHash)
 
-            // update DB
+            setTxStatusMessage(
+              `🧊 Multisig call included in block. Please wait for it to finalize!`,
+            )
+
+            // If tx completes the trade, check for the event and update the DB
             if (when && onTradeCompleted) {
-              onTradeCompleted(core.id)
+              result.events.forEach(({ phase, event: { data, method, section } }) => {
+                if (section === 'system' && method === 'ExtrinsicSuccess') {
+                  onTradeCompleted(core.id)
+                  isMarkedInDB = true
+                } else if (section === 'system' && method === 'ExtrinsicFailed')
+                  setTxStatusMessage('🚫 Multisig call failed')
+              })
+            }
+          } else if (result.status.isFinalized) {
+            setTxStatusMessage(`📜 Multisig call finalized!`)
+
+            if (!isMarkedInDB && when && onTradeCompleted) {
+              result.events.forEach(({ phase, event: { data, method, section } }) => {
+                if (section === 'system' && method === 'ExtrinsicSuccess') {
+                  onTradeCompleted(core.id)
+                  isMarkedInDB = true
+                } else if (section === 'system' && method === 'ExtrinsicFailed')
+                  setTxStatusMessage('🚫 Multisig call failed')
+              })
             }
 
-            setTxStatusMessage(`🧊 Multisig call included in block ${result.status.asInBlock}`)
-          } else if (result.status.isFinalized) {
-            setTxStatusMessage(`📜 Multisig call finalized ${result.status.asFinalized}`)
+            setIsLoading(false)
             unsub()
           }
         },
       )
     } catch (error: unknown) {
       if (error instanceof Error) setTxStatusMessage('Multisig call: ' + error.message)
-    } finally {
       setIsLoading(false)
     }
   }
@@ -142,18 +163,24 @@ export const useMultisigTrading = ({
       multisigAddress,
     )
     try {
+      setIsLoading(true)
       tx?.signAndSend(activeAccount!.address, { signer: activeSigner }, (result) => {
         setTxStatusMessage(result.status.type)
         if (result.status.isInBlock) {
           console.log(`Transaction included at blockHash ${result.status.asInBlock}`)
           console.log('Tx hash: ' + result.txHash)
-          setTxStatusMessage(`🧊 Core sent and tx included in block ${result.status.asInBlock}`)
+          setTxStatusMessage(
+            `🧊 Core sent and tx included in block. It's recommended to wait for it to be finalized.`,
+          )
+
+          setIsLoading(false)
         } else if (result.status.isFinalized) {
-          setTxStatusMessage(`📜 Core sent and tx finalized ${result.status.asFinalized}`)
+          setTxStatusMessage(`📜 Core sent and tx finalized!`)
         }
       })
     } catch (error: unknown) {
       if (error instanceof Error) setTxStatusMessage('Error sending the core: ' + error.message)
+      setIsLoading(false)
     }
   }
 
@@ -165,23 +192,36 @@ export const useMultisigTrading = ({
     // simple transfer logic
     const transfer = api?.tx.balances.transferKeepAlive(multisigAddress, core.cost)
 
-    transfer?.signAndSend(activeAccount!.address, { signer: activeSigner }, (result) => {
-      setTxStatusMessage(result.status.type)
-      if (result.status.isInBlock) {
-        console.log(
-          `Transaction included at blockHash ${result.status.asInBlock}; Tx hash: ${result.txHash}`,
-        )
+    try {
+      setIsLoading(true)
+      let isMarkedInDB = false
+      transfer?.signAndSend(activeAccount!.address, { signer: activeSigner }, (result) => {
+        setTxStatusMessage(result.status.type)
+        if (result.status.isInBlock) {
+          console.log(
+            `Transaction included at blockHash ${result.status.asInBlock}; Tx hash: ${result.txHash}`,
+          )
 
-        // update DB
-        if (onTradeStarted) onTradeStarted(core.id, activeAccount!.address)
+          // update DB
+          if (onTradeStarted) {
+            onTradeStarted(core.id, activeAccount!.address)
+            isMarkedInDB = true
+          }
 
-        setTxStatusMessage(`🧊 Funds sent and tx included in block ${result.status.asInBlock}`)
-      } else if (result.status.isFinalized) {
-        setTxStatusMessage(`📜 Funds sent and tx finalized ${result.status.asFinalized}`)
-        // update DB again to make sure to have correct values
-        if (onTradeStarted) onTradeStarted(core.id, activeAccount!.address)
-      }
-    })
+          setTxStatusMessage(
+            `🧊 Funds sent and tx included in block. Please wait for it to finalize.`,
+          )
+        } else if (result.status.isFinalized) {
+          setTxStatusMessage(`📜 Funds sent and tx finalized!`)
+          // update DB again to make sure to have correct values
+          if (!isMarkedInDB && onTradeStarted) onTradeStarted(core.id, activeAccount!.address)
+          setIsLoading(false)
+        }
+      })
+    } catch (error: unknown) {
+      if (error instanceof Error) setTxStatusMessage('Error sending the funds: ' + error.message)
+      setIsLoading(false)
+    }
   }
 
   const _basicChecks = () => {

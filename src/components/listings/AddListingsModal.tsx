@@ -18,30 +18,38 @@ const ListingsModal: FC<ListingsModalProps> = ({ isOpen, onClose, regionId }) =>
   const { activeAccount, activeChain } = useInkathon()
   const [cost, setCost] = useState('')
   let { tokenSymbol, tokenDecimals } = useBalance(activeAccount?.address, true)
-
-  const { statusMessage, addListing } = useListings()
+  const { statusMessage, addListing, isLoading } = useListings()
+  const [buttonDisabled, setButtonDisabled] = useState(false)
 
   const listCoreForSale = async () => {
-    if (!activeAccount) return
+    try {
+      if (!activeAccount) return
+      setButtonDisabled(true)
 
-    const network = activeChain?.name as networks
+      const network = activeChain?.name as networks
 
-    const coreData: Omit<CoreListing, 'id'> = {
-      coreNumber: Number(regionId.core),
-      mask: regionId.mask,
-      begin: regionId.begin.replace(/,/g, ''),
+      const coreData: Omit<CoreListing, 'id'> = {
+        coreNumber: Number(regionId.core),
+        mask: regionId.mask,
+        begin: regionId.begin.replace(/,/g, ''),
 
-      cost: (parseFloat(cost) * 10 ** tokenDecimals).toString(),
-      sellerAddress: activeAccount.address,
-      network,
-      status: 'listed',
+        cost: (parseFloat(cost) * 10 ** tokenDecimals).toString(),
+        sellerAddress: activeAccount.address,
+        network,
+        status: 'listed',
+      }
+
+      addListing(coreData).then((res) => {
+        if (res) {
+          setTimeout(() => {
+            onClose()
+            setButtonDisabled(false)
+          }, 3000)
+        } else setButtonDisabled(false)
+      })
+    } catch {
+      setButtonDisabled(false)
     }
-
-    addListing(coreData).then(() => {
-      setTimeout(() => {
-        onClose()
-      }, 3000)
-    })
   }
 
   if (!isOpen) return null
@@ -74,7 +82,9 @@ const ListingsModal: FC<ListingsModalProps> = ({ isOpen, onClose, regionId }) =>
             <PrimaryButton
               title="List Core for Sale"
               onClick={listCoreForSale}
-              disabled={!cost || !activeAccount || parseFloat(cost) < 0}
+              disabled={
+                !cost || !activeAccount || parseFloat(cost) < 0 || buttonDisabled || isLoading
+              }
             />
           </div>
           <div className="self-center pt-5">{statusMessage}</div>
