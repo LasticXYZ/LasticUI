@@ -9,10 +9,20 @@ import { priceCurve } from '@/utils'
 import { getChainFromPath } from '@/utils/common/chainPath'
 import { getClient } from '@poppyseed/squid-sdk'
 import { usePathname } from 'next/navigation'
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, type ReactNode } from 'react'
 import CoreOwners from './CoreOwners'
 
 type DataSetKey = 'priceOnePeriod' | 'price' | 'cores' | 'pastAuctions' // Add more keys as needed
+
+type GraphData = {
+  line: boolean
+  label: string
+  dataPoints: number[]
+  labels: string[]
+  xLabel: string
+  yLabel: string
+  footnote?: ReactNode
+}
 
 const CoreUtilisation: React.FC = () => {
   const pathname = usePathname()
@@ -64,6 +74,18 @@ const CoreUtilisation: React.FC = () => {
         : [],
       xLabel: 'Block Number',
       yLabel: `Price - ${network_list[network].tokenSymbol}`,
+      footnote: (
+        <span>
+          Pricing curve indicative of the{' '}
+          <a
+            className="underline hover:font-bold"
+            href="https://grillapp.net/12935/agile-coretime-pricing-explained-166522"
+            target="_blank"
+          >
+            new pricing model
+          </a>
+        </span>
+      ),
     },
     price: {
       line: false,
@@ -118,7 +140,9 @@ const CoreUtilisation: React.FC = () => {
       xLabel: 'Auction Index',
       yLabel: `Amount in ${network_list[network].tokenSymbol}`,
     },
-  }
+  } as const satisfies Record<string, GraphData>
+
+  const activeData = dataConfigs[activeDataSet]
 
   // Toggle between data sets
   const toggleActiveDataSet = (newDataSet: DataSetKey) => {
@@ -146,25 +170,28 @@ const CoreUtilisation: React.FC = () => {
           <div className="col-span-1">
             <div className="p-2 flex flex-col space-y-4">{dataSetOptions}</div>
           </div>
-          <div className="col-span-3 p-4">
-            {dataConfigs[activeDataSet].line ? (
+          <section className="col-span-3 p-4">
+            {activeData.line ? (
               <MiniLineGraphData
-                title={dataConfigs[activeDataSet].label}
-                labels={dataConfigs[activeDataSet].labels}
-                dataPoints={dataConfigs[activeDataSet].dataPoints}
-                xLabel={dataConfigs[activeDataSet].xLabel}
-                yLabel={dataConfigs[activeDataSet].yLabel}
+                title={activeData.label}
+                labels={activeData.labels}
+                dataPoints={activeData.dataPoints}
+                xLabel={activeData.xLabel}
+                yLabel={activeData.yLabel}
               />
             ) : (
               <MiniBarGraphData
-                title={dataConfigs[activeDataSet].label}
-                labels={dataConfigs[activeDataSet].labels}
-                dataPoints={dataConfigs[activeDataSet].dataPoints}
-                xLabel={dataConfigs[activeDataSet].xLabel}
-                yLabel={dataConfigs[activeDataSet].yLabel}
+                title={activeData.label}
+                labels={activeData.labels}
+                dataPoints={activeData.dataPoints}
+                xLabel={activeData.xLabel}
+                yLabel={activeData.yLabel}
               />
             )}
-          </div>
+            {'footnote' in activeData ? (
+              <footer className="text-xs text-gray-16 text-end">{activeData.footnote}</footer>
+            ) : null}
+          </section>
         </div>
         <CoreOwners />
       </Border>

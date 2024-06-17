@@ -1,6 +1,11 @@
 import { ApiPromise } from '@polkadot/api'
-import { BrokerConstantsType, getConstants, getCurrentBlockNumber } from '@poppyseed/lastic-sdk'
-import { useEffect, useState } from 'react'
+import {
+  BrokerConstantsType,
+  SaleInfoType,
+  getConstants,
+  getCurrentBlockNumber,
+} from '@poppyseed/lastic-sdk'
+import { useEffect, useMemo, useState } from 'react'
 
 // Define a type for the queryParams
 type QueryParams = (string | number | Record<string, unknown>)[]
@@ -37,6 +42,16 @@ export function useSubstrateQuery(
   }, [api, queryKey, queryParams])
 
   return data
+}
+
+export function useSaleInfo(api: ApiPromise | undefined) {
+  const saleInfoString = useSubstrateQuery(api, 'saleInfo')
+
+  const saleInfo = useMemo(
+    () => (saleInfoString ? (JSON.parse(saleInfoString) as SaleInfoType) : null),
+    [saleInfoString],
+  )
+  return saleInfo
 }
 
 export function useCurrentBlockNumber(api: ApiPromise | undefined) {

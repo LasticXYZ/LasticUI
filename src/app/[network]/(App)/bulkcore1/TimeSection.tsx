@@ -5,7 +5,7 @@ import BuyWalletStatus from '@/components/walletStatus/BuyWalletStatus'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
 import { useCoresSold, useSaleRegion } from '@/hooks/subsquid'
-import { useCurrentBlockNumber } from '@/hooks/useSubstrateQuery'
+import { useCurrentBlockNumber, useSaleInfo } from '@/hooks/useSubstrateQuery'
 import { calculateCurrentPricePerCore, saleStatus } from '@/utils/broker'
 import { StatusCode } from '@/utils/broker/saleStatus'
 import { getChainFromPath } from '@/utils/common/chainPath'
@@ -38,6 +38,8 @@ export default function BrokerSaleInfo() {
 
   const coresSoldInThisSale = useCoresSold(network, client, currentSaleRegion)
 
+  const saleInfo = useSaleInfo(api)
+
   useEffect(() => {
     if (currentSaleRegion && configuration && brokerConstants) {
       const { statusMessage, timeRemaining, statusTitle, statusCode } = saleStatus(
@@ -53,7 +55,7 @@ export default function BrokerSaleInfo() {
     }
   }, [currentBlockNumber, currentSaleRegion, configuration, brokerConstants])
 
-  if (!api)
+  if (!api || !saleInfo)
     return (
       <>
         <section className="mx-auto mb-5 max-w-9xl px-4 mt-5 sm:px-6 lg:px-8">
@@ -101,9 +103,9 @@ export default function BrokerSaleInfo() {
       change: `${currentPrice ? (currentPrice / 10 ** decimalPoints).toFixed(9) : '-'} ${tokenSymbol} to be exact`,
     },
     {
-      title: `${coresSoldInThisSale?.totalCount} / ${currentSaleRegion?.coresOffered}`,
-      subtitle: `Core sold out of ${currentSaleRegion?.coresOffered} available`,
-      change: '',
+      title: `${saleInfo?.coresSold} / ${currentSaleRegion?.coresOffered}`,
+      subtitle: `Cores sold or renewed out of ${currentSaleRegion?.coresOffered} available`,
+      change: `${coresSoldInThisSale?.totalCount} cores sold in this sale`,
     },
   ]
 
@@ -136,8 +138,8 @@ export default function BrokerSaleInfo() {
             <Border className="h-full flex justify-center items-center">
               <BuyWalletStatus
                 saleInfo={currentSaleRegion}
-                coresSold={coresSoldInThisSale?.totalCount}
-                firstCore={network_list[network].saleInfo?.firstCore || 0}
+                coresSold={saleInfo?.coresSold}
+                firstCore={saleInfo?.firstCore || 0}
                 formatPrice={`${currentPrice ? (currentPrice / 10 ** decimalPoints).toFixed(8) : '-'} ${tokenSymbol}`}
                 currentPrice={currentPrice}
                 statusCode={statusCode}

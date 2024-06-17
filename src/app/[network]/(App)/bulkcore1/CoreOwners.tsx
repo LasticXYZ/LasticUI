@@ -1,5 +1,5 @@
 import GeneralTable from '@/components/table/GeneralTable'
-import { parseNativeTokenToHuman, toShortAddress } from '@/utils/account/token'
+import { parseNativeTokenToHuman } from '@/utils/account/token'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
 import { GraphLike, PurchasedEvent, getClient } from '@poppyseed/squid-sdk'
 import { format } from 'date-fns'
@@ -47,7 +47,7 @@ const PastTransactions = () => {
       data: [
         event.timestamp ? format(new Date(event.timestamp), 'MMMM dd, yyyy HH:mm:ss OOOO') : '',
         event.blockNumber?.toString(),
-        toShortAddress(event.who, 5),
+        event.who,
         event.regionId.core?.toString(),
         event.regionId.begin?.toString(),
         `${parseNativeTokenToHuman({ paid: event.price?.toString(), decimals: 12 })} ${tokenSymbol}`,

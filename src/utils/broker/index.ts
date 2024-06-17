@@ -117,24 +117,13 @@ export function calculateCurrentPrice(
   }
 }
 
-// Calculate k - the slope of the price curve when it is the leadin period
-// k = (y2 - y1) / (x2 - x1)
-// k = (startPrice - regularPrice) / leadinLength
-function calculate_k(saleInfo: SaleInitializedEvent, config: ConfigurationType): number {
-  // Corrected the logic here to ensure proper calculation
-  return (
-    (Number(saleInfo.regularPrice?.toString()) - Number(saleInfo.startPrice?.toString())) /
-    config.leadinLength
-  )
-}
-
-// Calculate n - the y-intercept of the price curve when it is the interlude period
-// n = y1 - k * x1
-// n = startPrice - k * saleStart
-function calculate_n(saleInfo: SaleInitializedEvent, config: ConfigurationType): number {
-  let k = calculate_k(saleInfo, config)
-  return Number(saleInfo.startPrice?.toString()) - k * Number(saleInfo.saleStart?.toString())
-}
+/**
+ * Return the factor by which the regular price must be multiplied during the leadin period.
+ *
+ * @param progress - The amount through the leadin period; between zero and one
+ */
+const leadInFactorAt = (progress: number) =>
+  progress <= 1 / 2 ? 100 - progress * 180 : 19 - progress * 18
 
 // Calculate the price of a core at a given block number
 // y = kx + n
@@ -144,18 +133,21 @@ export function calculateCurrentPricePerCore(
   saleInfo: SaleInitializedEvent | null,
   config: ConfigurationType,
 ): number | null {
-  if (!saleInfo || !saleInfo.saleStart || !saleInfo.regularPrice || !saleInfo.startPrice)
+  if (saleInfo === null || saleInfo.saleStart === null || saleInfo.regularPrice === null) {
     return null
+  }
+
   if (
-    currentBlockNumber >= saleInfo.saleStart &&
-    currentBlockNumber < saleInfo.saleStart + config.leadinLength
+    currentBlockNumber < saleInfo.saleStart ||
+    currentBlockNumber >= saleInfo.saleStart + config.leadinLength
   ) {
-    let k = calculate_k(saleInfo, config)
-    let n = calculate_n(saleInfo, config)
-    return k * currentBlockNumber + n
-  } else {
     return Number(saleInfo.regularPrice)
   }
+
+  const leadInLength = saleInfo.leadinLength ?? config.leadinLength
+  const blocksPassed = Math.min(leadInLength, currentBlockNumber - saleInfo.saleStart)
+
+  return leadInFactorAt(blocksPassed / leadInLength) * Number(saleInfo.regularPrice)
 }
 
 // Pseudocode to visualize the price per core over time
