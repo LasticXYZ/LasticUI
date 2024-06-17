@@ -124,3 +124,14 @@ export function getComplementaryMaskBits(a: boolean[], b: boolean[]): boolean[] 
 
   return result
 }
+
+export const copyToClipboard = async (item: string | JSX.Element | null | undefined) => {
+  console.log(typeof item)
+  try {
+    if (typeof item === 'string') {
+      await navigator.clipboard.writeText(item)
+    }
+  } catch (error: any) {
+    throw new Error("Couldn't copy address. Please try again.")
+  }
+}

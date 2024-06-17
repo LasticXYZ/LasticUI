@@ -1,6 +1,8 @@
 import { joinClassNames } from '@/utils/helperFunc' // This is a custom function to join class names
 import Link from 'next/link'
 import { FC } from 'react'
+import { ClipboardIcon } from '@heroicons/react/24/outline'
+import { copyToClipboard } from '@/utils'
 
 type GeneralTableProps = {
   tableData: Array<{ href?: string; data: Array<string | JSX.Element | undefined | null> }>
@@ -56,8 +58,19 @@ const GeneralTable: FC<GeneralTableProps> = ({
                       className={joinClassNames('grid gap-4 px-2 border-b border-gray-9', colClass)}
                     >
                       {item.data.map((item2, innerIndex) => (
-                        <div key={innerIndex} className="flex justify-start items-center p-4">
-                          {item2}
+                        <div key={innerIndex} className="flex justify-between items-center p-4">
+                          {innerIndex !== 2 && item2}
+                          {innerIndex === 2 && (
+                            <div key={innerIndex} className="flex items-center justify-between">
+                              <span className="w-32">{item2}</span>
+                              <ClipboardIcon
+                                onClick={() => copyToClipboard(item2)}
+                                width={16}
+                                height={16}
+                                className=" ml-2 cursor-pointer transition ease-in-out delay-75 hover:scale-150"
+                              />
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
