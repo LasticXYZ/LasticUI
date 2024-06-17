@@ -1,6 +1,8 @@
+import { toShortAddress } from '@/utils'
 import { joinClassNames } from '@/utils/helperFunc' // This is a custom function to join class names
 import Link from 'next/link'
 import { FC } from 'react'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 
 type GeneralTableProps = {
   tableData: Array<{ href?: string; data: Array<string | JSX.Element | undefined | null> }>
@@ -55,11 +57,21 @@ const GeneralTable: FC<GeneralTableProps> = ({
                     <div
                       className={joinClassNames('grid gap-4 px-2 border-b border-gray-9', colClass)}
                     >
-                      {item.data.map((item2, innerIndex) => (
-                        <div key={innerIndex} className="flex justify-start items-center p-4">
-                          {item2}
-                        </div>
-                      ))}
+                      {item.data.map((item2, innerIndex) => {
+                        return (
+                          <div className="flex justify-start items-center p-4" key={innerIndex}>
+                            {innerIndex === 2 ? (
+                              <div className="cursor-pointer">
+                                <CopyToClipboard text={item2 as string}>
+                                  <span>{toShortAddress(item2 as string, 5)}</span>
+                                </CopyToClipboard>
+                              </div>
+                            ) : (
+                              <>{item2}</>
+                            )}
+                          </div>
+                        )
+                      })}
                     </div>
                   </div>
                 )}
