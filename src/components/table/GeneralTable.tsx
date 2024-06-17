@@ -3,6 +3,7 @@ import { joinClassNames } from '@/utils/helperFunc' // This is a custom function
 import Link from 'next/link'
 import { FC } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { ClipboardIcon } from '@heroicons/react/24/outline'
 
 type GeneralTableProps = {
   tableData: Array<{ href?: string; data: Array<string | JSX.Element | undefined | null> }>
