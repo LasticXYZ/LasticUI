@@ -64,11 +64,12 @@ const GeneralTable: FC<GeneralTableProps> = ({
                             {innerIndex === 2 ? (
                               <div className="cursor-pointer">
                                 <CopyToClipboard text={item2 as string}>
-                                  <span>{toShortAddress(item2 as string, 5)}</span>
-                                                                <ClipboardIcon
-                                                                    width={16}
-                                                                    height={16}
-                                                                  />
+                                  <span>{toShortAddress(item2 as string, 5)}
+                                          <ClipboardIcon
+                                              width={16}
+                                              height={16}
+                                            />
+                                        </span>
                                 </CopyToClipboard>
                               </div>
                             ) : (
