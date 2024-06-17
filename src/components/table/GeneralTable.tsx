@@ -65,6 +65,10 @@ const GeneralTable: FC<GeneralTableProps> = ({
                               <div className="cursor-pointer">
                                 <CopyToClipboard text={item2 as string}>
                                   <span>{toShortAddress(item2 as string, 5)}</span>
+                                                                <ClipboardIcon
+                                                                    width={16}
+                                                                    height={16}
+                                                                  />
                                 </CopyToClipboard>
                               </div>
                             ) : (
