@@ -73,6 +73,7 @@ const PastTransactions = () => {
           {result ? (
             <>
               <GeneralTable
+                addressFieldIndex={2}
                 tableData={TableData}
                 tableHeader={TableHeader}
                 colClass="grid-cols-6"

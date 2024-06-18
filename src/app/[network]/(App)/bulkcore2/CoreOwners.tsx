@@ -1,7 +1,5 @@
 import GeneralTable from '@/components/table/GeneralTable'
 import TagComp from '@/components/tags/TagComp'
-import Link from 'next/link'
-import React, { useState } from 'react'
 
 const PoolsSection = () => {
   const TableHeader = [

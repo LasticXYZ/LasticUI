@@ -68,6 +68,7 @@ const PastTransactions = ({ coreNb }: { coreNb: number }) => {
           <div>
             {result ? (
               <GeneralTable
+                addressFieldIndex={3}
                 tableData={TableData}
                 tableHeader={TableHeader}
                 colClass="grid-cols-7"

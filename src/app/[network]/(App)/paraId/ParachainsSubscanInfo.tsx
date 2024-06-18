@@ -117,6 +117,7 @@ const ParachainInfo: React.FC = () => {
           <>
             <div className="mx-auto max-w-9xl px-4 mt-5 sm:px-6 lg:px-8">
               <GeneralTable
+                addressFieldIndex={3}
                 tableData={TableData}
                 tableHeader={TableHeader}
                 colClass="grid-cols-5"

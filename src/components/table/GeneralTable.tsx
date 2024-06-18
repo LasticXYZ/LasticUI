@@ -4,12 +4,14 @@ import Link from 'next/link'
 import { FC } from 'react'
 
 type GeneralTableProps = {
+  addressFieldIndex?: number
   tableData: Array<{ href?: string; data: Array<string | JSX.Element | undefined | null> }>
   tableHeader: Array<{ title: string }>
   colClass?: string
 }
 
 const GeneralTable: FC<GeneralTableProps> = ({
+  addressFieldIndex,
   tableData,
   tableHeader,
   colClass = 'grid-cols-4',
@@ -59,7 +61,7 @@ const GeneralTable: FC<GeneralTableProps> = ({
                       {item.data.map((item2, innerIndex) => {
                         return (
                           <div className="flex justify-start items-center p-4" key={innerIndex}>
-                            {innerIndex === 2 ? (
+                            {innerIndex === addressFieldIndex ? (
                               <AddressCopyClipboard text={item2 as string} />
                             ) : (
                               <>{item2}</>
