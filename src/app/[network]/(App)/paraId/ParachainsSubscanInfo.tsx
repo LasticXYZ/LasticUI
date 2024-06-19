@@ -3,6 +3,7 @@ import { useSubScanCall } from '@/components/callSubscan/callSubScan'
 import { ParachainInfoRequest, ParachainInfoResponse } from '@/components/callSubscan/types'
 import GeneralTable from '@/components/table/GeneralTable'
 import { PossibleNetworks, network_list } from '@/config/network'
+import { toShortAddress } from '@/utils'
 import { getChainFromPath } from '@/utils/common/chainPath'
 import { usePathname } from 'next/navigation'
 import React, { useMemo, useState } from 'react'
@@ -72,7 +73,7 @@ const ParachainInfo: React.FC = () => {
             ? network_list[network as PossibleNetworks].paraId[paraInfo.para_id.toString()]?.name
             : null,
           paraInfo.status,
-          paraInfo.manager_display?.address.toString(),
+          toShortAddress(paraInfo.manager_display?.address),
           `${paraInfo.first_period} - ${paraInfo.last_period}`,
         ],
       }))
