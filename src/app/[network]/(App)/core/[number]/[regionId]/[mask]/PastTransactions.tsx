@@ -1,6 +1,6 @@
 import Border from '@/components/border/Border'
 import GeneralTable from '@/components/table/GeneralTable'
-import { parseNativeTokenToHuman } from '@/utils/account/token'
+import { parseNativeTokenToHuman, toShortAddress } from '@/utils/account/token'
 import { getChainFromPath } from '@/utils/common/chainPath'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
 import { GraphLike, PurchasedEvent, getClient } from '@poppyseed/squid-sdk'
@@ -49,7 +49,7 @@ const PastTransactions = ({ coreNb }: { coreNb: number }) => {
         event.timestamp ? format(new Date(event.timestamp), 'MMMM dd, yyyy HH:mm:ss OOOO') : '',
         event.blockNumber?.toString(),
         'Purchase',
-        event.who?.toString(),
+        toShortAddress(event.who, 4),
         event.regionId.begin?.toString(),
         event.regionId.mask,
         `${parseNativeTokenToHuman({ paid: event.price?.toString(), decimals: 12 })} ${tokenSymbol}`,
