@@ -1,10 +1,6 @@
+import { SaleInfoType } from '@/types'
 import { ApiPromise } from '@polkadot/api'
-import {
-  BrokerConstantsType,
-  SaleInfoType,
-  getConstants,
-  getCurrentBlockNumber,
-} from '@poppyseed/lastic-sdk'
+import { BrokerConstantsType, getConstants, getCurrentBlockNumber } from '@poppyseed/lastic-sdk'
 import { useEffect, useMemo, useState } from 'react'
 
 // Define a type for the queryParams

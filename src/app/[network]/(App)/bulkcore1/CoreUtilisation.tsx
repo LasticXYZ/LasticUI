@@ -5,8 +5,10 @@ import MiniBarGraphData from '@/components/graph/MiniBarGraphData'
 import MiniLineGraphData from '@/components/graph/MiniLineGraphData'
 import { network_list } from '@/config/network'
 import { useSaleRegions } from '@/hooks/subsquid'
+import { useSaleInfo } from '@/hooks/useSubstrateQuery'
 import { priceCurve } from '@/utils'
 import { getChainFromPath } from '@/utils/common/chainPath'
+import { useInkathon } from '@poppyseed/lastic-sdk'
 import { getClient } from '@poppyseed/squid-sdk'
 import { usePathname } from 'next/navigation'
 import React, { useMemo, useState, type ReactNode } from 'react'
@@ -28,17 +30,19 @@ const CoreUtilisation: React.FC = () => {
   const pathname = usePathname()
   const network = getChainFromPath(pathname)
   const decimalPoints = network_list[network].tokenDecimals
+  const { api } = useInkathon()
 
   const [activeDataSet, setActiveDataSet] = useState<DataSetKey>('priceOnePeriod') // Change to string to accommodate multiple datasets
   const client = useMemo(() => getClient(), [])
+  const saleInfo = useSaleInfo(api)
 
   const saleRegions = useSaleRegions(network, client)
   const currentSaleRegion = saleRegions?.data.event ? saleRegions.data.event[0] : null
   const constant = network_list[network].constants
   const config = network_list[network].configuration
   let price_xy: { x: number[]; y: number[] } | undefined
-  if (currentSaleRegion && config && constant) {
-    price_xy = priceCurve(currentSaleRegion, config, constant)
+  if (saleInfo && config && constant) {
+    price_xy = priceCurve(saleInfo, config, constant)
     //console.log(price_xy)
   }
 
