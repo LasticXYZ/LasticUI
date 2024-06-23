@@ -101,7 +101,7 @@ export default function BrokerSaleInfo() {
     {
       title: `${saleInfo?.coresSold} / ${currentSaleRegion?.coresOffered}`,
       subtitle: `Cores sold or renewed out of ${currentSaleRegion?.coresOffered} available`,
-      change: `${coresSoldInThisSale?.totalCount} cores sold in this sale`,
+      change: ``,
     },
   ]
 
