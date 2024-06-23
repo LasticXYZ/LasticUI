@@ -1,17 +1,17 @@
+import { SaleInfoType } from '@/types'
 import { BrokerConstantsType, ConfigurationType } from '@poppyseed/lastic-sdk'
-import { SaleInitializedEvent } from '@poppyseed/squid-sdk'
 import { FC } from 'react'
 
 // Additional interfaces, which should be defined according to your data structure
 type SliderPropeTypes = {
   currentBlockNumber: number
-  saleInfo: SaleInitializedEvent
+  saleInfo: SaleInfoType
   config: ConfigurationType
   constants: BrokerConstantsType
 }
 
 const Slider: FC<SliderPropeTypes> = ({ currentBlockNumber, saleInfo, config, constants }) => {
-  if (!saleInfo.saleStart || !saleInfo.regularPrice) return null
+  if (!saleInfo.saleStart || !saleInfo.endPrice) return null
   const saleDuration = (config.regionLength * constants.timeslicePeriod) / 2
 
   // Calculate percentages for each period
@@ -62,7 +62,7 @@ const Slider: FC<SliderPropeTypes> = ({ currentBlockNumber, saleInfo, config, co
         style={{ left: `${(safeLeadinPercentage + 100) / 2}%` }}
       >
         <p className="text-sm text-left mt-5 -ml-10">
-          Stable price = {Number(saleInfo.regularPrice) / 10 ** 12}
+          Stable price = {Number(saleInfo.endPrice) / 10 ** 12}
         </p>
       </div>
       {/* Marker for Purchase Period */}

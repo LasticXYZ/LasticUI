@@ -1,6 +1,5 @@
+import { SaleInfoType } from '@/types'
 import { BrokerConstantsType, ConfigurationType } from '@poppyseed/lastic-sdk'
-
-import { SaleInitializedEvent } from '@poppyseed/squid-sdk'
 import { blocksToTimeFormat } from './blockTime'
 
 export enum StatusCode {
@@ -33,7 +32,7 @@ const statusInfoMap: Record<StatusCode, StatusInfo> = {
 // Non-exported util functions for saleStatus
 
 export function getSaleEnds(
-  saleInfo: SaleInitializedEvent,
+  saleInfo: SaleInfoType,
   config: ConfigurationType,
   constant: BrokerConstantsType,
 ): number {
@@ -48,7 +47,7 @@ export function getSaleEnds(
 
 function calculateTimeRemaining(
   currentBlockNumber: number,
-  saleInfo: SaleInitializedEvent,
+  saleInfo: SaleInfoType,
   config: ConfigurationType,
   constant: BrokerConstantsType,
   statusCode: StatusCode,
@@ -81,7 +80,7 @@ function calculateTimeRemaining(
 
 function determineStatusCode(
   currentBlockNumber: number,
-  saleInfo: SaleInitializedEvent,
+  saleInfo: SaleInfoType,
   config: ConfigurationType,
 ): StatusCode {
   if (!saleInfo.saleStart) return StatusCode.Interlude
@@ -94,7 +93,7 @@ function determineStatusCode(
 
 export function saleStatus(
   currentBlockNumber: number,
-  saleInfo: SaleInitializedEvent,
+  saleInfo: SaleInfoType,
   config: ConfigurationType,
   constant: BrokerConstantsType,
 ): {
