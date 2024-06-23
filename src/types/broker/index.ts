@@ -8,7 +8,8 @@ export * from './region'
 export type SaleInfoType = {
   saleStart: number
   leadinLength: number
-  endPrice: number
+  endPrice: number | undefined
+  price: number | undefined
   regionBegin: number
   regionEnd: number
   idealCoresSold: number

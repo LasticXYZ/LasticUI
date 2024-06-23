@@ -103,17 +103,16 @@ export function calculateCurrentPrice(
   saleInfo: SaleInfoType | null,
   config: ConfigurationType,
 ): number | null {
-  if (!saleInfo || !saleInfo.saleStart || !saleInfo.endPrice) return null
+  if (!saleInfo || !saleInfo.saleStart || (!saleInfo.endPrice && !saleInfo.price)) return null
+
+  const price = saleInfo.endPrice ?? saleInfo.price
   if (
     currentBlockNumber < saleInfo.saleStart + config.leadinLength &&
     currentBlockNumber > saleInfo.saleStart
   ) {
-    return (
-      Number(saleInfo.endPrice) *
-      (2 - (currentBlockNumber - saleInfo.saleStart) / config.leadinLength)
-    )
+    return Number(price) * (2 - (currentBlockNumber - saleInfo.saleStart) / config.leadinLength)
   } else {
-    return Number(saleInfo.endPrice)
+    return Number(price)
   }
 }
 
@@ -133,21 +132,21 @@ export function calculateCurrentPricePerCore(
   saleInfo: SaleInfoType | null,
   config: ConfigurationType,
 ): number | null {
-  if (saleInfo === null || saleInfo.saleStart === null || saleInfo.endPrice === null) {
-    return null
-  }
+  if (!saleInfo || !saleInfo.saleStart || (!saleInfo.endPrice && !saleInfo.price)) return null
+
+  const price = saleInfo.endPrice ?? saleInfo.price
 
   if (
     currentBlockNumber < saleInfo.saleStart ||
     currentBlockNumber >= saleInfo.saleStart + config.leadinLength
   ) {
-    return Number(saleInfo.endPrice)
+    return Number(price)
   }
 
   const leadInLength = saleInfo.leadinLength ?? config.leadinLength
   const blocksPassed = Math.min(leadInLength, currentBlockNumber - saleInfo.saleStart)
 
-  return leadInFactorAt(blocksPassed / leadInLength) * Number(saleInfo.endPrice)
+  return leadInFactorAt(blocksPassed / leadInLength) * Number(price)
 }
 
 // Pseudocode to visualize the price per core over time
