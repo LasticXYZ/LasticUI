@@ -38,6 +38,7 @@ export const calculateMultisigAddress = (
   threshold: number,
   signatories: string[],
   activeChain?: SubstrateChain,
+  ss58Format?: number,
 ) => {
   if (threshold < 2 || signatories.length < 2) {
     console.error('Threshold or signatories are too low')
@@ -51,7 +52,9 @@ export const calculateMultisigAddress = (
   const multisigPubKey = createKeyMulti(signatories, threshold)
 
   // Convert byte array to SS58 encoding.
-  return getEncodedAddress(multisigPubKey, activeChain)
+  if (activeChain) return getEncodedAddress(multisigPubKey, activeChain)
+  if (ss58Format) return getEncodedAddress(multisigPubKey, undefined, ss58Format)
+  return
 }
 
 /** Get opened multisig events for the current multisig address. Note: They can already be executed or cancelled.  */
