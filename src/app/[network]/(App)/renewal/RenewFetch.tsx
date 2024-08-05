@@ -27,6 +27,7 @@ const RenewalsData = () => {
   const network = getChainFromPath(pathname)
   const saleInfo = useSaleInfo(api)
   const begin = saleInfo?.regionBegin
+  console.log(saleInfo)
 
   const { activeAccount, activeChain } = useInkathon()
   let potentialRenewals = usePotentialRenewalsQuery(api)
@@ -34,8 +35,6 @@ const RenewalsData = () => {
   if (!potentialRenewals) {
     potentialRenewals = allowedRenewals
   }
-  const [task, setTask] = useState<number | null>(null)
-  const [core, setCore] = useState<number | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 7
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
@@ -45,18 +44,7 @@ const RenewalsData = () => {
   // Data filtering based on user selection
   const filteredData = allowedRenewals
     ?.filter((plan) => {
-      return (
-        (!core || parseFormattedNumber(plan.coreInfo[0].core) === core) &&
-        (!begin || parseFormattedNumber(plan.coreInfo[0].when) === begin) &&
-        (!task ||
-          (plan.assignmentInfo &&
-            plan.assignmentInfo.completion &&
-            plan.assignmentInfo.completion.Complete &&
-            plan.assignmentInfo.completion.Complete[0] &&
-            plan.assignmentInfo.completion.Complete[0].assignment &&
-            parseFormattedNumber(plan.assignmentInfo.completion.Complete[0].assignment.Task) ===
-              task))
-      )
+      return !begin || parseFormattedNumber(plan.coreInfo[0].when) === begin
     })
     .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
 
@@ -75,7 +63,7 @@ const RenewalsData = () => {
           {filteredData && filteredData.length > 0 ? (
             <>
               <h1 className="text-xl font-bold uppercase mb-5">Cores that need to be renewed!</h1>
-              <div className="flex flex-row items-center gap-3 mb-5">
+              {/* <div className="flex flex-row items-center gap-3 mb-5">
                 <label htmlFor="task">Task:</label>
                 <input
                   id="task"
@@ -94,7 +82,7 @@ const RenewalsData = () => {
                   onChange={(e) => setCore(parseFloat(e.target.value) || null)}
                   className="p-2 border rounded"
                 />
-              </div>
+              </div> */}
 
               <div className="w-full overflow-x-auto">
                 <GeneralTable

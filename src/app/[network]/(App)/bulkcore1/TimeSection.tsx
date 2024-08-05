@@ -4,7 +4,7 @@ import TimelineComponent from '@/components/timelineComp/TimelineComp'
 import BuyWalletStatus from '@/components/walletStatus/BuyWalletStatus'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
-import { useCoresSold, useSaleRegion } from '@/hooks/subsquid'
+import { useSaleRegion } from '@/hooks/subsquid'
 import { useCurrentBlockNumber, useSaleInfo } from '@/hooks/substrate'
 import { calculateCurrentPricePerCore, saleStatus } from '@/utils/broker'
 import { StatusCode } from '@/utils/broker/saleStatus'
@@ -35,8 +35,6 @@ export default function BrokerSaleInfo() {
   const decimalPoints = network_list[network].tokenDecimals
 
   const currentSaleRegion = useSaleRegion(network, client)
-
-  const coresSoldInThisSale = useCoresSold(network, client, currentSaleRegion)
 
   const saleInfo = useSaleInfo(api)
 
