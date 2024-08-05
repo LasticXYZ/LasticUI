@@ -11,12 +11,8 @@ import TimelineComponent from '@/components/timelineComp/TimelineComp'
 import TimelineUtilizeCore from '@/components/timelineComp/TimelineUtilizeCore'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
+import { useCurrentBlockNumber, useCurrentRelayBlockNumber, useSaleInfo } from '@/hooks/substrate'
 import { useListings } from '@/hooks/useListings'
-import {
-  useCurrentBlockNumber,
-  useCurrentRelayBlockNumber,
-  useSaleInfo,
-} from '@/hooks/useSubstrateQuery'
 import { saleStatus } from '@/utils/broker'
 import { utilizationStatus } from '@/utils/broker/utilizationStatus'
 import { getChainFromPath } from '@/utils/common/chainPath'

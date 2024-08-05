@@ -4,7 +4,7 @@ import RenewModal from '@/components/extrinsics/broker/RenewModal'
 import GeneralTable from '@/components/table/GeneralTable'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { PossibleNetworks, network_list } from '@/config/network'
-import { usePotentialRenewalsQuery } from '@/hooks/substrate'
+import { useAllowedRenewalsQuery, usePotentialRenewalsQuery, useSaleInfo } from '@/hooks/substrate'
 
 import { AllowedRenewalAssignmentInfo, AllowedRenewalCoreInfoUnf } from '@/types'
 import { parseFormattedNumber, parseNativeTokenToHuman } from '@/utils'
@@ -25,12 +25,17 @@ const RenewalsData = () => {
   const [modalData, setModalData] = useState<ModalDataType | null>(null)
   const pathname = usePathname()
   const network = getChainFromPath(pathname)
+  const saleInfo = useSaleInfo(api)
+  const begin = saleInfo?.regionBegin
 
   const { activeAccount, activeChain } = useInkathon()
-  const allowedRenewals = usePotentialRenewalsQuery(api)
+  let potentialRenewals = usePotentialRenewalsQuery(api)
+  const allowedRenewals = useAllowedRenewalsQuery(api)
+  if (!potentialRenewals) {
+    potentialRenewals = allowedRenewals
+  }
   const [task, setTask] = useState<number | null>(null)
   const [core, setCore] = useState<number | null>(null)
-  const [begin, setBegin] = useState<number | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 7
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
@@ -77,15 +82,6 @@ const RenewalsData = () => {
               value={task || ''}
               onChange={(e) => setTask(parseFloat(e.target.value) || null)}
               className="ml-2 p-2 border rounded"
-            />
-            <label htmlFor="begin">Begin:</label>
-            <input
-              id="begin"
-              type="number"
-              placeholder="Begin Number"
-              value={begin || ''}
-              onChange={(e) => setBegin(parseFloat(e.target.value) || null)}
-              className="p-2 border rounded"
             />
             <label htmlFor="core">Core:</label>
             <input
