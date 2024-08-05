@@ -28,7 +28,7 @@ export const useAllowedRenewalsQuery = (api: ApiPromise | undefined) => {
     }
 
     fetchData()
-    const intervalId = setInterval(fetchData, 5000)
+    const intervalId = setInterval(fetchData, 5000) as unknown as number
     return () => clearInterval(intervalId)
   }, [api])
 
@@ -57,7 +57,7 @@ export const usePotentialRenewalsQuery = (api: ApiPromise | undefined) => {
     }
 
     fetchData()
-    const intervalId = setInterval(fetchData, 5000)
+    const intervalId = setInterval(fetchData, 5000) as unknown as number
     return () => clearInterval(intervalId)
   }, [api])
 

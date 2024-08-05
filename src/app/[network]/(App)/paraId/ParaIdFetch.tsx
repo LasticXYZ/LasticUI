@@ -50,7 +50,7 @@ const useWorkplanQuery = () => {
     }
 
     fetchData()
-    const intervalId = setInterval(fetchData, 5000) as unknown as number
+    const intervalId: number = setInterval(fetchData, 5000) as unknown as number
     return () => clearInterval(intervalId)
   }, [api])
 
