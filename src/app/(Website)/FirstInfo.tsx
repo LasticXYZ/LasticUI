@@ -17,7 +17,7 @@ const FirstInfo = () => {
             tech, and earn incentives.
           </p>
           <div className="pt-8">
-            <PrimaryButtonWeb title="Get Started" location="/start" />
+            <PrimaryButtonWeb title="Get Started" location="/kusama/bulkcore1" />
           </div>
         </div>
       </div>

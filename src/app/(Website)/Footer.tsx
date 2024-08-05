@@ -24,7 +24,7 @@ const Footer = () => (
             <h2 className="mb-6 text-sm font-semibold font-syne text-pink-400 uppercase ">HOME</h2>
             <ul className="text-montserrat  font-medium">
               <li className="mb-4">
-                <Link href="/start" className="hover:underline">
+                <Link href="/kusama/bulkcore1" className="hover:underline">
                   Launch App
                 </Link>
               </li>

@@ -23,7 +23,7 @@ const Hero = () => {
             <TypeAnimation
               // Same String at the start will only be typed once, initially
               sequence={[
-                'The Modular Marketplace.',
+                'The Coretime Marketplace.',
                 1000,
                 'Trade resources builders need.',
                 1000,
@@ -41,7 +41,7 @@ const Hero = () => {
           </h2>
           <div className="px-10 md:px-5 md:max-w-sm xl:max-w-xl ml-14  sm:ml-32 lg:mt-20">
             <p className="py-5 font-dm_sans text-gray-7 text-md xl:text-lg">
-              One marketplace for all Modular solutions. A protocol-agnostic application that
+              One marketplace for all Blockspace solutions. A protocol-agnostic application that
               leverages the best features of major networks in order to provide the best service to
               builders and traders.
             </p>
