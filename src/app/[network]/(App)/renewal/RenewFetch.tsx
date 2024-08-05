@@ -8,7 +8,7 @@ import { useAllowedRenewalsQuery, usePotentialRenewalsQuery, useSaleInfo } from 
 
 import { AllowedRenewalAssignmentInfo, AllowedRenewalCoreInfoUnf } from '@/types'
 import { parseFormattedNumber, parseNativeTokenToHuman } from '@/utils'
-import { getChainFromPath } from '@/utils/common/chainPath'
+import { getChainFromPath, goToChainRoute } from '@/utils/common/chainPath'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
@@ -72,29 +72,30 @@ const RenewalsData = () => {
     <>
       <Border className="h-full flex flex-row justify-center items-center">
         <div className="h-full w-full flex flex-col justify-start items-start p-10">
-          <h1 className="text-xl font-bold uppercase mb-5">Cores for renewal</h1>
-          <div className="flex flex-row items-center gap-3 mb-5">
-            <label htmlFor="task">Task:</label>
-            <input
-              id="task"
-              type="number"
-              placeholder="Task Number"
-              value={task || ''}
-              onChange={(e) => setTask(parseFloat(e.target.value) || null)}
-              className="ml-2 p-2 border rounded"
-            />
-            <label htmlFor="core">Core:</label>
-            <input
-              id="core"
-              type="number"
-              placeholder="Core Number"
-              value={core || ''}
-              onChange={(e) => setCore(parseFloat(e.target.value) || null)}
-              className="p-2 border rounded"
-            />
-          </div>
           {filteredData && filteredData.length > 0 ? (
             <>
+              <h1 className="text-xl font-bold uppercase mb-5">Cores that need to be renewed!</h1>
+              <div className="flex flex-row items-center gap-3 mb-5">
+                <label htmlFor="task">Task:</label>
+                <input
+                  id="task"
+                  type="number"
+                  placeholder="Task Number"
+                  value={task || ''}
+                  onChange={(e) => setTask(parseFloat(e.target.value) || null)}
+                  className="ml-2 p-2 border rounded"
+                />
+                <label htmlFor="core">Core:</label>
+                <input
+                  id="core"
+                  type="number"
+                  placeholder="Core Number"
+                  value={core || ''}
+                  onChange={(e) => setCore(parseFloat(e.target.value) || null)}
+                  className="p-2 border rounded"
+                />
+              </div>
+
               <div className="w-full overflow-x-auto">
                 <GeneralTable
                   tableData={filteredData.map(({ coreInfo, assignmentInfo }) => {
@@ -160,7 +161,14 @@ const RenewalsData = () => {
               </div>
             </>
           ) : (
-            <p className="p-10">No data available.</p>
+            <div className="h-full w-full flex justify-center items-center p-10">
+              <WalletStatus
+                redirectLocationMessage="Go to My Cores"
+                redirectLocation={goToChainRoute(pathname, '/my-cores')}
+                customEmoji="👍"
+                customMessage="All cores have been successfully renewed."
+              />
+            </div>
           )}
         </div>
       </Border>

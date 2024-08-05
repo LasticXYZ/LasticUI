@@ -35,6 +35,7 @@ const PastTransactions = () => {
   const TableHeader = [
     { title: 'Time' },
     { title: 'Block Number' },
+    { title: 'Begin Region' },
     { title: 'Core' },
     { title: 'Price' },
   ]
@@ -45,6 +46,7 @@ const PastTransactions = () => {
       data: [
         event.timestamp ? format(new Date(event.timestamp), 'MMMM dd, yyyy HH:mm:ss OOOO') : '',
         event.blockNumber?.toString(),
+        event.begin?.toString(),
         event.core?.toString(),
         `${parseNativeTokenToHuman({ paid: event.price?.toString(), decimals: 12, reduceDecimals: 6 })} ${tokenSymbol}`,
       ],
@@ -62,7 +64,7 @@ const PastTransactions = () => {
               <GeneralTable
                 tableData={TableData}
                 tableHeader={TableHeader}
-                colClass="grid-cols-4"
+                colClass="grid-cols-5"
               />
             ) : (
               <p>Loading transactions...</p>
