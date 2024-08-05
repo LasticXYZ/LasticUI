@@ -15,7 +15,7 @@ const Ending = () => {
             Enter the modular marketplace
           </h2>
           <div className="p-6">
-            <PrimaryButtonWeb title="Get Started" location="/start" />
+            <PrimaryButtonWeb title="Get Started" location="/kusama/bulkcore1" />
           </div>
         </div>
 
