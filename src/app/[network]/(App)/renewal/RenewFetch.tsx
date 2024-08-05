@@ -48,7 +48,7 @@ const RenewalsData = () => {
     })
     .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
 
-  if (!activeChain) {
+  if (!activeChain || !saleInfo) {
     return (
       <Border className="h-full flex flex-row justify-center items-center">
         <WalletStatus />
@@ -56,33 +56,31 @@ const RenewalsData = () => {
     )
   }
 
+  const soldOut =
+    saleInfo.coresOffered && saleInfo?.coresSold && saleInfo?.coresSold >= saleInfo.coresOffered
+
   return (
     <>
       <Border className="h-full flex flex-row justify-center items-center">
         <div className="h-full w-full flex flex-col justify-start items-start p-10">
           {filteredData && filteredData.length > 0 ? (
             <>
-              <h1 className="text-xl font-bold uppercase mb-5">Cores that need to be renewed!</h1>
-              {/* <div className="flex flex-row items-center gap-3 mb-5">
-                <label htmlFor="task">Task:</label>
-                <input
-                  id="task"
-                  type="number"
-                  placeholder="Task Number"
-                  value={task || ''}
-                  onChange={(e) => setTask(parseFloat(e.target.value) || null)}
-                  className="ml-2 p-2 border rounded"
-                />
-                <label htmlFor="core">Core:</label>
-                <input
-                  id="core"
-                  type="number"
-                  placeholder="Core Number"
-                  value={core || ''}
-                  onChange={(e) => setCore(parseFloat(e.target.value) || null)}
-                  className="p-2 border rounded"
-                />
-              </div> */}
+              {soldOut ? (
+                <>
+                  <h1 className="text-xl font-bold uppercase font-unbounded mb-5">
+                    Failed to renew
+                  </h1>
+                  <div>
+                    {' '}
+                    <b>Info:</b> Unfortunately all cores have been sold out, these are the cores
+                    that failed to renew:
+                  </div>
+                </>
+              ) : (
+                <h1 className="text-xl font-bold uppercase font-unbounded mb-5">
+                  Cores that need to be renewed!
+                </h1>
+              )}
 
               <div className="w-full overflow-x-auto">
                 <GeneralTable
@@ -106,14 +104,18 @@ const RenewalsData = () => {
                         coreInfo[0].when,
                         coreInfo[0].core,
                         `${parseNativeTokenToHuman({ paid: assignmentInfo.price?.toString(), decimals: 12, reduceDecimals: 4 })} ${tokenSymbol}`,
-                        <SecondaryButton
-                          title="Renew"
-                          onClick={() => {
-                            setModalData({ coreInfo: coreInfo[0], assignmentInfo })
-                            setIsRenewModalOpen(true)
-                          }}
-                          key="data"
-                        />,
+                        soldOut ? (
+                          'Not available'
+                        ) : (
+                          <SecondaryButton
+                            title="Renew"
+                            onClick={() => {
+                              setModalData({ coreInfo: coreInfo[0], assignmentInfo })
+                              setIsRenewModalOpen(true)
+                            }}
+                            key="data"
+                          />
+                        ),
                       ],
                     }
                   })}
