@@ -47,7 +47,7 @@ export const useRegionQuery = (updateInterval?: number): RegionsType | null => {
 
     fetchData()
     if (updateInterval) {
-      const intervalId = setInterval(fetchData, updateInterval)
+      const intervalId = setInterval(fetchData, updateInterval) as unknown as number
       return () => clearInterval(intervalId)
     }
   }, [api, updateInterval])

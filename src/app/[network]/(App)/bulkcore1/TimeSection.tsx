@@ -5,7 +5,7 @@ import BuyWalletStatus from '@/components/walletStatus/BuyWalletStatus'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
 import { useCoresSold, useSaleRegion } from '@/hooks/subsquid'
-import { useCurrentBlockNumber, useSaleInfo } from '@/hooks/useSubstrateQuery'
+import { useCurrentBlockNumber, useSaleInfo } from '@/hooks/substrate'
 import { calculateCurrentPricePerCore, saleStatus } from '@/utils/broker'
 import { StatusCode } from '@/utils/broker/saleStatus'
 import { getChainFromPath } from '@/utils/common/chainPath'
@@ -41,10 +41,10 @@ export default function BrokerSaleInfo() {
   const saleInfo = useSaleInfo(api)
 
   useEffect(() => {
-    if (currentSaleRegion && configuration && brokerConstants) {
+    if (saleInfo && configuration && brokerConstants) {
       const { statusMessage, timeRemaining, statusTitle, statusCode } = saleStatus(
         currentBlockNumber,
-        currentSaleRegion,
+        saleInfo,
         configuration,
         brokerConstants,
       )
@@ -53,7 +53,7 @@ export default function BrokerSaleInfo() {
       setSaleStage(statusMessage)
       setStatusCode(statusCode)
     }
-  }, [currentBlockNumber, currentSaleRegion, configuration, brokerConstants])
+  }, [currentBlockNumber, saleInfo, configuration, brokerConstants])
 
   if (!api || !saleInfo)
     return (
@@ -72,7 +72,7 @@ export default function BrokerSaleInfo() {
       </>
     )
 
-  if (!currentSaleRegion || !configuration || !brokerConstants) {
+  if (!currentSaleRegion || !saleInfo || !configuration || !brokerConstants) {
     return (
       <>
         <section className="mx-auto mb-5 max-w-9xl px-4 mt-5 sm:px-6 lg:px-8">
@@ -90,11 +90,7 @@ export default function BrokerSaleInfo() {
     )
   }
 
-  let currentPrice = calculateCurrentPricePerCore(
-    currentBlockNumber,
-    currentSaleRegion,
-    configuration,
-  )
+  let currentPrice = calculateCurrentPricePerCore(currentBlockNumber, saleInfo, configuration)
 
   let analyticsData = [
     {
@@ -105,7 +101,7 @@ export default function BrokerSaleInfo() {
     {
       title: `${saleInfo?.coresSold} / ${currentSaleRegion?.coresOffered}`,
       subtitle: `Cores sold or renewed out of ${currentSaleRegion?.coresOffered} available`,
-      change: `${coresSoldInThisSale?.totalCount} cores sold in this sale`,
+      change: ``,
     },
   ]
 
@@ -118,7 +114,7 @@ export default function BrokerSaleInfo() {
 
             <TimelineComponent
               currentBlockNumber={currentBlockNumber}
-              saleInfo={currentSaleRegion}
+              saleInfo={saleInfo}
               config={configuration}
               constants={brokerConstants}
             />

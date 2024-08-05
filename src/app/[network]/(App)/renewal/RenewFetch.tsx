@@ -4,64 +4,38 @@ import RenewModal from '@/components/extrinsics/broker/RenewModal'
 import GeneralTable from '@/components/table/GeneralTable'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { PossibleNetworks, network_list } from '@/config/network'
+import { useAllowedRenewalsQuery, usePotentialRenewalsQuery, useSaleInfo } from '@/hooks/substrate'
 
-import {
-  AllowedRenewalAssignmentInfo,
-  AllowedRenewalCoreInfoUnf,
-  AllowedRenewalsType,
-} from '@/types'
+import { AllowedRenewalAssignmentInfo, AllowedRenewalCoreInfoUnf } from '@/types'
 import { parseFormattedNumber, parseNativeTokenToHuman } from '@/utils'
 import { getChainFromPath } from '@/utils/common/chainPath'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 interface ModalDataType {
   coreInfo: AllowedRenewalCoreInfoUnf
   assignmentInfo: AllowedRenewalAssignmentInfo
 }
 
-// Custom hook for querying and transforming workplan data
-const useAllowedRenewalsQuery = () => {
-  const { api } = useInkathon()
-  const [data, setData] = useState<AllowedRenewalsType | null>(null)
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!api?.query?.broker?.workplan) return
-      try {
-        const entries = await api.query.broker.allowedRenewals.entries()
-        const allowedRenewals: AllowedRenewalsType = entries.map(([key, value]) => {
-          const coreInfo: AllowedRenewalCoreInfoUnf[] = key.toHuman() as AllowedRenewalCoreInfoUnf[]
-          const assignmentInfo: AllowedRenewalAssignmentInfo =
-            value.toHuman() as AllowedRenewalAssignmentInfo
-          return { coreInfo, assignmentInfo }
-        })
-        setData(allowedRenewals)
-      } catch (error) {
-        console.error('Failed to fetch data:', error)
-      }
-    }
-
-    fetchData()
-    const intervalId = setInterval(fetchData, 5000)
-    return () => clearInterval(intervalId)
-  }, [api])
-
-  return data
-}
-
 const RenewalsData = () => {
+  const { api } = useInkathon()
+
   const [isRenewModalOpen, setIsRenewModalOpen] = useState(false)
   const [modalData, setModalData] = useState<ModalDataType | null>(null)
   const pathname = usePathname()
   const network = getChainFromPath(pathname)
+  const saleInfo = useSaleInfo(api)
+  const begin = saleInfo?.regionBegin
 
   const { activeAccount, activeChain } = useInkathon()
-  const allowedRenewals = useAllowedRenewalsQuery()
+  let potentialRenewals = usePotentialRenewalsQuery(api)
+  const allowedRenewals = useAllowedRenewalsQuery(api)
+  if (!potentialRenewals) {
+    potentialRenewals = allowedRenewals
+  }
   const [task, setTask] = useState<number | null>(null)
   const [core, setCore] = useState<number | null>(null)
-  const [begin, setBegin] = useState<number | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 7
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
@@ -109,15 +83,6 @@ const RenewalsData = () => {
               onChange={(e) => setTask(parseFloat(e.target.value) || null)}
               className="ml-2 p-2 border rounded"
             />
-            <label htmlFor="begin">Begin:</label>
-            <input
-              id="begin"
-              type="number"
-              placeholder="Begin Number"
-              value={begin || ''}
-              onChange={(e) => setBegin(parseFloat(e.target.value) || null)}
-              className="p-2 border rounded"
-            />
             <label htmlFor="core">Core:</label>
             <input
               id="core"
@@ -139,6 +104,7 @@ const RenewalsData = () => {
                           assignmentInfo.completion?.Complete[0]?.assignment.Task,
                         )
                       : null
+                    if (!task) return { data: [] }
                     return {
                       data: [
                         task?.toString() || 'N/A',

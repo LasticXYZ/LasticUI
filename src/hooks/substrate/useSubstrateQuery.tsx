@@ -1,10 +1,6 @@
+import { SaleInfoType } from '@/types'
 import { ApiPromise } from '@polkadot/api'
-import {
-  BrokerConstantsType,
-  SaleInfoType,
-  getConstants,
-  getCurrentBlockNumber,
-} from '@poppyseed/lastic-sdk'
+import { BrokerConstantsType, getConstants, getCurrentBlockNumber } from '@poppyseed/lastic-sdk'
 import { useEffect, useMemo, useState } from 'react'
 
 // Define a type for the queryParams
@@ -36,7 +32,7 @@ export function useSubstrateQuery(
     }
 
     fetchData()
-    const intervalId = setInterval(fetchData, 5000)
+    const intervalId = setInterval(fetchData, 5000) as unknown as number
 
     return () => clearInterval(intervalId)
   }, [api, queryKey, queryParams])
@@ -65,7 +61,7 @@ export function useCurrentBlockNumber(api: ApiPromise | undefined) {
       setCurrentBlockNumber(currentBlock)
     }
 
-    const intervalId = setInterval(fetchCurrentBlockNumber, 1000) // Update every second
+    const intervalId = setInterval(fetchCurrentBlockNumber, 1000) as unknown as number
 
     return () => clearInterval(intervalId)
   }, [api])
@@ -84,7 +80,7 @@ export function useCurrentRelayBlockNumber(relayApi: ApiPromise | undefined) {
       setCurrentBlockNumber(currentBlock)
     }
 
-    const intervalId = setInterval(fetchCurrentBlockNumber, 1000) // Update every second
+    const intervalId = setInterval(fetchCurrentBlockNumber, 1000) as unknown as number
 
     return () => clearInterval(intervalId)
   }, [relayApi])

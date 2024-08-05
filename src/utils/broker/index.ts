@@ -1,8 +1,8 @@
+import { SaleInfoType } from '@/types'
 import { Region, RegionDetail, RegionOwner, RegionsType } from '@/types/broker'
 import { getSaleEnds } from '@/utils/broker/saleStatus'
 import { ApiPromise } from '@polkadot/api'
 import { BrokerConstantsType, ConfigurationType, getConstants } from '@poppyseed/lastic-sdk'
-import { SaleInitializedEvent } from '@poppyseed/squid-sdk'
 import { useEffect, useState } from 'react'
 
 export { saleStatus } from './saleStatus'
@@ -60,7 +60,7 @@ export function useQuerySpecificRegion({
     }
 
     fetchData()
-    const intervalId = setInterval(fetchData, 5000)
+    const intervalId = setInterval(fetchData, 5000) as unknown as number
 
     return () => clearInterval(intervalId)
   }, [api, coreNb, regionId, mask])
@@ -100,20 +100,19 @@ export function useBrokerConstants(api: ApiPromise | undefined) {
 
 export function calculateCurrentPrice(
   currentBlockNumber: number,
-  saleInfo: SaleInitializedEvent | null,
+  saleInfo: SaleInfoType | null,
   config: ConfigurationType,
 ): number | null {
-  if (!saleInfo || !saleInfo.saleStart || !saleInfo.regularPrice) return null
+  if (!saleInfo || !saleInfo.saleStart || (!saleInfo.endPrice && !saleInfo.price)) return null
+
+  const price = saleInfo.endPrice ?? saleInfo.price
   if (
     currentBlockNumber < saleInfo.saleStart + config.leadinLength &&
     currentBlockNumber > saleInfo.saleStart
   ) {
-    return (
-      Number(saleInfo.regularPrice) *
-      (2 - (currentBlockNumber - saleInfo.saleStart) / config.leadinLength)
-    )
+    return Number(price) * (2 - (currentBlockNumber - saleInfo.saleStart) / config.leadinLength)
   } else {
-    return Number(saleInfo.regularPrice)
+    return Number(price)
   }
 }
 
@@ -130,29 +129,29 @@ const leadInFactorAt = (progress: number) =>
 // y = k * currentBlockNumber + n
 export function calculateCurrentPricePerCore(
   currentBlockNumber: number,
-  saleInfo: SaleInitializedEvent | null,
+  saleInfo: SaleInfoType | null,
   config: ConfigurationType,
 ): number | null {
-  if (saleInfo === null || saleInfo.saleStart === null || saleInfo.regularPrice === null) {
-    return null
-  }
+  if (!saleInfo || !saleInfo.saleStart || (!saleInfo.endPrice && !saleInfo.price)) return null
+
+  const price = saleInfo.endPrice ?? saleInfo.price
 
   if (
     currentBlockNumber < saleInfo.saleStart ||
     currentBlockNumber >= saleInfo.saleStart + config.leadinLength
   ) {
-    return Number(saleInfo.regularPrice)
+    return Number(price)
   }
 
   const leadInLength = saleInfo.leadinLength ?? config.leadinLength
   const blocksPassed = Math.min(leadInLength, currentBlockNumber - saleInfo.saleStart)
 
-  return leadInFactorAt(blocksPassed / leadInLength) * Number(saleInfo.regularPrice)
+  return leadInFactorAt(blocksPassed / leadInLength) * Number(price)
 }
 
 // Pseudocode to visualize the price per core over time
 export function priceCurve(
-  saleInfo: SaleInitializedEvent,
+  saleInfo: SaleInfoType,
   config: ConfigurationType,
   constant: BrokerConstantsType,
 ): { x: number[]; y: number[] } | undefined {

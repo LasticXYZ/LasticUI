@@ -11,9 +11,8 @@ import TimelineComponent from '@/components/timelineComp/TimelineComp'
 import TimelineUtilizeCore from '@/components/timelineComp/TimelineUtilizeCore'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
-import { useSaleRegion } from '@/hooks/subsquid'
+import { useCurrentBlockNumber, useCurrentRelayBlockNumber, useSaleInfo } from '@/hooks/substrate'
 import { useListings } from '@/hooks/useListings'
-import { useCurrentBlockNumber, useCurrentRelayBlockNumber } from '@/hooks/useSubstrateQuery'
 import { saleStatus } from '@/utils/broker'
 import { utilizationStatus } from '@/utils/broker/utilizationStatus'
 import { getChainFromPath } from '@/utils/common/chainPath'
@@ -67,13 +66,13 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
   const currentBlockNumber = useCurrentBlockNumber(api)
   const currentRelayBlock = useCurrentRelayBlockNumber(relayApi)
 
-  const currentSaleRegion = useSaleRegion(network, client)
+  const saleInfo = useSaleInfo(api)
 
   useEffect(() => {
     let query: GraphQuery | undefined
 
-    if (currentSaleRegion && configuration) {
-      if (currentSaleRegion.regionBegin) {
+    if (saleInfo && configuration) {
+      if (saleInfo.regionBegin) {
         query = client.eventSpecificRegionCoreOwner(coreNb, beginRegion, mask)
       }
     }
@@ -87,13 +86,13 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
 
       fetchData()
     }
-  }, [network, currentSaleRegion, client, configuration, coreNb, beginRegion, mask])
+  }, [network, saleInfo, client, configuration, coreNb, beginRegion, mask])
 
   useEffect(() => {
-    if (currentSaleRegion && region && currentRelayBlock && configuration && brokerConstants) {
+    if (saleInfo && region && currentRelayBlock && configuration && brokerConstants) {
       const { statusMessage, timeRemaining, statusTitle } = saleStatus(
         currentBlockNumber,
-        currentSaleRegion,
+        saleInfo,
         configuration,
         brokerConstants,
       )
@@ -111,19 +110,12 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
       setUtilizationTitle(utilizationStatusTitle)
       setUtilizationTimeRemaining(utilizationTimeRemaining)
     }
-  }, [
-    currentBlockNumber,
-    currentRelayBlock,
-    currentSaleRegion,
-    region,
-    configuration,
-    brokerConstants,
-  ])
+  }, [currentBlockNumber, currentRelayBlock, saleInfo, region, configuration, brokerConstants])
 
   useEffect(() => {
     const fetchRegionTimestamps = async () => {
       try {
-        if (currentSaleRegion && region?.regionId?.begin && region.duration && brokerConstants) {
+        if (saleInfo && region?.regionId?.begin && region.duration && brokerConstants) {
           const beginTimestamp = relayApi
             ? await blockTimeToUTC(
                 relayApi,
@@ -146,7 +138,7 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
     }
 
     fetchRegionTimestamps()
-  }, [region, relayApi, brokerConstants, currentSaleRegion])
+  }, [region, relayApi, brokerConstants, saleInfo])
 
   if (!api || !relayApi || !configuration) {
     return (
@@ -159,7 +151,7 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
   if (
     !region ||
     !configuration ||
-    !currentSaleRegion ||
+    !saleInfo ||
     !currentRelayBlock ||
     !brokerConstants ||
     !region.duration ||
@@ -238,7 +230,7 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
 
             <TimelineComponent
               currentBlockNumber={currentBlockNumber}
-              saleInfo={currentSaleRegion}
+              saleInfo={saleInfo}
               config={configuration}
               constants={brokerConstants}
             />

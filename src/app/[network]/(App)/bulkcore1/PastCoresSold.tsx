@@ -1,6 +1,5 @@
 import Border from '@/components/border/Border'
 import SectionDisplay from '@/components/cores/CoreItemSectionDisplay'
-import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
 import { useCurrentSaleRegion, usePastCoresSold } from '@/hooks/subsquid'
 import { getChainFromPath } from '@/utils/common/chainPath'
@@ -22,17 +21,8 @@ export default function PastCoresSold() {
   const coresData = usePastCoresSold(network, client, currentSaleRegion, configuration)
   const constants = network_list[network].constants
 
-  if (!activeChain) {
-    return (
-      <Border className="h-full flex flex-row justify-center items-center">
-        <WalletStatus
-          inactiveWalletEmoji="🌐"
-          customEmoji="🌐"
-          inactiveWalletMessage="Connecting..."
-          customMessage="Connecting..."
-        />
-      </Border>
-    )
+  if (!activeChain || !coresData || coresData.length === 0) {
+    return null
   }
 
   return (
