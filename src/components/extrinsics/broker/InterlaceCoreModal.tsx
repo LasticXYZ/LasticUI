@@ -3,7 +3,7 @@ import BoxesContainer from '@/components/activityBoxes/BoxesContainer'
 import Legend from '@/components/activityBoxes/Legend'
 import PrimaryButton from '@/components/button/PrimaryButton'
 import Modal from '@/components/modal/Modal'
-import { useRegionQuery } from '@/hooks/useRegionQuery'
+import { useRegionQuery } from '@/hooks/substrate/useRegionQuery'
 import { RegionIdProps } from '@/types/broker'
 import { useBrokerConstants } from '@/utils/broker'
 import { TxButtonProps, blockTimeToUTC, useInkathon, useTxButton } from '@poppyseed/lastic-sdk'
@@ -38,7 +38,7 @@ const InterlaceCoreModal: FC<InterlaceCoreModalProps> = ({ isOpen, onClose, regi
   )
   const [isFreshCore, setIsFreshCore] = useState<boolean>(false)
 
-  const regionData = useRegionQuery()
+  const regionData = useRegionQuery(api)
   const [regionTimeSpan, setRegionTimeSpan] = useState<regionTimeSpan>({
     start: { region: 0, blocknumber: 0, utc: null },
     end: { region: 0, blocknumber: 0, utc: null },

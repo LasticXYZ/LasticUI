@@ -48,6 +48,8 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
   const { activeAccount, relayApi, activeChain, api } = useInkathon()
   let { tokenSymbol, tokenDecimals } = useBalance(activeAccount?.address, true)
   const [region, setRegionResult] = useState<CoreOwnerEvent | null>(null)
+  //const region = useQuerySpecificRegion({ api, coreNb, regionId, mask })
+
   const client = useMemo(() => getClient(), [])
   const pathname = usePathname()
   const network = getChainFromPath(pathname)
