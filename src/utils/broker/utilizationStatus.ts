@@ -1,5 +1,6 @@
 import { BrokerConstantsType, ConfigurationType } from '@poppyseed/lastic-sdk'
 
+import { parseFormattedNumber } from '@/utils/helperFunc'
 import { CoreOwnerEvent } from '@poppyseed/squid-sdk'
 import { blocksToTimeFormat } from './blockTime'
 
@@ -53,7 +54,6 @@ function determineUtilizationStatusCode(
 function calculateUtilizationTimeRemaining(
   currentRelayBlock: number,
   region: CoreOwnerEvent,
-  config: ConfigurationType,
   constant: BrokerConstantsType,
   statusCode: UtilizationCode,
 ): string {
@@ -101,7 +101,6 @@ export function utilizationStatus(
   const timeRemaining = calculateUtilizationTimeRemaining(
     currentRelayBlock,
     region,
-    config,
     constant,
     utilizationCode,
   )
@@ -112,4 +111,48 @@ export function utilizationStatus(
     timeRemaining,
     utilizationCode,
   }
+}
+
+export function calculateTimeUtilizationBegins(
+  currentRelayBlock: number,
+  beginRegion: string | number | null,
+  constant: BrokerConstantsType | null,
+): string | null {
+  if (beginRegion === null) {
+    return null
+  }
+
+  if (typeof beginRegion === 'string') {
+    beginRegion = parseFormattedNumber(beginRegion)
+  }
+
+  console.log('beginRegion', beginRegion)
+  return constant
+    ? blocksToTimeFormat(beginRegion * constant.timeslicePeriod - currentRelayBlock, 'RELAY')
+    : null
+}
+
+export function calculateTimeUtilizationEnds(
+  currentRelayBlock: number,
+  beginRegion: string | number,
+  constant: BrokerConstantsType | null,
+  config: ConfigurationType | null,
+  duration?: number,
+): string | null {
+  if (!config) {
+    return null
+  }
+
+  if (typeof beginRegion === 'string') {
+    beginRegion = parseFormattedNumber(beginRegion)
+  }
+
+  duration = duration ? duration : config.regionLength
+
+  return constant
+    ? blocksToTimeFormat(
+        (beginRegion + duration) * constant.timeslicePeriod - currentRelayBlock,
+        'RELAY',
+      )
+    : null
 }

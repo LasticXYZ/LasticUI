@@ -4,10 +4,16 @@ import RenewModal from '@/components/extrinsics/broker/RenewModal'
 import GeneralTable from '@/components/table/GeneralTable'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { PossibleNetworks, network_list } from '@/config/network'
-import { useAllowedRenewalsQuery, usePotentialRenewalsQuery, useSaleInfo } from '@/hooks/substrate'
+import {
+  useAllowedRenewalsQuery,
+  useCurrentRelayBlockNumber,
+  usePotentialRenewalsQuery,
+  useSaleInfo,
+} from '@/hooks/substrate'
 
 import { AllowedRenewalAssignmentInfo, AllowedRenewalCoreInfoUnf } from '@/types'
 import { parseFormattedNumber, parseNativeTokenToHuman } from '@/utils'
+import { calculateTimeUtilizationEnds } from '@/utils/broker/utilizationStatus'
 import { getChainFromPath, goToChainRoute } from '@/utils/common/chainPath'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
 import { usePathname } from 'next/navigation'
@@ -19,15 +25,15 @@ interface ModalDataType {
 }
 
 const RenewalsData = () => {
-  const { api } = useInkathon()
+  const { api, relayApi } = useInkathon()
 
   const [isRenewModalOpen, setIsRenewModalOpen] = useState(false)
   const [modalData, setModalData] = useState<ModalDataType | null>(null)
   const pathname = usePathname()
   const network = getChainFromPath(pathname)
   const saleInfo = useSaleInfo(api)
+  const currentRelayBlock = useCurrentRelayBlockNumber(relayApi)
   const begin = saleInfo?.regionBegin
-  console.log(saleInfo)
 
   const { activeAccount, activeChain } = useInkathon()
   let potentialRenewals = usePotentialRenewalsQuery(api)
@@ -38,6 +44,8 @@ const RenewalsData = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 7
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
+  const brokerConstants = network_list[network].constants
+  const configuration = network_list[network].configuration
 
   const handleNextPage = () => setCurrentPage(currentPage + 1)
   const handlePrevPage = () => setCurrentPage(currentPage - 1)
@@ -68,7 +76,7 @@ const RenewalsData = () => {
               {soldOut ? (
                 <>
                   <h1 className="text-xl font-bold uppercase font-unbounded mb-5">
-                    Failed to renew
+                    Cores that failed to renew:
                   </h1>
                   <div>
                     {' '}
@@ -101,8 +109,13 @@ const RenewalsData = () => {
                         )
                           ? network_list[network as PossibleNetworks].paraId[task].name
                           : null,
-                        coreInfo[0].when,
                         coreInfo[0].core,
+                        calculateTimeUtilizationEnds(
+                          currentRelayBlock,
+                          coreInfo[0].when,
+                          brokerConstants,
+                          configuration,
+                        ),
                         `${parseNativeTokenToHuman({ paid: assignmentInfo.price?.toString(), decimals: 12, reduceDecimals: 4 })} ${tokenSymbol}`,
                         soldOut ? (
                           'Not available'
@@ -122,8 +135,8 @@ const RenewalsData = () => {
                   tableHeader={[
                     { title: 'Para ID' },
                     { title: 'Network' },
-                    { title: 'Begin' },
                     { title: 'Core' },
+                    { title: 'Expires In' },
                     { title: 'Price' },
                     { title: 'Renew' },
                   ]}

@@ -193,8 +193,6 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
                 paid={region.price}
                 coreNumber={region.regionId.core}
                 currencyCost={tokenSymbol}
-                regionBeginTimestamp={regionBeginTimestamp || '-'}
-                regionEndTimestamp={regionEndTimestamp || '-'}
                 utilizationStatus={`${utilizationTitle} ${utilizationTimeRemaining}`}
               />
             </div>
