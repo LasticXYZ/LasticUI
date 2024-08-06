@@ -37,7 +37,7 @@ const useParasHead = () => {
     }
 
     fetchData()
-    const intervalId = setInterval(fetchData, 5000)
+    const intervalId = setInterval(fetchData, 5000) as unknown as number
     return () => clearInterval(intervalId)
   }, [relayApi])
 
@@ -63,7 +63,7 @@ const useParasParachains = () => {
     }
 
     fetchData()
-    const intervalId = setInterval(fetchData, 5000)
+    const intervalId = setInterval(fetchData, 5000) as unknown as number
     return () => clearInterval(intervalId)
   }, [relayApi])
 

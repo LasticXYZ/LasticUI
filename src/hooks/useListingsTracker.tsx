@@ -50,7 +50,7 @@ export const useListingsTracker = (coreListings: CoreListing[], intervalMs?: num
     if (intervalMs) {
       const interval = setInterval(() => {
         updateAllStates()
-      }, intervalMs)
+      }, intervalMs) as unknown as number
       return () => clearInterval(interval)
     }
   }, [activeAccount, coreListings, intervalMs])

@@ -16,8 +16,6 @@ interface CardProps {
   coreNumber: number
   currencyCost: string
   region: CoreOwnerEvent
-  regionBeginTimestamp: string
-  regionEndTimestamp: string
   utilizationStatus: string
 }
 
@@ -30,8 +28,6 @@ const CoreItemExtensive: React.FC<CardProps> = ({
   amITheOwner,
   coreNumber,
   currencyCost,
-  regionBeginTimestamp,
-  regionEndTimestamp,
   utilizationStatus,
 }) => {
   const mask = region.regionId.mask
@@ -97,37 +93,14 @@ const CoreItemExtensive: React.FC<CardProps> = ({
               Utilization: {utilizationStatus}
             </div>
           </div>
-          <div className=" grid grid-cols-2 gap-5 lg:grid-cols-4 justify-between mt-5">
-            <div className="flex flex-col pr-5 text-md text-black dark:text-gray-1">
-              <p>
-                <b>Utilization Begins</b>
-              </p>
-              <p>Relay Block: {begin * constants.timeslicePeriod}</p>
-              <p>Time: {regionBeginTimestamp}</p>
+          <div className="flex flex-row pb-4 justify-between space-x-3">
+            <div className="text-md leading-tight font-medium text-black dark:text-gray-1">
+              Ends: {end ? end * constants.timeslicePeriod : null}
             </div>
-            <div className="flex flex-col px-5 text-md text-black dark:text-gray-1">
-              <p>
-                <b>Utilization Ends</b>
-              </p>
-              <p>Relay Block: {end ? end * constants.timeslicePeriod : null}</p>
-              <p>Time: {regionEndTimestamp}</p>
-            </div>
-            <div className="flex flex-col px-5 text-md text-black dark:text-gray-1">
-              <p>
-                <b>Status</b>
-              </p>
-              <p>
-                Frequency:{' '}
-                {mask === '0xffffffffffffffffffff' ? 'Full' : `Interlaced Region - ${mask}`}
-              </p>
-            </div>
-            <div className="flex flex-col  px-5 text-md text-black dark:text-gray-1">
-              <p>
-                <b>Duration</b>
-              </p>
-              <p>
-                Blocks on the Relay chain: {duration ? duration * constants.timeslicePeriod : null}
-              </p>
+          </div>
+          <div className="flex flex-row pb-4 justify-between space-x-3">
+            <div className="text-md leading-tight font-medium text-black dark:text-gray-1">
+              Duration: {duration ? duration * constants.timeslicePeriod : null} blocks
             </div>
           </div>
         </div>
