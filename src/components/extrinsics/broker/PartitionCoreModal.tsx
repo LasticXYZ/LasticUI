@@ -2,7 +2,7 @@
 import Border from '@/components/border/Border'
 import PrimaryButton from '@/components/button/PrimaryButton'
 import Modal from '@/components/modal/Modal'
-import { useRegionQuery } from '@/hooks/useRegionQuery'
+import { useRegionQuery } from '@/hooks/substrate/useRegionQuery'
 import { RegionIdProps } from '@/types/broker'
 import { useBrokerConstants } from '@/utils/broker'
 import { MobileDateTimePicker } from '@mui/x-date-pickers'
@@ -56,7 +56,7 @@ const PartitionCoreModal: FC<PartitionCoreModalProps> = ({ isOpen, onClose, regi
     activeSigner,
   }
   const { transaction, status, allParamsFilled } = useTxButton(txButtonProps)
-  const regionData = useRegionQuery()
+  const regionData = useRegionQuery(api)
   const [regionTimeSpan, setRegionTimeSpan] = useState<regionTimeSpan>({
     start: { region: 0, blocknumber: 0, utc: null },
     end: { region: 0, blocknumber: 0, utc: null },

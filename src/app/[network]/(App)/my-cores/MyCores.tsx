@@ -1,12 +1,13 @@
 import Border from '@/components/border/Border'
 import SectionDisplay from '@/components/cores/CoreItemSectionDisplay'
+import BlockspaceBarons from '@/components/cores/CoretimeBlockspaceBarons'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
 import { useSaleInfo } from '@/hooks/substrate'
 import { useRegionQuery } from '@/hooks/substrate/useRegionQuery'
 import { getChainFromPath } from '@/utils/common/chainPath'
 import { encodeAddress } from '@polkadot/util-crypto'
-import { useInkathon } from '@poppyseed/lastic-sdk'
+import { parseHNString, useInkathon } from '@poppyseed/lastic-sdk'
 import {
   CoreOwnerEvent,
   GraphLike,
@@ -89,7 +90,7 @@ export default function MyCores() {
     }
   }, [activeAccount, activeChain, network, saleInfo, client, configuration])
 
-  if (!activeAccount || !activeChain) {
+  if (!activeAccount || !activeChain || !saleInfo || !configuration) {
     return (
       <Border className="h-full flex flex-row justify-center items-center">
         <WalletStatus inactiveWalletMessage="Connect wallet in order to see your Coretime." />
@@ -107,15 +108,23 @@ export default function MyCores() {
   // Splitting the results into two sections
   const currentSaleRegion = currentSaleData?.data?.event?.[0]
   const justBought =
-    result?.data?.event?.filter((region) =>
-      region.regionId.begin && currentSaleRegion?.regionBegin
-        ? region.regionId.begin >= currentSaleRegion.regionBegin
+    filteredRegionData?.filter((region) =>
+      region.detail[0].begin && saleInfo?.regionBegin
+        ? parseHNString(region.detail[0].begin) >= saleInfo?.regionBegin
         : null,
     ) || []
   const currentlyActive =
-    result?.data?.event?.filter((region) =>
-      region.regionId.begin && currentSaleRegion?.regionBegin
-        ? region.regionId.begin < currentSaleRegion.regionBegin
+    filteredRegionData?.filter((region) =>
+      region.detail[0].begin && saleInfo?.regionBegin
+        ? parseHNString(region.detail[0].begin) < saleInfo?.regionBegin &&
+          parseHNString(region.owner.end) >= saleInfo?.regionBegin - configuration.regionLength
+        : null,
+    ) || []
+
+  const blockspaceBarons =
+    filteredRegionData?.filter((region) =>
+      region.detail[0].begin && saleInfo?.regionBegin
+        ? parseHNString(region.detail[0].begin) < saleInfo?.regionBegin
         : null,
     ) || []
 
@@ -125,33 +134,7 @@ export default function MyCores() {
         <div className="pt-10 pl-4">
           <h1 className="text-xl font-bold uppercase font-unbounded ">Cores Owned</h1>
         </div>
-        {/* {filteredRegionData.map((region, index) => (
-            <div key={index} className="p-6">
-              <div>
-                <p className="text-lg font-bold">Region ID: {region.detail[0].}</p>
-                <p className="text-lg font-bold">Owner: {region.owner.owner}</p>
-              </div>
-              <CoreItem
-                coreNumber={Number(region.detail[0].core)}
-                size="1"
-                cost={parseNativeTokenToHuman({ paid: region.owner.paid, decimals: 12 })}
-                currencyCost={tokenSymbol}
-                mask={region.detail[0].mask}
-                begin={Number(region.detail[0].begin)}
-                end={region.owner.end}
-              />
-            </div>
-          ))} */}
         <SectionDisplay
-          title="Obtained in this Sale"
-          information="Cores you have bought in the current sale and are active during the next sale cycle."
-          constants={constants}
-          regions={filteredRegionData}
-          configuration={configuration}
-          tokenSymbol={tokenSymbol}
-        />
-
-        {/* <SectionDisplay
           title="Obtained in this Sale"
           information="Cores you have bought in the current sale and are active during the next sale cycle."
           constants={constants}
@@ -167,7 +150,6 @@ export default function MyCores() {
           configuration={configuration}
           tokenSymbol={tokenSymbol}
         />
-        */}
         <SectionDisplay
           title="Assigned Cores"
           information="All cores you have bought and are currently assigned to a task."
@@ -181,6 +163,14 @@ export default function MyCores() {
           information="All cores that are currently in the on demand pool."
           constants={constants}
           regions={pooledCores?.data?.event || []}
+          configuration={configuration}
+          tokenSymbol={tokenSymbol}
+        />
+        <BlockspaceBarons
+          title="Blockspace Barons"
+          information="These cores were bought and never used - YOLO Imma blockspace baron"
+          constants={constants}
+          regions={blockspaceBarons || []}
           configuration={configuration}
           tokenSymbol={tokenSymbol}
         />
