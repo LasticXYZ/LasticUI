@@ -4,11 +4,17 @@ import RenewModal from '@/components/extrinsics/broker/RenewModal'
 import GeneralTable from '@/components/table/GeneralTable'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { PossibleNetworks, network_list } from '@/config/network'
-import { useAllowedRenewalsQuery, usePotentialRenewalsQuery, useSaleInfo } from '@/hooks/substrate'
+import {
+  useAllowedRenewalsQuery,
+  useCurrentRelayBlockNumber,
+  usePotentialRenewalsQuery,
+  useSaleInfo,
+} from '@/hooks/substrate'
 
 import { AllowedRenewalAssignmentInfo, AllowedRenewalCoreInfoUnf } from '@/types'
 import { parseFormattedNumber, parseNativeTokenToHuman } from '@/utils'
-import { getChainFromPath } from '@/utils/common/chainPath'
+import { calculateTimeUtilizationEnds } from '@/utils/broker/utilizationStatus'
+import { getChainFromPath, goToChainRoute } from '@/utils/common/chainPath'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
@@ -19,13 +25,14 @@ interface ModalDataType {
 }
 
 const RenewalsData = () => {
-  const { api } = useInkathon()
+  const { api, relayApi } = useInkathon()
 
   const [isRenewModalOpen, setIsRenewModalOpen] = useState(false)
   const [modalData, setModalData] = useState<ModalDataType | null>(null)
   const pathname = usePathname()
   const network = getChainFromPath(pathname)
   const saleInfo = useSaleInfo(api)
+  const currentRelayBlock = useCurrentRelayBlockNumber(relayApi)
   const begin = saleInfo?.regionBegin
 
   const { activeAccount, activeChain } = useInkathon()
@@ -34,33 +41,22 @@ const RenewalsData = () => {
   if (!potentialRenewals) {
     potentialRenewals = allowedRenewals
   }
-  const [task, setTask] = useState<number | null>(null)
-  const [core, setCore] = useState<number | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 7
   let { tokenSymbol } = useBalance(activeAccount?.address, true)
+  const brokerConstants = network_list[network].constants
+  const configuration = network_list[network].configuration
 
   const handleNextPage = () => setCurrentPage(currentPage + 1)
   const handlePrevPage = () => setCurrentPage(currentPage - 1)
   // Data filtering based on user selection
   const filteredData = allowedRenewals
     ?.filter((plan) => {
-      return (
-        (!core || parseFormattedNumber(plan.coreInfo[0].core) === core) &&
-        (!begin || parseFormattedNumber(plan.coreInfo[0].when) === begin) &&
-        (!task ||
-          (plan.assignmentInfo &&
-            plan.assignmentInfo.completion &&
-            plan.assignmentInfo.completion.Complete &&
-            plan.assignmentInfo.completion.Complete[0] &&
-            plan.assignmentInfo.completion.Complete[0].assignment &&
-            parseFormattedNumber(plan.assignmentInfo.completion.Complete[0].assignment.Task) ===
-              task))
-      )
+      return !begin || parseFormattedNumber(plan.coreInfo[0].when) === begin
     })
     .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
 
-  if (!activeChain) {
+  if (!activeChain || !saleInfo) {
     return (
       <Border className="h-full flex flex-row justify-center items-center">
         <WalletStatus />
@@ -68,33 +64,32 @@ const RenewalsData = () => {
     )
   }
 
+  const soldOut =
+    saleInfo.coresOffered && saleInfo?.coresSold && saleInfo?.coresSold >= saleInfo.coresOffered
+
   return (
     <>
       <Border className="h-full flex flex-row justify-center items-center">
         <div className="h-full w-full flex flex-col justify-start items-start p-10">
-          <h1 className="text-xl font-bold uppercase mb-5">Cores for renewal</h1>
-          <div className="flex flex-row items-center gap-3 mb-5">
-            <label htmlFor="task">Task:</label>
-            <input
-              id="task"
-              type="number"
-              placeholder="Task Number"
-              value={task || ''}
-              onChange={(e) => setTask(parseFloat(e.target.value) || null)}
-              className="ml-2 p-2 border rounded"
-            />
-            <label htmlFor="core">Core:</label>
-            <input
-              id="core"
-              type="number"
-              placeholder="Core Number"
-              value={core || ''}
-              onChange={(e) => setCore(parseFloat(e.target.value) || null)}
-              className="p-2 border rounded"
-            />
-          </div>
           {filteredData && filteredData.length > 0 ? (
             <>
+              {soldOut ? (
+                <>
+                  <h1 className="text-xl font-bold uppercase font-unbounded mb-5">
+                    Cores that failed to renew:
+                  </h1>
+                  <div>
+                    {' '}
+                    <b>Info:</b> Unfortunately all cores have been sold out, these are the cores
+                    that failed to renew:
+                  </div>
+                </>
+              ) : (
+                <h1 className="text-xl font-bold uppercase font-unbounded mb-5">
+                  Cores that need to be renewed!
+                </h1>
+              )}
+
               <div className="w-full overflow-x-auto">
                 <GeneralTable
                   tableData={filteredData.map(({ coreInfo, assignmentInfo }) => {
@@ -114,25 +109,34 @@ const RenewalsData = () => {
                         )
                           ? network_list[network as PossibleNetworks].paraId[task].name
                           : null,
-                        coreInfo[0].when,
                         coreInfo[0].core,
+                        calculateTimeUtilizationEnds(
+                          currentRelayBlock,
+                          coreInfo[0].when,
+                          brokerConstants,
+                          configuration,
+                        ),
                         `${parseNativeTokenToHuman({ paid: assignmentInfo.price?.toString(), decimals: 12, reduceDecimals: 4 })} ${tokenSymbol}`,
-                        <SecondaryButton
-                          title="Renew"
-                          onClick={() => {
-                            setModalData({ coreInfo: coreInfo[0], assignmentInfo })
-                            setIsRenewModalOpen(true)
-                          }}
-                          key="data"
-                        />,
+                        soldOut ? (
+                          'Not available'
+                        ) : (
+                          <SecondaryButton
+                            title="Renew"
+                            onClick={() => {
+                              setModalData({ coreInfo: coreInfo[0], assignmentInfo })
+                              setIsRenewModalOpen(true)
+                            }}
+                            key="data"
+                          />
+                        ),
                       ],
                     }
                   })}
                   tableHeader={[
                     { title: 'Para ID' },
                     { title: 'Network' },
-                    { title: 'Begin' },
                     { title: 'Core' },
+                    { title: 'Expires In' },
                     { title: 'Price' },
                     { title: 'Renew' },
                   ]}
@@ -160,7 +164,14 @@ const RenewalsData = () => {
               </div>
             </>
           ) : (
-            <p className="p-10">No data available.</p>
+            <div className="h-full w-full flex justify-center items-center p-10">
+              <WalletStatus
+                redirectLocationMessage="Go to My Cores"
+                redirectLocation={goToChainRoute(pathname, '/my-cores')}
+                customEmoji="👍"
+                customMessage="All cores have been successfully renewed."
+              />
+            </div>
           )}
         </div>
       </Border>

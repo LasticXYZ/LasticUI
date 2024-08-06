@@ -1,7 +1,9 @@
 import Border from '@/components/border/Border'
 import GeneralTable from '@/components/table/GeneralTable'
 import { network_list } from '@/config/network'
+import { useCurrentRelayBlockNumber } from '@/hooks/substrate'
 import { parseNativeTokenToHuman } from '@/utils/account/token'
+import { calculateTimeUtilizationBegins } from '@/utils/broker/utilizationStatus'
 import { getChainFromPath } from '@/utils/common/chainPath'
 import { useInkathon } from '@poppyseed/lastic-sdk'
 import { GraphLike, RenewableEvent, getClient } from '@poppyseed/squid-sdk'
@@ -10,13 +12,15 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 
 const PastTransactions = () => {
-  const { activeAccount, activeChain } = useInkathon()
+  const { activeAccount, activeChain, relayApi } = useInkathon()
   const pathname = usePathname()
   const network = getChainFromPath(pathname)
   const tokenSymbol = network_list[network].tokenSymbol
 
   const [result, setResult] = useState<GraphLike<RenewableEvent[]> | null>(null)
   const client = useMemo(() => getClient(), [])
+  const currentRelayBlock = useCurrentRelayBlockNumber(relayApi)
+  const brokerConstants = network_list[network].constants
 
   useEffect(() => {
     if (activeAccount) {
@@ -35,6 +39,7 @@ const PastTransactions = () => {
   const TableHeader = [
     { title: 'Time' },
     { title: 'Block Number' },
+    { title: 'Utilization Starts' },
     { title: 'Core' },
     { title: 'Price' },
   ]
@@ -45,6 +50,7 @@ const PastTransactions = () => {
       data: [
         event.timestamp ? format(new Date(event.timestamp), 'MMMM dd, yyyy HH:mm:ss OOOO') : '',
         event.blockNumber?.toString(),
+        calculateTimeUtilizationBegins(currentRelayBlock, event.begin, brokerConstants),
         event.core?.toString(),
         `${parseNativeTokenToHuman({ paid: event.price?.toString(), decimals: 12, reduceDecimals: 6 })} ${tokenSymbol}`,
       ],
@@ -62,7 +68,7 @@ const PastTransactions = () => {
               <GeneralTable
                 tableData={TableData}
                 tableHeader={TableHeader}
-                colClass="grid-cols-4"
+                colClass="grid-cols-5"
               />
             ) : (
               <p>Loading transactions...</p>
