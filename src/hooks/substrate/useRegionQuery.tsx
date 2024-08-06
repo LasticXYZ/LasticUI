@@ -1,6 +1,6 @@
 // useRegionQuery.ts
 
-import { useInkathon } from '@poppyseed/lastic-sdk'
+import { ApiPromise } from '@polkadot/api'
 import { useEffect, useState } from 'react'
 
 type RegionDetailItem = {
@@ -24,8 +24,10 @@ type Region = {
 
 type RegionsType = Region[]
 
-export const useRegionQuery = (updateInterval?: number): RegionsType | null => {
-  const { api } = useInkathon()
+export const useRegionQuery = (
+  api: ApiPromise | undefined,
+  updateInterval?: number,
+): RegionsType | null => {
   const [data, setData] = useState<RegionsType | null>(null)
 
   useEffect(() => {

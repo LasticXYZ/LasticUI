@@ -1,6 +1,7 @@
 import CoreItem from '@/components/cores/CoreItem'
+import { Region } from '@/types'
 import { parseNativeTokenToHuman } from '@/utils'
-import { BrokerConstantsType } from '@poppyseed/lastic-sdk'
+import { BrokerConstantsType, parseHNString } from '@poppyseed/lastic-sdk'
 import { CoreOwnerEvent } from '@poppyseed/squid-sdk'
 import { useState } from 'react'
 
@@ -8,9 +9,13 @@ interface SectionProps {
   title: string
   information: string
   constants: BrokerConstantsType | null
-  regions: CoreOwnerEvent[] | null
+  regions: (CoreOwnerEvent | Region)[] | null
   configuration: any // Define more specific types based on what 'configuration' contains
   tokenSymbol: string
+}
+
+function isCoreOwnerEvent(item: CoreOwnerEvent | Region): item is CoreOwnerEvent {
+  return (item as CoreOwnerEvent).regionId !== undefined
 }
 
 export default function SectionDisplay({
@@ -35,20 +40,35 @@ export default function SectionDisplay({
             <p>{information}</p>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4">
-            {regions.map((region, index) => (
-              <CoreItem
-                key={index}
-                config={configuration}
-                coreNumber={region.regionId.core}
-                size={region.regionId.mask === '0xffffffffffffffffffff' ? 'Whole' : 'Interlaced'}
-                cost={parseNativeTokenToHuman({ paid: region.price?.toString(), decimals: 12 })}
-                currencyCost={tokenSymbol}
-                mask={region.regionId.mask}
-                begin={region.regionId.begin}
-                duration={region.duration}
-                constants={constants}
-              />
-            ))}
+            {regions.map((region, index) =>
+              isCoreOwnerEvent(region) ? (
+                <CoreItem
+                  key={index}
+                  config={configuration}
+                  coreNumber={region.regionId.core}
+                  size={region.regionId.mask === '0xffffffffffffffffffff' ? 'Whole' : 'Interlaced'}
+                  cost={parseNativeTokenToHuman({ paid: region.price?.toString(), decimals: 12 })}
+                  currencyCost={tokenSymbol}
+                  mask={region.regionId.mask}
+                  begin={region.regionId.begin}
+                  duration={region.duration}
+                  constants={constants}
+                />
+              ) : (
+                <CoreItem
+                  key={index}
+                  config={configuration}
+                  coreNumber={Number(region.detail[0].core)}
+                  size={region.detail[0].mask === '0xffffffffffffffffffff' ? 'Whole' : 'Interlaced'}
+                  cost={parseNativeTokenToHuman({ paid: region.owner.paid, decimals: 12 })}
+                  currencyCost={tokenSymbol}
+                  mask={region.detail[0].mask}
+                  begin={parseHNString(region.detail[0].begin)}
+                  duration={parseHNString(region.detail[0].begin) - parseHNString(region.owner.end)}
+                  constants={constants}
+                />
+              ),
+            )}
           </div>
         </>
       ) : null}

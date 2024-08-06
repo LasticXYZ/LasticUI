@@ -2,6 +2,8 @@ import Border from '@/components/border/Border'
 import SectionDisplay from '@/components/cores/CoreItemSectionDisplay'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
+import { useSaleInfo } from '@/hooks/substrate'
+import { useRegionQuery } from '@/hooks/substrate/useRegionQuery'
 import { getChainFromPath } from '@/utils/common/chainPath'
 import { encodeAddress } from '@polkadot/util-crypto'
 import { useInkathon } from '@poppyseed/lastic-sdk'
@@ -16,7 +18,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 
 export default function MyCores() {
-  const { activeAccount, activeChain } = useInkathon()
+  const { activeAccount, activeChain, api } = useInkathon()
   const [result, setResult] = useState<GraphLike<CoreOwnerEvent[]> | null>(null)
   const [assignedCores, setAssignedCores] = useState<GraphLike<CoreOwnerEvent[]> | null>(null)
   const [pooledCores, setPooledCores] = useState<GraphLike<CoreOwnerEvent[]> | null>(null)
@@ -31,32 +33,35 @@ export default function MyCores() {
   const constants = network_list[network].constants
 
   //const newAddress = encodeAddress(publicKeyBytes, targetNetworkPrefix)
+  const saleInfo = useSaleInfo(api)
+  const regionData = useRegionQuery(api)
+  // console.log("regionData", regionData)
 
-  useMemo(() => {
-    let query1 = client.eventAllSaleInitialized(2)
-    if (network && query1) {
-      const fetchData = async () => {
-        const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(network, query1)
-        setCurrentSaleData(fetchedResult)
-      }
+  // useMemo(() => {
+  //   let query1 = client.eventAllSaleInitialized(2)
+  //   if (network && query1) {
+  //     const fetchData = async () => {
+  //       const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(network, query1)
+  //       setCurrentSaleData(fetchedResult)
+  //     }
 
-      fetchData()
-    }
-  }, [network, client])
+  //     fetchData()
+  //   }
+  // }, [network, client])
 
   useEffect(() => {
     let query: GraphQuery | undefined
     let query2: GraphQuery | undefined
     let query3: GraphQuery | undefined
 
-    if (activeAccount && currentSaleData?.data?.event?.length && configuration) {
-      const currentSaleRegion = currentSaleData.data.event[0]
+    if (activeAccount && saleInfo && configuration) {
+      // console.log("saleInfo", saleInfo)
 
-      if (currentSaleRegion.regionBegin) {
+      if (saleInfo.regionBegin) {
         query = client.eventWhoCoreOwner(
           encodeAddress(activeAccount.address, activeChain?.ss58Prefix || 42),
-          currentSaleRegion.regionBegin - configuration.regionLength,
-          currentSaleRegion.regionBegin + configuration.regionLength,
+          saleInfo.regionBegin - configuration.regionLength,
+          saleInfo.regionBegin + configuration.regionLength,
         )
         query2 = client.eventOwnedAndAssignedCoreOwner(
           encodeAddress(activeAccount.address, activeChain?.ss58Prefix || 42),
@@ -82,7 +87,7 @@ export default function MyCores() {
 
       fetchData()
     }
-  }, [activeAccount, activeChain, network, currentSaleData, client, configuration])
+  }, [activeAccount, activeChain, network, saleInfo, client, configuration])
 
   if (!activeAccount || !activeChain) {
     return (
@@ -91,6 +96,13 @@ export default function MyCores() {
       </Border>
     )
   }
+
+  // Filter regions where activeAccount's address matches the region owner's address
+  const filteredRegionData = regionData?.filter(
+    (region) =>
+      region.owner.owner === encodeAddress(activeAccount.address, activeChain?.ss58Prefix || 42),
+  )
+  console.log('filteredRegionData', filteredRegionData)
 
   // Splitting the results into two sections
   const currentSaleRegion = currentSaleData?.data?.event?.[0]
@@ -107,13 +119,39 @@ export default function MyCores() {
         : null,
     ) || []
 
-  return result?.data?.event && result?.data?.event.length > 0 ? (
+  return filteredRegionData && filteredRegionData.length > 0 ? (
     <Border className="h-full flex flex-row justify-center items-center">
       <div className="h-full w-full flex flex-col justify-left items-left px-5 pb-10">
         <div className="pt-10 pl-4">
           <h1 className="text-xl font-bold uppercase font-unbounded ">Cores Owned</h1>
         </div>
+        {/* {filteredRegionData.map((region, index) => (
+            <div key={index} className="p-6">
+              <div>
+                <p className="text-lg font-bold">Region ID: {region.detail[0].}</p>
+                <p className="text-lg font-bold">Owner: {region.owner.owner}</p>
+              </div>
+              <CoreItem
+                coreNumber={Number(region.detail[0].core)}
+                size="1"
+                cost={parseNativeTokenToHuman({ paid: region.owner.paid, decimals: 12 })}
+                currencyCost={tokenSymbol}
+                mask={region.detail[0].mask}
+                begin={Number(region.detail[0].begin)}
+                end={region.owner.end}
+              />
+            </div>
+          ))} */}
         <SectionDisplay
+          title="Obtained in this Sale"
+          information="Cores you have bought in the current sale and are active during the next sale cycle."
+          constants={constants}
+          regions={filteredRegionData}
+          configuration={configuration}
+          tokenSymbol={tokenSymbol}
+        />
+
+        {/* <SectionDisplay
           title="Obtained in this Sale"
           information="Cores you have bought in the current sale and are active during the next sale cycle."
           constants={constants}
@@ -129,6 +167,7 @@ export default function MyCores() {
           configuration={configuration}
           tokenSymbol={tokenSymbol}
         />
+        */}
         <SectionDisplay
           title="Assigned Cores"
           information="All cores you have bought and are currently assigned to a task."
