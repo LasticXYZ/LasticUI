@@ -1,4 +1,4 @@
-import CoreItem from '@/components/cores/CoreItem'
+import BlockspaceItem from '@/components/cores/BlockspaceItem'
 import { Region } from '@/types'
 import { parseNativeTokenToHuman } from '@/utils'
 import { BrokerConstantsType, parseHNString } from '@poppyseed/lastic-sdk'
@@ -18,7 +18,7 @@ function isCoreOwnerEvent(item: CoreOwnerEvent | Region): item is CoreOwnerEvent
   return (item as CoreOwnerEvent).regionId !== undefined
 }
 
-export default function SectionDisplay({
+export default function BlockspaceBarons({
   title,
   information,
   regions,
@@ -39,10 +39,10 @@ export default function SectionDisplay({
           <div className="pl-10 pt-4 italic">
             <p>{information}</p>
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 p-4">
             {regions.map((region, index) =>
               isCoreOwnerEvent(region) ? (
-                <CoreItem
+                <BlockspaceItem
                   key={index}
                   config={configuration}
                   coreNumber={region.regionId.core}
@@ -55,7 +55,7 @@ export default function SectionDisplay({
                   constants={constants}
                 />
               ) : (
-                <CoreItem
+                <BlockspaceItem
                   key={index}
                   config={configuration}
                   coreNumber={Number(region.detail[0].core)}

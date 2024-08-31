@@ -6,6 +6,7 @@ import './globals.css'
 import ThemeProvider from '@/components/themeToggle/themeProvider'
 import {
   ArrowPathIcon,
+  BanknotesIcon,
   Cog8ToothIcon,
   HomeIcon,
   ShoppingCartIcon,
@@ -17,7 +18,7 @@ import Background from './Background'
 import Navbar from './Navbar'
 
 function getNavigation(network: string) {
-  return [
+  let navigation = [
     {
       name: 'My Cores',
       icon: <HomeIcon className="h-5 w-5" aria-hidden="true" />,
@@ -30,12 +31,6 @@ function getNavigation(network: string) {
       href: `/${network}/bulkcore1`,
       current: false,
     },
-    // {
-    //   name: 'Trade Cores',
-    //   icon: <BanknotesIcon className="h-5 w-5" aria-hidden="true" />,
-    //   href: `/${network}/listings`,
-    //   current: false,
-    // },
     // {
     //   name: 'On-Demand Cores',
     //   icon: <BoltIcon className="h-5 w-5" aria-hidden="true" />,
@@ -61,6 +56,17 @@ function getNavigation(network: string) {
       current: false,
     },
   ]
+
+  if (network === 'rococo') {
+    navigation.splice(2, 0, {
+      name: 'Trade Cores',
+      icon: <BanknotesIcon className="h-5 w-5" aria-hidden="true" />,
+      href: `/${network}/listings`,
+      current: false,
+    })
+  }
+
+  return navigation
 }
 
 const unbounded = Unbounded({

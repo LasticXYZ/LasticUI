@@ -1,10 +1,13 @@
 import Border from '@/components/border/Border'
 import SectionDisplay from '@/components/cores/CoreItemSectionDisplay'
+import BlockspaceBarons from '@/components/cores/CoretimeBlockspaceBarons'
 import WalletStatus from '@/components/walletStatus/WalletStatus'
 import { network_list } from '@/config/network'
+import { useSaleInfo } from '@/hooks/substrate'
+import { useRegionQuery } from '@/hooks/substrate/useRegionQuery'
 import { getChainFromPath } from '@/utils/common/chainPath'
 import { encodeAddress } from '@polkadot/util-crypto'
-import { useInkathon } from '@poppyseed/lastic-sdk'
+import { parseHNString, useInkathon } from '@poppyseed/lastic-sdk'
 import {
   CoreOwnerEvent,
   GraphLike,
@@ -16,7 +19,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 
 export default function MyCores() {
-  const { activeAccount, activeChain } = useInkathon()
+  const { activeAccount, activeChain, api } = useInkathon()
   const [result, setResult] = useState<GraphLike<CoreOwnerEvent[]> | null>(null)
   const [assignedCores, setAssignedCores] = useState<GraphLike<CoreOwnerEvent[]> | null>(null)
   const [pooledCores, setPooledCores] = useState<GraphLike<CoreOwnerEvent[]> | null>(null)
@@ -31,32 +34,35 @@ export default function MyCores() {
   const constants = network_list[network].constants
 
   //const newAddress = encodeAddress(publicKeyBytes, targetNetworkPrefix)
+  const saleInfo = useSaleInfo(api)
+  const regionData = useRegionQuery(api)
+  // console.log("regionData", regionData)
 
-  useMemo(() => {
-    let query1 = client.eventAllSaleInitialized(2)
-    if (network && query1) {
-      const fetchData = async () => {
-        const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(network, query1)
-        setCurrentSaleData(fetchedResult)
-      }
+  // useMemo(() => {
+  //   let query1 = client.eventAllSaleInitialized(2)
+  //   if (network && query1) {
+  //     const fetchData = async () => {
+  //       const fetchedResult: GraphLike<SaleInitializedEvent[]> = await client.fetch(network, query1)
+  //       setCurrentSaleData(fetchedResult)
+  //     }
 
-      fetchData()
-    }
-  }, [network, client])
+  //     fetchData()
+  //   }
+  // }, [network, client])
 
   useEffect(() => {
     let query: GraphQuery | undefined
     let query2: GraphQuery | undefined
     let query3: GraphQuery | undefined
 
-    if (activeAccount && currentSaleData?.data?.event?.length && configuration) {
-      const currentSaleRegion = currentSaleData.data.event[0]
+    if (activeAccount && saleInfo && configuration) {
+      // console.log("saleInfo", saleInfo)
 
-      if (currentSaleRegion.regionBegin) {
+      if (saleInfo.regionBegin) {
         query = client.eventWhoCoreOwner(
           encodeAddress(activeAccount.address, activeChain?.ss58Prefix || 42),
-          currentSaleRegion.regionBegin - configuration.regionLength,
-          currentSaleRegion.regionBegin + configuration.regionLength,
+          saleInfo.regionBegin - configuration.regionLength,
+          saleInfo.regionBegin + configuration.regionLength,
         )
         query2 = client.eventOwnedAndAssignedCoreOwner(
           encodeAddress(activeAccount.address, activeChain?.ss58Prefix || 42),
@@ -82,9 +88,9 @@ export default function MyCores() {
 
       fetchData()
     }
-  }, [activeAccount, activeChain, network, currentSaleData, client, configuration])
+  }, [activeAccount, activeChain, network, saleInfo, client, configuration])
 
-  if (!activeAccount || !activeChain) {
+  if (!activeAccount || !activeChain || !saleInfo || !configuration) {
     return (
       <Border className="h-full flex flex-row justify-center items-center">
         <WalletStatus inactiveWalletMessage="Connect wallet in order to see your Coretime." />
@@ -92,22 +98,37 @@ export default function MyCores() {
     )
   }
 
+  // Filter regions where activeAccount's address matches the region owner's address
+  const filteredRegionData = regionData?.filter(
+    (region) =>
+      region.owner.owner === encodeAddress(activeAccount.address, activeChain?.ss58Prefix || 42),
+  )
+  console.log('filteredRegionData', filteredRegionData)
+
   // Splitting the results into two sections
   const currentSaleRegion = currentSaleData?.data?.event?.[0]
   const justBought =
-    result?.data?.event?.filter((region) =>
-      region.regionId.begin && currentSaleRegion?.regionBegin
-        ? region.regionId.begin >= currentSaleRegion.regionBegin
+    filteredRegionData?.filter((region) =>
+      region.detail[0].begin && saleInfo?.regionBegin
+        ? parseHNString(region.detail[0].begin) >= saleInfo?.regionBegin
         : null,
     ) || []
   const currentlyActive =
-    result?.data?.event?.filter((region) =>
-      region.regionId.begin && currentSaleRegion?.regionBegin
-        ? region.regionId.begin < currentSaleRegion.regionBegin
+    filteredRegionData?.filter((region) =>
+      region.detail[0].begin && saleInfo?.regionBegin
+        ? parseHNString(region.detail[0].begin) < saleInfo?.regionBegin &&
+          parseHNString(region.owner.end) >= saleInfo?.regionBegin - configuration.regionLength
         : null,
     ) || []
 
-  return result?.data?.event && result?.data?.event.length > 0 ? (
+  const blockspaceBarons =
+    filteredRegionData?.filter((region) =>
+      region.detail[0].begin && saleInfo?.regionBegin
+        ? parseHNString(region.detail[0].begin) < saleInfo?.regionBegin
+        : null,
+    ) || []
+
+  return filteredRegionData && filteredRegionData.length > 0 ? (
     <Border className="h-full flex flex-row justify-center items-center">
       <div className="h-full w-full flex flex-col justify-left items-left px-5 pb-10">
         <div className="pt-10 pl-4">
@@ -142,6 +163,14 @@ export default function MyCores() {
           information="All cores that are currently in the on demand pool."
           constants={constants}
           regions={pooledCores?.data?.event || []}
+          configuration={configuration}
+          tokenSymbol={tokenSymbol}
+        />
+        <BlockspaceBarons
+          title="Blockspace Barons"
+          information="These cores were bought and never used - YOLO Imma blockspace baron"
+          constants={constants}
+          regions={blockspaceBarons || []}
           configuration={configuration}
           tokenSymbol={tokenSymbol}
         />

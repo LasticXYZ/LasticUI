@@ -13,7 +13,7 @@ import {
 
 import { AllowedRenewalAssignmentInfo, AllowedRenewalCoreInfoUnf } from '@/types'
 import { parseFormattedNumber, parseNativeTokenToHuman } from '@/utils'
-import { calculateTimeUtilizationEnds } from '@/utils/broker/utilizationStatus'
+import { calculateTimeUtilizationBegins } from '@/utils/broker/utilizationStatus'
 import { getChainFromPath, goToChainRoute } from '@/utils/common/chainPath'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
 import { usePathname } from 'next/navigation'
@@ -49,8 +49,9 @@ const RenewalsData = () => {
 
   const handleNextPage = () => setCurrentPage(currentPage + 1)
   const handlePrevPage = () => setCurrentPage(currentPage - 1)
+  console.log('potentialRenewals', potentialRenewals)
   // Data filtering based on user selection
-  const filteredData = allowedRenewals
+  const filteredData = potentialRenewals
     ?.filter((plan) => {
       return !begin || parseFormattedNumber(plan.coreInfo[0].when) === begin
     })
@@ -110,11 +111,10 @@ const RenewalsData = () => {
                           ? network_list[network as PossibleNetworks].paraId[task].name
                           : null,
                         coreInfo[0].core,
-                        calculateTimeUtilizationEnds(
+                        calculateTimeUtilizationBegins(
                           currentRelayBlock,
                           coreInfo[0].when,
                           brokerConstants,
-                          configuration,
                         ),
                         `${parseNativeTokenToHuman({ paid: assignmentInfo.price?.toString(), decimals: 12, reduceDecimals: 4 })} ${tokenSymbol}`,
                         soldOut ? (
