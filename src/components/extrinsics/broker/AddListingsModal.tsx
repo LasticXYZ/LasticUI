@@ -1,9 +1,12 @@
 import PrimaryButton from '@/components/button/PrimaryButton'
 import Modal from '@/components/modal/Modal'
+import useTransferExtrinsic from '@/hooks/substrate/extrinsics'
 import { CoreListing, networks, useListings } from '@/hooks/useListings'
-import { RegionIdProps } from '@/types/broker'
+import { RegionIdProps } from '@/types'
+import { getChainFromPath } from '@/utils/common/chainPath'
 import { Alert } from '@mui/material'
 import { useBalance, useInkathon } from '@poppyseed/lastic-sdk'
+import { usePathname } from 'next/navigation'
 import { FC, useState } from 'react'
 
 const LASTIC_ADDRESS = process.env.NEXT_PUBLIC_LASTIC_ADDRESS
@@ -20,19 +23,30 @@ const ListingsModal: FC<ListingsModalProps> = ({ isOpen, onClose, regionId }) =>
   let { tokenSymbol, tokenDecimals } = useBalance(activeAccount?.address, true)
   const { statusMessage, addListing, isLoading } = useListings()
   const [buttonDisabled, setButtonDisabled] = useState(false)
+  const pathname = usePathname()
+  const network = getChainFromPath(pathname)
+
+  const {
+    newOwner,
+    handleNewOwnerChange,
+    transaction: transferTransaction,
+    allParamsFilled,
+    fromAddress,
+  } = useTransferExtrinsic({ regionId })
 
   const listCoreForSale = async () => {
     try {
       if (!activeAccount) return
       setButtonDisabled(true)
-
       const network = activeChain?.name as networks
+
+      // Ensure the transfer transaction is prepared and executed
+      await transferTransaction()
 
       const coreData: Omit<CoreListing, 'id'> = {
         coreNumber: Number(regionId.core),
         mask: regionId.mask,
         begin: regionId.begin.replace(/,/g, ''),
-
         cost: (parseFloat(cost) * 10 ** tokenDecimals).toString(),
         sellerAddress: activeAccount.address,
         network,

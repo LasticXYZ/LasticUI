@@ -1,11 +1,14 @@
-import { RegionId } from '@/types/broker'
+import { RegionIdProps } from '@/types/broker'
+import { truncateHash } from '@/utils'
 import { encodeAddress } from '@polkadot/util-crypto'
 import { TxButtonProps, useInkathon, useTxButton } from '@poppyseed/lastic-sdk'
 import { useCallback, useState } from 'react'
 
 interface UseTransferExtrinsicProps {
-  regionId: RegionId
+  regionId: RegionIdProps
 }
+
+const LASTIC_ADDRESS = process.env.NEXT_PUBLIC_LASTIC_ADDRESS
 
 const useTransferExtrinsic = ({ regionId }: UseTransferExtrinsicProps) => {
   const { api, activeSigner, activeAccount, activeChain, addToast } = useInkathon()
