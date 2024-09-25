@@ -47,7 +47,7 @@
     "eslint": "8.36.0",
     "font-awesome": "^4.7.0",
     "framer-motion": "^10.18.0",
-    "next": "^13.5.6",
+    "next": "^14.2.13",
     "next-redux-wrapper": "^8.1.0",
     "next-themes": "^0.3.0",
     "notistack": "^3.0.1",
@@ -72,11 +72,11 @@
     "@poppyseed/lastic-sdk": "^0.2.23",
     "@types/react": "18.2.25",
     "autoprefixer": "^10.4.20",
-    "eslint-config-next": "^13.5.6",
-    "husky": "^9.1.5",
-    "postcss": "^8.4.43",
+    "eslint-config-next": "^13.5.7",
+    "husky": "^9.1.6",
+    "postcss": "^8.4.47",
     "prettier": "^3.3.3",
     "react-hot-toast": "^2.4.1",
-    "tailwindcss": "^3.4.10"
+    "tailwindcss": "^3.4.13"
   }
 }

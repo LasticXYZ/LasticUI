@@ -89,7 +89,7 @@ export const network_list: NetworkInfo = {
       '3363': { name: 'Polkadex', description: '', lease: null },
     },
     constants: {
-      maxLeasedCores: 50,
+      maxLeasedCores: 55,
       maxReservedCores: 10,
       palletId: '0x70792f62726f6b65',
       timeslicePeriod: 80,
