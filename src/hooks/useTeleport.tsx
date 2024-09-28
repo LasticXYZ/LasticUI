@@ -10,7 +10,8 @@ import { useState } from 'react'
 /** Small buffer for teleporting to prevent potential errors. Adjust it as needed. */
 const BUFFER: BN = new BN(5 * 10 ** 9) // 0.005 ROC
 
-const CHAIN = 'CoretimeKusama'
+const KSM_CHAIN = 'CoretimeKusama'
+const DOT_CHAIN = 'CoretimePolkadot'
 
 /**
  * Provides functionality to manage teleportation between blockchain networks.
@@ -39,6 +40,8 @@ export const useTeleport = (onTeleportSuccess?: () => void) => {
 
   const { api, relayApi, activeAccount, activeChain, activeRelayChain, activeSigner } =
     useInkathon()
+
+  const CHAIN = activeChain?.network === 'polkadot' ? DOT_CHAIN : KSM_CHAIN
 
   const {
     balanceFormatted: balanceFormattedOnCoretime,
