@@ -10,6 +10,8 @@ import { useState } from 'react'
 /** Small buffer for teleporting to prevent potential errors. Adjust it as needed. */
 const BUFFER: BN = new BN(5 * 10 ** 9) // 0.005 ROC
 
+const CHAIN = 'CoretimeKusama'
+
 /**
  * Provides functionality to manage teleportation between blockchain networks.
  * It encapsulates logic for checking user balances on different chains, performing the teleportation action,
@@ -171,11 +173,7 @@ export const useTeleport = (onTeleportSuccess?: () => void) => {
     setTeleportMessage(
       `Teleporting ${Number(amount) / 10 ** tokenDecimalsOnCoretimeChain} ${tokenSymbolOnCoretimeChain} to Relay Chain. Please wait...`,
     )
-    const ext = await Builder(api)
-      .from('CoretimeKusama')
-      .amount(amount)
-      .address(activeAccount.address)
-      .build()
+    const ext = await Builder(api).from(CHAIN).amount(amount).address(activeAccount.address).build()
 
     teleport(ext)
   }
@@ -191,7 +189,7 @@ export const useTeleport = (onTeleportSuccess?: () => void) => {
       `Teleporting ${Number(amount) / 10 ** tokenDecimalsOnRelayChain} ${tokenSymbolOnRelayChain} to Coretime Chain. Please wait...`,
     )
     const ext = await Builder(relayApi)
-      .to('CoretimeKusama')
+      .to(CHAIN)
       .amount(amount)
       .address(activeAccount.address)
       .build()

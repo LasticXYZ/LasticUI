@@ -97,7 +97,7 @@ export const network_list: NetworkInfo = {
     configuration: {
       advanceNotice: 10,
       interludeLength: 50400,
-      leadinLength: 50400,
+      leadinLength: 100800,
       regionLength: 5040,
       idealBulkProportion: 100,
       limitCoresOffered: null,
