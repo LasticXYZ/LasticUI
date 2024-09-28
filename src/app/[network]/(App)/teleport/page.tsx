@@ -87,8 +87,8 @@ const Teleport = () => {
 
   const doTeleport = async (amountToSend: number) => {
     isRelayToPara
-      ? await teleportToCoretimeChain(amountToSend, activeRelayChain)
-      : await teleportToRelay(amountToSend, activeRelayChain)
+      ? await teleportToCoretimeChain(amountToSend)
+      : await teleportToRelay(amountToSend)
   }
 
   const handleMaxClick = () => {
