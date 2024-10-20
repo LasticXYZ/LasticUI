@@ -192,7 +192,7 @@ const BrokerRegionData: FC<BrokerRegionDataProps> = ({ coreNb, beginRegion, mask
                     ? encodeAddress(activeAccount.address, activeChain?.ss58Prefix || 42)
                     : null)
                 }
-                paid={region.price}
+                paid={region.price ?? null}
                 coreNumber={region.regionId.core}
                 currencyCost={tokenSymbol}
                 utilizationStatus={`${utilizationTitle} ${utilizationTimeRemaining}`}
