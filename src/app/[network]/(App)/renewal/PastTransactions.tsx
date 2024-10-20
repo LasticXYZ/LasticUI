@@ -49,8 +49,8 @@ const PastTransactions = () => {
     result?.data.event?.map((event, index) => ({
       data: [
         event.timestamp ? format(new Date(event.timestamp), 'MMMM dd, yyyy HH:mm:ss OOOO') : '',
-        event.blockNumber?.toString(),
-        calculateTimeUtilizationBegins(currentRelayBlock, event.begin, brokerConstants),
+        event.blockNumber?.toString() ?? 'N/A',
+        calculateTimeUtilizationBegins(currentRelayBlock, event.begin ?? 0, brokerConstants),
         event.core?.toString(),
         `${parseNativeTokenToHuman({ paid: event.price?.toString(), decimals: 12, reduceDecimals: 6 })} ${tokenSymbol}`,
       ],
