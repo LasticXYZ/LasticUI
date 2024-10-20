@@ -54,6 +54,8 @@ const chainOptions: { [key: string]: string } = {
   'rococo-coretime': '/assets/Images/NetworkIcons/coretime-img.svg',
   kusama: '/assets/Images/NetworkIcons/kusama-img.svg',
   'kusama-coretime': '/assets/Images/NetworkIcons/coretime-img.svg',
+  polkadot: '/assets/Images/NetworkIcons/coretime-img.svg',
+  'polkadot-coretime': '/assets/Images/NetworkIcons/coretime-img.svg',
 }
 
 const Teleport = () => {

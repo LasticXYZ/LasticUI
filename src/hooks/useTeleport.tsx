@@ -10,6 +10,9 @@ import { useState } from 'react'
 /** Small buffer for teleporting to prevent potential errors. Adjust it as needed. */
 const BUFFER: BN = new BN(5 * 10 ** 9) // 0.005 ROC
 
+const KSM_PARASPELL_CHAIN = 'CoretimeKusama'
+const DOT_PARASPELL_CHAIN = 'CoretimePolkadot'
+
 /**
  * Provides functionality to manage teleportation between blockchain networks.
  * It encapsulates logic for checking user balances on different chains, performing the teleportation action,
@@ -37,6 +40,9 @@ export const useTeleport = (onTeleportSuccess?: () => void) => {
 
   const { api, relayApi, activeAccount, activeChain, activeRelayChain, activeSigner } =
     useInkathon()
+
+  const PARASPELL_CHAIN =
+    activeChain?.network === 'polkadot' ? DOT_PARASPELL_CHAIN : KSM_PARASPELL_CHAIN
 
   const {
     balanceFormatted: balanceFormattedOnCoretime,
@@ -172,7 +178,7 @@ export const useTeleport = (onTeleportSuccess?: () => void) => {
       `Teleporting ${Number(amount) / 10 ** tokenDecimalsOnCoretimeChain} ${tokenSymbolOnCoretimeChain} to Relay Chain. Please wait...`,
     )
     const ext = await Builder(api)
-      .from('CoretimeKusama')
+      .from(PARASPELL_CHAIN)
       .amount(amount)
       .address(activeAccount.address)
       .build()
@@ -191,7 +197,7 @@ export const useTeleport = (onTeleportSuccess?: () => void) => {
       `Teleporting ${Number(amount) / 10 ** tokenDecimalsOnRelayChain} ${tokenSymbolOnRelayChain} to Coretime Chain. Please wait...`,
     )
     const ext = await Builder(relayApi)
-      .to('CoretimeKusama')
+      .to(PARASPELL_CHAIN)
       .amount(amount)
       .address(activeAccount.address)
       .build()

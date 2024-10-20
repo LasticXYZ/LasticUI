@@ -45,13 +45,16 @@ export default function SectionDisplay({
                 <CoreItem
                   key={index}
                   config={configuration}
-                  coreNumber={region.regionId.core}
+                  coreNumber={region.regionId.core ?? null}
                   size={region.regionId.mask === '0xffffffffffffffffffff' ? 'Whole' : 'Interlaced'}
-                  cost={parseNativeTokenToHuman({ paid: region.price?.toString(), decimals: 12 })}
+                  cost={parseNativeTokenToHuman({
+                    paid: region.price?.toString() ?? null,
+                    decimals: 12,
+                  })}
                   currencyCost={tokenSymbol}
-                  mask={region.regionId.mask}
-                  begin={region.regionId.begin}
-                  duration={region.duration}
+                  mask={region.regionId.mask ?? null}
+                  begin={region.regionId.begin ?? null}
+                  duration={region.duration ?? null}
                   constants={constants}
                 />
               ) : (
