@@ -117,7 +117,7 @@ const Footer = () => (
             <span className="sr-only">Twitter page</span>
           </a>
           <a
-            href="https://github.com/LasticXYZ/Lastic"
+            href="https://github.com/LasticXYZ/"
             className=" p-2 bg-gray-20 rounded-full hover:bg-gray-18"
           >
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
