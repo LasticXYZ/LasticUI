@@ -1,6 +1,6 @@
 import { TxCbOnSuccessParams } from '@/app/[network]/(App)/teleport/page'
 import { notificationTypes } from '@/components/modal/ModalNotification'
-import { Builder, Extrinsic } from '@paraspell/sdk'
+import { Builder, Extrinsic } from '@paraspell/sdk-pjs'
 import { DispatchError } from '@polkadot/types/interfaces'
 import { ISubmittableResult } from '@polkadot/types/types'
 import { BN } from '@polkadot/util'
@@ -12,6 +12,8 @@ const BUFFER: BN = new BN(5 * 10 ** 9) // 0.005 ROC
 
 const KSM_PARASPELL_CHAIN = 'CoretimeKusama'
 const DOT_PARASPELL_CHAIN = 'CoretimePolkadot'
+const KSM_RELAY_CHAIN = 'Kusama'
+const DOT_RELAY_CHAIN = 'Polkadot'
 
 /**
  * Provides functionality to manage teleportation between blockchain networks.
@@ -42,7 +44,7 @@ export const useTeleport = (onTeleportSuccess?: () => void) => {
     useInkathon()
 
   const PARASPELL_CHAIN =
-    activeChain?.network === 'polkadot' ? DOT_PARASPELL_CHAIN : KSM_PARASPELL_CHAIN
+    activeChain?.network === 'polkadot-coretime' ? DOT_PARASPELL_CHAIN : KSM_PARASPELL_CHAIN
 
   const {
     balanceFormatted: balanceFormattedOnCoretime,
@@ -177,9 +179,13 @@ export const useTeleport = (onTeleportSuccess?: () => void) => {
     setTeleportMessage(
       `Teleporting ${Number(amount) / 10 ** tokenDecimalsOnCoretimeChain} ${tokenSymbolOnCoretimeChain} to Relay Chain. Please wait...`,
     )
+
+    const destination = tokenSymbolOnCoretimeChain === 'DOT' ? DOT_RELAY_CHAIN : KSM_RELAY_CHAIN
+
     const ext = await Builder(api)
       .from(PARASPELL_CHAIN)
-      .amount(amount)
+      .to(destination)
+      .currency({ symbol: tokenSymbolOnCoretimeChain, amount: amount })
       .address(activeAccount.address)
       .build()
 
@@ -196,9 +202,13 @@ export const useTeleport = (onTeleportSuccess?: () => void) => {
     setTeleportMessage(
       `Teleporting ${Number(amount) / 10 ** tokenDecimalsOnRelayChain} ${tokenSymbolOnRelayChain} to Coretime Chain. Please wait...`,
     )
+
+    const from = tokenSymbolOnRelayChain === 'DOT' ? DOT_RELAY_CHAIN : KSM_RELAY_CHAIN
+
     const ext = await Builder(relayApi)
+      .from(from)
       .to(PARASPELL_CHAIN)
-      .amount(amount)
+      .currency({ symbol: tokenSymbolOnRelayChain, amount: amount })
       .address(activeAccount.address)
       .build()
 
