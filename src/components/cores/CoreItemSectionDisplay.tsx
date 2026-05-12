@@ -1,8 +1,11 @@
 import CoreItem from '@/components/cores/CoreItem'
+import { network_list } from '@/config/network'
 import { Region } from '@/types'
 import { parseNativeTokenToHuman } from '@/utils'
+import { getChainFromPath } from '@/utils/common/chainPath'
 import { BrokerConstantsType, parseHNString } from '@poppyseed/lastic-sdk'
 import { CoreOwnerEvent } from '@poppyseed/squid-sdk'
+import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 
 interface SectionProps {
@@ -27,9 +30,15 @@ export default function SectionDisplay({
   tokenSymbol,
 }: SectionProps) {
   const [currentPage, setCurrentPage] = useState(1)
+  const pathname = usePathname()
+  const network = getChainFromPath(pathname)
   const itemsPerPage = 6
   const handleNextPage = () => setCurrentPage(currentPage + 1)
   const handlePrevPage = () => setCurrentPage(currentPage - 1)
+  const getParaName = (task?: string | number | null) =>
+    task !== null && task !== undefined
+      ? network_list[network]?.paraId?.[task.toString()]?.name
+      : null
 
   return (
     <>
@@ -56,6 +65,8 @@ export default function SectionDisplay({
                   begin={region.regionId.begin ?? null}
                   duration={region.duration ?? null}
                   constants={constants}
+                  assignedTask={region.task ?? null}
+                  assignedTaskName={getParaName(region.task)}
                 />
               ) : (
                 <CoreItem

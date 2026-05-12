@@ -17,6 +17,8 @@ interface CardProps {
   begin: number | null
   duration: number | null
   constants: BrokerConstantsType | null
+  assignedTask?: string | number | null
+  assignedTaskName?: string | null
 }
 
 const CoreItem: React.FC<CardProps> = ({
@@ -29,6 +31,8 @@ const CoreItem: React.FC<CardProps> = ({
   begin,
   duration,
   constants,
+  assignedTask,
+  assignedTaskName,
 }) => {
   const pathname = usePathname()
 
@@ -78,6 +82,14 @@ const CoreItem: React.FC<CardProps> = ({
                 End Relay Block: {(begin + duration) * constants.timeslicePeriod}
               </p>
             </div>
+            {assignedTask !== null && assignedTask !== undefined && (
+              <div className="flex flex-row text-gray-12 p-1 ">
+                <p className="px-2">
+                  Assigned to: {assignedTask}
+                  {assignedTaskName ? ` (${assignedTaskName})` : ''}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </Link>
